@@ -245,6 +245,7 @@ export function BriefingForm({
         manual={value.typographyManual ?? { heading: "Geist", body: "Inter", mono: "Geist Mono" }}
         onModeChange={(typographyMode) => onChange({ typographyMode })}
         onManualChange={(typographyManual) => onChange({ typographyManual })}
+        fontsPlayground={value.fontsPlayground as { fonte: string }[] ?? []}
       />
 
       {/* 7. Modo de Prompt */}

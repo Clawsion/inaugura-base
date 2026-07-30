@@ -79,14 +79,16 @@ interface UploadedFont {
 }
 
 export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
-  const slotStates = states.length === 5 ? states : DEFAULT_STATES;
+  const allSlotStates = states.length === 5 ? states : DEFAULT_STATES;
+  // NOVO: utilizador escolhe quantas fonts quer ver (1, 3, ou 5)
+  const [visibleCount, setVisibleCount] = useState<1 | 3 | 5>(5);
+  const slotStates = allSlotStates.slice(0, visibleCount);
   const [uploadedFonts, setUploadedFonts] = useState<UploadedFont[]>([]);
   const [expanded, setExpanded] = useState<boolean[]>([false, false, false, false, false]);
   const [textoGlobal, setTextoGlobal] = useState("The quick brown fox jumps over the lazy dog");
   const [filtro, setFiltro] = useState("todos");
   const [sourceFilter, setSourceFilter] = useState("todos");
   const [clipboard, setClipboard] = useState<FontSlotState | null>(null);
-  // NOVO: catálogo dinâmico de 1500+ fonts + contador
   const [fontCount, setFontCount] = useState<{ total: number; google: number; fontshare: number; curated: number } | null>(null);
   const [allFontsCatalog, setAllFontsCatalog] = useState<FontInfo[]>(FONTS_MODERNAS);
 
@@ -123,42 +125,39 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
   const expandAll = () => setExpanded([true, true, true, true, true]);
   const collapseAll = () => setExpanded([false, false, false, false, false]);
 
-  // GENERATE ALL FONTS — respeita locks: busca font aleatória (do catálogo 1500+).
-  // SÓ muda a font. NÃO mexe nas transforms (mantém o que o utilizador escolheu).
+  // GENERATE ALL FONTS — respeita locks e visibleCount
   const generateAllFonts = useCallback(async () => {
     const next = await Promise.all(
-      slotStates.map(async (s) => {
+      allSlotStates.slice(0, visibleCount).map(async (s) => {
         if (s.locked) return s;
         const font = await getRandomFontByFilterAsync(filtro, sourceFilter, s.fonte);
         await loadFont(font);
-        return {
-          ...s,
-          fonte: font.family,
-          customFontName: undefined,
-          // NÃO mexe no transformId — mantém a transform atual
-        };
+        return { ...s, fonte: font.family, customFontName: undefined };
       })
     );
-    onChange(next);
-    const lockedCount = slotStates.filter((s) => s.locked).length;
+    // Mantém as slots não visíveis inalteradas
+    const fullNext = [...next, ...allSlotStates.slice(visibleCount)];
+    onChange(fullNext);
+    const lockedCount = allSlotStates.slice(0, visibleCount).filter((s) => s.locked).length;
     toast.success(
-      `5 fonts geradas!${lockedCount > 0 ? ` (${lockedCount} bloqueadas mantidas)` : ""}`
+      `${visibleCount} fonts geradas!${lockedCount > 0 ? ` (${lockedCount} bloqueadas mantidas)` : ""}`
     );
-  }, [slotStates, onChange, filtro, sourceFilter]);
+  }, [allSlotStates, visibleCount, onChange, filtro, sourceFilter]);
 
-  // GENERATE ALL TRANSFORMS — respeita locks: aplica transform aleatória.
-  // SÓ muda a transform. NÃO mexe nas fonts.
+  // GENERATE ALL TRANSFORMS — respeita locks e visibleCount
   const generateAllTransforms = useCallback(() => {
-    const next = slotStates.map((s) => {
+    const visible = allSlotStates.slice(0, visibleCount);
+    const next = visible.map((s) => {
       if (s.locked) return s;
       return { ...s, transformId: getRandomTransform(s.transformId).id };
     });
-    onChange(next);
-    const lockedCount = slotStates.filter((s) => s.locked).length;
+    const fullNext = [...next, ...allSlotStates.slice(visibleCount)];
+    onChange(fullNext);
+    const lockedCount = visible.filter((s) => s.locked).length;
     toast.success(
-      `5 transforms geradas!${lockedCount > 0 ? ` (${lockedCount} bloqueadas mantidas)` : ""}`
+      `${visibleCount} transforms geradas!${lockedCount > 0 ? ` (${lockedCount} bloqueadas mantidas)` : ""}`
     );
-  }, [slotStates, onChange]);
+  }, [allSlotStates, visibleCount, onChange]);
 
   const handleUploadFont = useCallback(async (file: File) => {
     const familyName = file.name
@@ -217,11 +216,30 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
             <Button variant="outline" size="sm" onClick={collapseAll} className="h-7 text-xs">
               <ChevronDown className="h-3 w-3" /> Fechar
             </Button>
+            {/* NOVO: Seletor de quantas fonts mostrar (1, 3, 5) */}
+            <div className="flex items-center gap-0.5 rounded-md border border-border bg-card/50 p-0.5">
+              {([1, 3, 5] as const).map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => setVisibleCount(n)}
+                  className={cn(
+                    "h-6 rounded px-2 text-[10px] font-bold transition-all",
+                    visibleCount === n
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                  title={`Mostrar ${n} font${n > 1 ? "s" : ""}`}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
             {/* Generate All FONTS — só muda a font, mantém transforms */}
             <Button
               onClick={generateAllFonts}
               className="h-7 gap-1 rounded-md bg-primary px-3 text-xs text-primary-foreground hover:bg-primary/90"
-              title="Gera 5 fonts aleatórias (mantém as transforms atuais)"
+              title={`Gera ${visibleCount} fonts aleatórias (mantém as transforms atuais)`}
             >
               <Wand2 className="h-3 w-3" /> Generate All Fonts
             </Button>
@@ -230,7 +248,7 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
               onClick={generateAllTransforms}
               variant="outline"
               className="h-7 gap-1 rounded-md border-primary/40 px-3 text-xs text-primary hover:bg-primary/10"
-              title="Gera 5 transforms aleatórias (mantém as fonts atuais)"
+              title={`Gera ${visibleCount} transforms aleatórias (mantém as fonts atuais)`}
             >
               <Shuffle className="h-3 w-3" /> Generate All Transforms
             </Button>

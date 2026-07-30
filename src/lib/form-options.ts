@@ -42,6 +42,16 @@ export const Secoes = [
   "Auth",
   "Blog",
   "Gallery",
+  // NOVAS secções
+  "Cards",
+  "Bento Grid",
+  "Stats",
+  "Logos",
+  "Team",
+  "Contact",
+  "Newsletter",
+  "404",
+  "Cookies",
 ] as const;
 
 // ============================================================================
@@ -166,6 +176,62 @@ export const EfeitosInfo: EfeitoInfo[] = [
     ondeAplicar:
       "Cards flutuantes, modais, sidebars, dashboards sobre fundo colorido.",
     exemplo: "Apple Vision Pro UI, iOS control center, Microsoft Fluent.",
+  },
+  // ── NOVOS 5 ESTILOS (2 com animações bento) ───────────────────────────
+  {
+    nome: "Bento Grid Animated",
+    icon: "Grid3x3",
+    descricao:
+      "Grid de cards assimétricos estilo Bento Box (Apple) com animações staggered ao hover e scroll reveal.",
+    quandoAplicar:
+      "Para mostrar features, stats ou conteúdo diverso de forma visualmente rica e organizada.",
+    ondeAplicar:
+      "Features sections, product showcases, dashboards, landing pages modernas.",
+    exemplo: "Apple iPhone Pro page, Linear features, Vercel dashboard, Arc browser.",
+  },
+  {
+    nome: "Bento Expandable",
+    icon: "Maximize2",
+    descricao:
+      "Cards Bento que expandem ao hover com layout animations (Motion). Um card cresce enquanto outros encolhem.",
+    quandoAplicar:
+      "Quando queres interactividade lúdica e foco num item de cada vez sem sair da página.",
+    ondeAplicar:
+      "Product tours, feature comparisons, portfolio pieces, showcase sections.",
+    exemplo: "Framer website, Vercel products, Stripe features grid.",
+  },
+  {
+    nome: "Masonry Pinterest",
+    icon: "LayoutGrid",
+    descricao:
+      "Layout masonry (estilo Pinterest) com cards de alturas variadas. Reveal on scroll com stagger.",
+    quandoAplicar:
+      "Galerias de imagens, blogs, portfolios, e-commerce com cards de conteúdo assimétrico.",
+    ondeAplicar:
+      "Galleries, blog feeds, product grids, portfolio showcases.",
+    exemplo: "Pinterest, Unsplash, Behance galleries.",
+  },
+  {
+    nome: "Split Screen Scroll",
+    icon: "SplitSquareHorizontal",
+    descricao:
+      "Ecrã dividido em 2 colunas que scrollam independentemente. Sticky em cada lado.",
+    quandoAplicar:
+      "Storytelling dual, before/after, comparações, narrativas paralelas.",
+    ondeAplicar:
+      "About pages, case studies, product comparisons, brand stories.",
+    exemplo: "Apple product comparisons, Nike stories, fashion lookbooks.",
+  },
+  {
+    nome: "Marquee Infinite",
+    icon: "MoveHorizontal",
+    descricao:
+      "Faixas horizontais infinitas com logos, testimonials ou imagens que scrollam automaticamente.",
+    quandoAplicar:
+      "Para mostrar social proof, partners, testimonials de forma dinâmica e sem esforço.",
+    ondeAplicar:
+      "Logos bars, testimonial carousels, partner showcases, ticker tapes.",
+    exemplo: "Stripe customers, Linear logos, Vercel trusted by.",
   },
 ];
 

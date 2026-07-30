@@ -25,6 +25,10 @@ import {
   Wine,
   MousePointerClick,
   Info,
+  Grid3x3,
+  Maximize2,
+  LayoutGrid,
+  SplitSquareHorizontal,
 } from "lucide-react";
 
 const ICONS: Record<string, any> = {
@@ -37,6 +41,10 @@ const ICONS: Record<string, any> = {
   Maximize,
   Box,
   MousePointerClick,
+  Grid3x3,
+  Maximize2,
+  LayoutGrid,
+  SplitSquareHorizontal,
 };
 
 interface LayoutSelectorProps {
@@ -55,7 +63,7 @@ export function LayoutSelector({ efeitos, onToggle }: LayoutSelectorProps) {
       <Label className="text-sm font-semibold">Estilo de Layout & Efeitos</Label>
 
       {/* Grid de efeitos com hover */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2">
         {EfeitosInfo.map((e) => {
           const active = efeitos.includes(e.nome);
           const Icon = ICONS[e.icon] ?? Sparkles;

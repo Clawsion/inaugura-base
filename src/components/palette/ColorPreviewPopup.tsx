@@ -9,7 +9,7 @@
 // ============================================================================
 
 import { motion } from "framer-motion";
-import { Eye, X, Layout as LayoutIcon, BarChart3, CreditCard } from "lucide-react";
+import { Eye, Layout as LayoutIcon, BarChart3, CreditCard } from "lucide-react";
 import {
   Dialog, DialogContent, DialogTrigger, DialogTitle,
 } from "@/components/ui/dialog";
@@ -106,9 +106,7 @@ export function ColorPreviewPopup({ cor, outrasCores, fontEscolhida }: ColorPrev
               </p>
             </div>
           </div>
-          <Button variant="ghost" size="icon" onClick={() => setOpen(false)} className="h-7 w-7">
-            <X className="h-3.5 w-3.5" />
-          </Button>
+          {/* X removido — o Dialog já tem botão de fechar próprio no canto */}
         </div>
 
         <Tabs defaultValue="hero" className="w-full">

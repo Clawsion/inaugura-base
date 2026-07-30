@@ -10,7 +10,7 @@
 //  4. Brutalist — preview da font num contexto brutalist (sem radius, bordas duras)
 // ============================================================================
 
-import { Eye, X, Type, Moon, Sun, Square } from "lucide-react";
+import { Eye, Type, Moon, Sun, Square } from "lucide-react";
 import {
   Dialog, DialogContent, DialogTrigger, DialogTitle,
 } from "@/components/ui/dialog";
@@ -62,9 +62,7 @@ export function FontPreviewPopup({ state, texto }: FontPreviewPopupProps) {
               {transform ? `Transform: ${transform.name}` : "Sem transform"} · Peso: {PESOS_LABELS[pesoPrincipal]} · {state.italic ? "Italic" : "Regular"}
             </p>
           </div>
-          <Button variant="ghost" size="icon" onClick={() => setOpen(false)} className="h-7 w-7">
-            <X className="h-3.5 w-3.5" />
-          </Button>
+          {/* X removido — o Dialog já tem botão de fechar próprio no canto */}
         </div>
 
         <Tabs defaultValue="hierarquia" className="w-full">
