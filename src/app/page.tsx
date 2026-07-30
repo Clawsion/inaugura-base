@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useState, useMemo } from "react";
+import { useCallback, useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "next-themes";
 import { BriefingForm } from "@/components/forms/BriefingForm";
 import { LoadingSteps } from "@/components/loading-steps";
 import { ResultsPanel } from "@/components/results/ResultsPanel";
@@ -54,17 +55,24 @@ export default function Home() {
   const [showForm, setShowForm] = useState(true);
   // NOVO: skin ativo aplicado a toda a app (null = tema default)
   const [activeSkin, setActiveSkin] = useState<string | null>(null);
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const onChange = useCallback((patch: Partial<FormValues>) => {
     setForm((f) => ({ ...f, ...patch }));
   }, []);
 
   // Helper: gera o style object com CSS variables do skin ativo
+  // USA o tema atual (dark OU light) — respeita o toggle ThemeToggle
   const skinStyle = useMemo(() => {
-    if (!activeSkin) return undefined;
+    if (!activeSkin || !mounted) return undefined;
     const skin = getSkinById(activeSkin);
     if (!skin) return undefined;
-    const t = skin.dark; // app é dark por default
+    // Escolhe o variant conforme o tema atual (default = dark)
+    const isLight = theme === "light";
+    const t = isLight ? skin.light : skin.dark;
     return {
       "--background": t.bg,
       "--foreground": t.text,
@@ -85,11 +93,10 @@ export default function Home() {
       "--ring": t.accent,
       "--radius": t.radius,
       fontFamily: t.bodyFont,
-      // NOVO: aplicar padrão de fundo do skin (textura real)
       backgroundImage: t.bgPattern,
       backgroundAttachment: "fixed",
     } as React.CSSProperties;
-  }, [activeSkin]);
+  }, [activeSkin, theme, mounted]);
 
   const onSubmit = useCallback(async () => {
     setLoading(true);
