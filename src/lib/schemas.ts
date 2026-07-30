@@ -104,7 +104,7 @@ export const FormSchema = z.object({
   efeitos: z.array(z.string()),
   paletaMode: z.enum(["auto", "manual"]),
   paletaManual: z
-    .array(z.object({ nome: z.string(), hex: z.string(), uso: z.string() }))
+    .array(z.object({ nome: z.string(), hex: z.string(), uso: z.string(), locked: z.boolean().optional() }))
     .optional(),
   typographyMode: z.enum(["auto", "manual"]),
   typographyManual: z
@@ -118,7 +118,11 @@ export const FormSchema = z.object({
     .array(
       z.object({
         fonte: z.string(),
-        transform: z.string().optional(),
+        transformId: z.string().optional(),
+        customFontName: z.string().optional(),
+        pesos: z.array(z.number()).optional(),
+        italic: z.boolean().optional(),
+        locked: z.boolean().optional(),
       })
     )
     .max(5)

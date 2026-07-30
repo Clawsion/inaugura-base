@@ -1,16 +1,14 @@
 "use client";
 
 // ============================================================================
-// PaletteInput — redesenhado conforme pedido do utilizador
+// PaletteInput — redesenhado com lock + copy/paste + preview popup por cor
 // ============================================================================
-// Modos:
-//  - Auto: o modelo decide tudo (incluindo roles) com base no briefing + nicho
-//  - Manual: utilizador define cada cor com:
-//      • Retângulo grande mostrando a cor + HEX visível
-//      • Dropdown de ROLE (Background, Card, Text, Accent, Muted, Custom)
-//      • Color picker nativo (clica no retângulo)
-//      • Input hex textual
-//      • Swatches pequenos: grelha de cores pré-definidas para seleção rápida
+// Features:
+//  - Auto: GLM-5.2 decide cores + roles
+//  - Manual: retângulo grande com HEX + role + swatches
+//  - LOCK individual (cadeado): bloqueia a cor para não ser afetada por regenerações
+//  - COPY/PASTE individual por cor
+//  - PREVIEW POPUP: 3 mockups (Hero, Dashboard, Pricing) com a cor em tempo real
 // ============================================================================
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,27 +17,26 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
+  Tooltip, TooltipContent, TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Plus, Trash2, Sparkles, Info, Palette as PaletteIcon } from "lucide-react";
+import {
+  Plus, Trash2, Sparkles, Info, Palette as PaletteIcon,
+  Lock, Unlock, Copy, ClipboardPaste, Eye,
+} from "lucide-react";
 import { isHexValido } from "@/lib/color-utils";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { ColorPreviewPopup } from "@/components/palette/ColorPreviewPopup";
+import { toast } from "sonner";
 
 export interface Cor {
   nome: string;
   hex: string;
-  uso: string; // agora também usado como "role"
+  uso: string;
+  locked?: boolean;
 }
 
 interface PaletteInputProps {
@@ -47,6 +44,8 @@ interface PaletteInputProps {
   manual: Cor[];
   onModeChange: (m: "auto" | "manual") => void;
   onManualChange: (c: Cor[]) => void;
+  // NOVO: fonts do playground (para usar no preview)
+  fontsPlayground?: { fonte: string }[];
 }
 
 const ROLES = [
@@ -58,37 +57,24 @@ const ROLES = [
   { value: "Custom", label: "Custom", desc: "Outro uso" },
 ];
 
-// Swatches populares para seleção rápida (grelha de quadrados pequenos)
 const SWATCHES_POPULARES = [
-  // Dark backgrounds
   "#0A0A0B", "#141416", "#1A1A1A", "#0F0F1A", "#1E1E2E",
-  // Whites / light
   "#FFFFFF", "#FAFAFA", "#F5F5F7", "#E5E5E5", "#F4F4F5",
-  // Greens (accent)
   "#00E5A0", "#10B981", "#22C55E", "#4ADE80", "#16A34A",
-  // Blues
   "#0071E3", "#3B82F6", "#0A84FF", "#6366F1", "#818CF8",
-  // Purples
   "#7C3AED", "#A78BFA", "#9333EA", "#C084FC", "#6D28D9",
-  // Pinks / reds
   "#EC4899", "#F472B6", "#FF6B9D", "#FF4D4D", "#DC2626",
-  // Yellows / oranges
   "#FCD34D", "#F59E0B", "#FFB84D", "#FF6B35", "#FB923C",
-  // Cyans / teals
   "#06B6D4", "#22D3EE", "#14B8A6", "#5EEAD4", "#0EA5E9",
-  // Gold / luxury
   "#C9A961", "#9A7A2E", "#B8954A", "#D4AF37", "#E5C76B",
-  // Muted grays
   "#595959", "#A1A1AA", "#71717A", "#737373", "#A3A3A3",
 ];
 
 export function PaletteInput({
-  mode,
-  manual,
-  onModeChange,
-  onManualChange,
+  mode, manual, onModeChange, onManualChange, fontsPlayground,
 }: PaletteInputProps) {
   const [showSwatches, setShowSwatches] = useState<number | null>(null);
+  const [clipboard, setClipboard] = useState<Cor | null>(null);
 
   const adicionar = () =>
     onManualChange([
@@ -100,6 +86,25 @@ export function PaletteInput({
 
   const atualizar = (i: number, patch: Partial<Cor>) =>
     onManualChange(manual.map((c, idx) => (idx === i ? { ...c, ...patch } : c)));
+
+  const toggleLock = (i: number) => {
+    atualizar(i, { locked: !manual[i].locked });
+    toast.success(manual[i].locked ? `Cor ${i + 1} desbloqueada` : `Cor ${i + 1} bloqueada`);
+  };
+
+  const copyCor = (i: number) => {
+    setClipboard({ ...manual[i] });
+    toast.success(`Cor ${i + 1} copiada`);
+  };
+
+  const pasteCor = (i: number) => {
+    if (!clipboard) {
+      toast.error("Copia uma cor primeiro.");
+      return;
+    }
+    atualizar(i, { ...clipboard });
+    toast.success(`Cor colada no slot ${i + 1}`);
+  };
 
   return (
     <div className="space-y-3">
@@ -116,12 +121,12 @@ export function PaletteInput({
           </TooltipTrigger>
           <TooltipContent side="left" className="max-w-xs">
             <p className="text-xs">
-              <strong>Auto:</strong> Após gerar, o modelo decide as cores E as roles
-              (background, accent, etc.) com base no briefing e nicho detetado.
-              Depois podes clicar "Regenerar alternativas" para pedir outras opções.
+              <strong>Auto:</strong> Após gerar, o GLM-5.2 decide as cores E as roles
+              com base no briefing. Clica "Regenerar alternativas" nos resultados para
+              pedir outras opções. Cores bloqueadas (cadeado) são mantidas.
               <br /><br />
-              <strong>Manual:</strong> Defines tu cada cor com role. Podes usar
-              o color picker, hex input, ou os swatches populares.
+              <strong>Manual:</strong> Defines tu cada cor com role. Color picker,
+              hex input, swatches, copy/paste e preview popup.
             </p>
           </TooltipContent>
         </Tooltip>
@@ -139,14 +144,10 @@ export function PaletteInput({
         <TabsContent value="auto" className="mt-3">
           <div className="rounded-2xl border border-dashed border-primary/30 bg-primary/5 p-4 text-sm text-muted-foreground">
             <Sparkles className="mr-1.5 inline h-3.5 w-3.5 text-primary" />
-            No modo <strong>Auto</strong>, o modelo GLM-5.2 decide tudo após clicares
-            "Generate": escolhe as 5 cores essenciais <strong>+</strong> atribui
-            automaticamente as <strong>roles</strong> (Background, Card, Text,
-            Accent, Muted) otimizadas para o teu nicho e tipo de site.
-            <br /><br />
-            Depois de veres o resultado, podes clicar
-            <strong> "Regenerar alternativas"</strong> na zona de resultados
-            para o modelo gerar outras variações harmoniosas.
+            No modo <strong>Auto</strong>, o GLM-5.2 decide tudo após clicares "Generate":
+            cores + roles otimizadas para o nicho. Depois podes clicar
+            <strong> "Regenerar alternativas"</strong> nos resultados para o modelo
+            gerar outras variações harmoniosas.
           </div>
         </TabsContent>
 
@@ -162,14 +163,16 @@ export function PaletteInput({
                   initial={{ opacity: 0, y: -8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: -8 }}
-                  className="overflow-hidden rounded-2xl border border-border bg-background/40"
+                  className={cn(
+                    "overflow-hidden rounded-2xl border bg-background/40 transition-colors",
+                    cor.locked ? "border-primary/40 ring-1 ring-primary/20" : "border-border"
+                  )}
                 >
-                  {/* RETÂNGULO GRANDE com HEX visível */}
+                  {/* RETÂNGULO GRANDE com HEX visível + actions */}
                   <div
-                    className="relative flex min-h-[80px] items-center justify-between px-4 py-3"
+                    className="relative flex min-h-[90px] items-center justify-between px-4 py-3"
                     style={{ backgroundColor: cor.hex }}
                   >
-                    {/* Color picker nativo (clica no retângulo) */}
                     <input
                       type="color"
                       value={cor.hex}
@@ -190,17 +193,54 @@ export function PaletteInput({
                         {cor.hex.toUpperCase()}
                       </span>
                     </div>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setShowSwatches(showSwatches === i ? null : i);
-                      }}
-                      className="pointer-events-auto z-10 rounded-md bg-black/20 px-2 py-1 text-[10px] font-semibold text-white backdrop-blur-sm hover:bg-black/40"
-                      style={{ color: isDark ? "#fff" : "#000" }}
-                    >
-                      Swatches
-                    </button>
+
+                    {/* Actions overlay (não afetam o color picker) */}
+                    <div className="pointer-events-auto z-10 flex items-center gap-1">
+                      {/* Lock */}
+                      <ActionBtn
+                        onClick={(e) => { e.stopPropagation(); toggleLock(i); }}
+                        active={cor.locked}
+                        isDark={isDark}
+                        title={cor.locked ? "Desbloquear" : "Bloquear"}
+                      >
+                        {cor.locked ? <Lock className="h-3 w-3" /> : <Unlock className="h-3 w-3" />}
+                      </ActionBtn>
+                      {/* Copy */}
+                      <ActionBtn
+                        onClick={(e) => { e.stopPropagation(); copyCor(i); }}
+                        isDark={isDark}
+                        title="Copiar cor"
+                      >
+                        <Copy className="h-3 w-3" />
+                      </ActionBtn>
+                      {/* Paste */}
+                      <ActionBtn
+                        onClick={(e) => { e.stopPropagation(); pasteCor(i); }}
+                        isDark={isDark}
+                        disabled={!clipboard}
+                        title="Colar cor"
+                      >
+                        <ClipboardPaste className="h-3 w-3" />
+                      </ActionBtn>
+                      {/* Preview popup */}
+                      <ColorPreviewPopup
+                        cor={cor}
+                        outrasCores={manual}
+                        fontEscolhida={fontsPlayground?.[0]?.fonte}
+                      />
+                      {/* Swatches toggle */}
+                      <ActionBtn
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowSwatches(showSwatches === i ? null : i);
+                        }}
+                        isDark={isDark}
+                        active={showSwatches === i}
+                        title="Swatches populares"
+                      >
+                        <PaletteIcon className="h-3 w-3" />
+                      </ActionBtn>
+                    </div>
                   </div>
 
                   {/* Controlos: nome + role + hex input + delete */}
@@ -301,7 +341,38 @@ export function PaletteInput({
   );
 }
 
-// Helper: determinar se uma cor é escura (para contraste do texto sobre ela)
+// ============================================================================
+// ActionBtn — botão de ícone sobre o retângulo colorido (contraste adaptativo)
+// ============================================================================
+function ActionBtn({
+  onClick, children, active, disabled, isDark, title,
+}: {
+  onClick: (e: React.MouseEvent) => void;
+  children: React.ReactNode;
+  active?: boolean;
+  disabled?: boolean;
+  isDark: boolean;
+  title?: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      title={title}
+      className={cn(
+        "flex h-7 w-7 items-center justify-center rounded-md backdrop-blur-sm transition-all",
+        active ? "bg-primary/30" : "bg-black/20 hover:bg-black/40",
+        disabled && "opacity-40 cursor-not-allowed"
+      )}
+      style={{ color: isDark ? "#fff" : "#000" }}
+    >
+      {children}
+    </button>
+  );
+}
+
+// Helper: determinar se uma cor é escura
 function isDarkColor(hex: string): boolean {
   if (!isHexValido(hex)) return true;
   const r = parseInt(hex.slice(1, 3), 16);

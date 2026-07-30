@@ -47,7 +47,6 @@ import {
 import { PaletteInput } from "./PaletteInput";
 import { TypographyInput } from "./TypographyInput";
 import { LayoutSelector } from "./LayoutSelector";
-import { SkinsGallery } from "@/components/skins/SkinsGallery";
 import { FontPlayground, type FontSlotState } from "@/components/fonts/FontPlayground";
 import { Check, ChevronsUpDown, Wand2, Sparkles } from "lucide-react";
 import { useState } from "react";
@@ -221,16 +220,8 @@ export function BriefingForm({
         onToggle={(efeito) => toggleArrayItem("efeitos", efeito)}
       />
 
-      {/* 5. Skins Gallery — Top 10 (escolhe até 3) */}
+      {/* 5. Font Playground — 5 slots + 50 transforms + 10 sources + filtro */}
       <motion.div variants={fadeUp} custom={4}>
-        <SkinsGallery
-          selecionados={value.skinsSelecionados ?? []}
-          onChange={(skinsSelecionados) => onChange({ skinsSelecionados })}
-        />
-      </motion.div>
-
-      {/* 6. Font Playground — 5 slots + 50 transforms + 10 sources */}
-      <motion.div variants={fadeUp} custom={5}>
         <FontPlayground
           states={value.fontsPlayground as FontSlotState[] ?? []}
           onChange={(fontsPlayground) =>
@@ -239,12 +230,13 @@ export function BriefingForm({
         />
       </motion.div>
 
-      {/* 7. Paleta (tabs manual/auto) */}
+      {/* 6. Paleta (tabs manual/auto) */}
       <PaletteInput
         mode={value.paletaMode}
         manual={value.paletaManual ?? []}
         onModeChange={(paletaMode) => onChange({ paletaMode })}
         onManualChange={(paletaManual) => onChange({ paletaManual })}
+        fontsPlayground={value.fontsPlayground as { fonte: string }[] ?? []}
       />
 
       {/* 8. Tipografia (tabs manual/auto) */}

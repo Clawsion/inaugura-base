@@ -33,11 +33,11 @@ const FORM_INIT: FormValues = {
   // NOVOS CAMPOS:
   skinsSelecionados: [],
   fontsPlayground: [
-    { fonte: "Inter" },
-    { fonte: "Geist" },
-    { fonte: "Plus Jakarta Sans" },
-    { fonte: "Outfit" },
-    { fonte: "Montserrat" },
+    { fonte: "Inter", pesos: [400, 700] },
+    { fonte: "Geist", pesos: [400, 600] },
+    { fonte: "Plus Jakarta Sans", pesos: [400, 700] },
+    { fonte: "Outfit", pesos: [400, 500] },
+    { fonte: "Montserrat", pesos: [400, 600] },
   ],
   incluirMockups: true,
   incluirDesignTokens: true,
@@ -146,13 +146,14 @@ export default function Home() {
       <div className="relative">
         {/* Header */}
         <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur-xl">
-          <div className="mx-auto max-w-5xl px-4 py-3 sm:px-6">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2.5">
+          <div className="mx-auto max-w-5xl px-4 py-2.5 sm:px-6">
+            <div className="flex items-center gap-3">
+              {/* Logo + nome (à esquerda, fixo) */}
+              <div className="flex shrink-0 items-center gap-2.5">
                 <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/30">
                   <Hammer className="h-4 w-4" />
                 </div>
-                <div>
+                <div className="hidden sm:block">
                   <h1 className="text-sm font-bold leading-none tracking-tight">
                     ProjectForge <span className="text-primary">AI</span>
                   </h1>
@@ -161,7 +162,14 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+
+              {/* SkinSwitcher — expande no meio, entre logo e actions */}
+              <div className="min-w-0 flex-1">
+                <SkinSwitcher activeSkin={activeSkin} onChange={setActiveSkin} />
+              </div>
+
+              {/* Actions (à direita, fixo) */}
+              <div className="flex shrink-0 items-center gap-2">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -179,11 +187,6 @@ export default function Home() {
                 </Button>
                 <ThemeToggle />
               </div>
-            </div>
-
-            {/* Skin Switcher — linha abaixo do header */}
-            <div className="mt-2 flex justify-center">
-              <SkinSwitcher activeSkin={activeSkin} onChange={setActiveSkin} />
             </div>
           </div>
         </header>

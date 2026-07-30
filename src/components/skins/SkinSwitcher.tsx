@@ -29,9 +29,8 @@ export function SkinSwitcher({ activeSkin, onChange }: SkinSwitcherProps) {
       </span>
       <div
         className={cn(
-          "flex items-center gap-1 overflow-x-auto rounded-full border border-border bg-card/50 p-1 backdrop-blur-sm",
-          "[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
-          expanded ? "max-w-none" : "max-w-[280px] sm:max-w-md"
+          "flex items-center gap-0.5 overflow-x-auto rounded-full border border-border bg-card/50 p-1 backdrop-blur-sm",
+          "[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         )}
       >
         {/* Reset button */}
