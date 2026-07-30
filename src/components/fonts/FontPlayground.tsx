@@ -21,7 +21,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Type, Zap, ChevronDown, ChevronUp, Wand2,
   Lock, Unlock, Copy, ClipboardPaste, Shuffle,
-  Bold, Italic, Eye, Globe,
+  Bold, Italic, Eye, Globe, RotateCcw, Sparkles,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -44,6 +44,7 @@ import {
   countFontsBySource, getAllFonts,
   type FontInfo,
 } from "@/lib/fonts-modernas";
+import { getTopAwwwardsFonts } from "@/lib/top-awwwards-fonts";
 import { FONTES_DISPONIVEIS } from "@/lib/fonts";
 import { FontPreviewPopup } from "./FontPreviewPopup";
 import { UploadWithSuggestions } from "./UploadWithSuggestions";
@@ -159,6 +160,37 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
     );
   }, [allSlotStates, visibleCount, onChange]);
 
+  // NOVO: RESET TRANSFORMS — deixa todas as fonts sem transform
+  const resetTransforms = useCallback(() => {
+    const next = allSlotStates.map((s) => ({ ...s, transformId: undefined }));
+    onChange(next);
+    toast.success("Transforms removidas — 5 fonts sem transform");
+  }, [allSlotStates, onChange]);
+
+  // NOVO: I'M LUCKY — top awwwards fonts (250 curadas a rigor)
+  const imLucky = useCallback(async () => {
+    const topFonts = getTopAwwwardsFonts();
+    const usedFamilies = new Set<string>();
+    const next = await Promise.all(
+      allSlotStates.slice(0, visibleCount).map(async (s) => {
+        if (s.locked) return s;
+        // Escolhe uma font top awwwards aleatória (sem repetir)
+        const available = topFonts.filter((f) => !usedFamilies.has(f.family));
+        const pool = available.length > 0 ? available : topFonts;
+        const font = pool[Math.floor(Math.random() * pool.length)];
+        usedFamilies.add(font.family);
+        await loadFont(font);
+        return { ...s, fonte: font.family, customFontName: undefined };
+      })
+    );
+    const fullNext = [...next, ...allSlotStates.slice(visibleCount)];
+    onChange(fullNext);
+    const lockedCount = allSlotStates.slice(0, visibleCount).filter((s) => s.locked).length;
+    toast.success(
+      `I'm Lucky! ${visibleCount} fonts top awwwards aplicadas!${lockedCount > 0 ? ` (${lockedCount} bloqueadas mantidas)` : ""}`
+    );
+  }, [allSlotStates, visibleCount, onChange]);
+
   const handleUploadFont = useCallback(async (file: File) => {
     const familyName = file.name
       .replace(/\.(ttf|otf|woff|woff2)$/i, "")
@@ -251,6 +283,24 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
               title={`Gera ${visibleCount} transforms aleatórias (mantém as fonts atuais)`}
             >
               <Shuffle className="h-3 w-3" /> Generate All Transforms
+            </Button>
+            {/* NOVO: Reset Transforms — deixa todas sem transform */}
+            <Button
+              onClick={resetTransforms}
+              variant="ghost"
+              size="sm"
+              className="h-7 gap-1 px-2 text-[10px] text-muted-foreground hover:text-foreground"
+              title="Remove todas as transforms (deixa as 5 fonts sem transform)"
+            >
+              <RotateCcw className="h-3 w-3" /> Reset Transforms
+            </Button>
+            {/* NOVO: I'm Lucky — top 250 awwwards fonts */}
+            <Button
+              onClick={imLucky}
+              className="h-7 gap-1 rounded-md bg-gradient-to-r from-amber-500 to-pink-500 px-3 text-xs font-bold text-white shadow-md shadow-amber-500/30 hover:from-amber-600 hover:to-pink-600"
+              title="Gera 5 fonts top awwwards (250 curadas a rigor — as mesmas usadas por sites premiados)"
+            >
+              <Sparkles className="h-3 w-3" /> I'm Lucky
             </Button>
           </div>
         </div>
