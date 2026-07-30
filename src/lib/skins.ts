@@ -85,29 +85,29 @@ export const SKINS: Skin[] = [
       card: "#F3EFE9",         // off-white creme quente
       text: "#1A1A1A",         // ink black
       muted: "#4A4A4A",        // cinza escuro suave
-      accent: "#D4FF45",       // amarelo-lima neon chartreuse
-      accentForeground: "#0D0D0D", // preto sobre o accent neon
+      accent: "#39FF14",       // verde fluorescente puro (neon green)
+      accentForeground: "#0A0A0A", // preto sobre o accent verde neon
       border: "#000000",       // bordas pretas sólidas
       radius: "1.5rem",        // cantos arredondados (squircle)
       shadow: "6px 6px 0px #1A1A1A", // hard shadow offset, zero blur
       headingFont: "var(--font-jakarta), system-ui, sans-serif",
       bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "radial-gradient(circle at 15% 20%, rgba(197, 180, 227, 0.25) 0%, transparent 35%), radial-gradient(circle at 85% 80%, rgba(212, 255, 69, 0.12) 0%, transparent 40%)",
+      bgPattern: "radial-gradient(circle at 15% 20%, rgba(197, 180, 227, 0.25) 0%, transparent 35%), radial-gradient(circle at 85% 80%, rgba(57, 255, 20, 0.15) 0%, transparent 40%)",
     },
     dark: {
-      // DARK variant — ESCURO (preto profundo + accent neon que brilha)
+      // DARK variant — ESCURO (preto profundo + verde fluorescente que brilha)
       bg: "#0A0A0A",           // preto profundo
       card: "#1A1A1A",         // card escuro
       text: "#FFFFFF",         // texto branco legível
       muted: "#9CA3AF",        // cinza claro para texto secundário
-      accent: "#D4FF45",       // amarelo-lima neon (brilha no escuro)
-      accentForeground: "#0A0A0A", // preto sobre o accent neon
+      accent: "#39FF14",       // verde fluorescente puro (brilha no escuro)
+      accentForeground: "#0A0A0A", // preto sobre o accent verde neon
       border: "#FFFFFF",       // bordas brancas em dark
       radius: "1.5rem",
       shadow: "6px 6px 0px #FFFFFF", // hard shadow branca offset
       headingFont: "var(--font-jakarta), system-ui, sans-serif",
       bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "radial-gradient(circle at 15% 20%, rgba(197, 180, 227, 0.15) 0%, transparent 35%), radial-gradient(circle at 85% 80%, rgba(212, 255, 69, 0.10) 0%, transparent 40%)",
+      bgPattern: "radial-gradient(circle at 15% 20%, rgba(197, 180, 227, 0.15) 0%, transparent 35%), radial-gradient(circle at 85% 80%, rgba(57, 255, 20, 0.12) 0%, transparent 40%)",
     },
   },
 
