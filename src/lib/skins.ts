@@ -73,37 +73,40 @@ export const SKINS: Skin[] = [
     },
   },
 
-  // ── 2. Brutalist Ink ───────────────────────────────────────────────────
+  // ── 2. Brutalist Ink — Neo-Brutalist com pastéis + accent neon ────────
+  // Inspirado na referência: bordas 3px pretas, sombras duras offset,
+  // cores pastel suaves (pêssego/creme), accent amarelo-lima neon,
+  // tipografia bold geométrica, pill buttons.
   {
     id: "brutalist-ink",
     name: "Brutalist Ink",
-    description: "Hard edges, raw offset shadows, monospace",
+    description: "Neo-brutalist pastel, hard shadows, neon accent",
     category: "Brutalist",
     light: {
-      bg: "#FFFEF0",
-      card: "#FFFFFF",
-      text: "#000000",
-      muted: "#444444",
-      accent: "#1A00E6",
-      border: "#000000",
-      radius: "0px",
-      shadow: "5px 5px 0px #000000",
-      headingFont: "var(--font-mono), ui-monospace, monospace",
-      bodyFont: "var(--font-mono), ui-monospace, monospace",
-      bgPattern: "repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(0,0,0,0.02) 20px, rgba(0,0,0,0.02) 21px)",
+      bg: "#F4C2A8",           // pêssego/salmão pastel
+      card: "#F3EFE9",         // off-white creme quente
+      text: "#1A1A1A",         // ink black
+      muted: "#4A4A4A",        // cinza escuro suave
+      accent: "#D4FF45",       // amarelo-lima neon chartreuse
+      border: "#000000",       // bordas pretas sólidas 3px
+      radius: "1.5rem",        // cantos arredondados (squircle)
+      shadow: "6px 6px 0px #1A1A1A", // hard shadow offset, zero blur
+      headingFont: "var(--font-jakarta), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+      bgPattern: "radial-gradient(circle at 15% 20%, rgba(197, 180, 227, 0.25) 0%, transparent 35%), radial-gradient(circle at 85% 80%, rgba(212, 255, 69, 0.12) 0%, transparent 40%)",
     },
     dark: {
-      bg: "#0A0A0A",
-      card: "#161616",
-      text: "#FFFFFF",
-      muted: "#8C8C8C",
-      accent: "#EBFF00",
-      border: "#FFFFFF",
-      radius: "0px",
-      shadow: "5px 5px 0px #FFFFFF",
-      headingFont: "var(--font-mono), ui-monospace, monospace",
-      bodyFont: "var(--font-mono), ui-monospace, monospace",
-      bgPattern: "repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.03) 20px, rgba(255,255,255,0.03) 21px)",
+      bg: "#FFFFFF",           // branco puro (igual à referência)
+      card: "#F3EFE9",         // off-white creme
+      text: "#0D0D0D",         // preto profundo
+      muted: "#4A4A4A",
+      accent: "#D4FF45",       // amarelo-lima neon
+      border: "#000000",       // bordas pretas
+      radius: "1.5rem",
+      shadow: "6px 6px 0px #1A1A1A",
+      headingFont: "var(--font-jakarta), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+      bgPattern: "radial-gradient(circle at 15% 20%, rgba(184, 165, 217, 0.30) 0%, transparent 35%), radial-gradient(circle at 85% 80%, rgba(212, 255, 69, 0.15) 0%, transparent 40%)",
     },
   },
 
@@ -210,12 +213,12 @@ export const SKINS: Skin[] = [
   },
 
   // ── 6. Pure Light — light style completamente diferente ────────────────
-  // Tudo claro em ambas as variantes (light = branco puro, dark = bege quente).
-  // Soft shadows, rounded-3xl, accent azul-cobalto. Apple/Notion vibe.
+  // Light: branco puro + cobalto + sombras suaves (Apple/Notion vibe)
+  // Dark: PRETO PROFUNDO (#050509) + cobalto vibrante + glow — muito escuro
   {
     id: "pure-light",
     name: "Pure Light",
-    description: "All-light, soft shadows, cobalt accent, airy whitespace",
+    description: "Pure white light / deep void dark, cobalt accent",
     category: "Light",
     light: {
       bg: "#FFFFFF",
@@ -231,18 +234,18 @@ export const SKINS: Skin[] = [
       bgPattern: "radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.04) 0%, transparent 40%), radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.03) 0%, transparent 40%)",
     },
     dark: {
-      // DARK variant mas MANTÉM-SE CLARO — bege quente em vez de preto
-      bg: "#F5F1EB",
-      card: "#FFFFFF",
-      text: "#1A1611",
-      muted: "#6B5D4F",
-      accent: "#1E40AF",
-      border: "rgba(26, 22, 17, 0.08)",
+      // DARK variant — MUITO ESCURO (preto profundo void)
+      bg: "#050509",           // preto profundo quase void
+      card: "#0D0D14",         // card muito escuro com subtom azul
+      text: "#FAFAFC",
+      muted: "#6B7280",
+      accent: "#3B82F6",       // cobalto vibrante que brilha no escuro
+      border: "rgba(59, 130, 246, 0.15)",
       radius: "1.5rem",
-      shadow: "0 1px 2px rgba(26, 22, 17, 0.05), 0 8px 24px rgba(26, 22, 17, 0.08)",
+      shadow: "0 0 0 1px rgba(59, 130, 246, 0.08), 0 8px 32px rgba(59, 130, 246, 0.12), 0 0 60px rgba(59, 130, 246, 0.08)",
       headingFont: "var(--font-jakarta), system-ui, sans-serif",
       bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "radial-gradient(circle at 0% 0%, rgba(30, 64, 175, 0.05) 0%, transparent 40%), radial-gradient(circle at 100% 100%, rgba(180, 83, 9, 0.04) 0%, transparent 40%)",
+      bgPattern: "radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.08) 0%, transparent 50%), radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.05) 0%, transparent 50%)",
     },
   },
 ];
