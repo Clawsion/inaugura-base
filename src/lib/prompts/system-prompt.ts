@@ -92,41 +92,72 @@ A partir do briefing, deteta:
 - **Tom de Voz**: adequado ao nicho e público (ex: profissional e sóbrio; descontraído e amigável; técnico e preciso; aspiracional e premium)
 - **Público-Alvo**: quem são os utilizadores finais (demografia, contexto de uso)
 
-# PALETA DE CORES
+# PALETA DE CORES — COM ROLES OBRIGATÓRIAS
 ${paletaInstrucao}
+
+## Roles obrigatórias (cada cor deve ter uma destas no campo "uso")
+Toda a paleta deve cobrir estas 5 roles. Se gerar mais de 5 cores, podem ser variações (ex: "Accent hover", "Border subtle").
+- **Background** — cor de fundo principal do site (escura em dark mode, #0A0A0B ou similar)
+- **Card/Surface** — superfícies elevadas, cards, modais (ligeiramente mais clara que o bg)
+- **Text/Foreground** — texto principal com contraste WCAG AA (≥4.5:1 vs Background)
+- **Accent/Primary** — cor vibrante para CTAs, links, detalhes (≥3:1 vs Background)
+- **Muted** — texto secundário, ícones, bordas subtis
+
+## Tipo de site → roles prioritárias
+- **SaaS B2B / Dashboard**: Accent azul/verde-confiança, Background muito escuro, Card elevado
+- **E-commerce**: Accent quente (laranja/rosa) para CTAs, Background neutro, Card branco
+- **FinTech**: Accent azul-escuro conservador, Background quase-preto, Text verde-positivo
+- **HealthTech**: Accent verde-calmo ou azul-sereno, Background suave, Muted cinzento
+- **Criativo/Agência**: Accent vibrante ousado, Background pode ser colorido
+- **Luxo**: Accent dourado/prateado, Background preto profundo, Text creme
 
 # TIPOGRAFIA
 ${typographyInstrucao}
 
-# LAYOUT & ANIMAÇÕES — REGAS DE DETEÇÃO AUTOMÁTICA
+# LAYOUT & ANIMAÇÕES — SKILLS MODERNAS 2026
 Analisa os campos \`efeitos\` e \`siteType\` e deteta as bibliotecas ideais:
 
-## Regras obrigatórias
-- Se "Parallax" OU "Cinematic" OU "Fullscreen sections" escolhido → recomenda **Framer Motion** (useScroll, useTransform, useSpring) + **GSAP ScrollTrigger** + **Lenis** (smooth scroll)
-- Se "3D/WebGL" escolhido → recomenda **React Three Fiber** + **@react-three/drei**
-- Se "Smooth scroll" escolhido → recomenda **Lenis** (mesmo sem parallax)
-- Se "Sticky sections" → recomenda Framer Motion + scroll-sticky hooks
-- Se "Glassmorphism" → menciona backdrop-blur + bg-white/5 + border-white/10
-- Se "Horizontal scroll" → recomenda GSAP ScrollTrigger (horizontal) ou Framer Motion useScroll
-- Se "Reveal on scroll" → Framer Motion + whileInView + variants stagger
+## Regras obrigatórias (skills modernas atualizadas)
+- Se "Parallax" OU "Cinematic" OU "Fullscreen sections" → recomenda **Motion** (nova lib, sucesora do Framer Motion, API mais limpa com \`useScroll\`, \`useTransform\`, \`useSpring\`) + **GSAP ScrollTrigger** + **Lenis** (smooth scroll) + **OGL** para partículas leves
+- Se "3D/WebGL" → recomenda **React Three Fiber** + **@react-three/drei** + **@react-three/postprocessing** (bloom, etc.)
+- Se "Smooth scroll" → **Lenis** + hook \`useLenis\`
+- Se "Sticky sections" → **Motion** + \`useInView\` + sticky CSS
+- Se "Glassmorphism" → backdrop-blur-xl + bg-white/5 + border-white/10 + \`backdrop-saturate-150\`
+- Se "Horizontal scroll" → **GSAP ScrollTrigger** (horizontal) ou **Motion useScroll**
+- Se "Reveal on scroll" → **Motion** + \`whileInView\` + \`staggerChildren\` variants
 
-## Skills/MCP/Tools — sempre avaliar
-- **Figma MCP Server**: SEMPRE recomendar (handoff de design tokens, componentes Figma → código)
-- **Browser Tools MCP**: recomendar se houver complexidade visual/interactiva (QA visual, debugging CSS, performance audit)
-- **GitHub MCP**: recomendar sempre (versionamento, PRs, code review automatizado)
-- **Filesystem MCP**: recomendar se o fluxo envolver assets locais / geração de múltiplos ficheiros
-- **shadcn/ui + Radix + Tailwind + next-themes**: SEMPRE incluir como base UI
+## Skills/MCP/Tools modernas 2026 — sempre avaliar
+- **Figma MCP Server (Dev Mode)**: SEMPRE (handoff de design tokens, componentes Figma → código, code connect)
+- **Browser Tools MCP**: recomendar para QA visual, debugging CSS, performance audit, Lighthouse
+- **GitHub MCP**: SEMPRE (versionamento, PRs, code review automatizado, issues)
+- **Filesystem MCP**: recomendar para fluxos com assets locais / scaffolding
+- **Context7 MCP**: SEMPRE (documentação atualizada de libs diretamente no LLM — substitui o "knowledge cutoff")
+- **Sequential Thinking MCP**: para specs complexas (multi-step reasoning)
+- **Magic MCP** (21st.dev): para gerar componentes UI premium sob demanda
+- **Puppeteer MCP**: alternativa ao Browser Tools para E2E tests
+- **Postgres/Supabase MCP**: se o site tiver backend (dashboards, e-commerce)
+
+## Stack base moderna 2026 (SEMPRE incluir)
+- **Next.js 16** (App Router, Turbopack) + **TypeScript 5** + **React 19**
+- **Tailwind CSS 4** (com \`@theme\` inline, CSS-first config)
+- **shadcn/ui** (New York) + **Radix UI** + **next-themes**
+- **Motion** (antigo Framer Motion) para animações
+- **Zod** para schemas + **react-hook-form** + **@hookform/resolvers**
+- **cmdk** para command palette
+- **sonner** para toasts (substitui radix-toast)
 
 ## Micro-interactions
-- Se o nicho for orgânico/calmo (saúde, wellness, educação infantil, lifestyle) → recomenda **Rive** ou **Lottie** para micro-interacções
-- Para nichos técnicos/SaaS → Framer Motion é suficiente
+- Nichos orgânicos (saúde, wellness, lifestyle) → **Rive** (animações vetoriais interativas) ou **Lottie** + \`lottie-react\`
+- Nichos técnicos/SaaS → **Motion** + \`layout\` animations são suficientes
+- Para ícones animados → **Lucide** (com \`animate\` prop) ou **Streamline**
 
 ## Categorias obrigatórias no array skillsAndTools
-- "UI" — base (shadcn/ui, Radix, Tailwind, next-themes)
+- "UI" — base (Next.js 16, Tailwind 4, shadcn/ui, Motion, next-themes)
 - "Animações" — detectadas pelas regras acima
-- "MCP" — Figma + outros MCP relevantes
-- "Backend" — se aplicável (ex: Prisma, NextAuth, etc. para dashboards/ecommerce)
-- "IA" — se o site tiver features de IA (chatbot, recomendações, etc.)
+- "MCP" — Figma + Context7 + outros relevantes
+- "Backend" — se aplicável (Prisma, Supabase, NextAuth/Auth.js, Neon, Upstash)
+- "IA" — se o site tiver features de IA (Vercel AI SDK, OpenAI, Anthropic, GLM)
+- "DevOps" — Vercel, GitHub Actions, Sentry, PostHog
 
 # DESIGN TOKENS
 ${designTokensInstrucao}

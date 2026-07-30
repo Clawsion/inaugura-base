@@ -57,7 +57,8 @@ async function chamarModelo(
   // por isso podemos passar `tools` e `tool_choice` que o endpoint GLM suporta
   // (compatibilidade OpenAI).
   const response = await zai.chat.completions.create({
-    model: "glm-4.6",
+    // CRUCIAL: GLM-5.2 — motor mais recente com function calling nativo robusto.
+    model: "glm-5.2",
     messages,
     temperature: 0.7,
     tools: [

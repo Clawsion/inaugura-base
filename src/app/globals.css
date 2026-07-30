@@ -48,70 +48,71 @@
    DESIGN TOKENS — ProjectForge AI
    Dark mode como DEFAULT. Light mode como alternativa via .light class.
    Accent: verde-esmeralda vibrante (#00E5A0) — premium, moderno.
+   Estilo mobile-app: contraste alto, sombras profundas, bordas subtis.
    ============================================================================ */
 
 :root, .dark {
-  --radius: 1rem;
-  --background: #0A0A0B;
-  --foreground: #F4F4F5;
-  --card: #141416;
-  --card-foreground: #F4F4F5;
-  --popover: #141416;
-  --popover-foreground: #F4F4F5;
-  --primary: #00E5A0;
-  --primary-foreground: #0A0A0B;
-  --secondary: #1C1C1F;
-  --secondary-foreground: #F4F4F5;
-  --muted: #1C1C1F;
-  --muted-foreground: #A1A1AA;
-  --accent: #00E5A0;
-  --accent-foreground: #0A0A0B;
-  --destructive: #FF4D4D;
-  --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.08);
-  --ring: #00E5A0;
-  --chart-1: #00E5A0;
+  --radius: 1.25rem;
+  --background: #08080A;
+  --foreground: #FAFAFA;
+  --card: #131316;
+  --card-foreground: #FAFAFA;
+  --popover: #1A1A1E;
+  --popover-foreground: #FAFAFA;
+  --primary: #00FFB2;
+  --primary-foreground: #08080A;
+  --secondary: #1C1C20;
+  --secondary-foreground: #FAFAFA;
+  --muted: #1C1C20;
+  --muted-foreground: #9CA3AF;
+  --accent: #00FFB2;
+  --accent-foreground: #08080A;
+  --destructive: #FF5252;
+  --border: rgba(255, 255, 255, 0.10);
+  --input: rgba(255, 255, 255, 0.10);
+  --ring: #00FFB2;
+  --chart-1: #00FFB2;
   --chart-2: #FFB84D;
-  --chart-3: #6366F1;
+  --chart-3: #818CF8;
   --chart-4: #FF6B9D;
   --chart-5: #4ADE80;
-  --sidebar: #0A0A0B;
-  --sidebar-foreground: #F4F4F5;
-  --sidebar-primary: #00E5A0;
-  --sidebar-primary-foreground: #0A0A0B;
-  --sidebar-accent: #1C1C1F;
-  --sidebar-accent-foreground: #F4F4F5;
-  --sidebar-border: rgba(255, 255, 255, 0.08);
-  --sidebar-ring: #00E5A0;
+  --sidebar: #08080A;
+  --sidebar-foreground: #FAFAFA;
+  --sidebar-primary: #00FFB2;
+  --sidebar-primary-foreground: #08080A;
+  --sidebar-accent: #1C1C20;
+  --sidebar-accent-foreground: #FAFAFA;
+  --sidebar-border: rgba(255, 255, 255, 0.10);
+  --sidebar-ring: #00FFB2;
 }
 
 .light {
-  --background: #FAFAFA;
-  --foreground: #0A0A0B;
+  --background: #F8F9FB;
+  --foreground: #08080A;
   --card: #FFFFFF;
-  --card-foreground: #0A0A0B;
+  --card-foreground: #08080A;
   --popover: #FFFFFF;
-  --popover-foreground: #0A0A0B;
-  --primary: #00B377;
+  --popover-foreground: #08080A;
+  --primary: #00C77D;
   --primary-foreground: #FFFFFF;
-  --secondary: #F4F4F5;
-  --secondary-foreground: #0A0A0B;
-  --muted: #F4F4F5;
-  --muted-foreground: #52525B;
-  --accent: #00B377;
+  --secondary: #F1F3F6;
+  --secondary-foreground: #08080A;
+  --muted: #F1F3F6;
+  --muted-foreground: #4B5563;
+  --accent: #00C77D;
   --accent-foreground: #FFFFFF;
   --destructive: #DC2626;
-  --border: rgba(0, 0, 0, 0.08);
-  --input: rgba(0, 0, 0, 0.08);
-  --ring: #00B377;
+  --border: rgba(0, 0, 0, 0.10);
+  --input: rgba(0, 0, 0, 0.10);
+  --ring: #00C77D;
   --sidebar: #FFFFFF;
-  --sidebar-foreground: #0A0A0B;
-  --sidebar-primary: #00B377;
+  --sidebar-foreground: #08080A;
+  --sidebar-primary: #00C77D;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #F4F4F5;
-  --sidebar-accent-foreground: #0A0A0B;
-  --sidebar-border: rgba(0, 0, 0, 0.08);
-  --sidebar-ring: #00B377;
+  --sidebar-accent: #F1F3F6;
+  --sidebar-accent-foreground: #08080A;
+  --sidebar-border: rgba(0, 0, 0, 0.10);
+  --sidebar-ring: #00C77D;
 }
 
 @layer base {
@@ -167,10 +168,34 @@
   box-shadow: 0 0 40px -10px var(--primary);
 }
 
-/* Premium card */
+/* Premium card — mobile-app style com sombras profundas e bordas subtis */
 .premium-card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 1.5rem;
-  box-shadow: 0 8px 32px -12px rgba(0, 0, 0, 0.4);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 8px 24px -8px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Card interativo — hover com elevação premium */
+.card-interactive {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 16px 40px -12px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  border-color: rgba(var(--primary-rgb, 0, 255, 178), 0.3);
+}
+
+/* Glass surface — para elementos flutuantes sobre gradientes */
+.glass-surface {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }

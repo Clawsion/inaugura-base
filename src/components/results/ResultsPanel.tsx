@@ -14,6 +14,7 @@ import { ColorSwatch } from "./ColorSwatch";
 import { FontPreview } from "./FontPreview";
 import { PromptCard } from "./PromptCard";
 import { PalettePreviews } from "@/components/palette/PalettePreviews";
+import { WorkflowsSection } from "./WorkflowsSection";
 import {
   paletaParaCssVariables,
   paletaParaTailwind,
@@ -30,11 +31,15 @@ import {
   Layout as LayoutIcon,
   Map,
   Copy,
+  Target,
+  RefreshCw,
 } from "lucide-react";
 
 interface ResultsPanelProps {
   spec: ProjectSpec & { paletaValidada?: CorValidada[] };
   tentativas?: number;
+  onRegenerate?: () => void;
+  regenerating?: boolean;
 }
 
 const CATEGORIA_COLOR: Record<string, string> = {
@@ -47,7 +52,7 @@ const CATEGORIA_COLOR: Record<string, string> = {
   "Outro": "bg-zinc-500/10 text-zinc-300 border-zinc-500/30",
 };
 
-export function ResultsPanel({ spec, tentativas }: ResultsPanelProps) {
+export function ResultsPanel({ spec, tentativas, onRegenerate, regenerating }: ResultsPanelProps) {
   const cssVars = paletaParaCssVariables(spec.palette);
   const tailwindConfig = paletaParaTailwind(spec.palette);
 
@@ -77,6 +82,18 @@ export function ResultsPanel({ spec, tentativas }: ResultsPanelProps) {
           </div>
         </div>
         <div className="flex gap-2">
+          {onRegenerate && (
+            <button
+              type="button"
+              onClick={onRegenerate}
+              disabled={regenerating}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-all hover:bg-primary/20 active:scale-95 disabled:opacity-50"
+              title="Gera novas alternativas (paleta, tipografia, layout) mantendo o briefing"
+            >
+              <RefreshCw className={`h-3.5 w-3.5 ${regenerating ? "animate-spin" : ""}`} />
+              {regenerating ? "A regenerar..." : "Regenerar alternativas"}
+            </button>
+          )}
           <CopyButton text={markdownExport} label="Markdown" />
           <CopyButton text={jsonExport} label="JSON" />
         </div>
@@ -104,6 +121,9 @@ export function ResultsPanel({ spec, tentativas }: ResultsPanelProps) {
           </TabsTrigger>
           <TabsTrigger value="prompts" className="text-xs">
             <FileText className="mr-1.5 h-3 w-3" /> Prompts
+          </TabsTrigger>
+          <TabsTrigger value="workflows" className="text-xs">
+            <Target className="mr-1.5 h-3 w-3" /> Workflows
           </TabsTrigger>
           {spec.roadmap && spec.roadmap.length > 0 && (
             <TabsTrigger value="roadmap" className="text-xs">
@@ -313,6 +333,11 @@ export function ResultsPanel({ spec, tentativas }: ResultsPanelProps) {
               <PromptCard key={i} prompt={p} index={i} defaultOpen={i === 0} />
             ))}
           </div>
+        </TabsContent>
+
+        {/* WORKFLOWS — 3 metodologias com copy + download .md */}
+        <TabsContent value="workflows">
+          <WorkflowsSection spec={spec} />
         </TabsContent>
 
         {/* ROADMAP */}

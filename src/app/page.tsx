@@ -1,13 +1,15 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BriefingForm } from "@/components/forms/BriefingForm";
 import { LoadingSteps } from "@/components/loading-steps";
 import { ResultsPanel } from "@/components/results/ResultsPanel";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { SkinSwitcher } from "@/components/skins/SkinSwitcher";
 import { generateProject, type GenerateResult } from "@/app/actions/generate";
 import type { FormValues } from "@/lib/schemas";
+import { getSkinById } from "@/lib/skins";
 import { toast } from "sonner";
 import { Hammer, Github, AlertCircle, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -49,10 +51,41 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<GenerateResult | null>(null);
   const [showForm, setShowForm] = useState(true);
+  // NOVO: skin ativo aplicado a toda a app (null = tema default)
+  const [activeSkin, setActiveSkin] = useState<string | null>(null);
 
   const onChange = useCallback((patch: Partial<FormValues>) => {
     setForm((f) => ({ ...f, ...patch }));
   }, []);
+
+  // Helper: gera o style object com CSS variables do skin ativo
+  const skinStyle = useMemo(() => {
+    if (!activeSkin) return undefined;
+    const skin = getSkinById(activeSkin);
+    if (!skin) return undefined;
+    const t = skin.dark; // app é dark por default
+    return {
+      "--background": t.bg,
+      "--foreground": t.text,
+      "--card": t.card,
+      "--card-foreground": t.text,
+      "--popover": t.card,
+      "--popover-foreground": t.text,
+      "--primary": t.accent,
+      "--primary-foreground": t.bg,
+      "--secondary": t.card,
+      "--secondary-foreground": t.text,
+      "--muted": t.card,
+      "--muted-foreground": t.muted,
+      "--accent": t.accent,
+      "--accent-foreground": t.bg,
+      "--border": t.border,
+      "--input": t.border,
+      "--ring": t.accent,
+      "--radius": t.radius,
+      fontFamily: t.bodyFont,
+    } as React.CSSProperties;
+  }, [activeSkin]);
 
   const onSubmit = useCallback(async () => {
     setLoading(true);
@@ -82,8 +115,28 @@ export default function Home() {
     setShowForm(true);
   }, []);
 
+  // NOVO: regenerar alternativas (mantém o briefing, gera nova variação)
+  const [regenerating, setRegenerating] = useState(false);
+  const onRegenerate = useCallback(async () => {
+    if (!result?.ok) return;
+    setRegenerating(true);
+    try {
+      const r = await generateProject(form);
+      if (r.ok) {
+        setResult(r);
+        toast.success("Novas alternativas geradas!");
+      } else {
+        toast.error("Falha ao regenerar. Mantém o resultado anterior.");
+      }
+    } catch (e: any) {
+      toast.error("Erro inesperado ao regenerar.");
+    } finally {
+      setRegenerating(false);
+    }
+  }, [form, result]);
+
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen bg-background text-foreground" style={skinStyle}>
       {/* Background gradient overlay */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-primary/10 blur-[120px]" />
@@ -93,37 +146,44 @@ export default function Home() {
       <div className="relative">
         {/* Header */}
         <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur-xl">
-          <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6">
-            <div className="flex items-center gap-2.5">
-              <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/30">
-                <Hammer className="h-4 w-4" />
+          <div className="mx-auto max-w-5xl px-4 py-3 sm:px-6">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/30">
+                  <Hammer className="h-4 w-4" />
+                </div>
+                <div>
+                  <h1 className="text-sm font-bold leading-none tracking-tight">
+                    ProjectForge <span className="text-primary">AI</span>
+                  </h1>
+                  <p className="text-[10px] leading-tight text-muted-foreground">
+                    Briefing → spec production-ready
+                  </p>
+                </div>
               </div>
-              <div>
-                <h1 className="text-sm font-bold leading-none tracking-tight">
-                  ProjectForge <span className="text-primary">AI</span>
-                </h1>
-                <p className="text-[10px] leading-tight text-muted-foreground">
-                  Briefing → spec production-ready
-                </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-9 w-9 text-muted-foreground"
+                  asChild
+                >
+                  <a
+                    href="https://z.ai"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Z.ai"
+                  >
+                    <Github className="h-4 w-4" />
+                  </a>
+                </Button>
+                <ThemeToggle />
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 text-muted-foreground"
-                asChild
-              >
-                <a
-                  href="https://z.ai"
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Z.ai"
-                >
-                  <Github className="h-4 w-4" />
-                </a>
-              </Button>
-              <ThemeToggle />
+
+            {/* Skin Switcher — linha abaixo do header */}
+            <div className="mt-2 flex justify-center">
+              <SkinSwitcher activeSkin={activeSkin} onChange={setActiveSkin} />
             </div>
           </div>
         </header>
@@ -147,7 +207,7 @@ export default function Home() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
                 </span>
-                Powered by GLM-4.6 · Function Calling
+                Function Calling · Structured Output
               </motion.div>
               <h2 className="mx-auto max-w-2xl text-balance text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
                 Forja projetos <span className="text-gradient">production-ready</span> a partir de um briefing
@@ -210,7 +270,12 @@ export default function Home() {
                 </div>
 
                 {result?.ok && result.data ? (
-                  <ResultsPanel spec={result.data} tentativas={result.tentativas} />
+                  <ResultsPanel
+                    spec={result.data}
+                    tentativas={result.tentativas}
+                    onRegenerate={onRegenerate}
+                    regenerating={regenerating}
+                  />
                 ) : (
                   <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-6">
                     <div className="flex items-start gap-3">
@@ -242,8 +307,7 @@ export default function Home() {
         {/* Footer */}
         <footer className="mt-auto border-t border-border py-6">
           <div className="mx-auto max-w-5xl px-4 text-center text-xs text-muted-foreground sm:px-6">
-            ProjectForge AI · Next.js 16 · GLM-4.6 · Tailwind 4 · Framer Motion
-            · chroma.js · Zod
+            ProjectForge AI · Next.js 16 · Tailwind 4 · Framer Motion · chroma.js · Zod
           </div>
         </footer>
       </div>
