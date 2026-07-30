@@ -73,38 +73,41 @@ export const SKINS: Skin[] = [
   },
 
   // ── 2. Brutalist Ink — Neo-Brutalist com pastéis + accent neon ────────
+  // LIGHT: pêssego pastel + creme + accent amarelo-lima neon (estilo referência)
+  // DARK: preto profundo + card escuro + accent amarelo-lima neon (legível)
   {
     id: "brutalist-ink",
     name: "Brutalist Ink",
     description: "Neo-brutalist pastel, hard shadows, neon accent",
     category: "Brutalist",
     light: {
-      bg: "#F4C2A8",
-      card: "#F3EFE9",
-      text: "#1A1A1A",
-      muted: "#4A4A4A",
-      accent: "#D4FF45",
-      accentForeground: "#0D0D0D",
-      border: "#000000",
-      radius: "1.5rem",
-      shadow: "6px 6px 0px #1A1A1A",
+      bg: "#F4C2A8",           // pêssego/salmão pastel
+      card: "#F3EFE9",         // off-white creme quente
+      text: "#1A1A1A",         // ink black
+      muted: "#4A4A4A",        // cinza escuro suave
+      accent: "#D4FF45",       // amarelo-lima neon chartreuse
+      accentForeground: "#0D0D0D", // preto sobre o accent neon
+      border: "#000000",       // bordas pretas sólidas
+      radius: "1.5rem",        // cantos arredondados (squircle)
+      shadow: "6px 6px 0px #1A1A1A", // hard shadow offset, zero blur
       headingFont: "var(--font-jakarta), system-ui, sans-serif",
       bodyFont: "var(--font-inter), system-ui, sans-serif",
       bgPattern: "radial-gradient(circle at 15% 20%, rgba(197, 180, 227, 0.25) 0%, transparent 35%), radial-gradient(circle at 85% 80%, rgba(212, 255, 69, 0.12) 0%, transparent 40%)",
     },
     dark: {
-      bg: "#FFFFFF",
-      card: "#F3EFE9",
-      text: "#0D0D0D",
-      muted: "#4A4A4A",
-      accent: "#D4FF45",
-      accentForeground: "#0D0D0D",
-      border: "#000000",
+      // DARK variant — ESCURO (preto profundo + accent neon que brilha)
+      bg: "#0A0A0A",           // preto profundo
+      card: "#1A1A1A",         // card escuro
+      text: "#FFFFFF",         // texto branco legível
+      muted: "#9CA3AF",        // cinza claro para texto secundário
+      accent: "#D4FF45",       // amarelo-lima neon (brilha no escuro)
+      accentForeground: "#0A0A0A", // preto sobre o accent neon
+      border: "#FFFFFF",       // bordas brancas em dark
       radius: "1.5rem",
-      shadow: "6px 6px 0px #1A1A1A",
+      shadow: "6px 6px 0px #FFFFFF", // hard shadow branca offset
       headingFont: "var(--font-jakarta), system-ui, sans-serif",
       bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "radial-gradient(circle at 15% 20%, rgba(184, 165, 217, 0.30) 0%, transparent 35%), radial-gradient(circle at 85% 80%, rgba(212, 255, 69, 0.15) 0%, transparent 40%)",
+      bgPattern: "radial-gradient(circle at 15% 20%, rgba(197, 180, 227, 0.15) 0%, transparent 35%), radial-gradient(circle at 85% 80%, rgba(212, 255, 69, 0.10) 0%, transparent 40%)",
     },
   },
 
