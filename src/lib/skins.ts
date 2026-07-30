@@ -25,7 +25,8 @@ export type SkinCategory =
   | "Brutalist"
   | "Editorial"
   | "3D"
-  | "Carbon";
+  | "Carbon"
+  | "Light";
 
 export interface Skin {
   id: string;
@@ -205,6 +206,43 @@ export const SKINS: Skin[] = [
       headingFont: "var(--font-geist-sans), system-ui, sans-serif",
       bodyFont: "var(--font-geist-sans), system-ui, sans-serif",
       bgPattern: "repeating-linear-gradient(45deg, #0A0A0A 0px, #0A0A0A 2px, #141414 2px, #141414 4px), repeating-linear-gradient(-45deg, transparent 0px, transparent 2px, rgba(163,230,53,0.03) 2px, rgba(163,230,53,0.03) 4px)",
+    },
+  },
+
+  // ── 6. Pure Light — light style completamente diferente ────────────────
+  // Tudo claro em ambas as variantes (light = branco puro, dark = bege quente).
+  // Soft shadows, rounded-3xl, accent azul-cobalto. Apple/Notion vibe.
+  {
+    id: "pure-light",
+    name: "Pure Light",
+    description: "All-light, soft shadows, cobalt accent, airy whitespace",
+    category: "Light",
+    light: {
+      bg: "#FFFFFF",
+      card: "#FAFAFC",
+      text: "#0F172A",
+      muted: "#64748B",
+      accent: "#2563EB",
+      border: "rgba(15, 23, 42, 0.06)",
+      radius: "1.5rem",
+      shadow: "0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06)",
+      headingFont: "var(--font-jakarta), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+      bgPattern: "radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.04) 0%, transparent 40%), radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.03) 0%, transparent 40%)",
+    },
+    dark: {
+      // DARK variant mas MANTÉM-SE CLARO — bege quente em vez de preto
+      bg: "#F5F1EB",
+      card: "#FFFFFF",
+      text: "#1A1611",
+      muted: "#6B5D4F",
+      accent: "#1E40AF",
+      border: "rgba(26, 22, 17, 0.08)",
+      radius: "1.5rem",
+      shadow: "0 1px 2px rgba(26, 22, 17, 0.05), 0 8px 24px rgba(26, 22, 17, 0.08)",
+      headingFont: "var(--font-jakarta), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+      bgPattern: "radial-gradient(circle at 0% 0%, rgba(30, 64, 175, 0.05) 0%, transparent 40%), radial-gradient(circle at 100% 100%, rgba(180, 83, 9, 0.04) 0%, transparent 40%)",
     },
   },
 ];

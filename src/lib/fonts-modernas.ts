@@ -198,7 +198,8 @@ let dynamicFetchPromise: Promise<FontInfo[]> | null = null;
 
 /**
  * Busca o catálogo dinâmico do Google Fonts (1500+ fonts).
- * Cache em memória. Se o fetch falhar (CORS/offline), retorna array vazio.
+ * Usa proxy server-side (/api/fonts-catalog) para contornar CORS.
+ * Cache em memória. Se o fetch falhar, retorna array vazio.
  */
 export async function fetchGoogleFontsCatalog(): Promise<FontInfo[]> {
   if (dynamicCatalogCache) return dynamicCatalogCache;
@@ -206,15 +207,13 @@ export async function fetchGoogleFontsCatalog(): Promise<FontInfo[]> {
 
   dynamicFetchPromise = (async () => {
     try {
-      // Endpoint público do Google Fonts com metadata de todas as fonts.
-      // Pode ter restrições CORS em alguns ambientes; nesse caso, fallback.
-      const res = await fetch("https://fonts.google.com/metadata/fonts", {
+      // Proxy server-side para contornar CORS do Google Fonts metadata.
+      const res = await fetch("/api/fonts-catalog", {
         method: "GET",
+        headers: { Accept: "application/json" },
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const text = await res.text();
-      // O endpoint pode retornar JSON puro ou com prefixo ")]}'"
-      const json = JSON.parse(text.replace(/^\)\]\}'\n/, ""));
+      const json = await res.json();
       const fonts: FontInfo[] = (json.familyMetadataList ?? json ?? []).map(
         (f: any) => {
           const family: string = f.family ?? f.name ?? "";
@@ -226,7 +225,6 @@ export async function fetchGoogleFontsCatalog(): Promise<FontInfo[]> {
             .filter((n) => PESOS_DISPONIVEIS.includes(n));
           if (pesos.length === 0) pesos.push(400);
           const italic = variants.includes("italic") || variants.some((v) => v.includes("italic"));
-          // Map Google category → nossa FontCategory
           const cat: FontCategory[] = [];
           if (category.includes("sans")) cat.push("sans");
           if (category.includes("serif")) cat.push("serif");
@@ -246,7 +244,8 @@ export async function fetchGoogleFontsCatalog(): Promise<FontInfo[]> {
       );
       dynamicCatalogCache = fonts;
       return fonts;
-    } catch {
+    } catch (err) {
+      console.warn("[fonts-modernas] fetchGoogleFontsCatalog failed:", err);
       dynamicCatalogCache = [];
       return [];
     } finally {
