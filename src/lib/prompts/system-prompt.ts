@@ -146,6 +146,19 @@ Analisa os campos \`efeitos\` e \`siteType\` e deteta as bibliotecas ideais:
 - **cmdk** para command palette
 - **sonner** para toasts (substitui radix-toast)
 
+## 10 Design Skills (impacto + leveza + otimização)
+Além das skills base, recomenda PELO MENOS 3 destas para qualquer projeto:
+1. **Layout Animations** (Motion \`layout\` prop) — fluidez premium, custo baixo
+2. **Spring Physics** (Motion springs) — animações orgânicas naturais
+3. **Scroll-Linked Animations** (Motion useScroll + useTransform + Lenis) — parallax sem JS pesado
+4. **View Transitions API** (next/view-transitions) — transições nativas browser, zero JS
+5. **Real Glassmorphism** (backdrop-blur + saturate + layers) — profundidade real
+6. **Mesh Gradients** (CSS radial-gradient layers) — backgrounds vivos sem imagens
+7. **Text Balance & Pretty** (text-wrap: balance/pretty) — tipografia pro instantânea
+8. **Micro-Interactions Rive** (animações vetoriais interativas) — memorabilidade
+9. **:focus-visible Polished** (ring-2 + offset) — acessibilidade sem atrapalhar
+10. **Skeleton Shimmer** (gradiente animado) — perceived performance 10x melhor
+
 ## Micro-interactions
 - Nichos orgânicos (saúde, wellness, lifestyle) → **Rive** (animações vetoriais interativas) ou **Lottie** + \`lottie-react\`
 - Nichos técnicos/SaaS → **Motion** + \`layout\` animations são suficientes

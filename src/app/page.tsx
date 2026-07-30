@@ -85,6 +85,9 @@ export default function Home() {
       "--ring": t.accent,
       "--radius": t.radius,
       fontFamily: t.bodyFont,
+      // NOVO: aplicar padrão de fundo do skin (textura real)
+      backgroundImage: t.bgPattern,
+      backgroundAttachment: "fixed",
     } as React.CSSProperties;
   }, [activeSkin]);
 

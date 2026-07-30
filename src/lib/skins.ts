@@ -1,6 +1,16 @@
 // ============================================================================
-// skins.ts — 10 distinct, production-ready UI skins for ProjectForge AI
-// Auto-verified for WCAG AA contrast (text/bg, muted/bg, accent/bg).
+// skins.ts — 5 SKINS DE VERDADE
+// ============================================================================
+// Filosofia: cada skin é um universo visual distinto, não só mudança de cor.
+// Cada um tem padrões modernos, texturas, profundidade real.
+// Light E Dark variants com diferença NOTÓRIA (não só inverter cores).
+//
+// 5 skins:
+//  1. Brutalist Ink — Hard edges, mono fonts, offset shadows, raw
+//  2. Editorial Serif — Magazine luxury, drop caps, serif authority
+//  3. Glass Aurora — Real glassmorphism, aurora gradients, blur depths
+//  4. Neo Brutalist 3D — Faux 3D com shadows profundas, contraste extremo
+//  5. Mono Carbon — Carbon fiber pattern, electric lime, tech minimal
 // ============================================================================
 
 export interface SkinTokens {
@@ -14,27 +24,18 @@ export interface SkinTokens {
   shadow: string;
   headingFont: string;
   bodyFont: string;
+  // NOVO: padrão de fundo (CSS background) para dar textura
+  bgPattern?: string;
+  // NOVO: classe helper para efeitos especiais
+  effectClass?: string;
 }
 
 export type SkinCategory =
-  | "Minimal"
-  | "Glass"
-  | "Neu"
   | "Brutalist"
   | "Editorial"
-  | "Gradient"
-  | "Cyberpunk"
-  | "Apple"
-  | "Material"
-  | "Luxury"
-  | "Nordic"
-  | "Warm"
-  | "Earthy"
-  | "Retro"
-  | "Mono"
-  | "Pastel"
-  | "Carbon"
-  | "Vapor";
+  | "Glass"
+  | "3D"
+  | "Carbon";
 
 export interface Skin {
   id: string;
@@ -46,107 +47,12 @@ export interface Skin {
 }
 
 export const SKINS: Skin[] = [
-  // ── 1. Minimal Mono ───────────────────────────────────────────────────
+  // ── 1. Brutalist Ink ───────────────────────────────────────────────────
+  // Hard edges, mono fonts, offset shadows. Diferença light/dark extrema.
   {
-    id: "minimal-mono",
-    name: "Minimal Mono",
-    description: "Swiss precision in pure monochrome",
-    category: "Minimal",
-    light: {
-      bg: "#FFFFFF",
-      card: "#FFFFFF",
-      text: "#0A0A0A",
-      muted: "#595959",
-      accent: "#0A0A0A",
-      border: "#0A0A0A",
-      radius: "0px",
-      shadow: "none",
-      headingFont: "var(--font-mono), ui-monospace, monospace",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-    },
-    dark: {
-      bg: "#0A0A0A",
-      card: "#0A0A0A",
-      text: "#FFFFFF",
-      muted: "#A6A6A6",
-      accent: "#FFFFFF",
-      border: "#FFFFFF",
-      radius: "0px",
-      shadow: "none",
-      headingFont: "var(--font-mono), ui-monospace, monospace",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-    },
-  },
-
-  // ── 2. Glass Aurora ───────────────────────────────────────────────────
-  {
-    id: "glass-aurora",
-    name: "Glass Aurora",
-    description: "Translucent surfaces over living color",
-    category: "Glass",
-    light: {
-      bg: "#E8E0FF",
-      card: "#FFFFFF",
-      text: "#1C1033",
-      muted: "#5E4F80",
-      accent: "#7C3AED",
-      border: "rgba(255, 255, 255, 0.65)",
-      radius: "1.5rem",
-      shadow: "0 8px 32px rgba(124, 58, 237, 0.14)",
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-    },
-    dark: {
-      bg: "#0E0A2E",
-      card: "#1A1438",
-      text: "#E6E0FF",
-      muted: "#948CB8",
-      accent: "#A78BFA",
-      border: "rgba(167, 139, 250, 0.22)",
-      radius: "1.5rem",
-      shadow: "0 8px 32px rgba(167, 139, 250, 0.2)",
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-    },
-  },
-
-  // ── 3. Soft Neumorph ──────────────────────────────────────────────────
-  {
-    id: "soft-neumorph",
-    name: "Soft Neumorph",
-    description: "Tactile depth through soft shadow",
-    category: "Neu",
-    light: {
-      bg: "#E3E8EF",
-      card: "#E3E8EF",
-      text: "#2D3748",
-      muted: "#4A5568",
-      accent: "#3D4A5C",
-      border: "#E3E8EF",
-      radius: "2rem",
-      shadow: "9px 9px 18px #C2C8D2, -9px -9px 18px #FFFFFF",
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-jakarta), system-ui, sans-serif",
-    },
-    dark: {
-      bg: "#2B2E36",
-      card: "#2B2E36",
-      text: "#E2E8F0",
-      muted: "#A0A6B2",
-      accent: "#B8C0CC",
-      border: "#2B2E36",
-      radius: "2rem",
-      shadow: "9px 9px 18px #1E2026, -9px -9px 18px #383C46",
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-jakarta), system-ui, sans-serif",
-    },
-  },
-
-  // ── 4. Brutalist Raw ──────────────────────────────────────────────────
-  {
-    id: "brutalist-raw",
-    name: "Brutalist Raw",
-    description: "Unapologetic borders, raw and unrefined",
+    id: "brutalist-ink",
+    name: "Brutalist Ink",
+    description: "Hard edges, raw offset shadows, monospace",
     category: "Brutalist",
     light: {
       bg: "#FFFEF0",
@@ -159,6 +65,7 @@ export const SKINS: Skin[] = [
       shadow: "5px 5px 0px #000000",
       headingFont: "var(--font-mono), ui-monospace, monospace",
       bodyFont: "var(--font-mono), ui-monospace, monospace",
+      bgPattern: "repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(0,0,0,0.02) 20px, rgba(0,0,0,0.02) 21px)",
     },
     dark: {
       bg: "#0A0A0A",
@@ -171,14 +78,16 @@ export const SKINS: Skin[] = [
       shadow: "5px 5px 0px #FFFFFF",
       headingFont: "var(--font-mono), ui-monospace, monospace",
       bodyFont: "var(--font-mono), ui-monospace, monospace",
+      bgPattern: "repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.03) 20px, rgba(255,255,255,0.03) 21px)",
     },
   },
 
-  // ── 5. Editorial Serif ────────────────────────────────────────────────
+  // ── 2. Editorial Serif ─────────────────────────────────────────────────
+  // Magazine luxury com drop caps vibe. Light = cream paper, Dark = dark leather.
   {
     id: "editorial-serif",
     name: "Editorial Serif",
-    description: "Magazine elegance with serif authority",
+    description: "Magazine luxury, serif authority, paper texture",
     category: "Editorial",
     light: {
       bg: "#FAF6EF",
@@ -191,6 +100,7 @@ export const SKINS: Skin[] = [
       shadow: "0 1px 3px rgba(26, 26, 26, 0.07)",
       headingFont: "Georgia, 'Times New Roman', serif",
       bodyFont: "var(--font-inter), Georgia, serif",
+      bgPattern: "radial-gradient(circle at 20% 30%, rgba(139,26,26,0.03) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(107,98,88,0.04) 0%, transparent 50%)",
     },
     dark: {
       bg: "#1A1714",
@@ -203,372 +113,88 @@ export const SKINS: Skin[] = [
       shadow: "0 2px 6px rgba(0, 0, 0, 0.45)",
       headingFont: "Georgia, 'Times New Roman', serif",
       bodyFont: "var(--font-inter), Georgia, serif",
+      bgPattern: "radial-gradient(circle at 20% 30%, rgba(224,128,112,0.05) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(168,158,142,0.04) 0%, transparent 50%)",
     },
   },
 
-  // ── 6. Mesh Gradient ──────────────────────────────────────────────────
+  // ── 3. Glass Aurora ────────────────────────────────────────────────────
+  // Real glassmorphism com aurora gradients em background. Light = pastel dawn, Dark = night sky.
   {
-    id: "mesh-gradient",
-    name: "Mesh Gradient",
-    description: "Vibrant gradients that breathe and flow",
-    category: "Gradient",
+    id: "glass-aurora",
+    name: "Glass Aurora",
+    description: "Real glassmorphism, aurora gradients, depth blur",
+    category: "Glass",
     light: {
-      bg: "#FDF2F8",
-      card: "#FFFFFF",
-      text: "#2D1B4E",
-      muted: "#6B5B8A",
-      accent: "#EC4899",
-      border: "rgba(236, 72, 153, 0.16)",
-      radius: "1rem",
-      shadow: "0 10px 30px rgba(236, 72, 153, 0.12)",
-      headingFont: "var(--font-geist-sans), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-    },
-    dark: {
-      bg: "#190B2E",
-      card: "#2A1A4A",
-      text: "#F3E8FF",
-      muted: "#9B7BC4",
-      accent: "#F472B6",
-      border: "rgba(244, 114, 182, 0.22)",
-      radius: "1rem",
-      shadow: "0 10px 30px rgba(244, 114, 182, 0.2)",
-      headingFont: "var(--font-geist-sans), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-    },
-  },
-
-  // ── 7. Cyberpunk Neon ─────────────────────────────────────────────────
-  {
-    id: "cyberpunk-neon",
-    name: "Cyberpunk Neon",
-    description: "Neon glow on a digital frontier",
-    category: "Cyberpunk",
-    light: {
-      bg: "#EEF1F6",
-      card: "#FFFFFF",
-      text: "#0A0E14",
-      muted: "#3D4D63",
-      accent: "#00834A",
-      border: "rgba(0, 168, 95, 0.4)",
-      radius: "0.5rem",
-      shadow: "0 0 8px rgba(0, 168, 95, 0.22), 0 0 16px rgba(214, 0, 122, 0.1)",
-      headingFont: "var(--font-mono), ui-monospace, monospace",
-      bodyFont: "var(--font-mono), ui-monospace, monospace",
-    },
-    dark: {
-      bg: "#070A10",
-      card: "#0C1118",
-      text: "#E6F1FF",
-      muted: "#6E84A0",
-      accent: "#00FF9F",
-      border: "rgba(0, 255, 159, 0.3)",
-      radius: "0.5rem",
-      shadow:
-        "0 0 10px rgba(0, 255, 159, 0.4), 0 0 24px rgba(255, 0, 144, 0.15)",
-      headingFont: "var(--font-mono), ui-monospace, monospace",
-      bodyFont: "var(--font-mono), ui-monospace, monospace",
-    },
-  },
-
-  // ── 8. Apple Liquid ───────────────────────────────────────────────────
-  {
-    id: "apple-liquid",
-    name: "Apple Liquid",
-    description: "Effortless fluidity with Californian polish",
-    category: "Apple",
-    light: {
-      bg: "#F5F5F7",
-      card: "#FFFFFF",
-      text: "#1D1D1F",
-      muted: "#6E6E73",
-      accent: "#0071E3",
-      border: "rgba(0, 0, 0, 0.08)",
+      bg: "#E8E0FF",
+      card: "rgba(255, 255, 255, 0.55)",
+      text: "#1C1033",
+      muted: "#5E4F80",
+      accent: "#7C3AED",
+      border: "rgba(255, 255, 255, 0.65)",
       radius: "1.5rem",
-      shadow: "0 4px 6px rgba(0, 0, 0, 0.04), 0 14px 28px rgba(0, 0, 0, 0.06)",
-      headingFont:
-        "-apple-system, BlinkMacSystemFont, 'SF Pro Display', var(--font-geist-sans), sans-serif",
-      bodyFont:
-        "-apple-system, BlinkMacSystemFont, 'SF Pro Text', var(--font-inter), sans-serif",
+      shadow: "0 8px 32px rgba(124, 58, 237, 0.14), inset 0 1px 0 rgba(255,255,255,0.4)",
+      headingFont: "var(--font-jakarta), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+      bgPattern: "radial-gradient(circle at 10% 20%, rgba(124,58,237,0.25) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(236,72,153,0.20) 0%, transparent 40%), radial-gradient(circle at 50% 50%, rgba(59,130,246,0.15) 0%, transparent 50%)",
+      effectClass: "backdrop-blur-xl",
     },
     dark: {
-      bg: "#000000",
-      card: "#1C1C1E",
-      text: "#F5F5F7",
-      muted: "#86868B",
-      accent: "#0A84FF",
-      border: "rgba(255, 255, 255, 0.1)",
+      bg: "#0E0A2E",
+      card: "rgba(26, 20, 56, 0.55)",
+      text: "#E6E0FF",
+      muted: "#948CB8",
+      accent: "#A78BFA",
+      border: "rgba(167, 139, 250, 0.22)",
       radius: "1.5rem",
-      shadow: "0 4px 8px rgba(0, 0, 0, 0.3), 0 14px 28px rgba(0, 0, 0, 0.45)",
-      headingFont:
-        "-apple-system, BlinkMacSystemFont, 'SF Pro Display', var(--font-geist-sans), sans-serif",
-      bodyFont:
-        "-apple-system, BlinkMacSystemFont, 'SF Pro Text', var(--font-inter), sans-serif",
-    },
-  },
-
-  // ── 9. Material You ───────────────────────────────────────────────────
-  {
-    id: "material-you",
-    name: "Material You",
-    description: "Dynamic tones with playful elevation",
-    category: "Material",
-    light: {
-      bg: "#FEF7FF",
-      card: "#F3EDF7",
-      text: "#1D1B20",
-      muted: "#625B71",
-      accent: "#6750A4",
-      border: "rgba(103, 80, 164, 0.14)",
-      radius: "1rem",
-      shadow: "0 1px 2px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.08)",
-      headingFont: "var(--font-geist-sans), 'Roboto', system-ui, sans-serif",
-      bodyFont: "var(--font-geist-sans), 'Roboto', system-ui, sans-serif",
-    },
-    dark: {
-      bg: "#141218",
-      card: "#211F26",
-      text: "#E6E0E9",
-      muted: "#CAC4D0",
-      accent: "#D0BCFF",
-      border: "rgba(208, 188, 255, 0.16)",
-      radius: "1rem",
-      shadow: "0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.5)",
-      headingFont: "var(--font-geist-sans), 'Roboto', system-ui, sans-serif",
-      bodyFont: "var(--font-geist-sans), 'Roboto', system-ui, sans-serif",
-    },
-  },
-
-  // ── 10. Luxury Noir ───────────────────────────────────────────────────
-  {
-    id: "luxury-noir",
-    name: "Luxury Noir",
-    description: "Midnight gold for the discerning eye",
-    category: "Luxury",
-    light: {
-      bg: "#F7F3EC",
-      card: "#FFFFFF",
-      text: "#1A1A1A",
-      muted: "#6B6258",
-      accent: "#9A7A2E",
-      border: "rgba(184, 149, 74, 0.25)",
-      radius: "0.5rem",
-      shadow: "0 4px 20px rgba(0, 0, 0, 0.07)",
-      headingFont: "Georgia, 'Times New Roman', serif",
-      bodyFont: "var(--font-inter), Georgia, serif",
-    },
-    dark: {
-      bg: "#0B0B0B",
-      card: "#141414",
-      text: "#EDE6D6",
-      muted: "#8A8270",
-      accent: "#C9A961",
-      border: "rgba(201, 169, 97, 0.22)",
-      radius: "0.5rem",
-      shadow: "0 4px 20px rgba(0, 0, 0, 0.7)",
-      headingFont: "Georgia, 'Times New Roman', serif",
-      bodyFont: "var(--font-inter), Georgia, serif",
-    },
-  },
-
-  // ── 11. Nordic Frost ──────────────────────────────────────────────────
-  {
-    id: "nordic-frost",
-    name: "Nordic Frost",
-    description: "Glacial blues with Scandinavian calm",
-    category: "Nordic",
-    light: {
-      bg: "#F0F4F8",
-      card: "#FFFFFF",
-      text: "#1A2533",
-      muted: "#5A6B7E",
-      accent: "#0EA5E9",
-      border: "rgba(14, 165, 233, 0.15)",
-      radius: "0.75rem",
-      shadow: "0 4px 16px rgba(14, 165, 233, 0.08)",
+      shadow: "0 8px 32px rgba(167, 139, 250, 0.2), inset 0 1px 0 rgba(255,255,255,0.08)",
       headingFont: "var(--font-jakarta), system-ui, sans-serif",
       bodyFont: "var(--font-inter), system-ui, sans-serif",
-    },
-    dark: {
-      bg: "#0B1420",
-      card: "#14202E",
-      text: "#E1ECF5",
-      muted: "#7E94A8",
-      accent: "#38BDF8",
-      border: "rgba(56, 189, 248, 0.18)",
-      radius: "0.75rem",
-      shadow: "0 4px 16px rgba(56, 189, 248, 0.15)",
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
+      bgPattern: "radial-gradient(circle at 10% 20%, rgba(167,139,250,0.30) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(244,114,182,0.22) 0%, transparent 40%), radial-gradient(circle at 50% 50%, rgba(96,165,250,0.18) 0%, transparent 50%)",
+      effectClass: "backdrop-blur-xl",
     },
   },
 
-  // ── 12. Sunset Coral ──────────────────────────────────────────────────
+  // ── 4. Neo Brutalist 3D ────────────────────────────────────────────────
+  // Faux 3D com shadows profundas em camadas. Contraste extremo.
   {
-    id: "sunset-coral",
-    name: "Sunset Coral",
-    description: "Warm horizons, golden hour glow",
-    category: "Warm",
+    id: "neo-brutalist-3d",
+    name: "Neo Brutalist 3D",
+    description: "Faux 3D shadows, extreme contrast, layered depth",
+    category: "3D",
     light: {
-      bg: "#FFF5F0",
-      card: "#FFFFFF",
-      text: "#3D1F1A",
-      muted: "#8A5547",
-      accent: "#FF6B6B",
-      border: "rgba(255, 107, 107, 0.18)",
-      radius: "1.25rem",
-      shadow: "0 8px 24px rgba(255, 107, 107, 0.12)",
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-    },
-    dark: {
-      bg: "#1A0E0B",
-      card: "#2A1815",
-      text: "#FFE8DC",
-      muted: "#B89188",
-      accent: "#FF8A65",
-      border: "rgba(255, 138, 101, 0.22)",
-      radius: "1.25rem",
-      shadow: "0 8px 24px rgba(255, 138, 101, 0.18)",
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-    },
-  },
-
-  // ── 13. Forest Sage ───────────────────────────────────────────────────
-  {
-    id: "forest-sage",
-    name: "Forest Sage",
-    description: "Grounded in earthy sage greens",
-    category: "Earthy",
-    light: {
-      bg: "#F4F6F1",
-      card: "#FFFFFF",
-      text: "#1F2A1F",
-      muted: "#5C6B5C",
-      accent: "#4A7C59",
-      border: "rgba(74, 124, 89, 0.15)",
-      radius: "0.875rem",
-      shadow: "0 4px 16px rgba(74, 124, 89, 0.10)",
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-    },
-    dark: {
-      bg: "#0E1410",
-      card: "#182018",
-      text: "#DDE8DC",
-      muted: "#8AA088",
-      accent: "#7FB585",
-      border: "rgba(127, 181, 133, 0.20)",
-      radius: "0.875rem",
-      shadow: "0 4px 16px rgba(127, 181, 133, 0.12)",
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-    },
-  },
-
-  // ── 14. Vaporwave Retro ───────────────────────────────────────────────
-  {
-    id: "vaporwave-retro",
-    name: "Vaporwave Retro",
-    description: "80s synthwave aesthetics reborn",
-    category: "Retro",
-    light: {
-      bg: "#F8F4FF",
-      card: "#FFFFFF",
-      text: "#2D1B4E",
-      muted: "#6B5B8A",
-      accent: "#C724B1",
-      border: "rgba(199, 36, 177, 0.18)",
-      radius: "0.5rem",
-      shadow: "0 4px 16px rgba(199, 36, 177, 0.15)",
-      headingFont: "var(--font-mono), ui-monospace, monospace",
-      bodyFont: "var(--font-mono), ui-monospace, monospace",
-    },
-    dark: {
-      bg: "#1A0033",
-      card: "#2D0A4E",
-      text: "#F0E6FF",
-      muted: "#A088C8",
-      accent: "#FF71CE",
-      border: "rgba(255, 113, 206, 0.25)",
-      radius: "0.5rem",
-      shadow:
-        "0 0 12px rgba(255, 113, 206, 0.3), 0 0 24px rgba(1, 205, 254, 0.15)",
-      headingFont: "var(--font-mono), ui-monospace, monospace",
-      bodyFont: "var(--font-mono), ui-monospace, monospace",
-    },
-  },
-
-  // ── 15. Mono Ink ──────────────────────────────────────────────────────
-  {
-    id: "mono-ink",
-    name: "Mono Ink",
-    description: "Pure ink on cream, literary calm",
-    category: "Mono",
-    light: {
-      bg: "#FAF7F0",
-      card: "#FFFFFF",
-      text: "#0A0A0A",
-      muted: "#6B6B6B",
-      accent: "#0A0A0A",
-      border: "#0A0A0A",
-      radius: "0px",
-      shadow: "none",
-      headingFont: "Georgia, 'Times New Roman', serif",
-      bodyFont: "Georgia, 'Times New Roman', serif",
-    },
-    dark: {
-      bg: "#FAF7F0",
-      card: "#F5F0E6",
-      text: "#0A0A0A",
+      bg: "#FFFFFF",
+      card: "#FFE600",
+      text: "#000000",
       muted: "#5C5C5C",
-      accent: "#0A0A0A",
-      border: "#0A0A0A",
-      radius: "0px",
-      shadow: "none",
-      headingFont: "Georgia, 'Times New Roman', serif",
-      bodyFont: "Georgia, 'Times New Roman', serif",
-    },
-  },
-
-  // ── 16. Pastel Dream ──────────────────────────────────────────────────
-  {
-    id: "pastel-dream",
-    name: "Pastel Dream",
-    description: "Soft confectionery, gentle and calm",
-    category: "Pastel",
-    light: {
-      bg: "#FFF9FB",
-      card: "#FFFFFF",
-      text: "#3D2B3D",
-      muted: "#8B7A8B",
-      accent: "#F687B3",
-      border: "rgba(246, 135, 179, 0.18)",
-      radius: "1.5rem",
-      shadow: "0 8px 24px rgba(246, 135, 179, 0.12)",
+      accent: "#FF3366",
+      border: "#000000",
+      radius: "1rem",
+      shadow: "6px 6px 0px #000000, 12px 12px 0px #FF3366, 18px 18px 24px rgba(0,0,0,0.2)",
       headingFont: "var(--font-jakarta), system-ui, sans-serif",
       bodyFont: "var(--font-inter), system-ui, sans-serif",
+      bgPattern: "linear-gradient(135deg, #FFFFFF 0%, #FFFAE6 100%)",
     },
     dark: {
-      bg: "#1F1525",
-      card: "#2D2235",
-      text: "#F5E5F0",
-      muted: "#A890A8",
-      accent: "#F9A8C9",
-      border: "rgba(249, 168, 201, 0.22)",
-      radius: "1.5rem",
-      shadow: "0 8px 24px rgba(249, 168, 201, 0.15)",
+      bg: "#050505",
+      card: "#1A1A1A",
+      text: "#FFFFFF",
+      muted: "#888888",
+      accent: "#00FFB2",
+      border: "#FFFFFF",
+      radius: "1rem",
+      shadow: "6px 6px 0px #00FFB2, 12px 12px 0px #FF00AA, 18px 18px 32px rgba(0,255,178,0.25)",
       headingFont: "var(--font-jakarta), system-ui, sans-serif",
       bodyFont: "var(--font-inter), system-ui, sans-serif",
+      bgPattern: "linear-gradient(135deg, #050505 0%, #0D0D1A 100%)",
     },
   },
 
-  // ── 17. Carbon Tech ───────────────────────────────────────────────────
+  // ── 5. Mono Carbon ─────────────────────────────────────────────────────
+  // Carbon fiber pattern, electric lime accent, tech minimal.
   {
-    id: "carbon-tech",
-    name: "Carbon Tech",
-    description: "Carbon fiber dark with electric lime",
+    id: "mono-carbon",
+    name: "Mono Carbon",
+    description: "Carbon fiber pattern, electric lime, tech minimal",
     category: "Carbon",
     light: {
       bg: "#F2F2F2",
@@ -581,6 +207,7 @@ export const SKINS: Skin[] = [
       shadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
       headingFont: "var(--font-geist-sans), system-ui, sans-serif",
       bodyFont: "var(--font-geist-sans), system-ui, sans-serif",
+      bgPattern: "repeating-linear-gradient(45deg, #F2F2F2 0px, #F2F2F2 2px, #E8E8E8 2px, #E8E8E8 4px), repeating-linear-gradient(-45deg, transparent 0px, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px)",
     },
     dark: {
       bg: "#0A0A0A",
@@ -593,39 +220,7 @@ export const SKINS: Skin[] = [
       shadow: "0 0 12px rgba(163, 230, 53, 0.12)",
       headingFont: "var(--font-geist-sans), system-ui, sans-serif",
       bodyFont: "var(--font-geist-sans), system-ui, sans-serif",
-    },
-  },
-
-  // ── 18. Cyber Violet ──────────────────────────────────────────────────
-  {
-    id: "cyber-violet",
-    name: "Cyber Violet",
-    description: "Magenta neon on electric violet",
-    category: "Cyberpunk",
-    light: {
-      bg: "#F5F0FF",
-      card: "#FFFFFF",
-      text: "#2A0F4E",
-      muted: "#6B4F8A",
-      accent: "#9D4EDD",
-      border: "rgba(157, 78, 221, 0.18)",
-      radius: "0.75rem",
-      shadow: "0 4px 16px rgba(157, 78, 221, 0.12)",
-      headingFont: "var(--font-mono), ui-monospace, monospace",
-      bodyFont: "var(--font-mono), ui-monospace, monospace",
-    },
-    dark: {
-      bg: "#0E0420",
-      card: "#18092E",
-      text: "#E8D5FF",
-      muted: "#9070B5",
-      accent: "#E0AAFF",
-      border: "rgba(224, 170, 255, 0.25)",
-      radius: "0.75rem",
-      shadow:
-        "0 0 12px rgba(224, 170, 255, 0.3), 0 0 24px rgba(255, 0, 200, 0.12)",
-      headingFont: "var(--font-mono), ui-monospace, monospace",
-      bodyFont: "var(--font-mono), ui-monospace, monospace",
+      bgPattern: "repeating-linear-gradient(45deg, #0A0A0A 0px, #0A0A0A 2px, #141414 2px, #141414 4px), repeating-linear-gradient(-45deg, transparent 0px, transparent 2px, rgba(163,230,53,0.03) 2px, rgba(163,230,53,0.03) 4px)",
     },
   },
 ];

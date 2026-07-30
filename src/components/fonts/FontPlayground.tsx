@@ -18,7 +18,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Type, Zap, ChevronDown, ChevronUp, Upload, Wand2,
+  Type, Zap, ChevronDown, ChevronUp, Wand2,
   Lock, Unlock, Copy, ClipboardPaste, Shuffle,
   Bold, Italic, Eye, Globe,
 } from "lucide-react";
@@ -45,6 +45,8 @@ import {
 } from "@/lib/fonts-modernas";
 import { FONTES_DISPONIVEIS } from "@/lib/fonts";
 import { FontPreviewPopup } from "./FontPreviewPopup";
+import { UploadWithSuggestions } from "./UploadWithSuggestions";
+import { FontSources } from "./FontSources";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -268,6 +270,9 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
           />
         ))}
       </div>
+
+      {/* Sources modernos — separador discreto (12 sites + clones) */}
+      <FontSources />
     </motion.div>
   );
 }
@@ -549,7 +554,19 @@ function FontBar({
                 </SelectContent>
               </Select>
 
-              <UploadButton onUpload={onUploadFont} />
+              <UploadWithSuggestions
+                onApplyFont={async (family, isCustom) => {
+                  if (isCustom) {
+                    onChange({ ...state, customFontName: family, fonte: family });
+                  } else {
+                    const info = FONTS_MODERNAS.find((f) => f.family === family);
+                    if (info) await loadFont(info);
+                    onChange({ ...state, fonte: family, customFontName: undefined });
+                  }
+                }}
+                uploadedFonts={uploadedFonts}
+                onUploadFont={onUploadFont}
+              />
 
               {/* Transform picker */}
               <Select
@@ -666,26 +683,6 @@ function PesosPopover({
         </div>
       </PopoverContent>
     </Popover>
-  );
-}
-
-// Helper: upload button reutilizável
-function UploadButton({ onUpload }: { onUpload: (f: File) => void }) {
-  return (
-    <label className="flex h-8 cursor-pointer items-center justify-center gap-1.5 rounded-md border border-dashed border-border bg-background/50 px-3 text-[10px] text-muted-foreground hover:border-primary/40 hover:text-foreground">
-      <Upload className="h-3 w-3" />
-      Upload .ttf/.otf/.woff
-      <input
-        type="file"
-        accept=".ttf,.otf,.woff,.woff2"
-        className="hidden"
-        onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) onUpload(f);
-          e.target.value = "";
-        }}
-      />
-    </label>
   );
 }
 
