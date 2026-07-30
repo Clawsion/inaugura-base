@@ -21,7 +21,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Type, Zap, ChevronDown, ChevronUp, Wand2,
   Lock, Unlock, Copy, ClipboardPaste, Shuffle,
-  Bold, Italic, Eye, Globe, RotateCcw, Sparkles,
+  Bold, Italic, Eye, Globe, RotateCcw, Sparkles, Plus, Trash2,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -66,12 +66,11 @@ interface FontPlaygroundProps {
   onChange: (states: FontSlotState[]) => void;
 }
 
+// Default: 3 slots (igual ao sistema de cores — pode adicionar/remover)
 const DEFAULT_STATES: FontSlotState[] = [
   { fonte: "Inter", pesos: [400, 700] },
   { fonte: "Geist", pesos: [400, 600] },
   { fonte: "Plus Jakarta Sans", pesos: [400, 700] },
-  { fonte: "Outfit", pesos: [400, 500] },
-  { fonte: "Montserrat", pesos: [400, 600] },
 ];
 
 interface UploadedFont {
@@ -80,10 +79,8 @@ interface UploadedFont {
 }
 
 export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
-  const allSlotStates = states.length === 5 ? states : DEFAULT_STATES;
-  // NOVO: utilizador escolhe quantas fonts quer ver (1, 3, ou 5)
-  const [visibleCount, setVisibleCount] = useState<1 | 3 | 5>(5);
-  const slotStates = allSlotStates.slice(0, visibleCount);
+  // Sistema de adicionar/remover slots (como nas cores) — default 3
+  const slotStates = states.length > 0 ? states : DEFAULT_STATES;
   const [uploadedFonts, setUploadedFonts] = useState<UploadedFont[]>([]);
   const [expanded, setExpanded] = useState<boolean[]>([false, false, false, false, false]);
   const [textoGlobal, setTextoGlobal] = useState("The quick brown fox jumps over the lazy dog");
@@ -93,6 +90,24 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
   const [fontCount, setFontCount] = useState<{ total: number; google: number; fontshare: number; curated: number } | null>(null);
   const [allFontsCatalog, setAllFontsCatalog] = useState<FontInfo[]>(FONTS_MODERNAS);
 
+  // NOVO: adicionar/remover slots (máx 10, min 1)
+  const addSlot = () => {
+    if (slotStates.length >= 10) {
+      toast.warning("Máximo de 10 slots.");
+      return;
+    }
+    const newSlot: FontSlotState = { fonte: "Inter", pesos: [400] };
+    onChange([...slotStates, newSlot]);
+  };
+
+  const removeSlot = (i: number) => {
+    if (slotStates.length <= 1) {
+      toast.warning("Mínimo de 1 slot.");
+      return;
+    }
+    onChange(slotStates.filter((_, idx) => idx !== i));
+  };
+
   // Busca catálogo dinâmico ao montar
   useEffect(() => {
     getAllFonts().then((catalog) => {
@@ -100,10 +115,6 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
       countFontsBySource().then(setFontCount);
     });
   }, []);
-
-  useEffect(() => {
-    if (states.length !== 5) onChange(DEFAULT_STATES);
-  }, [states.length, onChange]);
 
   // Carrega as fonts iniciais ao montar
   useEffect(() => {
@@ -120,61 +131,64 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
   };
 
   const toggleExpand = (i: number) => {
-    setExpanded((prev) => prev.map((v, idx) => (idx === i ? !v : v)));
+    setExpanded((prev) => {
+      const next = [...prev];
+      next[i] = !next[i];
+      return next;
+    });
   };
 
-  const expandAll = () => setExpanded([true, true, true, true, true]);
-  const collapseAll = () => setExpanded([false, false, false, false, false]);
+  const expandAll = () => setExpanded(Array(slotStates.length).fill(true));
+  const collapseAll = () => setExpanded(Array(slotStates.length).fill(false));
 
-  // GENERATE ALL FONTS — respeita locks e visibleCount
+  // GENERATE ALL FONTS — respeita locks
   const generateAllFonts = useCallback(async () => {
+    const count = slotStates.length;
     const next = await Promise.all(
-      allSlotStates.slice(0, visibleCount).map(async (s) => {
+      slotStates.map(async (s) => {
         if (s.locked) return s;
         const font = await getRandomFontByFilterAsync(filtro, sourceFilter, s.fonte);
         await loadFont(font);
         return { ...s, fonte: font.family, customFontName: undefined };
       })
     );
-    // Mantém as slots não visíveis inalteradas
-    const fullNext = [...next, ...allSlotStates.slice(visibleCount)];
-    onChange(fullNext);
-    const lockedCount = allSlotStates.slice(0, visibleCount).filter((s) => s.locked).length;
+    onChange(next);
+    const lockedCount = slotStates.filter((s) => s.locked).length;
     toast.success(
-      `${visibleCount} fonts geradas!${lockedCount > 0 ? ` (${lockedCount} bloqueadas mantidas)` : ""}`
+      `${count} fonts geradas!${lockedCount > 0 ? ` (${lockedCount} bloqueadas mantidas)` : ""}`
     );
-  }, [allSlotStates, visibleCount, onChange, filtro, sourceFilter]);
+  }, [slotStates, onChange, filtro, sourceFilter]);
 
-  // GENERATE ALL TRANSFORMS — respeita locks e visibleCount
+  // GENERATE ALL TRANSFORMS — respeita locks
   const generateAllTransforms = useCallback(() => {
-    const visible = allSlotStates.slice(0, visibleCount);
-    const next = visible.map((s) => {
+    const count = slotStates.length;
+    const next = slotStates.map((s) => {
       if (s.locked) return s;
       return { ...s, transformId: getRandomTransform(s.transformId).id };
     });
-    const fullNext = [...next, ...allSlotStates.slice(visibleCount)];
-    onChange(fullNext);
-    const lockedCount = visible.filter((s) => s.locked).length;
-    toast.success(
-      `${visibleCount} transforms geradas!${lockedCount > 0 ? ` (${lockedCount} bloqueadas mantidas)` : ""}`
-    );
-  }, [allSlotStates, visibleCount, onChange]);
-
-  // NOVO: RESET TRANSFORMS — deixa todas as fonts sem transform
-  const resetTransforms = useCallback(() => {
-    const next = allSlotStates.map((s) => ({ ...s, transformId: undefined }));
     onChange(next);
-    toast.success("Transforms removidas — 5 fonts sem transform");
-  }, [allSlotStates, onChange]);
+    const lockedCount = slotStates.filter((s) => s.locked).length;
+    toast.success(
+      `${count} transforms geradas!${lockedCount > 0 ? ` (${lockedCount} bloqueadas mantidas)` : ""}`
+    );
+  }, [slotStates, onChange]);
 
-  // NOVO: I'M LUCKY — top awwwards fonts (250 curadas a rigor)
+  // RESET TRANSFORMS — deixa todas as fonts sem transform
+  const resetTransforms = useCallback(() => {
+    const count = slotStates.length;
+    const next = slotStates.map((s) => ({ ...s, transformId: undefined }));
+    onChange(next);
+    toast.success(`Transforms removidas — ${count} fonts sem transform`);
+  }, [slotStates, onChange]);
+
+  // I'M LUCKY — top awwwards fonts (250 curadas a rigor)
   const imLucky = useCallback(async () => {
     const topFonts = getTopAwwwardsFonts();
     const usedFamilies = new Set<string>();
+    const count = slotStates.length;
     const next = await Promise.all(
-      allSlotStates.slice(0, visibleCount).map(async (s) => {
+      slotStates.map(async (s) => {
         if (s.locked) return s;
-        // Escolhe uma font top awwwards aleatória (sem repetir)
         const available = topFonts.filter((f) => !usedFamilies.has(f.family));
         const pool = available.length > 0 ? available : topFonts;
         const font = pool[Math.floor(Math.random() * pool.length)];
@@ -183,13 +197,12 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
         return { ...s, fonte: font.family, customFontName: undefined };
       })
     );
-    const fullNext = [...next, ...allSlotStates.slice(visibleCount)];
-    onChange(fullNext);
-    const lockedCount = allSlotStates.slice(0, visibleCount).filter((s) => s.locked).length;
+    onChange(next);
+    const lockedCount = slotStates.filter((s) => s.locked).length;
     toast.success(
-      `I'm Lucky! ${visibleCount} fonts top awwwards aplicadas!${lockedCount > 0 ? ` (${lockedCount} bloqueadas mantidas)` : ""}`
+      `I'm Lucky! ${count} fonts top awwwards aplicadas!${lockedCount > 0 ? ` (${lockedCount} bloqueadas mantidas)` : ""}`
     );
-  }, [allSlotStates, visibleCount, onChange]);
+  }, [slotStates, onChange]);
 
   const handleUploadFont = useCallback(async (file: File) => {
     const familyName = file.name
@@ -248,30 +261,15 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
             <Button variant="outline" size="sm" onClick={collapseAll} className="h-7 text-xs">
               <ChevronDown className="h-3 w-3" /> Fechar
             </Button>
-            {/* NOVO: Seletor de quantas fonts mostrar (1, 3, 5) */}
-            <div className="flex items-center gap-0.5 rounded-md border border-border bg-card/50 p-0.5">
-              {([1, 3, 5] as const).map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  onClick={() => setVisibleCount(n)}
-                  className={cn(
-                    "h-6 rounded px-2 text-[10px] font-bold transition-all",
-                    visibleCount === n
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground"
-                  )}
-                  title={`Mostrar ${n} font${n > 1 ? "s" : ""}`}
-                >
-                  {n}
-                </button>
-              ))}
-            </div>
+            {/* Contador de slots ativos */}
+            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+              {slotStates.length} slot{slotStates.length > 1 ? "s" : ""}
+            </span>
             {/* Generate All FONTS — só muda a font, mantém transforms */}
             <Button
               onClick={generateAllFonts}
               className="h-7 gap-1 rounded-md bg-primary px-3 text-xs text-primary-foreground hover:bg-primary/90"
-              title={`Gera ${visibleCount} fonts aleatórias (mantém as transforms atuais)`}
+              title={`Gera ${slotStates.length} fonts aleatórias (mantém as transforms atuais)`}
             >
               <Wand2 className="h-3 w-3" /> Generate All Fonts
             </Button>
@@ -280,7 +278,7 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
               onClick={generateAllTransforms}
               variant="outline"
               className="h-7 gap-1 rounded-md border-primary/40 px-3 text-xs text-primary hover:bg-primary/10"
-              title={`Gera ${visibleCount} transforms aleatórias (mantém as fonts atuais)`}
+              title={`Gera ${slotStates.length} transforms aleatórias (mantém as fonts atuais)`}
             >
               <Shuffle className="h-3 w-3" /> Generate All Transforms
             </Button>
@@ -342,7 +340,7 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
         className="h-8 border-border bg-card/50 text-xs"
       />
 
-      {/* 5 BARRAS HORIZONTAIS GRANDES em fila vertical */}
+      {/* BARRAS HORIZONTAIS GRANDES em fila vertical (quantas o utilizador quiser) */}
       <div className="space-y-2">
         {slotStates.map((s, i) => (
           <FontBar
@@ -350,9 +348,11 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
             index={i}
             state={s}
             texto={textoGlobal}
-            expanded={expanded[i]}
+            expanded={expanded[i] ?? false}
             onToggleExpand={() => toggleExpand(i)}
             onChange={(ns) => updateSlot(i, ns)}
+            onRemove={() => removeSlot(i)}
+            canRemove={slotStates.length > 1}
             uploadedFonts={uploadedFonts}
             onUploadFont={handleUploadFont}
             filtro={filtro}
@@ -364,6 +364,19 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
           />
         ))}
       </div>
+
+      {/* Botão Adicionar slot (como nas cores) */}
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={addSlot}
+        disabled={slotStates.length >= 10}
+        className="border-dashed"
+        title="Adicionar mais um slot de font"
+      >
+        <Plus className="mr-1 h-3 w-3" /> Adicionar font
+      </Button>
 
       {/* Sources modernos — separador discreto (12 sites + clones) */}
       <FontSources />
@@ -381,6 +394,8 @@ interface FontBarProps {
   expanded: boolean;
   onToggleExpand: () => void;
   onChange: (s: FontSlotState) => void;
+  onRemove: () => void;
+  canRemove: boolean;
   uploadedFonts: UploadedFont[];
   onUploadFont: (file: File) => void;
   filtro: string;
@@ -392,7 +407,7 @@ interface FontBarProps {
 }
 
 function FontBar({
-  index, state, texto, expanded, onToggleExpand, onChange,
+  index, state, texto, expanded, onToggleExpand, onChange, onRemove, canRemove,
   uploadedFonts, onUploadFont, filtro, sourceFilter, allFontsCatalog,
   onCopy, onPaste, hasClipboard,
 }: FontBarProps) {
@@ -545,6 +560,12 @@ function FontBar({
           >
             <Zap className="h-3 w-3" /> Generate Font
           </Button>
+          {/* Remover slot (como nas cores) */}
+          {canRemove && (
+            <IconBtn onClick={onRemove} title="Remover este slot">
+              <Trash2 className="h-3 w-3" />
+            </IconBtn>
+          )}
         </div>
       </div>
 

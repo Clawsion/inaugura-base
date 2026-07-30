@@ -38,8 +38,6 @@ const FORM_INIT: FormValues = {
     { fonte: "Inter", pesos: [400, 700] },
     { fonte: "Geist", pesos: [400, 600] },
     { fonte: "Plus Jakarta Sans", pesos: [400, 700] },
-    { fonte: "Outfit", pesos: [400, 500] },
-    { fonte: "Montserrat", pesos: [400, 600] },
   ],
   incluirMockups: true,
   incluirDesignTokens: true,
