@@ -48,6 +48,8 @@ import { PaletteInput } from "./PaletteInput";
 import { TypographyInput } from "./TypographyInput";
 import { LayoutSelector } from "./LayoutSelector";
 import { FontPlayground, type FontSlotState } from "@/components/fonts/FontPlayground";
+import { PerfectComboPopup } from "@/components/perfect-combo/PerfectComboPopup";
+import type { PerfectCombo } from "@/lib/perfect-combo";
 import { Check, ChevronsUpDown, Wand2, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -227,6 +229,38 @@ export function BriefingForm({
           onChange={(fontsPlayground) =>
             onChange({ fontsPlayground: fontsPlayground as any })
           }
+        />
+      </motion.div>
+
+      {/* 5.5 PERFECT COMBO — une fonts + cores + skin compatíveis */}
+      <motion.div variants={fadeUp} custom={4.5} className="flex justify-center">
+        <PerfectComboPopup
+          fontsPlayground={value.fontsPlayground as { fonte: string }[] ?? []}
+          paletaManual={value.paletaManual ?? []}
+          onApplyCombo={(combo: PerfectCombo) => {
+            // Aplica a combo ao form: fonts + paleta + skin
+            onChange({
+              fontsPlayground: [
+                { fonte: combo.fonts.heading.family, pesos: combo.fonts.heading.pesos.slice(0, 2) },
+                { fonte: combo.fonts.body.family, pesos: combo.fonts.body.pesos.slice(0, 2) },
+                ...(combo.fonts.mono ? [{ fonte: combo.fonts.mono.family, pesos: combo.fonts.mono.pesos.slice(0, 2) }] : []),
+              ] as any,
+              paletaMode: "manual" as const,
+              paletaManual: [
+                { nome: "Background", hex: combo.paleta.bg, uso: "Background" },
+                { nome: "Card", hex: combo.paleta.card, uso: "Card/Surface" },
+                { nome: "Text", hex: combo.paleta.text, uso: "Text/Foreground" },
+                { nome: "Accent", hex: combo.paleta.accent, uso: "Accent/Primary" },
+                { nome: "Muted", hex: combo.paleta.muted, uso: "Muted" },
+              ],
+              typographyMode: "manual" as const,
+              typographyManual: {
+                heading: combo.fonts.heading.family,
+                body: combo.fonts.body.family,
+                mono: combo.fonts.mono?.family ?? "Geist Mono",
+              },
+            });
+          }}
         />
       </motion.div>
 
