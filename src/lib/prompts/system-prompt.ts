@@ -174,5 +174,28 @@ Tipografia mode: ${input.typographyMode}${
 Modo de Prompt: ${input.promptMode}
 Nível: ${input.nivel}
 Idioma: ${input.idioma}
+
+# SKINS PREFERIDOS (máximo 3)
+O utilizador escolheu estes estilos visuais como referência (usa-os como inspiração para a paleta, tokens e layout recommendation):
+${
+  input.skinsSelecionados && input.skinsSelecionados.length > 0
+    ? input.skinsSelecionados
+        .map((id, i) => `${i + 1}. ${id}`)
+        .join("\n")
+    : "(nenhum skin selecionado — escolhe tu com base no briefing)"
+}
+
+# FONTS EM EXPERIMENTAÇÃO (playground)
+O utilizador está a experimentar estas fonts no playground (considera-as como preferência expressa):
+${
+  input.fontsPlayground && input.fontsPlayground.length > 0
+    ? input.fontsPlayground
+        .map(
+          (f, i) =>
+            `${i + 1}. ${f.fonte}${f.transform ? ` (com transform: ${f.transform})` : ""}`
+        )
+        .join("\n")
+    : "(nenhuma preferência expressa)"
+}
 `;
 }

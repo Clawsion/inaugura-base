@@ -47,6 +47,9 @@ import {
 import { PaletteInput } from "./PaletteInput";
 import { TypographyInput } from "./TypographyInput";
 import { LayoutSelector } from "./LayoutSelector";
+import { SkinsGallery } from "@/components/skins/SkinsGallery";
+import { FontPlayground } from "@/components/fonts/FontPlayground";
+import type { FontSlotState } from "@/components/fonts/FontSlot";
 import { Check, ChevronsUpDown, Wand2, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -219,7 +222,25 @@ export function BriefingForm({
         onToggle={(efeito) => toggleArrayItem("efeitos", efeito)}
       />
 
-      {/* 5. Paleta (tabs manual/auto) */}
+      {/* 5. Skins Gallery — Top 10 (escolhe até 3) */}
+      <motion.div variants={fadeUp} custom={4}>
+        <SkinsGallery
+          selecionados={value.skinsSelecionados ?? []}
+          onChange={(skinsSelecionados) => onChange({ skinsSelecionados })}
+        />
+      </motion.div>
+
+      {/* 6. Font Playground — 5 slots + 50 transforms + 10 sources */}
+      <motion.div variants={fadeUp} custom={5}>
+        <FontPlayground
+          states={value.fontsPlayground as FontSlotState[] ?? []}
+          onChange={(fontsPlayground) =>
+            onChange({ fontsPlayground: fontsPlayground as any })
+          }
+        />
+      </motion.div>
+
+      {/* 7. Paleta (tabs manual/auto) */}
       <PaletteInput
         mode={value.paletaMode}
         manual={value.paletaManual ?? []}
@@ -227,7 +248,7 @@ export function BriefingForm({
         onManualChange={(paletaManual) => onChange({ paletaManual })}
       />
 
-      {/* 6. Tipografia (tabs manual/auto) */}
+      {/* 8. Tipografia (tabs manual/auto) */}
       <TypographyInput
         mode={value.typographyMode}
         manual={value.typographyManual ?? { heading: "Geist", body: "Inter", mono: "Geist Mono" }}

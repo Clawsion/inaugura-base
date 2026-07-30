@@ -13,6 +13,7 @@ import { CopyButton } from "@/components/copy-button";
 import { ColorSwatch } from "./ColorSwatch";
 import { FontPreview } from "./FontPreview";
 import { PromptCard } from "./PromptCard";
+import { PalettePreviews } from "@/components/palette/PalettePreviews";
 import {
   paletaParaCssVariables,
   paletaParaTailwind,
@@ -131,6 +132,18 @@ export function ResultsPanel({ spec, tentativas }: ResultsPanelProps) {
 
         {/* PALETA */}
         <TabsContent value="paleta" className="space-y-4">
+          {/* Botão de previews em mockups reais */}
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-primary/30 bg-primary/5 p-3">
+            <div>
+              <h4 className="text-sm font-semibold">Vê a paleta em ação</h4>
+              <p className="text-[11px] text-muted-foreground">
+                3 mockups (Hero, Dashboard, Pricing) usam exatamente estas cores.
+                Avalia contraste e harmonia antes de avançar.
+              </p>
+            </div>
+            <PalettePreviews spec={spec} />
+          </div>
+
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {spec.palette.map((cor, i) => (
               <ColorSwatch

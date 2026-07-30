@@ -111,6 +111,18 @@ export const FormSchema = z.object({
     .object({ heading: z.string(), body: z.string(), mono: z.string() })
     .optional(),
   promptMode: z.enum(["compact", "extended"]),
+  // NOVO: até 3 skins escolhidos pelo utilizador (ids do array SKINS)
+  skinsSelecionados: z.array(z.string()).max(3).default([]),
+  // NOVO: fonts escolhidas no playground (5 slots)
+  fontsPlayground: z
+    .array(
+      z.object({
+        fonte: z.string(),
+        transform: z.string().optional(),
+      })
+    )
+    .max(5)
+    .default([]),
   incluirMockups: z.boolean(),
   incluirDesignTokens: z.boolean(),
   incluirRoadmap: z.boolean(),

@@ -28,6 +28,15 @@ const FORM_INIT: FormValues = {
   typographyMode: "auto",
   typographyManual: { heading: "Geist", body: "Inter", mono: "Geist Mono" },
   promptMode: "compact",
+  // NOVOS CAMPOS:
+  skinsSelecionados: [],
+  fontsPlayground: [
+    { fonte: "Inter" },
+    { fonte: "Geist" },
+    { fonte: "Plus Jakarta Sans" },
+    { fonte: "Outfit" },
+    { fonte: "Montserrat" },
+  ],
   incluirMockups: true,
   incluirDesignTokens: true,
   incluirRoadmap: false,
