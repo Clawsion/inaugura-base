@@ -7,11 +7,12 @@ import { LoadingSteps } from "@/components/loading-steps";
 import { ResultsPanel } from "@/components/results/ResultsPanel";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SkinSwitcher } from "@/components/skins/SkinSwitcher";
+import { Logo } from "@/components/logo";
 import { generateProject, type GenerateResult } from "@/app/actions/generate";
 import type { FormValues } from "@/lib/schemas";
 import { getSkinById } from "@/lib/skins";
 import { toast } from "sonner";
-import { Hammer, Github, AlertCircle, RotateCcw } from "lucide-react";
+import { Github, AlertCircle, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const FORM_INIT: FormValues = {
@@ -144,52 +145,42 @@ export default function Home() {
       </div>
 
       <div className="relative">
-        {/* Header */}
+        {/* Header — minimalista, sem skins inline */}
         <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur-xl">
-          <div className="mx-auto max-w-5xl px-4 py-2.5 sm:px-6">
-            <div className="flex items-center gap-3">
-              {/* Logo + nome (à esquerda, fixo) */}
-              <div className="flex shrink-0 items-center gap-2.5">
-                <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/30">
-                  <Hammer className="h-4 w-4" />
-                </div>
-                <div className="hidden sm:block">
-                  <h1 className="text-sm font-bold leading-none tracking-tight">
-                    ProjectForge <span className="text-primary">AI</span>
-                  </h1>
-                  <p className="text-[10px] leading-tight text-muted-foreground">
-                    Briefing → spec production-ready
-                  </p>
-                </div>
+          <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6">
+            <div className="flex items-center gap-2.5">
+              <Logo size={36} />
+              <div>
+                <h1 className="text-sm font-bold leading-none tracking-tight">
+                  Inaugura<span className="text-primary">-Base</span>
+                </h1>
+                <p className="text-[10px] leading-tight text-muted-foreground">
+                  Briefing → spec production-ready
+                </p>
               </div>
-
-              {/* SkinSwitcher — expande no meio, entre logo e actions */}
-              <div className="min-w-0 flex-1">
-                <SkinSwitcher activeSkin={activeSkin} onChange={setActiveSkin} />
-              </div>
-
-              {/* Actions (à direita, fixo) */}
-              <div className="flex shrink-0 items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-9 w-9 text-muted-foreground"
-                  asChild
-                >
-                  <a
-                    href="https://z.ai"
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label="Z.ai"
-                  >
-                    <Github className="h-4 w-4" />
-                  </a>
-                </Button>
-                <ThemeToggle />
-              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 text-muted-foreground"
+                asChild
+              >
+                <a href="https://z.ai" target="_blank" rel="noreferrer" aria-label="Z.ai">
+                  <Github className="h-4 w-4" />
+                </a>
+              </Button>
+              <ThemeToggle />
             </div>
           </div>
         </header>
+
+        {/* Secção de Skins — abaixo do header, todas visíveis (wrap) */}
+        <div className="border-b border-border bg-card/30">
+          <div className="mx-auto max-w-5xl px-4 py-2.5 sm:px-6">
+            <SkinSwitcher activeSkin={activeSkin} onChange={setActiveSkin} />
+          </div>
+        </div>
 
         {/* Hero — apenas quando o form está visível */}
         <AnimatePresence>
@@ -212,7 +203,7 @@ export default function Home() {
                 </span>
                 Function Calling · Structured Output
               </motion.div>
-              <h2 className="mx-auto max-w-2xl text-balance text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+              <h2 className="mx-auto max-w-2xl text-balance text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
                 Forja projetos <span className="text-gradient">production-ready</span> a partir de um briefing
               </h2>
               <p className="mx-auto mt-4 max-w-xl text-pretty text-sm text-muted-foreground sm:text-base">
@@ -310,7 +301,7 @@ export default function Home() {
         {/* Footer */}
         <footer className="mt-auto border-t border-border py-6">
           <div className="mx-auto max-w-5xl px-4 text-center text-xs text-muted-foreground sm:px-6">
-            ProjectForge AI · Next.js 16 · Tailwind 4 · Framer Motion · chroma.js · Zod
+            Inaugura-Base · Next.js 16 · Tailwind 4 · Motion · chroma.js · Zod
           </div>
         </footer>
       </div>

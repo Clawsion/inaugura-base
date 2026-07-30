@@ -18,20 +18,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ProjectForge AI — Gera specs de projeto com IA",
+  title: "Inaugura-Base — Forge spec-driven projects with AI",
   description:
     "Briefing → análise de nicho, paleta, tipografia, design tokens, layout, skills/MCP e prompts prontos a copiar.",
   keywords: [
-    "ProjectForge",
+    "Inaugura-Base",
     "AI",
     "Next.js",
     "Design System",
     "MCP",
     "Motion",
   ],
-  icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
-  },
 };
 
 export default function RootLayout({

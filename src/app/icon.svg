@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF3366">
+        <animate attributeName="stop-color"
+          values="#FF3366;#FF8C00;#FFD60A;#00E676;#00B0FF;#7C4DFF;#FF3366"
+          dur="10s" repeatCount="indefinite" calcMode="spline"
+          keyTimes="0;0.16;0.33;0.5;0.66;0.83;1"
+          keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+      </stop>
+      <stop offset="100%" stop-color="#7C4DFF">
+        <animate attributeName="stop-color"
+          values="#7C4DFF;#FF3366;#FF8C00;#FFD60A;#00E676;#00B0FF;#7C4DFF"
+          dur="10s" repeatCount="indefinite" calcMode="spline"
+          keyTimes="0;0.16;0.33;0.5;0.66;0.83;1"
+          keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+      </stop>
+    </linearGradient>
+    <filter id="blur1">
+      <feGaussianBlur stdDeviation="0.6"/>
+    </filter>
+  </defs>
+  <rect width="32" height="32" rx="9" fill="#08080A"/>
+  <rect width="32" height="32" rx="9" fill="url(#g1)" opacity="0.18"/>
+  <circle cx="16" cy="16" r="9" fill="url(#g1)" filter="url(#blur1)" opacity="0.55">
+    <animate attributeName="r" values="9;10;9" dur="4s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+  </circle>
+  <circle cx="16" cy="16" r="6.5" fill="url(#g1)"/>
+  <rect x="13.5" y="13.5" width="5" height="5" rx="1.5" fill="#08080A"/>
+  <rect x="14.5" y="14.5" width="3" height="3" rx="0.75" fill="url(#g1)" opacity="0.9"/>
+</svg>

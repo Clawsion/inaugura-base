@@ -26,7 +26,15 @@ export type SkinCategory =
   | "Cyberpunk"
   | "Apple"
   | "Material"
-  | "Luxury";
+  | "Luxury"
+  | "Nordic"
+  | "Warm"
+  | "Earthy"
+  | "Retro"
+  | "Mono"
+  | "Pastel"
+  | "Carbon"
+  | "Vapor";
 
 export interface Skin {
   id: string;
@@ -360,6 +368,264 @@ export const SKINS: Skin[] = [
       shadow: "0 4px 20px rgba(0, 0, 0, 0.7)",
       headingFont: "Georgia, 'Times New Roman', serif",
       bodyFont: "var(--font-inter), Georgia, serif",
+    },
+  },
+
+  // ── 11. Nordic Frost ──────────────────────────────────────────────────
+  {
+    id: "nordic-frost",
+    name: "Nordic Frost",
+    description: "Glacial blues with Scandinavian calm",
+    category: "Nordic",
+    light: {
+      bg: "#F0F4F8",
+      card: "#FFFFFF",
+      text: "#1A2533",
+      muted: "#5A6B7E",
+      accent: "#0EA5E9",
+      border: "rgba(14, 165, 233, 0.15)",
+      radius: "0.75rem",
+      shadow: "0 4px 16px rgba(14, 165, 233, 0.08)",
+      headingFont: "var(--font-jakarta), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+    },
+    dark: {
+      bg: "#0B1420",
+      card: "#14202E",
+      text: "#E1ECF5",
+      muted: "#7E94A8",
+      accent: "#38BDF8",
+      border: "rgba(56, 189, 248, 0.18)",
+      radius: "0.75rem",
+      shadow: "0 4px 16px rgba(56, 189, 248, 0.15)",
+      headingFont: "var(--font-jakarta), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+    },
+  },
+
+  // ── 12. Sunset Coral ──────────────────────────────────────────────────
+  {
+    id: "sunset-coral",
+    name: "Sunset Coral",
+    description: "Warm horizons, golden hour glow",
+    category: "Warm",
+    light: {
+      bg: "#FFF5F0",
+      card: "#FFFFFF",
+      text: "#3D1F1A",
+      muted: "#8A5547",
+      accent: "#FF6B6B",
+      border: "rgba(255, 107, 107, 0.18)",
+      radius: "1.25rem",
+      shadow: "0 8px 24px rgba(255, 107, 107, 0.12)",
+      headingFont: "var(--font-jakarta), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+    },
+    dark: {
+      bg: "#1A0E0B",
+      card: "#2A1815",
+      text: "#FFE8DC",
+      muted: "#B89188",
+      accent: "#FF8A65",
+      border: "rgba(255, 138, 101, 0.22)",
+      radius: "1.25rem",
+      shadow: "0 8px 24px rgba(255, 138, 101, 0.18)",
+      headingFont: "var(--font-jakarta), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+    },
+  },
+
+  // ── 13. Forest Sage ───────────────────────────────────────────────────
+  {
+    id: "forest-sage",
+    name: "Forest Sage",
+    description: "Grounded in earthy sage greens",
+    category: "Earthy",
+    light: {
+      bg: "#F4F6F1",
+      card: "#FFFFFF",
+      text: "#1F2A1F",
+      muted: "#5C6B5C",
+      accent: "#4A7C59",
+      border: "rgba(74, 124, 89, 0.15)",
+      radius: "0.875rem",
+      shadow: "0 4px 16px rgba(74, 124, 89, 0.10)",
+      headingFont: "var(--font-jakarta), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+    },
+    dark: {
+      bg: "#0E1410",
+      card: "#182018",
+      text: "#DDE8DC",
+      muted: "#8AA088",
+      accent: "#7FB585",
+      border: "rgba(127, 181, 133, 0.20)",
+      radius: "0.875rem",
+      shadow: "0 4px 16px rgba(127, 181, 133, 0.12)",
+      headingFont: "var(--font-jakarta), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+    },
+  },
+
+  // ── 14. Vaporwave Retro ───────────────────────────────────────────────
+  {
+    id: "vaporwave-retro",
+    name: "Vaporwave Retro",
+    description: "80s synthwave aesthetics reborn",
+    category: "Retro",
+    light: {
+      bg: "#F8F4FF",
+      card: "#FFFFFF",
+      text: "#2D1B4E",
+      muted: "#6B5B8A",
+      accent: "#C724B1",
+      border: "rgba(199, 36, 177, 0.18)",
+      radius: "0.5rem",
+      shadow: "0 4px 16px rgba(199, 36, 177, 0.15)",
+      headingFont: "var(--font-mono), ui-monospace, monospace",
+      bodyFont: "var(--font-mono), ui-monospace, monospace",
+    },
+    dark: {
+      bg: "#1A0033",
+      card: "#2D0A4E",
+      text: "#F0E6FF",
+      muted: "#A088C8",
+      accent: "#FF71CE",
+      border: "rgba(255, 113, 206, 0.25)",
+      radius: "0.5rem",
+      shadow:
+        "0 0 12px rgba(255, 113, 206, 0.3), 0 0 24px rgba(1, 205, 254, 0.15)",
+      headingFont: "var(--font-mono), ui-monospace, monospace",
+      bodyFont: "var(--font-mono), ui-monospace, monospace",
+    },
+  },
+
+  // ── 15. Mono Ink ──────────────────────────────────────────────────────
+  {
+    id: "mono-ink",
+    name: "Mono Ink",
+    description: "Pure ink on cream, literary calm",
+    category: "Mono",
+    light: {
+      bg: "#FAF7F0",
+      card: "#FFFFFF",
+      text: "#0A0A0A",
+      muted: "#6B6B6B",
+      accent: "#0A0A0A",
+      border: "#0A0A0A",
+      radius: "0px",
+      shadow: "none",
+      headingFont: "Georgia, 'Times New Roman', serif",
+      bodyFont: "Georgia, 'Times New Roman', serif",
+    },
+    dark: {
+      bg: "#FAF7F0",
+      card: "#F5F0E6",
+      text: "#0A0A0A",
+      muted: "#5C5C5C",
+      accent: "#0A0A0A",
+      border: "#0A0A0A",
+      radius: "0px",
+      shadow: "none",
+      headingFont: "Georgia, 'Times New Roman', serif",
+      bodyFont: "Georgia, 'Times New Roman', serif",
+    },
+  },
+
+  // ── 16. Pastel Dream ──────────────────────────────────────────────────
+  {
+    id: "pastel-dream",
+    name: "Pastel Dream",
+    description: "Soft confectionery, gentle and calm",
+    category: "Pastel",
+    light: {
+      bg: "#FFF9FB",
+      card: "#FFFFFF",
+      text: "#3D2B3D",
+      muted: "#8B7A8B",
+      accent: "#F687B3",
+      border: "rgba(246, 135, 179, 0.18)",
+      radius: "1.5rem",
+      shadow: "0 8px 24px rgba(246, 135, 179, 0.12)",
+      headingFont: "var(--font-jakarta), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+    },
+    dark: {
+      bg: "#1F1525",
+      card: "#2D2235",
+      text: "#F5E5F0",
+      muted: "#A890A8",
+      accent: "#F9A8C9",
+      border: "rgba(249, 168, 201, 0.22)",
+      radius: "1.5rem",
+      shadow: "0 8px 24px rgba(249, 168, 201, 0.15)",
+      headingFont: "var(--font-jakarta), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+    },
+  },
+
+  // ── 17. Carbon Tech ───────────────────────────────────────────────────
+  {
+    id: "carbon-tech",
+    name: "Carbon Tech",
+    description: "Carbon fiber dark with electric lime",
+    category: "Carbon",
+    light: {
+      bg: "#F2F2F2",
+      card: "#FFFFFF",
+      text: "#0A0A0A",
+      muted: "#5C5C5C",
+      accent: "#84CC16",
+      border: "rgba(0, 0, 0, 0.10)",
+      radius: "0.5rem",
+      shadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+      headingFont: "var(--font-geist-sans), system-ui, sans-serif",
+      bodyFont: "var(--font-geist-sans), system-ui, sans-serif",
+    },
+    dark: {
+      bg: "#0A0A0A",
+      card: "#161616",
+      text: "#F2F2F2",
+      muted: "#7C7C7C",
+      accent: "#A3E635",
+      border: "rgba(163, 230, 53, 0.18)",
+      radius: "0.5rem",
+      shadow: "0 0 12px rgba(163, 230, 53, 0.12)",
+      headingFont: "var(--font-geist-sans), system-ui, sans-serif",
+      bodyFont: "var(--font-geist-sans), system-ui, sans-serif",
+    },
+  },
+
+  // ── 18. Cyber Violet ──────────────────────────────────────────────────
+  {
+    id: "cyber-violet",
+    name: "Cyber Violet",
+    description: "Magenta neon on electric violet",
+    category: "Cyberpunk",
+    light: {
+      bg: "#F5F0FF",
+      card: "#FFFFFF",
+      text: "#2A0F4E",
+      muted: "#6B4F8A",
+      accent: "#9D4EDD",
+      border: "rgba(157, 78, 221, 0.18)",
+      radius: "0.75rem",
+      shadow: "0 4px 16px rgba(157, 78, 221, 0.12)",
+      headingFont: "var(--font-mono), ui-monospace, monospace",
+      bodyFont: "var(--font-mono), ui-monospace, monospace",
+    },
+    dark: {
+      bg: "#0E0420",
+      card: "#18092E",
+      text: "#E8D5FF",
+      muted: "#9070B5",
+      accent: "#E0AAFF",
+      border: "rgba(224, 170, 255, 0.25)",
+      radius: "0.75rem",
+      shadow:
+        "0 0 12px rgba(224, 170, 255, 0.3), 0 0 24px rgba(255, 0, 200, 0.12)",
+      headingFont: "var(--font-mono), ui-monospace, monospace",
+      bodyFont: "var(--font-mono), ui-monospace, monospace",
     },
   },
 ];

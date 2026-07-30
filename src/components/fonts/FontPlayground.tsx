@@ -15,12 +15,12 @@
 //  - Expand/collapse por barra
 // ============================================================================
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Type, Zap, ChevronDown, ChevronUp, Upload, Wand2,
   Lock, Unlock, Copy, ClipboardPaste, Shuffle,
-  Bold, Italic, Eye,
+  Bold, Italic, Eye, Globe,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -39,11 +39,11 @@ import {
 } from "@/lib/font-transforms";
 import {
   FONTS_MODERNAS, FONT_FILTERS, PESOS_LABELS, PESOS_DISPONIVEIS,
-  loadFont, getRandomFontByFilter, fontStackFor,
+  loadFont, getRandomFontByFilterAsync, fontStackFor,
+  countFontsBySource, getAllFonts,
   type FontInfo,
 } from "@/lib/fonts-modernas";
 import { FONTES_DISPONIVEIS } from "@/lib/fonts";
-import { FontSources } from "./FontSources";
 import { FontPreviewPopup } from "./FontPreviewPopup";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -81,7 +81,19 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
   const [expanded, setExpanded] = useState<boolean[]>([false, false, false, false, false]);
   const [textoGlobal, setTextoGlobal] = useState("The quick brown fox jumps over the lazy dog");
   const [filtro, setFiltro] = useState("todos");
+  const [sourceFilter, setSourceFilter] = useState("todos");
   const [clipboard, setClipboard] = useState<FontSlotState | null>(null);
+  // NOVO: catálogo dinâmico de 1500+ fonts + contador
+  const [fontCount, setFontCount] = useState<{ total: number; google: number; fontshare: number; curated: number } | null>(null);
+  const [allFontsCatalog, setAllFontsCatalog] = useState<FontInfo[]>(FONTS_MODERNAS);
+
+  // Busca catálogo dinâmico ao montar
+  useEffect(() => {
+    getAllFonts().then((catalog) => {
+      setAllFontsCatalog(catalog);
+      countFontsBySource().then(setFontCount);
+    });
+  }, []);
 
   useEffect(() => {
     if (states.length !== 5) onChange(DEFAULT_STATES);
@@ -108,12 +120,13 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
   const expandAll = () => setExpanded([true, true, true, true, true]);
   const collapseAll = () => setExpanded([false, false, false, false, false]);
 
-  // GENERATE ALL — respeita locks: busca font aleatória + transform aleatória
+  // GENERATE ALL — respeita locks: busca font aleatória (do catálogo 1500+) + transform aleatória
   const generateAll = useCallback(async () => {
     const next = await Promise.all(
       slotStates.map(async (s) => {
         if (s.locked) return s; // respeita o lock
-        const font = getRandomFontByFilter(filtro, s.fonte);
+        // Usa catálogo dinâmico (1500+ fonts) com filtro de categoria + source
+        const font = await getRandomFontByFilterAsync(filtro, sourceFilter, s.fonte);
         await loadFont(font);
         return {
           ...s,
@@ -128,7 +141,7 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
     toast.success(
       `5 fonts geradas!${lockedCount > 0 ? ` (${lockedCount} bloqueadas mantidas)` : ""}`
     );
-  }, [slotStates, onChange, filtro]);
+  }, [slotStates, onChange, filtro, sourceFilter]);
 
   const handleUploadFont = useCallback(async (file: File) => {
     const familyName = file.name
@@ -196,24 +209,32 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
           </div>
         </div>
 
-        {/* Filtros por categoria */}
-        <div className="mt-2 flex flex-wrap gap-1">
-          {FONT_FILTERS.map((f) => (
-            <button
-              key={f.id}
-              type="button"
-              onClick={() => setFiltro(f.id)}
-              title={f.desc}
-              className={cn(
-                "rounded-full border px-2.5 py-0.5 text-[10px] font-medium transition-all",
-                filtro === f.id
-                  ? "border-primary bg-primary/15 text-primary"
-                  : "border-border text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {f.label}
-            </button>
-          ))}
+        {/* Filtros por categoria + source + contador */}
+        <div className="mt-2 flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap gap-1">
+            {FONT_FILTERS.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => setFiltro(f.id)}
+                title={f.desc}
+                className={cn(
+                  "rounded-full border px-2.5 py-0.5 text-[10px] font-medium transition-all",
+                  filtro === f.id
+                    ? "border-primary bg-primary/15 text-primary"
+                    : "border-border text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Separador visual */}
+          <div className="h-4 w-px bg-border" />
+
+          {/* Source filter (seletor de site de fonts) */}
+          <SourceFilter value={sourceFilter} onChange={setSourceFilter} fontCount={fontCount} />
         </div>
       </div>
 
@@ -239,15 +260,14 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
             uploadedFonts={uploadedFonts}
             onUploadFont={handleUploadFont}
             filtro={filtro}
+            sourceFilter={sourceFilter}
+            allFontsCatalog={allFontsCatalog}
             onCopy={() => copySlot(i)}
             onPaste={() => pasteSlot(i)}
             hasClipboard={clipboard !== null}
           />
         ))}
       </div>
-
-      {/* Font Sources (10 sites) */}
-      <FontSources />
     </motion.div>
   );
 }
@@ -265,6 +285,8 @@ interface FontBarProps {
   uploadedFonts: UploadedFont[];
   onUploadFont: (file: File) => void;
   filtro: string;
+  sourceFilter: string;
+  allFontsCatalog: FontInfo[];
   onCopy: () => void;
   onPaste: () => void;
   hasClipboard: boolean;
@@ -272,7 +294,8 @@ interface FontBarProps {
 
 function FontBar({
   index, state, texto, expanded, onToggleExpand, onChange,
-  uploadedFonts, onUploadFont, filtro, onCopy, onPaste, hasClipboard,
+  uploadedFonts, onUploadFont, filtro, sourceFilter, allFontsCatalog,
+  onCopy, onPaste, hasClipboard,
 }: FontBarProps) {
   const transformAtual = state.transformId
     ? FONT_TRANSFORMS.find((t) => t.id === state.transformId)
@@ -280,7 +303,17 @@ function FontBar({
 
   // Generate individual — busca font aleatória do filtro + transform aleatória
   const gerarIndividual = async () => {
-    const font = getRandomFontByFilter(filtro, state.fonte);
+    // Usa catálogo dinâmico (1500+ fonts) com filtro de categoria + source
+    let pool = allFontsCatalog;
+    if (filtro !== "todos") {
+      pool = pool.filter((f) => f.categoria.includes(filtro as any));
+    }
+    if (sourceFilter !== "todos") {
+      pool = pool.filter((f) => f.source === sourceFilter);
+    }
+    pool = pool.filter((f) => f.family !== state.fonte);
+    if (pool.length === 0) pool = FONTS_MODERNAS;
+    const font = pool[Math.floor(Math.random() * pool.length)];
     await loadFont(font);
     onChange({
       ...state,
@@ -653,5 +686,98 @@ function UploadButton({ onUpload }: { onUpload: (f: File) => void }) {
         }}
       />
     </label>
+  );
+}
+
+// ============================================================================
+// SourceFilter — seletor expansível do site de fonts (Google/Fontshare/Todos)
+// ============================================================================
+const SOURCES = [
+  { id: "todos", label: "Todos", desc: "Todas as fonts (Google + Fontshare)" },
+  { id: "google", label: "Google Fonts", desc: "1500+ fonts gratuitas" },
+  { id: "fontshare", label: "Fontshare", desc: "Premium ITF gratuitas (awwwards)" },
+];
+
+function SourceFilter({
+  value, onChange, fontCount,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  fontCount: { total: number; google: number; fontshare: number; curated: number } | null;
+}) {
+  const [open, setOpen] = useState(false);
+  const current = SOURCES.find((s) => s.id === value) ?? SOURCES[0];
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-1.5 rounded-full border border-border bg-background/40 px-2.5 py-0.5 text-[10px] font-medium transition-all hover:border-primary/40"
+      >
+        <Globe className="h-2.5 w-2.5 text-primary" />
+        <span className="text-muted-foreground">Source:</span>
+        <span className="font-semibold">{current.label}</span>
+        {fontCount && (
+          <span className="rounded bg-primary/10 px-1 text-primary">
+            {value === "google" ? fontCount.google : value === "fontshare" ? fontCount.fontshare : fontCount.total}
+          </span>
+        )}
+        <ChevronDown className={cn("h-2.5 w-2.5 transition-transform", open && "rotate-180")} />
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <>
+            {/* Overlay para fechar ao clicar fora */}
+            <div
+              className="fixed inset-0 z-40"
+              onClick={() => setOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              className="absolute left-0 top-full z-50 mt-1 min-w-[220px] rounded-xl border border-border bg-card p-1 shadow-lg"
+            >
+              {SOURCES.map((s) => {
+                const count = s.id === "google" ? fontCount?.google : s.id === "fontshare" ? fontCount?.fontshare : fontCount?.total;
+                return (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => {
+                      onChange(s.id);
+                      setOpen(false);
+                    }}
+                    className={cn(
+                      "flex w-full items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-left text-xs transition-colors",
+                      value === s.id
+                        ? "bg-primary/10 text-primary"
+                        : "text-foreground hover:bg-background/50"
+                    )}
+                  >
+                    <div>
+                      <div className="font-semibold">{s.label}</div>
+                      <div className="text-[9px] text-muted-foreground">{s.desc}</div>
+                    </div>
+                    {count !== undefined && (
+                      <span className="rounded bg-background/60 px-1.5 py-0.5 text-[9px] font-mono text-muted-foreground">
+                        {count}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+              {fontCount && fontCount.total > FONTS_MODERNAS.length && (
+                <div className="mt-1 border-t border-border px-2 py-1 text-[9px] text-muted-foreground">
+                  Catálogo dinâmico ativo ({fontCount.total} fonts)
+                </div>
+              )}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }

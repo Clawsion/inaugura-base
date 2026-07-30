@@ -1,18 +1,16 @@
 // ============================================================================
-// fonts-modernas.ts — 40+ fonts curadas (sans/serif/mono/geist/awwwards)
+// fonts-modernas.ts — Catálogo de 1500+ fonts (Google + Fontshare + curadas)
 // ============================================================================
-// Lista curada de fonts modernas para o Generate do FontPlayground buscar.
-// Inclui fonts populares em sites awwwards + clássicas modernas.
+// Three-tier strategy:
+//  1. CURATED: 45 fonts à mão (sempre disponíveis, com metadados ricos)
+//  2. GOOGLE DYNAMIC: ~1500 fonts fetched at runtime from
+//     https://fonts.google.com/metadata/fonts (public, no auth)
+//  3. FONTSHARE: 40+ premium ITF fonts
 //
-// SKILL RECOMENDADA para fetch dinâmico:
-//  - Google Fonts CSS API (sem auth, ilimitado): https://fonts.googleapis.com/css2
-//  - Fontshare API (gratuito, fonts premium ITF): https://api.fontshare.com/v2/css
-//  - Para awwwards: Fontshare (Clash, Cabinet, General Sans) + Google (Bricolage, Space Grotesk)
-//
-// O loader dinâmico usa <link> tags para carregar apenas as fonts necessárias.
+// SKILL: Google Fonts CSS2 API + Fontshare API — loaders dinâmicos via <link>
 // ============================================================================
 
-export type FontCategory = "sans" | "serif" | "mono" | "geist" | "awwwards";
+export type FontCategory = "sans" | "serif" | "mono" | "geist" | "awwwards" | "display" | "handwriting";
 export type FontSource = "google" | "fontshare";
 
 export interface FontInfo {
@@ -176,3 +174,129 @@ export const PESOS_LABELS: Record<number, string> = {
 };
 
 export const PESOS_DISPONIVEIS = [100, 200, 300, 400, 500, 600, 700, 800, 900];
+
+// ============================================================================
+// CATÁLOGO DINÂMICO — 1500+ fonts do Google Fonts
+// ============================================================================
+// Fetch runtime de https://fonts.google.com/metadata/fonts (endpoint público,
+// sem auth). Retorna JSON com todas as fonts Google (~1500).
+// Cada entry: { family, category, subsets, variants, ... }
+//
+// Estratégia:
+//  - CURATED (45) sempre disponíveis offline
+//  - Dinâmico fetch incrementa para 1500+ quando online
+//  - Merge: mantém metadados ricos das curadas, adiciona as dinâmicas
+// ============================================================================
+
+let dynamicCatalogCache: FontInfo[] | null = null;
+let dynamicFetchPromise: Promise<FontInfo[]> | null = null;
+
+/**
+ * Busca o catálogo dinâmico do Google Fonts (1500+ fonts).
+ * Cache em memória. Se o fetch falhar (CORS/offline), retorna array vazio.
+ */
+export async function fetchGoogleFontsCatalog(): Promise<FontInfo[]> {
+  if (dynamicCatalogCache) return dynamicCatalogCache;
+  if (dynamicFetchPromise) return dynamicFetchPromise;
+
+  dynamicFetchPromise = (async () => {
+    try {
+      // Endpoint público do Google Fonts com metadata de todas as fonts.
+      // Pode ter restrições CORS em alguns ambientes; nesse caso, fallback.
+      const res = await fetch("https://fonts.google.com/metadata/fonts", {
+        method: "GET",
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
+      // O endpoint pode retornar JSON puro ou com prefixo ")]}'"
+      const json = JSON.parse(text.replace(/^\)\]\}'\n/, ""));
+      const fonts: FontInfo[] = (json.familyMetadataList ?? json ?? []).map(
+        (f: any) => {
+          const family: string = f.family ?? f.name ?? "";
+          const category: string = (f.category ?? "sans-serif").toLowerCase();
+          const variants: string[] = f.variants ?? [];
+          const pesos: number[] = variants
+            .filter((v) => /^\d+$/.test(v))
+            .map((v) => parseInt(v, 10))
+            .filter((n) => PESOS_DISPONIVEIS.includes(n));
+          if (pesos.length === 0) pesos.push(400);
+          const italic = variants.includes("italic") || variants.some((v) => v.includes("italic"));
+          // Map Google category → nossa FontCategory
+          const cat: FontCategory[] = [];
+          if (category.includes("sans")) cat.push("sans");
+          if (category.includes("serif")) cat.push("serif");
+          if (category.includes("monospace")) cat.push("mono");
+          if (category.includes("display")) cat.push("display");
+          if (category.includes("handwriting")) cat.push("handwriting");
+          if (cat.length === 0) cat.push("sans");
+          return {
+            nome: family,
+            family,
+            categoria: cat,
+            source: "google" as FontSource,
+            pesos: Array.from(new Set(pesos)).sort((a, b) => a - b),
+            italic,
+          };
+        }
+      );
+      dynamicCatalogCache = fonts;
+      return fonts;
+    } catch {
+      dynamicCatalogCache = [];
+      return [];
+    } finally {
+      dynamicFetchPromise = null;
+    }
+  })();
+
+  return dynamicFetchPromise;
+}
+
+/**
+ * Retorna o catálogo completo: curadas (com metadados ricos) + dinâmicas.
+ * Deduplica por family (curadas têm prioridade).
+ */
+export async function getAllFonts(): Promise<FontInfo[]> {
+  const dynamic = await fetchGoogleFontsCatalog();
+  const curatedFamilies = new Set(FONTS_MODERNAS.map((f) => f.family));
+  const dynamicUnique = dynamic.filter((f) => !curatedFamilies.has(f.family));
+  return [...FONTS_MODERNAS, ...dynamicUnique];
+}
+
+/**
+ * Helper: escolher font aleatória por filtro + source (async, usa catálogo completo)
+ */
+export async function getRandomFontByFilterAsync(
+  filtro: string,
+  source: string, // "todos" | "google" | "fontshare"
+  exclude?: string
+): Promise<FontInfo> {
+  let pool = await getAllFonts();
+  if (filtro !== "todos") {
+    pool = pool.filter((f) => f.categoria.includes(filtro as FontCategory));
+  }
+  if (source !== "todos") {
+    pool = pool.filter((f) => f.source === source);
+  }
+  if (exclude) {
+    pool = pool.filter((f) => f.family !== exclude);
+  }
+  if (pool.length === 0) {
+    // Fallback para as curadas
+    pool = FONTS_MODERNAS;
+  }
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+/**
+ * Conta quantas fonts estão disponíveis por source (para mostrar no UI).
+ */
+export async function countFontsBySource(): Promise<{ total: number; google: number; fontshare: number; curated: number }> {
+  const all = await getAllFonts();
+  return {
+    total: all.length,
+    google: all.filter((f) => f.source === "google").length,
+    fontshare: all.filter((f) => f.source === "fontshare").length,
+    curated: FONTS_MODERNAS.length,
+  };
+}
