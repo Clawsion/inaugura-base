@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { generatePerfectCombos, type PerfectCombo } from "@/lib/perfect-combo";
+import { generatePerfectCombos, detectarNicho, getComboForNicho, type PerfectCombo } from "@/lib/perfect-combo";
 import { loadFont, fontStackFor } from "@/lib/fonts-modernas";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -21,14 +21,20 @@ interface PerfectComboPopupProps {
   onApplyCombo: (combo: PerfectCombo) => void;
   fontsPlayground: { fonte: string }[];
   paletaManual: { nome: string; hex: string; uso: string }[];
+  briefing?: string;
+  nicho?: string;
 }
 
 export function PerfectComboPopup({
-  onApplyCombo, fontsPlayground, paletaManual,
+  onApplyCombo, fontsPlayground, paletaManual, briefing, nicho,
 }: PerfectComboPopupProps) {
   const [open, setOpen] = useState(false);
   const [selectedCombo, setSelectedCombo] = useState<PerfectCombo | null>(null);
   const combos = generatePerfectCombos();
+
+  // NOVO: deteta nicho automaticamente quando o popup abre
+  const nichoDetetado = nicho || (briefing ? detectarNicho(briefing) : null);
+  const comboRecomendada = nichoDetetado ? getComboForNicho(nichoDetetado) : null;
 
   const handleSelect = async (combo: PerfectCombo) => {
     setSelectedCombo(combo);
@@ -86,6 +92,27 @@ export function PerfectComboPopup({
               </Button>
             )}
           </div>
+          {/* NOVO: banner de recomendação automática por nicho */}
+          {nichoDetetado && comboRecomendada && (
+            <button
+              type="button"
+              onClick={() => handleSelect(comboRecomendada)}
+              className="mt-2 flex w-full items-center gap-2 rounded-lg border border-fuchsia-500/40 bg-fuchsia-500/10 p-2 text-left transition-all hover:bg-fuchsia-500/15"
+            >
+              <Sparkles className="h-3.5 w-3.5 shrink-0 text-fuchsia-500" />
+              <div className="flex-1 min-w-0">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-fuchsia-500">
+                  Recomendado para o teu nicho: {nichoDetetado}
+                </div>
+                <div className="text-xs font-semibold">{comboRecomendada.nome}</div>
+                <div className="text-[10px] text-muted-foreground">{comboRecomendada.descricao}</div>
+              </div>
+              <div className="flex gap-0.5">
+                <div className="h-3 w-3 rounded-sm border border-border" style={{ backgroundColor: comboRecomendada.paleta.bg }} />
+                <div className="h-3 w-3 rounded-sm border border-border" style={{ backgroundColor: comboRecomendada.paleta.accent }} />
+              </div>
+            </button>
+          )}
         </div>
 
         <div className="grid max-h-[80vh] grid-cols-1 overflow-hidden md:grid-cols-[280px_1fr]">
@@ -111,6 +138,11 @@ export function PerfectComboPopup({
                       <div className="h-4 w-4 rounded-sm border border-border" style={{ backgroundColor: combo.paleta.text }} />
                     </div>
                     <span className="text-xs font-bold">{combo.nome}</span>
+                    {comboRecomendada?.id === combo.id && (
+                      <span className="rounded bg-fuchsia-500/20 px-1 text-[8px] font-bold uppercase text-fuchsia-500">
+                        ★ Recomendado
+                      </span>
+                    )}
                   </div>
                   <p className="mt-1 text-[10px] leading-tight text-muted-foreground">{combo.descricao}</p>
                   <div className="mt-1 flex flex-wrap gap-0.5">

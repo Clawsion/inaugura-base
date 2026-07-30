@@ -224,3 +224,88 @@ export function generatePerfectCombos(): PerfectCombo[] {
 export function getComboById(id: string): PerfectCombo | undefined {
   return generatePerfectCombos().find((c) => c.id === id);
 }
+
+// ============================================================================
+// Detetar nicho automaticamente a partir do briefing
+// ============================================================================
+export function detectarNicho(briefing: string): string | null {
+  if (!briefing || briefing.length < 10) return null;
+  const b = briefing.toLowerCase();
+
+  // Mapeamento de keywords → nicho
+  const keywords: Record<string, string[]> = {
+    "SaaS B2B": ["saas", "b2b", "software", "enterprise", "dashboard", "crm", "erp", "workflow", "tool", "platform"],
+    "E-commerce Moda": ["moda", "fashion", "roupa", "clothing", "apparel", "store", "loja", "shop"],
+    "E-commerce Geral": ["e-commerce", "ecommerce", "loja online", "online store", "shop", "vendas", "sales"],
+    "FinTech": ["fintech", "bank", "banco", "payment", "pagamento", "finance", "financeiro", "crypto", "investment"],
+    "HealthTech": ["health", "saúde", "saude", "medical", "médico", "medico", "clinic", "clínica", "wellness", "hospital"],
+    "EdTech": ["education", "educação", "educacao", "course", "curso", "learning", "aprendizagem", "school", "escola", "student"],
+    "Imobiliário": ["imobiliário", "imobiliario", "real estate", "property", "propriedade", "house", "casa", "apartment"],
+    "Restaurantes / Food": ["restaurante", "restaurant", "food", "comida", "menu", "chef", "culinary", "gastronomy"],
+    "Viagens & Turismo": ["travel", "viagens", "turismo", "tourism", "hotel", "booking", "reserva", "vacation", "férias"],
+    "Agência Criativa": ["agência", "agencia", "agency", "creative", "criativa", "design", "studio", "branding"],
+    "Portfólio Pessoal": ["portfolio", "portfólio", "pessoal", "personal", "freelancer", "designer", "developer"],
+    "Blog / Media": ["blog", "media", "notícias", "noticias", "news", "article", "artigo", "magazine", "revista"],
+    "Gaming": ["game", "gaming", "jogo", "jogos", "gamer", "esports", "play", "stream"],
+    "Crypto / Web3": ["crypto", "web3", "blockchain", "nft", "token", "defi", "wallet", "metamask"],
+    "Mobilidade": ["mobilidade", "mobility", "transport", "transporte", "ride", "uber", "vehicle", "carro"],
+    "Logística": ["logística", "logistica", "logistics", "shipping", "envio", "delivery", "entrega", "supply chain"],
+    "Energia / Sustentabilidade": ["energia", "energy", "solar", "sustentabilidade", "sustainability", "green", "renewable", "eco"],
+    "Fitness / Wellness": ["fitness", "gym", "ginásio", "workout", "treino", "yoga", "pilates", "health club"],
+    "Beleza / Cosmética": ["beleza", "beauty", "cosmética", "cosmetic", "makeup", "skincare", "salon", "salão"],
+    "Imobiliário de Luxo": ["luxo", "luxury", "premium", "exclusive", "high-end", "mansion", "penthouse"],
+    "Advocacia / Jurídico": ["advocacia", "law", "jurídico", "juridico", "lawyer", "advogado", "legal", "attorney"],
+    "Consultoria": ["consultoria", "consulting", "consultant", "consultor", "advisory", "strategy"],
+    "Manufatura / Indústria": ["manufatura", "manufacturing", "indústria", "industria", "factory", "fábrica", "production"],
+    "ONG / Impacto Social": ["ong", "ngo", "impacto social", "social impact", "charity", "solidário", "nonprofit"],
+  };
+
+  // Contar matches por nicho
+  const scores: Record<string, number> = {};
+  for (const [nicho, kws] of Object.entries(keywords)) {
+    let score = 0;
+    for (const kw of kws) {
+      if (b.includes(kw)) score += 1;
+    }
+    if (score > 0) scores[nicho] = score;
+  }
+
+  // Retornar o nicho com maior score
+  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  return sorted.length > 0 ? sorted[0][0] : null;
+}
+
+// ============================================================================
+// Mapear nicho → combo recomendada
+// ============================================================================
+export function getComboForNicho(nicho: string): PerfectCombo {
+  const combos = generatePerfectCombos();
+  const map: Record<string, string> = {
+    "SaaS B2B": "modern-minimal",
+    "E-commerce Moda": "editorial-luxury",
+    "E-commerce Geral": "modern-minimal",
+    "FinTech": "modern-minimal",
+    "HealthTech": "warm-vintage",
+    "EdTech": "bento-modern",
+    "Imobiliário": "editorial-luxury",
+    "Restaurantes / Food": "warm-vintage",
+    "Viagens & Turismo": "editorial-luxury",
+    "Agência Criativa": "neo-brutalist",
+    "Portfólio Pessoal": "mono-ink-literary",
+    "Blog / Media": "mono-ink-literary",
+    "Gaming": "cyberpunk-gaming",
+    "Crypto / Web3": "cyberpunk-gaming",
+    "Mobilidade": "modern-minimal",
+    "Logística": "bento-modern",
+    "Energia / Sustentabilidade": "pure-light-apple",
+    "Fitness / Wellness": "neo-brutalist",
+    "Beleza / Cosmética": "editorial-luxury",
+    "Imobiliário de Luxo": "editorial-luxury",
+    "Advocacia / Jurídico": "mono-ink-literary",
+    "Consultoria": "bento-modern",
+    "Manufatura / Indústria": "bento-modern",
+    "ONG / Impacto Social": "warm-vintage",
+  };
+  const comboId = map[nicho] ?? "modern-minimal";
+  return combos.find((c) => c.id === comboId) ?? combos[0];
+}

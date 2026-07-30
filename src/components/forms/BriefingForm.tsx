@@ -39,8 +39,11 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import {
   Nichos,
-  Secoes,
-  Efeitos,
+  SecoesInfo,
+  EfeitosInfo,
+  getPresetByNicho,
+  getSecaoLabel,
+  getSecaoId,
   type FormValues,
   type SiteType,
 } from "@/lib/form-options";
@@ -50,9 +53,10 @@ import { LayoutSelector } from "./LayoutSelector";
 import { FontPlayground, type FontSlotState } from "@/components/fonts/FontPlayground";
 import { PerfectComboPopup } from "@/components/perfect-combo/PerfectComboPopup";
 import type { PerfectCombo } from "@/lib/perfect-combo";
-import { Check, ChevronsUpDown, Wand2, Sparkles } from "lucide-react";
+import { Check, ChevronsUpDown, Wand2, Sparkles, Lightbulb, Languages } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface BriefingFormProps {
   value: FormValues;
@@ -85,6 +89,42 @@ export function BriefingForm({
   isLoading,
 }: BriefingFormProps) {
   const [nichoOpen, setNichoOpen] = useState(false);
+  // NOVO: idioma das labels das secções (PT/EN)
+  const [seccoesLang, setSeccoesLang] = useState<"pt" | "en">("pt");
+
+  // NOVO: aplicar preset recomendado com base no nicho
+  const aplicarPreset = () => {
+    // Se nicho estiver vazio, tenta detetar do briefing
+    let nicho = value.nicho;
+    if (!nicho && value.briefing) {
+      const briefingLower = value.briefing.toLowerCase();
+      const detetado = Nichos.find((n) =>
+        n.toLowerCase().split(" ").some((word) => briefingLower.includes(word.toLowerCase()))
+      );
+      if (detetado) {
+        nicho = detetado;
+        onChange({ nicho: detetado });
+      }
+    }
+    if (!nicho) {
+      toast.warning("Seleciona um nicho primeiro (ou escreve um briefing para detetar automaticamente).");
+      return;
+    }
+    const preset = getPresetByNicho(nicho);
+    if (!preset) {
+      toast.warning(`Não há preset para "${nicho}". Usa um nicho da lista.`);
+      return;
+    }
+    onChange({
+      seccoes: preset.secoes,
+      efeitos: preset.efeitos,
+      paletaMode: preset.paletaMode,
+      typographyMode: preset.typographyMode,
+      promptMode: preset.promptMode,
+      nivel: preset.nivel,
+    });
+    toast.success(`Preset "${nicho}" aplicado! ${preset.razao}`);
+  };
 
   const toggleArrayItem = (key: "seccoes" | "efeitos", item: string) => {
     const arr = value[key];
@@ -191,25 +231,63 @@ export function BriefingForm({
         </motion.div>
       </div>
 
-      {/* 3. Secções (multi-select tags) */}
+      {/* 3. Secções (multi-select tags) — com toggle PT/EN + botão Recomendar */}
       <motion.div variants={fadeUp} custom={3} className="space-y-2">
-        <Label className="text-sm font-semibold">Secções a trabalhar</Label>
+        <div className="flex items-center justify-between">
+          <Label className="text-sm font-semibold">Secções a trabalhar</Label>
+          <div className="flex items-center gap-1.5">
+            {/* Botão Recomendar preset */}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={aplicarPreset}
+              className="h-6 gap-1 border-primary/40 px-2 text-[10px] text-primary hover:bg-primary/10"
+              title="Carrega um preset recomendado com base no nicho selecionado (ou deteta do briefing)"
+            >
+              <Lightbulb className="h-3 w-3" /> Recomendar
+            </Button>
+            {/* Toggle PT/EN */}
+            <div className="flex items-center gap-0.5 rounded-md border border-border bg-card/50 p-0.5">
+              <button
+                type="button"
+                onClick={() => setSeccoesLang("pt")}
+                className={cn(
+                  "rounded px-1.5 py-0.5 text-[9px] font-bold transition-all",
+                  seccoesLang === "pt" ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+                )}
+              >
+                PT
+              </button>
+              <button
+                type="button"
+                onClick={() => setSeccoesLang("en")}
+                className={cn(
+                  "rounded px-1.5 py-0.5 text-[9px] font-bold transition-all",
+                  seccoesLang === "en" ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+                )}
+              >
+                EN
+              </button>
+            </div>
+          </div>
+        </div>
         <div className="flex flex-wrap gap-2">
-          {Secoes.map((s) => {
-            const active = value.seccoes.includes(s);
+          {SecoesInfo.map((s) => {
+            const isActive = value.seccoes.includes(s.id) || value.seccoes.includes(s.pt) || value.seccoes.includes(s.en);
             return (
               <button
-                key={s}
+                key={s.id}
                 type="button"
-                onClick={() => toggleArrayItem("seccoes", s)}
+                onClick={() => toggleArrayItem("seccoes", s.id)}
                 className={cn(
                   "rounded-full border px-3 py-1.5 text-xs font-medium transition-all active:scale-95",
-                  active
+                  isActive
                     ? "border-primary bg-primary/10 text-primary"
                     : "border-border bg-card/50 text-muted-foreground hover:border-primary/40 hover:text-foreground"
                 )}
               >
-                {s}
+                {seccoesLang === "en" ? s.en : s.pt}
               </button>
             );
           })}
@@ -237,6 +315,8 @@ export function BriefingForm({
         <PerfectComboPopup
           fontsPlayground={value.fontsPlayground as { fonte: string }[] ?? []}
           paletaManual={value.paletaManual ?? []}
+          briefing={value.briefing}
+          nicho={value.nicho}
           onApplyCombo={(combo: PerfectCombo) => {
             // Aplica a combo ao form: fonts + paleta + skin
             onChange({

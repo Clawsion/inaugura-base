@@ -1,6 +1,9 @@
 // ============================================================================
 // form-options.ts — Constantes partilhadas pelo formulário
 // ============================================================================
+// Suporte PT/EN: cada secão/efeito tem chave i18n.
+// Presets: seleções pré-feitas por nicho (botão "Recomendar").
+// ============================================================================
 
 export const Nichos = [
   "SaaS B2B",
@@ -29,33 +32,57 @@ export const Nichos = [
   "ONG / Impacto Social",
 ] as const;
 
-export const Secoes = [
-  "Hero",
-  "Features",
-  "How it works",
-  "Pricing",
-  "Testimonials",
-  "FAQ",
-  "CTA",
-  "Footer",
-  "Dashboard",
-  "Auth",
-  "Blog",
-  "Gallery",
-  // NOVAS secções
-  "Cards",
-  "Bento Grid",
-  "Stats",
-  "Logos",
-  "Team",
-  "Contact",
-  "Newsletter",
-  "404",
-  "Cookies",
-] as const;
+// ============================================================================
+// SECÇÕES — com tradução PT/EN
+// ============================================================================
+export interface SecaoInfo {
+  id: string;
+  pt: string;
+  en: string;
+}
+
+export const SecoesInfo: SecaoInfo[] = [
+  { id: "hero", pt: "Hero", en: "Hero" },
+  { id: "features", pt: "Features", en: "Features" },
+  { id: "how-it-works", pt: "Como funciona", en: "How it works" },
+  { id: "pricing", pt: "Preços", en: "Pricing" },
+  { id: "testimonials", pt: "Testemunhos", en: "Testimonials" },
+  { id: "faq", pt: "FAQ", en: "FAQ" },
+  { id: "cta", pt: "CTA", en: "CTA" },
+  { id: "footer", pt: "Footer", en: "Footer" },
+  { id: "dashboard", pt: "Dashboard", en: "Dashboard" },
+  { id: "auth", pt: "Autenticação", en: "Auth" },
+  { id: "blog", pt: "Blog", en: "Blog" },
+  { id: "gallery", pt: "Galeria", en: "Gallery" },
+  { id: "cards", pt: "Cards", en: "Cards" },
+  { id: "bento-grid", pt: "Bento Grid", en: "Bento Grid" },
+  { id: "stats", pt: "Estatísticas", en: "Stats" },
+  { id: "logos", pt: "Logos", en: "Logos" },
+  { id: "team", pt: "Equipa", en: "Team" },
+  { id: "contact", pt: "Contacto", en: "Contact" },
+  { id: "newsletter", pt: "Newsletter", en: "Newsletter" },
+  { id: "404", pt: "Página 404", en: "404 Page" },
+  { id: "cookies", pt: "Banner Cookies", en: "Cookies Banner" },
+  { id: "services", pt: "Serviços", en: "Services" },
+];
+
+// Retro-compatibilidade — usa PT por defeito
+export const Secoes = SecoesInfo.map((s) => s.pt) as readonly string[];
+
+// Helper: obter secção por idioma
+export function getSecaoLabel(id: string, lang: "pt" | "en"): string {
+  const info = SecoesInfo.find((s) => s.id === id);
+  return info ? (lang === "en" ? info.en : info.pt) : id;
+}
+
+// Helper: obter id por label (qualquer idioma)
+export function getSecaoId(label: string): string {
+  const info = SecoesInfo.find((s) => s.pt === label || s.en === label || s.id === label);
+  return info?.id ?? label;
+}
 
 // ============================================================================
-// EFEITOS — agora com descrição + sugestões de uso (para hover tooltips)
+// EFEITOS — com descrição + sugestões de uso (para hover tooltips)
 // ============================================================================
 export interface EfeitoInfo {
   nome: string;
@@ -177,7 +204,6 @@ export const EfeitosInfo: EfeitoInfo[] = [
       "Cards flutuantes, modais, sidebars, dashboards sobre fundo colorido.",
     exemplo: "Apple Vision Pro UI, iOS control center, Microsoft Fluent.",
   },
-  // ── NOVOS 5 ESTILOS (2 com animações bento) ───────────────────────────
   {
     nome: "Bento Grid Animated",
     icon: "Grid3x3",
@@ -237,3 +263,267 @@ export const EfeitosInfo: EfeitoInfo[] = [
 
 // Manter retro-compatibilidade
 export const Efeitos = EfeitosInfo.map((e) => e.nome) as readonly string[];
+
+// ============================================================================
+// PRESETS RECOMENDADOS — por nicho (botão "Recomendar")
+// ============================================================================
+// Cada preset define: secões + efeitos + paleta + tipografia recomendados
+// ============================================================================
+export interface PresetRecomendado {
+  nicho: string;
+  razao: string;
+  secoes: string[]; // ids
+  efeitos: string[];
+  paletaMode: "auto" | "manual";
+  typographyMode: "auto" | "manual";
+  promptMode: "compact" | "extended";
+  nivel: "mvp" | "production";
+}
+
+export const PRESETS_RECOMENDADOS: PresetRecomendado[] = [
+  {
+    nicho: "SaaS B2B",
+    razao: "Stack clássico SaaS: hero impactante + features + pricing + social proof + CTA. Reveal on scroll para guiado.",
+    secoes: ["hero", "features", "how-it-works", "pricing", "testimonials", "logos", "faq", "cta", "footer"],
+    efeitos: ["Reveal on scroll", "Smooth scroll", "Minimal classic"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "extended",
+    nivel: "production",
+  },
+  {
+    nicho: "E-commerce Moda",
+    razao: "E-commerce fashion: hero + gallery + product cards + testimonials. Parallax + bento para visual richness.",
+    secoes: ["hero", "gallery", "cards", "pricing", "testimonials", "newsletter", "cta", "footer"],
+    efeitos: ["Parallax", "Cinematic", "Bento Grid Animated", "Reveal on scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "extended",
+    nivel: "production",
+  },
+  {
+    nicho: "E-commerce Geral",
+    razao: "E-commerce geral: hero + features + pricing + testimonials + FAQ. Marquee para logos de partners.",
+    secoes: ["hero", "features", "pricing", "testimonials", "logos", "faq", "newsletter", "cta", "footer"],
+    efeitos: ["Reveal on scroll", "Marquee Infinite", "Minimal classic"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "compact",
+    nivel: "production",
+  },
+  {
+    nicho: "FinTech",
+    razao: "FinTech precisa de confiança: stats + logos + testimonials. Minimal classic + smooth scroll.",
+    secoes: ["hero", "stats", "features", "how-it-works", "pricing", "testimonials", "logos", "faq", "cta", "footer"],
+    efeitos: ["Minimal classic", "Smooth scroll", "Reveal on scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "extended",
+    nivel: "production",
+  },
+  {
+    nicho: "HealthTech",
+    razao: "HealthTech: calmo + confiável. Hero + services + features + testimonials. Minimal + smooth.",
+    secoes: ["hero", "services", "features", "how-it-works", "testimonials", "faq", "cta", "footer"],
+    efeitos: ["Minimal classic", "Smooth scroll", "Reveal on scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "compact",
+    nivel: "production",
+  },
+  {
+    nicho: "EdTech",
+    razao: "EdTech: features + how it works + pricing + testimonials. Bento para courses.",
+    secoes: ["hero", "features", "how-it-works", "pricing", "testimonials", "faq", "newsletter", "cta", "footer"],
+    efeitos: ["Bento Grid Animated", "Reveal on scroll", "Smooth scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "compact",
+    nivel: "production",
+  },
+  {
+    nicho: "Imobiliário",
+    razao: "Imobiliário: gallery + cards + contact. Parallax + cinematic para premium feel.",
+    secoes: ["hero", "gallery", "cards", "stats", "testimonials", "contact", "cta", "footer"],
+    efeitos: ["Parallax", "Cinematic", "Reveal on scroll", "Fullscreen sections"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "compact",
+    nivel: "production",
+  },
+  {
+    nicho: "Restaurantes / Food",
+    razao: "Food: gallery + menu cards + testimonials + contact. Warm + inviting.",
+    secoes: ["hero", "gallery", "cards", "testimonials", "contact", "footer"],
+    efeitos: ["Reveal on scroll", "Parallax", "Smooth scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "compact",
+    nivel: "mvp",
+  },
+  {
+    nicho: "Viagens & Turismo",
+    razao: "Travel: hero fullscreen + gallery + testimonials + contact. Cinematic + parallax.",
+    secoes: ["hero", "gallery", "features", "testimonials", "pricing", "contact", "cta", "footer"],
+    efeitos: ["Cinematic", "Parallax", "Fullscreen sections", "Reveal on scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "extended",
+    nivel: "production",
+  },
+  {
+    nicho: "Agência Criativa",
+    razao: "Agência: portfolio + services + team + contact. Bento + brutalist + marquee para ousadia.",
+    secoes: ["hero", "services", "gallery", "bento-grid", "stats", "team", "testimonials", "logos", "contact", "footer"],
+    efeitos: ["Bento Expandable", "Cinematic", "Marquee Infinite", "Smooth scroll", "Reveal on scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "extended",
+    nivel: "production",
+  },
+  {
+    nicho: "Portfólio Pessoal",
+    razao: "Portfólio: hero + about + projects + contact. Minimal + smooth + reveal.",
+    secoes: ["hero", "gallery", "stats", "testimonials", "contact", "footer"],
+    efeitos: ["Minimal classic", "Smooth scroll", "Reveal on scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "compact",
+    nivel: "mvp",
+  },
+  {
+    nicho: "Blog / Media",
+    razao: "Blog: hero + cards (posts) + newsletter + categories. Masonry + minimal.",
+    secoes: ["hero", "cards", "gallery", "newsletter", "footer"],
+    efeitos: ["Masonry Pinterest", "Reveal on scroll", "Minimal classic"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "compact",
+    nivel: "mvp",
+  },
+  {
+    nicho: "Gaming",
+    razao: "Gaming: hero cinematic + features + stats + community. Cyberpunk + 3D + marquee.",
+    secoes: ["hero", "features", "stats", "gallery", "testimonials", "newsletter", "cta", "footer"],
+    efeitos: ["Cinematic", "3D / WebGL leve", "Marquee Infinite", "Glassmorphism"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "extended",
+    nivel: "production",
+  },
+  {
+    nicho: "Crypto / Web3",
+    razao: "Web3: hero + stats + features + community. 3D + cinematic + glassmorphism.",
+    secoes: ["hero", "stats", "features", "how-it-works", "testimonials", "logos", "faq", "cta", "footer"],
+    efeitos: ["3D / WebGL leve", "Cinematic", "Glassmorphism", "Reveal on scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "extended",
+    nivel: "production",
+  },
+  {
+    nicho: "Mobilidade",
+    razao: "Mobilidade: hero + features + stats + pricing + app download. Cinematic + parallax.",
+    secoes: ["hero", "features", "stats", "pricing", "testimonials", "faq", "cta", "footer"],
+    efeitos: ["Cinematic", "Parallax", "Reveal on scroll", "Smooth scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "compact",
+    nivel: "production",
+  },
+  {
+    nicho: "Logística",
+    razao: "Logística: hero + services + stats + features + contact. Minimal + bento.",
+    secoes: ["hero", "services", "stats", "features", "logos", "testimonials", "contact", "cta", "footer"],
+    efeitos: ["Bento Grid Animated", "Minimal classic", "Reveal on scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "compact",
+    nivel: "production",
+  },
+  {
+    nicho: "Energia / Sustentabilidade",
+    razao: "Sustentabilidade: hero + stats + features + testimonials. Minimal + parallax.",
+    secoes: ["hero", "stats", "features", "how-it-works", "testimonials", "logos", "newsletter", "cta", "footer"],
+    efeitos: ["Parallax", "Reveal on scroll", "Smooth scroll", "Minimal classic"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "compact",
+    nivel: "production",
+  },
+  {
+    nicho: "Fitness / Wellness",
+    razao: "Fitness: hero + services + pricing + testimonials + community. Bold + energetic.",
+    secoes: ["hero", "services", "pricing", "testimonials", "gallery", "newsletter", "cta", "footer"],
+    efeitos: ["Cinematic", "Bento Grid Animated", "Reveal on scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "compact",
+    nivel: "production",
+  },
+  {
+    nicho: "Beleza / Cosmética",
+    razao: "Beleza: hero + gallery + product cards + testimonials. Elegant + parallax.",
+    secoes: ["hero", "gallery", "cards", "testimonials", "newsletter", "cta", "footer"],
+    efeitos: ["Parallax", "Cinematic", "Reveal on scroll", "Smooth scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "compact",
+    nivel: "production",
+  },
+  {
+    nicho: "Imobiliário de Luxo",
+    razao: "Luxo imobiliário: hero fullscreen + gallery + stats + contact. Cinematic + fullscreen.",
+    secoes: ["hero", "gallery", "stats", "features", "testimonials", "contact", "cta", "footer"],
+    efeitos: ["Cinematic", "Fullscreen sections", "Parallax", "Smooth scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "extended",
+    nivel: "production",
+  },
+  {
+    nicho: "Advocacia / Jurídico",
+    razao: "Jurídico: hero + services + team + testimonials + contact. Minimal + trustworthy.",
+    secoes: ["hero", "services", "team", "testimonials", "faq", "contact", "cta", "footer"],
+    efeitos: ["Minimal classic", "Reveal on scroll", "Smooth scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "compact",
+    nivel: "production",
+  },
+  {
+    nicho: "Consultoria",
+    razao: "Consultoria: hero + services + team + testimonials + contact. Minimal + bento.",
+    secoes: ["hero", "services", "features", "team", "testimonials", "logos", "contact", "cta", "footer"],
+    efeitos: ["Bento Grid Animated", "Minimal classic", "Reveal on scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "compact",
+    nivel: "production",
+  },
+  {
+    nicho: "Manufatura / Indústria",
+    razao: "Indústria: hero + services + stats + features + contact. Minimal + bento.",
+    secoes: ["hero", "services", "stats", "features", "logos", "testimonials", "contact", "cta", "footer"],
+    efeitos: ["Bento Grid Animated", "Minimal classic", "Reveal on scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "compact",
+    nivel: "production",
+  },
+  {
+    nicho: "ONG / Impacto Social",
+    razao: "ONG: hero + about + stats + testimonials + newsletter + donate CTA. Cinematic + parallax.",
+    secoes: ["hero", "features", "stats", "testimonials", "gallery", "newsletter", "cta", "footer"],
+    efeitos: ["Cinematic", "Parallax", "Reveal on scroll", "Smooth scroll"],
+    paletaMode: "auto",
+    typographyMode: "auto",
+    promptMode: "compact",
+    nivel: "mvp",
+  },
+];
+
+// Helper: obter preset por nicho
+export function getPresetByNicho(nicho: string): PresetRecomendado | null {
+  return PRESETS_RECOMENDADOS.find((p) => p.nicho === nicho) ?? null;
+}
