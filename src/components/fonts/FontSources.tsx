@@ -20,7 +20,7 @@ export function FontSources() {
   const sites = showAll ? FONT_SOURCE_SITES : FONT_SOURCE_SITES.slice(0, 6);
 
   return (
-    <div className="rounded-xl border border-border bg-background/40 p-3">
+    <div className="rounded-xl border border-border bg-card/40 p-3">
       {/* Header compacto */}
       <div className="mb-2 flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5">

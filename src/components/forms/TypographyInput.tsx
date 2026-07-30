@@ -30,7 +30,7 @@ export function TypographyInput({
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
       <Label className="text-sm font-semibold">Tipografia</Label>
       <Tabs value={mode} onValueChange={(v) => onModeChange(v as "auto" | "manual")}>
-        <TabsList className="grid w-full grid-cols-2 bg-background/50">
+        <TabsList className="grid w-full grid-cols-2 bg-card/50">
           <TabsTrigger value="auto" className="text-xs">
             <Sparkles className="mr-1.5 h-3 w-3" /> Auto
           </TabsTrigger>
@@ -48,7 +48,7 @@ export function TypographyInput({
           <div className="space-y-1.5">
             <Label className="text-xs uppercase tracking-wider text-muted-foreground">Heading</Label>
             <Select value={manual.heading} onValueChange={(v) => onManualChange({ ...manual, heading: v })}>
-              <SelectTrigger className="border-border bg-background/50 text-sm">
+              <SelectTrigger className="border-border bg-card/50 text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -61,7 +61,7 @@ export function TypographyInput({
           <div className="space-y-1.5">
             <Label className="text-xs uppercase tracking-wider text-muted-foreground">Body</Label>
             <Select value={manual.body} onValueChange={(v) => onManualChange({ ...manual, body: v })}>
-              <SelectTrigger className="border-border bg-background/50 text-sm">
+              <SelectTrigger className="border-border bg-card/50 text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -74,7 +74,7 @@ export function TypographyInput({
           <div className="space-y-1.5">
             <Label className="text-xs uppercase tracking-wider text-muted-foreground">Mono</Label>
             <Select value={manual.mono} onValueChange={(v) => onManualChange({ ...manual, mono: v })}>
-              <SelectTrigger className="border-border bg-background/50 text-sm">
+              <SelectTrigger className="border-border bg-card/50 text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

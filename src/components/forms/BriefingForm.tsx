@@ -108,7 +108,7 @@ export function BriefingForm({
           value={value.briefing}
           onChange={(e) => onChange({ briefing: e.target.value })}
           placeholder="Ex: Estamos a criar uma plataforma SaaS B2B para gestão de equipas remotas. O público-alvo são CTOs e Head of Ops de startups em fase Series A-B. Tom deve ser confiante, técnico mas acessível..."
-          className="min-h-[140px] resize-y border-border bg-background/50 text-sm leading-relaxed"
+          className="min-h-[140px] resize-y border-border bg-card/50 text-sm leading-relaxed"
         />
         <p className="text-xs text-muted-foreground">
           {value.briefing.length} caracteres · mínimo 20
@@ -126,7 +126,7 @@ export function BriefingForm({
                 variant="outline"
                 role="combobox"
                 aria-expanded={nichoOpen}
-                className="w-full justify-between border-border bg-background/50 font-normal"
+                className="w-full justify-between border-border bg-card/50 font-normal"
               >
                 {value.nicho || "Auto-detectar a partir do briefing"}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -175,7 +175,7 @@ export function BriefingForm({
             value={value.siteType}
             onValueChange={(v) => onChange({ siteType: v as SiteType })}
           >
-            <SelectTrigger className="border-border bg-background/50">
+            <SelectTrigger className="border-border bg-card/50">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -204,7 +204,7 @@ export function BriefingForm({
                   "rounded-full border px-3 py-1.5 text-xs font-medium transition-all active:scale-95",
                   active
                     ? "border-primary bg-primary/10 text-primary"
-                    : "border-border bg-background/50 text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                    : "border-border bg-card/50 text-muted-foreground hover:border-primary/40 hover:text-foreground"
                 )}
               >
                 {s}
@@ -266,7 +266,7 @@ export function BriefingForm({
                 "flex cursor-pointer flex-col gap-1 rounded-2xl border p-4 transition-all",
                 value.promptMode === opt.value
                   ? "border-primary bg-primary/5"
-                  : "border-border bg-background/50 hover:border-primary/40"
+                  : "border-border bg-card/50 hover:border-primary/40"
               )}
             >
               <div className="flex items-center gap-2">
@@ -281,7 +281,7 @@ export function BriefingForm({
 
       {/* 8. Extras (checkboxes + switches) */}
       <motion.div variants={fadeUp} custom={7} className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="space-y-3 rounded-2xl border border-border bg-background/40 p-4">
+        <div className="space-y-3 rounded-2xl border border-border bg-card/40 p-4">
           <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Incluir no output
           </Label>
@@ -305,7 +305,7 @@ export function BriefingForm({
           ))}
         </div>
 
-        <div className="space-y-3 rounded-2xl border border-border bg-background/40 p-4">
+        <div className="space-y-3 rounded-2xl border border-border bg-card/40 p-4">
           <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Configuração
           </Label>

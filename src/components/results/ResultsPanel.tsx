@@ -262,7 +262,7 @@ export function ResultsPanel({ spec, tentativas, onRegenerate, regenerating }: R
                     {items.map((s, i) => (
                       <div
                         key={i}
-                        className="rounded-xl border border-border bg-background/30 p-3"
+                        className="rounded-xl border border-border bg-card/30 p-3"
                       >
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-semibold">{s.nome}</span>
@@ -297,7 +297,7 @@ export function ResultsPanel({ spec, tentativas, onRegenerate, regenerating }: R
                 spec.mockups.map((m, i) => (
                   <div
                     key={i}
-                    className="rounded-xl border border-border bg-background/30 p-4"
+                    className="rounded-xl border border-border bg-card/30 p-4"
                   >
                     <div className="flex items-center gap-2">
                       <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
@@ -375,7 +375,7 @@ export function ResultsPanel({ spec, tentativas, onRegenerate, regenerating }: R
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-border bg-background/30 p-3">
+    <div className="rounded-xl border border-border bg-card/30 p-3">
       <div className="text-xs uppercase tracking-wider text-muted-foreground">
         {label}
       </div>
@@ -394,7 +394,7 @@ function TokenList({ label, tokens }: { label: string; tokens: string[] }) {
         {tokens.map((t, i) => (
           <div
             key={i}
-            className="flex items-center justify-between rounded-md bg-background/40 px-2 py-1 font-mono text-xs"
+            className="flex items-center justify-between rounded-md bg-card/40 px-2 py-1 font-mono text-xs"
           >
             <span className="text-foreground/80">{t}</span>
             <CopyButton text={t} size="icon" label="Copiar" />
@@ -407,8 +407,8 @@ function TokenList({ label, tokens }: { label: string; tokens: string[] }) {
 
 function ExportBlock({ title, content }: { title: string; content: string }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-background/30">
-      <div className="flex items-center justify-between border-b border-border bg-background/40 px-3 py-2">
+    <div className="overflow-hidden rounded-xl border border-border bg-card/30">
+      <div className="flex items-center justify-between border-b border-border bg-card/40 px-3 py-2">
         <span className="font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           {title}
         </span>

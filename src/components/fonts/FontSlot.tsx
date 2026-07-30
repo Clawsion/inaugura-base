@@ -123,7 +123,7 @@ export function FontSlot({
           }
         }}
       >
-        <SelectTrigger className="h-8 border-border bg-background/50 text-xs">
+        <SelectTrigger className="h-8 border-border bg-card/50 text-xs">
           <SelectValue placeholder="Escolhe font" />
         </SelectTrigger>
         <SelectContent>
@@ -181,7 +181,7 @@ export function FontSlot({
       </Button>
 
       {/* Preview area — text + transform applied */}
-      <div className="relative min-h-[100px] overflow-hidden rounded-xl border border-border bg-background/30 p-3">
+      <div className="relative min-h-[100px] overflow-hidden rounded-xl border border-border bg-card/30 p-3">
         <AnimatePresence mode="wait">
           <motion.div
             key={state.transformId ?? "default"}
@@ -216,7 +216,7 @@ export function FontSlot({
         value={texto}
         onChange={(e) => setTexto(e.target.value)}
         placeholder="Texto de preview"
-        className="h-8 border-border bg-background/50 text-xs"
+        className="h-8 border-border bg-card/50 text-xs"
       />
 
       {/* Transform picker (categorizado) */}
@@ -226,7 +226,7 @@ export function FontSlot({
           onChange({ ...state, transformId: v === "__none__" ? undefined : v })
         }
       >
-        <SelectTrigger className="h-8 border-border bg-background/50 text-xs">
+        <SelectTrigger className="h-8 border-border bg-card/50 text-xs">
           <SelectValue placeholder="Transform (50 estilos)" />
         </SelectTrigger>
         <SelectContent className="max-h-80">

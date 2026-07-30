@@ -64,7 +64,7 @@ export function FontPreview({ heading, body, mono, justificacao }: FontPreviewPr
           Call to Action →
         </button>
         <pre
-          className="rounded-xl border border-border bg-background/50 p-3 text-xs"
+          className="rounded-xl border border-border bg-card/50 p-3 text-xs"
           style={{ fontFamily: classeFonte(mono ?? "Geist Mono") }}
         >
           <code>const design = {`{ tokens, type, motion }`};</code>

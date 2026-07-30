@@ -62,7 +62,7 @@ export function UploadWithSuggestions({
 
   return (
     <div className="space-y-2">
-      <label className="flex h-8 w-full cursor-pointer items-center justify-center gap-1.5 rounded-md border border-dashed border-border bg-background/50 px-3 text-[10px] text-muted-foreground hover:border-primary/40 hover:text-foreground">
+      <label className="flex h-8 w-full cursor-pointer items-center justify-center gap-1.5 rounded-md border border-dashed border-border bg-card/50 px-3 text-[10px] text-muted-foreground hover:border-primary/40 hover:text-foreground">
         <Upload className="h-3 w-3" />
         Upload .ttf/.otf/.woff (sugere 5 clones)
         <input
@@ -102,7 +102,7 @@ export function UploadWithSuggestions({
               </div>
 
               {uploadedName && (
-                <div className="mb-2 rounded bg-background/50 px-2 py-1 text-[9px] text-muted-foreground">
+                <div className="mb-2 rounded bg-card/50 px-2 py-1 text-[9px] text-muted-foreground">
                   Carregada: <span className="font-mono text-foreground">{uploadedName}</span>
                 </div>
               )}

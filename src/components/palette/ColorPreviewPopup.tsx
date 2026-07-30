@@ -113,7 +113,7 @@ export function ColorPreviewPopup({ cor, outrasCores, fontEscolhida }: ColorPrev
 
         <Tabs defaultValue="hero" className="w-full">
           <div className="border-b border-border px-4 pt-3">
-            <TabsList className="grid w-full grid-cols-3 bg-background/50">
+            <TabsList className="grid w-full grid-cols-3 bg-card/50">
               <TabsTrigger value="hero" className="text-xs">
                 <LayoutIcon className="mr-1 h-3 w-3" /> Hero
               </TabsTrigger>

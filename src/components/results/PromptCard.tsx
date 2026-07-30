@@ -31,7 +31,7 @@ export function PromptCard({ prompt, index, defaultOpen = false }: PromptCardPro
     >
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center gap-3 p-4 text-left transition-colors hover:bg-background/30"
+        className="flex w-full items-center gap-3 p-4 text-left transition-colors hover:bg-card/30"
       >
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
           <FileText className="h-4 w-4" />
@@ -64,7 +64,7 @@ export function PromptCard({ prompt, index, defaultOpen = false }: PromptCardPro
         className="overflow-hidden"
       >
         <div className="border-t border-border p-4 space-y-3">
-          <pre className="max-h-80 overflow-y-auto whitespace-pre-wrap rounded-xl border border-border bg-background/50 p-3 text-xs leading-relaxed">
+          <pre className="max-h-80 overflow-y-auto whitespace-pre-wrap rounded-xl border border-border bg-card/50 p-3 text-xs leading-relaxed">
 {prompt.conteudo}
           </pre>
           <div className="flex justify-end">

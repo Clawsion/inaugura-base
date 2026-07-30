@@ -133,7 +133,7 @@ export function PaletteInput({
       </div>
 
       <Tabs value={mode} onValueChange={(v) => onModeChange(v as "auto" | "manual")}>
-        <TabsList className="grid w-full grid-cols-2 bg-background/50">
+        <TabsList className="grid w-full grid-cols-2 bg-card/50">
           <TabsTrigger value="auto" className="text-xs">
             <Sparkles className="mr-1.5 h-3 w-3" /> Auto
           </TabsTrigger>
@@ -164,7 +164,7 @@ export function PaletteInput({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: -8 }}
                   className={cn(
-                    "overflow-hidden rounded-2xl border bg-background/40 transition-colors",
+                    "overflow-hidden rounded-2xl border bg-card/40 transition-colors",
                     cor.locked ? "border-primary/40 ring-1 ring-primary/20" : "border-border"
                   )}
                 >
@@ -249,13 +249,13 @@ export function PaletteInput({
                       placeholder="Nome"
                       value={cor.nome}
                       onChange={(e) => atualizar(i, { nome: e.target.value })}
-                      className="h-8 border-border bg-background/50 text-xs"
+                      className="h-8 border-border bg-card/50 text-xs"
                     />
                     <Select
                       value={cor.uso || "Custom"}
                       onValueChange={(v) => atualizar(i, { uso: v })}
                     >
-                      <SelectTrigger className="h-8 border-border bg-background/50 text-xs">
+                      <SelectTrigger className="h-8 border-border bg-card/50 text-xs">
                         <SelectValue placeholder="Role" />
                       </SelectTrigger>
                       <SelectContent>
@@ -272,7 +272,7 @@ export function PaletteInput({
                       value={cor.hex}
                       onChange={(e) => atualizar(i, { hex: e.target.value })}
                       className={cn(
-                        "h-8 border-border bg-background/50 font-mono text-xs",
+                        "h-8 border-border bg-card/50 font-mono text-xs",
                         !isHexValido(cor.hex) && "border-destructive"
                       )}
                     />

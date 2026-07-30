@@ -71,7 +71,7 @@ export function LayoutSelector({ efeitos, onToggle }: LayoutSelectorProps) {
                 "relative flex flex-col items-center gap-1.5 rounded-2xl border p-3 text-center transition-all active:scale-95",
                 active
                   ? "border-primary bg-primary/10 text-primary"
-                  : "border-border bg-background/40 text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                  : "border-border bg-card/40 text-muted-foreground hover:border-primary/40 hover:text-foreground"
               )}
             >
               <Icon className="h-4 w-4" />

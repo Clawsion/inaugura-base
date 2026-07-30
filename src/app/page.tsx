@@ -70,7 +70,6 @@ export default function Home() {
     if (!activeSkin || !mounted) return undefined;
     const skin = getSkinById(activeSkin);
     if (!skin) return undefined;
-    // Escolhe o variant conforme o tema atual (default = dark)
     const isLight = theme === "light";
     const t = isLight ? skin.light : skin.dark;
     return {
@@ -81,13 +80,13 @@ export default function Home() {
       "--popover": t.card,
       "--popover-foreground": t.text,
       "--primary": t.accent,
-      "--primary-foreground": t.bg,
+      "--primary-foreground": t.accentForeground,
       "--secondary": t.card,
       "--secondary-foreground": t.text,
       "--muted": t.card,
       "--muted-foreground": t.muted,
       "--accent": t.accent,
-      "--accent-foreground": t.bg,
+      "--accent-foreground": t.accentForeground,
       "--border": t.border,
       "--input": t.border,
       "--ring": t.accent,
@@ -96,6 +95,66 @@ export default function Home() {
       backgroundImage: t.bgPattern,
       backgroundAttachment: "fixed",
     } as React.CSSProperties;
+  }, [activeSkin, theme, mounted]);
+
+  // Aplica os tokens do skin diretamente no <html> para que TODA a app
+  // (incluindo <body>) use os tokens. Isto garante que não há "vazamento"
+  // do tema default por baixo do <main>.
+  useEffect(() => {
+    if (!mounted) return;
+    const html = document.documentElement;
+    if (!activeSkin) {
+      // Sem skin: remove os tokens custom, volta ao default
+      [
+        "--background", "--foreground", "--card", "--card-foreground",
+        "--primary", "--primary-foreground", "--secondary", "--secondary-foreground",
+        "--muted", "--muted-foreground", "--accent", "--accent-foreground",
+        "--border", "--input", "--ring", "--radius",
+      ].forEach((p) => html.style.removeProperty(p));
+      html.style.backgroundImage = "";
+      html.style.backgroundAttachment = "";
+      html.style.fontFamily = "";
+      // Restaura a classe dark/light do ThemeProvider
+      if (theme === "light") {
+        html.classList.remove("dark");
+        html.classList.add("light");
+      } else {
+        html.classList.remove("light");
+        html.classList.add("dark");
+      }
+      return;
+    }
+    const skin = getSkinById(activeSkin);
+    if (!skin) return;
+    const isLight = theme === "light";
+    const t = isLight ? skin.light : skin.dark;
+    html.style.setProperty("--background", t.bg);
+    html.style.setProperty("--foreground", t.text);
+    html.style.setProperty("--card", t.card);
+    html.style.setProperty("--card-foreground", t.text);
+    html.style.setProperty("--primary", t.accent);
+    html.style.setProperty("--primary-foreground", t.accentForeground);
+    html.style.setProperty("--secondary", t.card);
+    html.style.setProperty("--secondary-foreground", t.text);
+    html.style.setProperty("--muted", t.card);
+    html.style.setProperty("--muted-foreground", t.muted);
+    html.style.setProperty("--accent", t.accent);
+    html.style.setProperty("--accent-foreground", t.accentForeground);
+    html.style.setProperty("--border", t.border);
+    html.style.setProperty("--input", t.border);
+    html.style.setProperty("--ring", t.accent);
+    html.style.setProperty("--radius", t.radius);
+    html.style.fontFamily = t.bodyFont;
+    if (t.bgPattern) {
+      html.style.backgroundImage = t.bgPattern;
+      html.style.backgroundAttachment = "fixed";
+    } else {
+      html.style.backgroundImage = "";
+    }
+    // CRÍTICO: Remove as classes dark/light do ThemeProvider para que os
+    // `dark:` variants do Tailwind (ex: dark:bg-input/30) NÃO se apliquem.
+    // Os tokens do skin já definem tudo via CSS variables inline.
+    html.classList.remove("dark", "light");
   }, [activeSkin, theme, mounted]);
 
   const onSubmit = useCallback(async () => {
@@ -156,7 +215,7 @@ export default function Home() {
 
       <div className="relative">
         {/* Header — minimalista, sem skins inline */}
-        <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur-xl">
+        <header className="sticky top-0 z-30 border-b border-border bg-card/80 backdrop-blur-xl">
           <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6">
             <div className="flex items-center gap-2.5">
               <Logo size={36} />

@@ -1,8 +1,5 @@
 // ============================================================================
-// skins.ts — 5 SKINS DE VERDADE (sem Glass Aurora, com Mono Ink)
-// ============================================================================
-// Ordem para caberem numa linha: Mono Ink → Brutalist Ink → Editorial Serif →
-// Neo Brutalist 3D → Mono Carbon
+// skins.ts — 6 SKINS DE VERDADE
 // ============================================================================
 
 export interface SkinTokens {
@@ -11,6 +8,7 @@ export interface SkinTokens {
   text: string;
   muted: string;
   accent: string;
+  accentForeground: string; // cor do texto/icon sobre o accent
   border: string;
   radius: string;
   shadow: string;
@@ -39,7 +37,6 @@ export interface Skin {
 
 export const SKINS: Skin[] = [
   // ── 1. Mono Ink ────────────────────────────────────────────────────────
-  // Pure ink on cream. Literary, timeless. Light = paper, Dark = deep ink.
   {
     id: "mono-ink",
     name: "Mono Ink",
@@ -51,6 +48,7 @@ export const SKINS: Skin[] = [
       text: "#0A0A0A",
       muted: "#6B6B6B",
       accent: "#0A0A0A",
+      accentForeground: "#FAF7F0",
       border: "#0A0A0A",
       radius: "0px",
       shadow: "none",
@@ -64,6 +62,7 @@ export const SKINS: Skin[] = [
       text: "#FAF7F0",
       muted: "#8C8C8C",
       accent: "#FAF7F0",
+      accentForeground: "#0A0A0A",
       border: "#FAF7F0",
       radius: "0px",
       shadow: "none",
@@ -74,34 +73,33 @@ export const SKINS: Skin[] = [
   },
 
   // ── 2. Brutalist Ink — Neo-Brutalist com pastéis + accent neon ────────
-  // Inspirado na referência: bordas 3px pretas, sombras duras offset,
-  // cores pastel suaves (pêssego/creme), accent amarelo-lima neon,
-  // tipografia bold geométrica, pill buttons.
   {
     id: "brutalist-ink",
     name: "Brutalist Ink",
     description: "Neo-brutalist pastel, hard shadows, neon accent",
     category: "Brutalist",
     light: {
-      bg: "#F4C2A8",           // pêssego/salmão pastel
-      card: "#F3EFE9",         // off-white creme quente
-      text: "#1A1A1A",         // ink black
-      muted: "#4A4A4A",        // cinza escuro suave
-      accent: "#D4FF45",       // amarelo-lima neon chartreuse
-      border: "#000000",       // bordas pretas sólidas 3px
-      radius: "1.5rem",        // cantos arredondados (squircle)
-      shadow: "6px 6px 0px #1A1A1A", // hard shadow offset, zero blur
+      bg: "#F4C2A8",
+      card: "#F3EFE9",
+      text: "#1A1A1A",
+      muted: "#4A4A4A",
+      accent: "#D4FF45",
+      accentForeground: "#0D0D0D",
+      border: "#000000",
+      radius: "1.5rem",
+      shadow: "6px 6px 0px #1A1A1A",
       headingFont: "var(--font-jakarta), system-ui, sans-serif",
       bodyFont: "var(--font-inter), system-ui, sans-serif",
       bgPattern: "radial-gradient(circle at 15% 20%, rgba(197, 180, 227, 0.25) 0%, transparent 35%), radial-gradient(circle at 85% 80%, rgba(212, 255, 69, 0.12) 0%, transparent 40%)",
     },
     dark: {
-      bg: "#FFFFFF",           // branco puro (igual à referência)
-      card: "#F3EFE9",         // off-white creme
-      text: "#0D0D0D",         // preto profundo
+      bg: "#FFFFFF",
+      card: "#F3EFE9",
+      text: "#0D0D0D",
       muted: "#4A4A4A",
-      accent: "#D4FF45",       // amarelo-lima neon
-      border: "#000000",       // bordas pretas
+      accent: "#D4FF45",
+      accentForeground: "#0D0D0D",
+      border: "#000000",
       radius: "1.5rem",
       shadow: "6px 6px 0px #1A1A1A",
       headingFont: "var(--font-jakarta), system-ui, sans-serif",
@@ -122,6 +120,7 @@ export const SKINS: Skin[] = [
       text: "#1A1A1A",
       muted: "#6B6258",
       accent: "#8B1A1A",
+      accentForeground: "#FFFFFF",
       border: "#E0D7C8",
       radius: "0px",
       shadow: "0 1px 3px rgba(26, 26, 26, 0.07)",
@@ -135,6 +134,7 @@ export const SKINS: Skin[] = [
       text: "#F2EBDD",
       muted: "#A89E8E",
       accent: "#E08070",
+      accentForeground: "#1A1714",
       border: "#3A352E",
       radius: "0px",
       shadow: "0 2px 6px rgba(0, 0, 0, 0.45)",
@@ -156,6 +156,7 @@ export const SKINS: Skin[] = [
       text: "#000000",
       muted: "#5C5C5C",
       accent: "#FF3366",
+      accentForeground: "#FFFFFF",
       border: "#000000",
       radius: "1rem",
       shadow: "6px 6px 0px #000000, 12px 12px 0px #FF3366, 18px 18px 24px rgba(0,0,0,0.2)",
@@ -169,6 +170,7 @@ export const SKINS: Skin[] = [
       text: "#FFFFFF",
       muted: "#888888",
       accent: "#00FFB2",
+      accentForeground: "#050505",
       border: "#FFFFFF",
       radius: "1rem",
       shadow: "6px 6px 0px #00FFB2, 12px 12px 0px #FF00AA, 18px 18px 32px rgba(0,255,178,0.25)",
@@ -190,6 +192,7 @@ export const SKINS: Skin[] = [
       text: "#0A0A0A",
       muted: "#5C5C5C",
       accent: "#84CC16",
+      accentForeground: "#0A0A0A",
       border: "rgba(0, 0, 0, 0.10)",
       radius: "0.5rem",
       shadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
@@ -203,6 +206,7 @@ export const SKINS: Skin[] = [
       text: "#F2F2F2",
       muted: "#7C7C7C",
       accent: "#A3E635",
+      accentForeground: "#0A0A0A",
       border: "rgba(163, 230, 53, 0.18)",
       radius: "0.5rem",
       shadow: "0 0 12px rgba(163, 230, 53, 0.12)",
@@ -213,8 +217,6 @@ export const SKINS: Skin[] = [
   },
 
   // ── 6. Pure Light — light style completamente diferente ────────────────
-  // Light: branco puro + cobalto + sombras suaves (Apple/Notion vibe)
-  // Dark: PRETO PROFUNDO (#050509) + cobalto vibrante + glow — muito escuro
   {
     id: "pure-light",
     name: "Pure Light",
@@ -226,6 +228,7 @@ export const SKINS: Skin[] = [
       text: "#0F172A",
       muted: "#64748B",
       accent: "#2563EB",
+      accentForeground: "#FFFFFF",
       border: "rgba(15, 23, 42, 0.06)",
       radius: "1.5rem",
       shadow: "0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06)",
@@ -234,12 +237,12 @@ export const SKINS: Skin[] = [
       bgPattern: "radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.04) 0%, transparent 40%), radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.03) 0%, transparent 40%)",
     },
     dark: {
-      // DARK variant — MUITO ESCURO (preto profundo void)
-      bg: "#050509",           // preto profundo quase void
-      card: "#0D0D14",         // card muito escuro com subtom azul
+      bg: "#050509",
+      card: "#0D0D14",
       text: "#FAFAFC",
       muted: "#6B7280",
-      accent: "#3B82F6",       // cobalto vibrante que brilha no escuro
+      accent: "#3B82F6",
+      accentForeground: "#FFFFFF",
       border: "rgba(59, 130, 246, 0.15)",
       radius: "1.5rem",
       shadow: "0 0 0 1px rgba(59, 130, 246, 0.08), 0 8px 32px rgba(59, 130, 246, 0.12), 0 0 60px rgba(59, 130, 246, 0.08)",

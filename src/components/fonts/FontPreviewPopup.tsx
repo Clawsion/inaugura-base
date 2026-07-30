@@ -46,7 +46,7 @@ export function FontPreviewPopup({ state, texto }: FontPreviewPopupProps) {
         <button
           type="button"
           title="Preview popup da font (com 3 skins)"
-          className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-all hover:bg-background/50 hover:text-foreground"
+          className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-all hover:bg-card/50 hover:text-foreground"
         >
           <Eye className="h-3 w-3" />
         </button>
@@ -69,7 +69,7 @@ export function FontPreviewPopup({ state, texto }: FontPreviewPopupProps) {
 
         <Tabs defaultValue="hierarquia" className="w-full">
           <div className="border-b border-border px-4 pt-3">
-            <TabsList className="grid w-full grid-cols-4 bg-background/50">
+            <TabsList className="grid w-full grid-cols-4 bg-card/50">
               <TabsTrigger value="hierarquia" className="text-xs">
                 <Type className="mr-1 h-3 w-3" /> Hierarquia
               </TabsTrigger>

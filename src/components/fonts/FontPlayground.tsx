@@ -271,7 +271,7 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
         value={textoGlobal}
         onChange={(e) => setTextoGlobal(e.target.value)}
         placeholder="Texto de preview (partilhado por todas as barras)"
-        className="h-8 border-border bg-background/50 text-xs"
+        className="h-8 border-border bg-card/50 text-xs"
       />
 
       {/* 5 BARRAS HORIZONTAIS GRANDES em fila vertical */}
@@ -401,7 +401,7 @@ function FontBar({
         <button
           type="button"
           onClick={onToggleExpand}
-          className="flex h-7 w-7 items-center justify-center rounded-md hover:bg-background/50"
+          className="flex h-7 w-7 items-center justify-center rounded-md hover:bg-card/50"
           aria-label={expanded ? "Fechar" : "Expandir"}
         >
           {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
@@ -420,11 +420,11 @@ function FontBar({
         )}
 
         {pesosAtivos.length > 1 ? (
-          <span className="rounded-md bg-background/50 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+          <span className="rounded-md bg-card/50 px-1.5 py-0.5 text-[10px] text-muted-foreground">
             {pesosAtivos.length} pesos
           </span>
         ) : (
-          <span className="rounded-md bg-background/50 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+          <span className="rounded-md bg-card/50 px-1.5 py-0.5 text-[10px] text-muted-foreground">
             {PESOS_LABELS[pesoPrincipal]}
           </span>
         )}
@@ -482,7 +482,7 @@ function FontBar({
 
       {/* Preview grande horizontal — sempre visível */}
       <div className="px-3 pb-3">
-        <div className="relative min-h-[80px] overflow-hidden rounded-xl border border-border bg-background/30 px-4 py-3">
+        <div className="relative min-h-[80px] overflow-hidden rounded-xl border border-border bg-card/30 px-4 py-3">
           {/* Mostra uma linha por peso ativo (para comparar pesos) */}
           <div className="space-y-1">
             {pesosAtivos.slice(0, 3).map((p, idx) => (
@@ -538,7 +538,7 @@ function FontBar({
                   }
                 }}
               >
-                <SelectTrigger className="h-8 border-border bg-background/50 text-xs">
+                <SelectTrigger className="h-8 border-border bg-card/50 text-xs">
                   <SelectValue placeholder="Escolhe font" />
                 </SelectTrigger>
                 <SelectContent>
@@ -601,7 +601,7 @@ function FontBar({
                   onChange({ ...state, transformId: v === "__none__" ? undefined : v })
                 }
               >
-                <SelectTrigger className="h-8 border-border bg-background/50 text-xs">
+                <SelectTrigger className="h-8 border-border bg-card/50 text-xs">
                   <SelectValue placeholder="Transform (50 estilos)" />
                 </SelectTrigger>
                 <SelectContent className="max-h-80">
@@ -653,7 +653,7 @@ function IconBtn({
         "flex h-7 w-7 items-center justify-center rounded-md transition-all",
         active
           ? "bg-primary/15 text-primary"
-          : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
+          : "text-muted-foreground hover:bg-card/50 hover:text-foreground",
         disabled && "opacity-40 cursor-not-allowed"
       )}
     >
@@ -677,7 +677,7 @@ function PesosPopover({
         <button
           type="button"
           title="Pesos (multi-seleção)"
-          className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-all hover:bg-background/50 hover:text-foreground"
+          className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-all hover:bg-card/50 hover:text-foreground"
         >
           <Bold className="h-3 w-3" />
         </button>
@@ -691,7 +691,7 @@ function PesosPopover({
             <label
               key={p}
               htmlFor={`peso-${p}`}
-              className="flex cursor-pointer items-center gap-2 rounded px-1 py-0.5 hover:bg-background/50"
+              className="flex cursor-pointer items-center gap-2 rounded px-1 py-0.5 hover:bg-card/50"
             >
               <Checkbox
                 id={`peso-${p}`}
@@ -736,7 +736,7 @@ function SourceFilter({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1.5 rounded-full border border-border bg-background/40 px-2.5 py-0.5 text-[10px] font-medium transition-all hover:border-primary/40"
+        className="flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-2.5 py-0.5 text-[10px] font-medium transition-all hover:border-primary/40"
       >
         <Globe className="h-2.5 w-2.5 text-primary" />
         <span className="text-muted-foreground">Source:</span>
@@ -777,7 +777,7 @@ function SourceFilter({
                       "flex w-full items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-left text-xs transition-colors",
                       value === s.id
                         ? "bg-primary/10 text-primary"
-                        : "text-foreground hover:bg-background/50"
+                        : "text-foreground hover:bg-card/50"
                     )}
                   >
                     <div>
@@ -785,7 +785,7 @@ function SourceFilter({
                       <div className="text-[9px] text-muted-foreground">{s.desc}</div>
                     </div>
                     {count !== undefined && (
-                      <span className="rounded bg-background/60 px-1.5 py-0.5 text-[9px] font-mono text-muted-foreground">
+                      <span className="rounded bg-card/60 px-1.5 py-0.5 text-[9px] font-mono text-muted-foreground">
                         {count}
                       </span>
                     )}

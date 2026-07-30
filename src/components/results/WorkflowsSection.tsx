@@ -325,7 +325,7 @@ export function WorkflowsSection({ spec }: WorkflowsSectionProps) {
                   {workflow.melhorPara.map((m) => (
                     <span
                       key={m}
-                      className="rounded-full bg-background/50 px-2 py-0.5 text-[10px] text-muted-foreground"
+                      className="rounded-full bg-card/50 px-2 py-0.5 text-[10px] text-muted-foreground"
                     >
                       {m}
                     </span>
@@ -391,7 +391,7 @@ export function WorkflowsSection({ spec }: WorkflowsSectionProps) {
                         >
                           {passo.titulo}
                         </h5>
-                        <span className="flex items-center gap-1 rounded-md bg-background/50 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                        <span className="flex items-center gap-1 rounded-md bg-card/50 px-1.5 py-0.5 text-[10px] text-muted-foreground">
                           <Clock className="h-2.5 w-2.5" /> {passo.duracao}
                         </span>
                       </div>
@@ -407,7 +407,7 @@ export function WorkflowsSection({ spec }: WorkflowsSectionProps) {
                         {passo.ferramentas.map((f) => (
                           <span
                             key={f}
-                            className="inline-flex items-center gap-1 rounded-md border border-border bg-background/40 px-1.5 py-0.5 text-[10px] font-medium text-foreground/80"
+                            className="inline-flex items-center gap-1 rounded-md border border-border bg-card/40 px-1.5 py-0.5 text-[10px] font-medium text-foreground/80"
                           >
                             <TrendingUp className="h-2 w-2 text-primary" />
                             {f}
