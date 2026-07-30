@@ -32,7 +32,7 @@ export interface FontInfo {
 // LISTA CURADA — 45 fonts modernas
 // ----------------------------------------------------------------------------
 export const FONTS_MODERNAS: FontInfo[] = [
-  // ── SANS (modernas, populares) ──────────────────────────────────────────
+  // ── SANS TOP-TIER (as melhores para websites de topo 2026) ──────────────
   { nome: "Inter", family: "Inter", categoria: ["sans"], source: "google", pesos: [100,200,300,400,500,600,700,800,900], italic: true },
   { nome: "Plus Jakarta Sans", family: "Plus Jakarta Sans", categoria: ["sans"], source: "google", pesos: [200,300,400,500,600,700,800], italic: true },
   { nome: "Outfit", family: "Outfit", categoria: ["sans"], source: "google", pesos: [100,200,300,400,500,600,700,800,900] },
@@ -47,12 +47,19 @@ export const FONTS_MODERNAS: FontInfo[] = [
   { nome: "Lexend", family: "Lexend", categoria: ["sans"], source: "google", pesos: [100,200,300,400,500,600,700,800,900] },
   { nome: "DM Sans", family: "DM Sans", categoria: ["sans"], source: "google", pesos: [100,200,300,400,500,600,700,800,900], italic: true },
   { nome: "Hanken Grotesk", family: "Hanken Grotesk", categoria: ["sans"], source: "google", pesos: [100,200,300,400,500,600,700,800,900], italic: true },
-
-  // ── GEIST (ecossistema Vercel, modernas) ───────────────────────────────
+  // NOVAS — top awwwards sans
+  { nome: "Schibsted Grotesk", family: "Schibsted Grotesk", categoria: ["sans", "awwwards"], source: "google", pesos: [400,500,600,700,800,900], awwwards: true },
+  { nome: "Unbounded", family: "Unbounded", categoria: ["sans", "awwwards"], source: "google", pesos: [200,300,400,500,600,700,800,900], awwwards: true },
+  { nome: "Anton", family: "Anton", categoria: ["sans", "awwwards"], source: "google", pesos: [400], awwwards: true },
+  { nome: "Be Vietnam Pro", family: "Be Vietnam Pro", categoria: ["sans"], source: "google", pesos: [100,200,300,400,500,600,700,800,900], italic: true },
+  { nome: "Mona Sans", family: "Mona Sans", categoria: ["sans", "awwwards"], source: "google", pesos: [200,300,400,500,600,700,800,900], awwwards: true },
+  { nome: "Hubot Sans", family: "Hubot Sans", categoria: ["sans", "awwwards"], source: "google", pesos: [200,300,400,500,600,700,800,900], awwwards: true },
   { nome: "Geist", family: "Geist", categoria: ["geist", "sans"], source: "google", pesos: [100,200,300,400,500,600,700,800,900] },
+
+  // ── GEIST (ecossistema Vercel) ──────────────────────────────────────────
   { nome: "Geist Mono", family: "Geist Mono", categoria: ["geist", "mono"], source: "google", pesos: [100,200,300,400,500,600,700,800,900] },
 
-  // ── SERIF (modernas, editoriais) ───────────────────────────────────────
+  // ── SERIF TOP-TIER (editoriais premium, awwwards) ───────────────────────
   { nome: "Fraunces", family: "Fraunces", categoria: ["serif", "awwwards"], source: "google", pesos: [100,200,300,400,500,600,700,800,900], italic: true, awwwards: true },
   { nome: "Newsreader", family: "Newsreader", categoria: ["serif", "awwwards"], source: "google", pesos: [200,300,400,500,600,700,800], italic: true, awwwards: true },
   { nome: "Instrument Serif", family: "Instrument Serif", categoria: ["serif", "awwwards"], source: "google", pesos: [400], italic: true, awwwards: true },
@@ -61,15 +68,38 @@ export const FONTS_MODERNAS: FontInfo[] = [
   { nome: "Lora", family: "Lora", categoria: ["serif"], source: "google", pesos: [400,500,600,700], italic: true },
   { nome: "Cormorant", family: "Cormorant", categoria: ["serif", "awwwards"], source: "google", pesos: [300,400,500,600,700], italic: true, awwwards: true },
   { nome: "Spectral", family: "Spectral", categoria: ["serif"], source: "google", pesos: [200,300,400,500,600,700,800], italic: true },
+  // NOVAS — top serif editoriais
+  { nome: "PT Serif", family: "PT Serif", categoria: ["serif"], source: "google", pesos: [400,700], italic: true },
+  { nome: "Source Serif 4", family: "Source Serif 4", categoria: ["serif", "awwwards"], source: "google", pesos: [200,300,400,500,600,700,800,900], italic: true, awwwards: true },
+  { nome: "Crimson Pro", family: "Crimson Pro", categoria: ["serif"], source: "google", pesos: [200,300,400,500,600,700,800,900], italic: true },
+  { nome: "Libre Caslon Display", family: "Libre Caslon Display", categoria: ["serif", "awwwards"], source: "google", pesos: [400], awwwards: true },
+  { nome: "Libre Caslon Text", family: "Libre Caslon Text", categoria: ["serif"], source: "google", pesos: [400,700], italic: true },
+  { nome: "Marcellus", family: "Marcellus", categoria: ["serif", "awwwards"], source: "google", pesos: [400], awwwards: true },
+  { nome: "Cardo", family: "Cardo", categoria: ["serif"], source: "google", pesos: [400,700], italic: true },
+  { nome: "EB Garamond", family: "EB Garamond", categoria: ["serif"], source: "google", pesos: [400,500,600,700,800], italic: true },
 
-  // ── MONO (para código e aesthetic tech) ────────────────────────────────
+  // ── MONO TOP-TIER ───────────────────────────────────────────────────────
   { nome: "JetBrains Mono", family: "JetBrains Mono", categoria: ["mono"], source: "google", pesos: [100,200,300,400,500,600,700,800], italic: true },
   { nome: "Fira Code", family: "Fira Code", categoria: ["mono"], source: "google", pesos: [300,400,500,600,700] },
   { nome: "IBM Plex Mono", family: "IBM Plex Mono", categoria: ["mono"], source: "google", pesos: [100,200,300,400,500,600,700], italic: true },
   { nome: "Space Mono", family: "Space Mono", categoria: ["mono", "awwwards"], source: "google", pesos: [400,700], italic: true, awwwards: true },
   { nome: "Source Code Pro", family: "Source Code Pro", categoria: ["mono"], source: "google", pesos: [200,300,400,500,600,700,800,900], italic: true },
+  // NOVAS — top mono
+  { nome: "Roboto Mono", family: "Roboto Mono", categoria: ["mono"], source: "google", pesos: [100,200,300,400,500,600,700], italic: true },
+  { nome: "Cousine", family: "Cousine", categoria: ["mono"], source: "google", pesos: [400,700], italic: true },
+  { nome: "Inconsolata", family: "Inconsolata", categoria: ["mono"], source: "google", pesos: [200,300,400,500,600,700,800,900] },
 
-  // ── AWWWARDS EXCLUSIVAS (via Fontshare — premium gratuitas) ────────────
+  // ── DISPLAY TOP-TIER (para headlines impactantes) ───────────────────────
+  { nome: "Bebas Neue", family: "Bebas Neue", categoria: ["display", "awwwards"], source: "google", pesos: [400], awwwards: true },
+  { nome: "Archivo Black", family: "Archivo Black", categoria: ["display", "awwwards"], source: "google", pesos: [900], awwwards: true },
+  { nome: "Big Shoulders Display", family: "Big Shoulders Display", categoria: ["display", "awwwards"], source: "google", pesos: [100,200,300,400,500,600,700,800,900], awwwards: true },
+  { nome: "Syne", family: "Syne", categoria: ["display", "awwwards"], source: "google", pesos: [400,500,600,700,800], awwwards: true },
+  { nome: "Climate Crisis", family: "Climate Crisis", categoria: ["display", "awwwards"], source: "google", pesos: [200,300,400,500,600,700,800,900], awwwards: true },
+  { nome: "Anybody", family: "Anybody", categoria: ["display", "awwwards"], source: "google", pesos: [100,200,300,400,500,600,700,800,900], awwwards: true },
+  { nome: "Tasa Explorer", family: "Tasa Explorer", categoria: ["display", "awwwards"], source: "google", pesos: [400,500,600,700,800,900], awwwards: true },
+  { nome: "Bagel Fat One", family: "Bagel Fat One", categoria: ["display", "awwwards"], source: "google", pesos: [400], awwwards: true },
+
+  // ── AWWWARDS EXCLUSIVAS (via Fontshare — premium gratuitas ITF) ─────────
   { nome: "Clash Display", family: "Clash Display", categoria: ["sans", "awwwards"], source: "fontshare", pesos: [200,300,400,500,600,700], awwwards: true },
   { nome: "Cabinet Grotesk", family: "Cabinet Grotesk", categoria: ["sans", "awwwards"], source: "fontshare", pesos: [100,200,300,400,500,700,800,900], awwwards: true },
   { nome: "General Sans", family: "General Sans", categoria: ["sans", "awwwards"], source: "fontshare", pesos: [200,300,400,500,600,700], awwwards: true },
@@ -80,6 +110,18 @@ export const FONTS_MODERNAS: FontInfo[] = [
   { nome: "Panch", family: "Panch", categoria: ["sans", "awwwards"], source: "fontshare", pesos: [400,500,600,700,800,900], awwwards: true },
   { nome: "Suprith", family: "Suprith", categoria: ["serif", "awwwards"], source: "fontshare", pesos: [400,500,600,700], italic: true, awwwards: true },
   { nome: "Zentry", family: "Zentry", categoria: ["serif", "awwwards"], source: "fontshare", pesos: [400,500,600,700], italic: true, awwwards: true },
+  // NOVAS — Fontshare premium top-tier
+  { nome: "Author", family: "Author", categoria: ["sans", "awwwards"], source: "fontshare", pesos: [100,200,300,400,500,600,700,800,900], awwwards: true },
+  { nome: "SWitzer", family: "SWitzer", categoria: ["sans", "awwwards"], source: "fontshare", pesos: [100,200,300,400,500,600,700,800,900], awwwards: true },
+  { nome: "Pretendard", family: "Pretendard", categoria: ["sans", "awwwards"], source: "fontshare", pesos: [100,200,300,400,500,600,700,800,900], awwwards: true },
+  { nome: "Rival Sans", family: "Rival Sans", categoria: ["sans", "awwwards"], source: "fontshare", pesos: [100,200,300,400,500,600,700,800,900], awwwards: true },
+  { nome: "Clash Grotesk", family: "Clash Grotesk", categoria: ["sans", "awwwards"], source: "fontshare", pesos: [200,300,400,500,600,700], awwwards: true },
+  { nome: "Bonvoy", family: "Bonvoy", categoria: ["serif", "awwwards"], source: "fontshare", pesos: [200,300,400,500,600,700,800,900], italic: true, awwwards: true },
+  { nome: "Chillax", family: "Chillax", categoria: ["sans", "awwwards"], source: "fontshare", pesos: [200,300,400,500,600,700], awwwards: true },
+  { nome: "Lexend Zetta", family: "Lexend Zetta", categoria: ["display", "awwwards"], source: "fontshare", pesos: [100,200,300,400,500,600,700,800,900], awwwards: true },
+  { nome: "Excon", family: "Excon", categoria: ["display", "awwwards"], source: "fontshare", pesos: [100,200,300,400,500,600,700,800,900], awwwards: true },
+  { nome: "Meclight", family: "Meclight", categoria: ["sans", "awwwards"], source: "fontshare", pesos: [400,500,600,700], awwwards: true },
+  { nome: "Boser", family: "Boser", categoria: ["serif", "awwwards"], source: "fontshare", pesos: [400,500,600,700], italic: true, awwwards: true },
 ];
 
 // ----------------------------------------------------------------------------
@@ -87,11 +129,12 @@ export const FONTS_MODERNAS: FontInfo[] = [
 // ----------------------------------------------------------------------------
 export const FONT_FILTERS: { id: string; label: string; desc: string }[] = [
   { id: "todos", label: "Todos", desc: "Todas as fonts (Google + Fontshare)" },
+  { id: "awwwards", label: "Top Sites", desc: "As melhores para websites de topo" },
   { id: "sans", label: "Sans", desc: "Apenas sans-serif" },
   { id: "serif", label: "Serif", desc: "Apenas serif (incl. editoriais)" },
   { id: "mono", label: "Mono", desc: "Apenas monospaced" },
+  { id: "display", label: "Display", desc: "Headlines impactantes" },
   { id: "geist", label: "Geist", desc: "Ecossistema Geist (Vercel)" },
-  { id: "awwwards", label: "Awwwards", desc: "As mais modernas em sites premiados" },
 ];
 
 // ----------------------------------------------------------------------------
@@ -218,13 +261,26 @@ export async function fetchGoogleFontsCatalog(): Promise<FontInfo[]> {
         (f: any) => {
           const family: string = f.family ?? f.name ?? "";
           const category: string = (f.category ?? "sans-serif").toLowerCase();
-          const variants: string[] = f.variants ?? [];
-          const pesos: number[] = variants
-            .filter((v) => /^\d+$/.test(v))
-            .map((v) => parseInt(v, 10))
+
+          // NOVO: o metadata do Google tem "fonts" como DICT onde as chaves
+          // são os pesos (ex: {"100": {...}, "200": {...}, ...}).
+          // Antes procurávamos "variants" que não existe — agora extraímos de "fonts".
+          const fontsDict = f.fonts ?? {};
+          const allWeights: string[] = Array.isArray(fontsDict)
+            ? fontsDict.map((ft: any) => String(ft.weight ?? ""))
+            : Object.keys(fontsDict);
+
+          const pesos: number[] = allWeights
+            .filter((w) => /^\d+$/.test(w))
+            .map((w) => parseInt(w, 10))
             .filter((n) => PESOS_DISPONIVEIS.includes(n));
           if (pesos.length === 0) pesos.push(400);
-          const italic = variants.includes("italic") || variants.some((v) => v.includes("italic"));
+
+          // Italic: procuramos em "axes" se há eixo "ital" ou slant != 0
+          const axes = f.axes ?? [];
+          const hasItalicAxis = Array.isArray(axes) && axes.some((a: any) => a.tag === "ital" || (a.tag === "slant" && a.max > 0));
+          const italic = hasItalicAxis;
+
           const cat: FontCategory[] = [];
           if (category.includes("sans")) cat.push("sans");
           if (category.includes("serif")) cat.push("serif");
