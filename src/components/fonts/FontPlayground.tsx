@@ -5,11 +5,12 @@
 // ============================================================================
 // Features:
 //  - Filtro por categoria (todos/sans/serif/mono/geist/awwwards)
-//  - Generate All global: busca fonts aleatórias dos sites + aplica transforms
-//  - Generate individual: mesma coisa mas por slot
-//  - Lock individual (cadeado): bloqueia o slot para não ser afetado pelo Generate All
-//  - Copy/Paste individual por slot (copia estado, cola de outro slot)
-//  - Random transforms (ícone separado, não muda a font)
+//  - Generate All Fonts: SÓ muda as 5 fonts (mantém transforms), respeita locks
+//  - Generate All Transforms: SÓ muda as 5 transforms (mantém fonts), respeita locks
+//  - Generate Font (por slot): SÓ muda a font desse slot (mantém transform)
+//  - Generate Transform (ícone Shuffle, por slot): SÓ muda a transform (mantém font)
+//  - Lock individual (cadeado): bloqueia o slot para não ser afetado pelos Generate All
+//  - Copy/Paste individual por slot
 //  - Pesos multi-seleção (Bold, Italic, Regular, Thin, etc.)
 //  - Italic toggle
 //  - Expand/collapse por barra
@@ -122,19 +123,19 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
   const expandAll = () => setExpanded([true, true, true, true, true]);
   const collapseAll = () => setExpanded([false, false, false, false, false]);
 
-  // GENERATE ALL — respeita locks: busca font aleatória (do catálogo 1500+) + transform aleatória
-  const generateAll = useCallback(async () => {
+  // GENERATE ALL FONTS — respeita locks: busca font aleatória (do catálogo 1500+).
+  // SÓ muda a font. NÃO mexe nas transforms (mantém o que o utilizador escolheu).
+  const generateAllFonts = useCallback(async () => {
     const next = await Promise.all(
       slotStates.map(async (s) => {
-        if (s.locked) return s; // respeita o lock
-        // Usa catálogo dinâmico (1500+ fonts) com filtro de categoria + source
+        if (s.locked) return s;
         const font = await getRandomFontByFilterAsync(filtro, sourceFilter, s.fonte);
         await loadFont(font);
         return {
           ...s,
           fonte: font.family,
           customFontName: undefined,
-          transformId: getRandomTransform(s.transformId).id,
+          // NÃO mexe no transformId — mantém a transform atual
         };
       })
     );
@@ -144,6 +145,20 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
       `5 fonts geradas!${lockedCount > 0 ? ` (${lockedCount} bloqueadas mantidas)` : ""}`
     );
   }, [slotStates, onChange, filtro, sourceFilter]);
+
+  // GENERATE ALL TRANSFORMS — respeita locks: aplica transform aleatória.
+  // SÓ muda a transform. NÃO mexe nas fonts.
+  const generateAllTransforms = useCallback(() => {
+    const next = slotStates.map((s) => {
+      if (s.locked) return s;
+      return { ...s, transformId: getRandomTransform(s.transformId).id };
+    });
+    onChange(next);
+    const lockedCount = slotStates.filter((s) => s.locked).length;
+    toast.success(
+      `5 transforms geradas!${lockedCount > 0 ? ` (${lockedCount} bloqueadas mantidas)` : ""}`
+    );
+  }, [slotStates, onChange]);
 
   const handleUploadFont = useCallback(async (file: File) => {
     const familyName = file.name
@@ -202,11 +217,22 @@ export function FontPlayground({ states, onChange }: FontPlaygroundProps) {
             <Button variant="outline" size="sm" onClick={collapseAll} className="h-7 text-xs">
               <ChevronDown className="h-3 w-3" /> Fechar
             </Button>
+            {/* Generate All FONTS — só muda a font, mantém transforms */}
             <Button
-              onClick={generateAll}
+              onClick={generateAllFonts}
               className="h-7 gap-1 rounded-md bg-primary px-3 text-xs text-primary-foreground hover:bg-primary/90"
+              title="Gera 5 fonts aleatórias (mantém as transforms atuais)"
             >
-              <Wand2 className="h-3 w-3" /> Generate All 5
+              <Wand2 className="h-3 w-3" /> Generate All Fonts
+            </Button>
+            {/* Generate All TRANSFORMS — só muda a transform, mantém fonts */}
+            <Button
+              onClick={generateAllTransforms}
+              variant="outline"
+              className="h-7 gap-1 rounded-md border-primary/40 px-3 text-xs text-primary hover:bg-primary/10"
+              title="Gera 5 transforms aleatórias (mantém as fonts atuais)"
+            >
+              <Shuffle className="h-3 w-3" /> Generate All Transforms
             </Button>
           </div>
         </div>
@@ -306,9 +332,9 @@ function FontBar({
     ? FONT_TRANSFORMS.find((t) => t.id === state.transformId)
     : undefined;
 
-  // Generate individual — busca font aleatória do filtro + transform aleatória
+  // Generate individual — SÓ muda a font (NÃO mexe na transform).
+  // Para mudar a transform, usa o ícone Shuffle (randomTransform).
   const gerarIndividual = async () => {
-    // Usa catálogo dinâmico (1500+ fonts) com filtro de categoria + source
     let pool = allFontsCatalog;
     if (filtro !== "todos") {
       pool = pool.filter((f) => f.categoria.includes(filtro as any));
@@ -324,7 +350,7 @@ function FontBar({
       ...state,
       fonte: font.family,
       customFontName: undefined,
-      transformId: getRandomTransform(state.transformId).id,
+      // NÃO mexe no transformId — mantém a transform atual
     });
     toast.success(`Slot ${index + 1}: ${font.family}`);
   };
@@ -431,8 +457,8 @@ function FontBar({
           </IconBtn>
           {/* Preview popup */}
           <FontPreviewPopup state={state} texto={texto} />
-          {/* Random transform (ícone shuffle) */}
-          <IconBtn onClick={randomTransform} title="Randomizar apenas a transform">
+          {/* Generate TRANSFORM (ícone shuffle) — só muda a transform, mantém a font */}
+          <IconBtn onClick={randomTransform} title="Generate Transform (só muda a transform, mantém a font)">
             <Shuffle className="h-3 w-3" />
           </IconBtn>
           {/* Pesos (multi-seleção) */}
@@ -441,15 +467,15 @@ function FontBar({
           <IconBtn onClick={toggleItalic} active={state.italic} title="Itálico">
             <Italic className="h-3 w-3" />
           </IconBtn>
-          {/* Generate individual */}
+          {/* Generate FONT — só muda a font, mantém a transform */}
           <Button
             type="button"
             size="sm"
             onClick={gerarIndividual}
             className="h-7 gap-1 rounded-md bg-primary px-2 text-[10px] text-primary-foreground hover:bg-primary/90"
-            title="Busca font aleatória (do filtro) + aplica transform"
+            title="Generate Font (só muda a font, mantém a transform)"
           >
-            <Zap className="h-3 w-3" /> Generate
+            <Zap className="h-3 w-3" /> Generate Font
           </Button>
         </div>
       </div>

@@ -1,16 +1,8 @@
 // ============================================================================
-// skins.ts — 5 SKINS DE VERDADE
+// skins.ts — 5 SKINS DE VERDADE (sem Glass Aurora, com Mono Ink)
 // ============================================================================
-// Filosofia: cada skin é um universo visual distinto, não só mudança de cor.
-// Cada um tem padrões modernos, texturas, profundidade real.
-// Light E Dark variants com diferença NOTÓRIA (não só inverter cores).
-//
-// 5 skins:
-//  1. Brutalist Ink — Hard edges, mono fonts, offset shadows, raw
-//  2. Editorial Serif — Magazine luxury, drop caps, serif authority
-//  3. Glass Aurora — Real glassmorphism, aurora gradients, blur depths
-//  4. Neo Brutalist 3D — Faux 3D com shadows profundas, contraste extremo
-//  5. Mono Carbon — Carbon fiber pattern, electric lime, tech minimal
+// Ordem para caberem numa linha: Mono Ink → Brutalist Ink → Editorial Serif →
+// Neo Brutalist 3D → Mono Carbon
 // ============================================================================
 
 export interface SkinTokens {
@@ -24,16 +16,14 @@ export interface SkinTokens {
   shadow: string;
   headingFont: string;
   bodyFont: string;
-  // NOVO: padrão de fundo (CSS background) para dar textura
   bgPattern?: string;
-  // NOVO: classe helper para efeitos especiais
   effectClass?: string;
 }
 
 export type SkinCategory =
+  | "Mono"
   | "Brutalist"
   | "Editorial"
-  | "Glass"
   | "3D"
   | "Carbon";
 
@@ -47,8 +37,42 @@ export interface Skin {
 }
 
 export const SKINS: Skin[] = [
-  // ── 1. Brutalist Ink ───────────────────────────────────────────────────
-  // Hard edges, mono fonts, offset shadows. Diferença light/dark extrema.
+  // ── 1. Mono Ink ────────────────────────────────────────────────────────
+  // Pure ink on cream. Literary, timeless. Light = paper, Dark = deep ink.
+  {
+    id: "mono-ink",
+    name: "Mono Ink",
+    description: "Pure ink on cream, literary calm",
+    category: "Mono",
+    light: {
+      bg: "#FAF7F0",
+      card: "#FFFFFF",
+      text: "#0A0A0A",
+      muted: "#6B6B6B",
+      accent: "#0A0A0A",
+      border: "#0A0A0A",
+      radius: "0px",
+      shadow: "none",
+      headingFont: "Georgia, 'Times New Roman', serif",
+      bodyFont: "Georgia, 'Times New Roman', serif",
+      bgPattern: "radial-gradient(circle at 30% 20%, rgba(10,10,10,0.02) 0%, transparent 60%)",
+    },
+    dark: {
+      bg: "#0A0A0A",
+      card: "#161616",
+      text: "#FAF7F0",
+      muted: "#8C8C8C",
+      accent: "#FAF7F0",
+      border: "#FAF7F0",
+      radius: "0px",
+      shadow: "none",
+      headingFont: "Georgia, 'Times New Roman', serif",
+      bodyFont: "Georgia, 'Times New Roman', serif",
+      bgPattern: "radial-gradient(circle at 30% 20%, rgba(250,247,240,0.03) 0%, transparent 60%)",
+    },
+  },
+
+  // ── 2. Brutalist Ink ───────────────────────────────────────────────────
   {
     id: "brutalist-ink",
     name: "Brutalist Ink",
@@ -82,8 +106,7 @@ export const SKINS: Skin[] = [
     },
   },
 
-  // ── 2. Editorial Serif ─────────────────────────────────────────────────
-  // Magazine luxury com drop caps vibe. Light = cream paper, Dark = dark leather.
+  // ── 3. Editorial Serif ─────────────────────────────────────────────────
   {
     id: "editorial-serif",
     name: "Editorial Serif",
@@ -117,45 +140,7 @@ export const SKINS: Skin[] = [
     },
   },
 
-  // ── 3. Glass Aurora ────────────────────────────────────────────────────
-  // Real glassmorphism com aurora gradients em background. Light = pastel dawn, Dark = night sky.
-  {
-    id: "glass-aurora",
-    name: "Glass Aurora",
-    description: "Real glassmorphism, aurora gradients, depth blur",
-    category: "Glass",
-    light: {
-      bg: "#E8E0FF",
-      card: "rgba(255, 255, 255, 0.55)",
-      text: "#1C1033",
-      muted: "#5E4F80",
-      accent: "#7C3AED",
-      border: "rgba(255, 255, 255, 0.65)",
-      radius: "1.5rem",
-      shadow: "0 8px 32px rgba(124, 58, 237, 0.14), inset 0 1px 0 rgba(255,255,255,0.4)",
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "radial-gradient(circle at 10% 20%, rgba(124,58,237,0.25) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(236,72,153,0.20) 0%, transparent 40%), radial-gradient(circle at 50% 50%, rgba(59,130,246,0.15) 0%, transparent 50%)",
-      effectClass: "backdrop-blur-xl",
-    },
-    dark: {
-      bg: "#0E0A2E",
-      card: "rgba(26, 20, 56, 0.55)",
-      text: "#E6E0FF",
-      muted: "#948CB8",
-      accent: "#A78BFA",
-      border: "rgba(167, 139, 250, 0.22)",
-      radius: "1.5rem",
-      shadow: "0 8px 32px rgba(167, 139, 250, 0.2), inset 0 1px 0 rgba(255,255,255,0.08)",
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "radial-gradient(circle at 10% 20%, rgba(167,139,250,0.30) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(244,114,182,0.22) 0%, transparent 40%), radial-gradient(circle at 50% 50%, rgba(96,165,250,0.18) 0%, transparent 50%)",
-      effectClass: "backdrop-blur-xl",
-    },
-  },
-
   // ── 4. Neo Brutalist 3D ────────────────────────────────────────────────
-  // Faux 3D com shadows profundas em camadas. Contraste extremo.
   {
     id: "neo-brutalist-3d",
     name: "Neo Brutalist 3D",
@@ -190,7 +175,6 @@ export const SKINS: Skin[] = [
   },
 
   // ── 5. Mono Carbon ─────────────────────────────────────────────────────
-  // Carbon fiber pattern, electric lime accent, tech minimal.
   {
     id: "mono-carbon",
     name: "Mono Carbon",
@@ -225,7 +209,6 @@ export const SKINS: Skin[] = [
   },
 ];
 
-// Helper: get a skin by id
 export function getSkinById(id: string): Skin | undefined {
   return SKINS.find((s) => s.id === id);
 }

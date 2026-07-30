@@ -13,26 +13,10 @@
 export type FontCategory = "sans" | "serif" | "mono" | "geist" | "awwwards" | "display" | "handwriting";
 export type FontSource = "google" | "fontshare";
 
-// Import dinâmico do catálogo de 500+ clones (definido em font-sources-catalog.ts)
-import { FONT_CLONES, type FontClone } from "./font-sources-catalog";
-
-// Converte clones para FontInfo (compatível com o catálogo)
-const FONT_CLONES_AS_FONTINFO: FontInfo[] = (() => {
-  const familiesSeen = new Set<string>();
-  const result: FontInfo[] = [];
-  for (const clone of FONT_CLONES) {
-    if (familiesSeen.has(clone.family)) continue;
-    familiesSeen.add(clone.family);
-    result.push({
-      nome: clone.family,
-      family: clone.family,
-      categoria: [clone.categoria] as FontCategory[],
-      source: clone.source,
-      pesos: clone.pesos,
-    });
-  }
-  return result;
-})();
+// NOTA: PAID_FONT_CLONES (em font-sources-catalog.ts) é usado APENAS para
+// sugestões no upload. Não cria entradas no catálogo de fonts — as alternatives
+// referenciam families REAIS de FONTS_MODERNAS + Google dynamic.
+// Isto garante que não há duplicados no picker.
 
 export interface FontInfo {
   nome: string;
@@ -274,18 +258,14 @@ export async function fetchGoogleFontsCatalog(): Promise<FontInfo[]> {
 }
 
 /**
- * Retorna o catálogo completo: curadas (com metadados ricos) + dinâmicas + clones.
- * Deduplica por family (curadas têm prioridade).
+ * Retorna o catálogo completo: curadas (45) + dinâmicas Google (1500+).
+ * SEM duplicados — cada family aparece UMA vez.
  */
 export async function getAllFonts(): Promise<FontInfo[]> {
   const dynamic = await fetchGoogleFontsCatalog();
   const curatedFamilies = new Set(FONTS_MODERNAS.map((f) => f.family));
   const dynamicUnique = dynamic.filter((f) => !curatedFamilies.has(f.family));
-  // NOVO: inclui clones do catálogo de 500+
-  const clonesUnique = FONT_CLONES_AS_FONTINFO.filter(
-    (f) => !curatedFamilies.has(f.family) && !dynamicUnique.some((d) => d.family === f.family)
-  );
-  return [...FONTS_MODERNAS, ...dynamicUnique, ...clonesUnique];
+  return [...FONTS_MODERNAS, ...dynamicUnique];
 }
 
 /**
