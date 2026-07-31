@@ -24,7 +24,8 @@ export type SkinCategory =
   | "Editorial"
   | "3D"
   | "Carbon"
-  | "Light";
+  | "Light"
+  | "Outline";
 
 export interface Skin {
   id: string;
@@ -252,6 +253,44 @@ export const SKINS: Skin[] = [
       headingFont: "var(--font-jakarta), system-ui, sans-serif",
       bodyFont: "var(--font-inter), system-ui, sans-serif",
       bgPattern: "radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.08) 0%, transparent 50%), radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.05) 0%, transparent 50%)",
+    },
+  },
+
+  // ── 7. Pure Outline — preto puro + cinza claro + contornos brancos ────
+  // DARK: preto puro + cinza claro #ADB2C1 + linha contornos brancos
+  // LIGHT: cinza claro + preto + linha de contornos branca
+  {
+    id: "pure-outline",
+    name: "Pure Outline",
+    description: "Black + light gray + white contour lines",
+    category: "Outline",
+    dark: {
+      bg: "#000000",
+      card: "#0A0A0A",
+      text: "#ADB2C1",
+      muted: "#6B7280",
+      accent: "#ADB2C1",
+      accentForeground: "#000000",
+      border: "rgba(255, 255, 255, 0.15)",
+      radius: "0.75rem",
+      shadow: "0 0 0 1px rgba(255, 255, 255, 0.08)",
+      headingFont: "var(--font-geist-sans), system-ui, sans-serif",
+      bodyFont: "var(--font-geist-sans), system-ui, sans-serif",
+      bgPattern: "none",
+    },
+    light: {
+      bg: "#ADB2C1",
+      card: "#C2C7D4",
+      text: "#000000",
+      muted: "#4A4F5C",
+      accent: "#000000",
+      accentForeground: "#FFFFFF",
+      border: "rgba(255, 255, 255, 0.6)",
+      radius: "0.75rem",
+      shadow: "0 0 0 1px rgba(255, 255, 255, 0.5)",
+      headingFont: "var(--font-geist-sans), system-ui, sans-serif",
+      bodyFont: "var(--font-geist-sans), system-ui, sans-serif",
+      bgPattern: "none",
     },
   },
 ];
