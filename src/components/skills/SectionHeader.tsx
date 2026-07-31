@@ -11,12 +11,12 @@
 import { cn } from "@/lib/utils";
 import type { SkillMode } from "@/lib/skills-catalog";
 
-const MODE_BUTTONS: { mode: SkillMode; label: string; color: string; activeBg: string }[] = [
-  { mode: "recomendada", label: "Recomendada", color: "text-emerald-500", activeBg: "border-emerald-500 bg-emerald-500/10 text-emerald-500" },
-  { mode: "alternativa", label: "Alternativa", color: "text-blue-500", activeBg: "border-blue-500 bg-blue-500/10 text-blue-500" },
-  { mode: "opcional", label: "Opcional", color: "text-amber-500", activeBg: "border-amber-500 bg-amber-500/10 text-amber-500" },
-  { mode: "manual", label: "Manual", color: "text-fuchsia-500", activeBg: "border-fuchsia-500 bg-fuchsia-500/10 text-fuchsia-500" },
-  { mode: "off", label: "Off", color: "text-zinc-400", activeBg: "border-zinc-500 bg-zinc-500/10 text-zinc-300" },
+const MODE_BUTTONS: { mode: SkillMode; label: string; color: string; activeBg: string; dotActive: string; dotInactive: string }[] = [
+  { mode: "recomendada", label: "Recomendada", color: "text-emerald-500", activeBg: "border-emerald-500 bg-emerald-500/10 text-emerald-500", dotActive: "bg-emerald-500", dotInactive: "bg-emerald-500/40" },
+  { mode: "alternativa", label: "Alternativa", color: "text-blue-500", activeBg: "border-blue-500 bg-blue-500/10 text-blue-500", dotActive: "bg-blue-500", dotInactive: "bg-blue-500/40" },
+  { mode: "opcional", label: "Opcional", color: "text-amber-500", activeBg: "border-amber-500 bg-amber-500/10 text-amber-500", dotActive: "bg-amber-500", dotInactive: "bg-amber-500/40" },
+  { mode: "manual", label: "Manual", color: "text-fuchsia-500", activeBg: "border-fuchsia-500 bg-fuchsia-500/10 text-fuchsia-500", dotActive: "bg-fuchsia-500", dotInactive: "bg-fuchsia-500/40" },
+  { mode: "off", label: "Off", color: "text-zinc-400", activeBg: "border-zinc-500 bg-zinc-500/10 text-zinc-300", dotActive: "bg-zinc-400", dotInactive: "bg-zinc-500/50" },
 ];
 
 interface SectionHeaderProps {
@@ -73,8 +73,8 @@ export function SectionHeader({
               }
             >
               <span className={cn(
-                "h-2 w-2 rounded-full",
-                isActive ? btn.color.replace("text-", "bg-") : "bg-zinc-500"
+                "h-2 w-2 rounded-full transition-all",
+                isActive ? btn.dotActive : btn.dotInactive
               )} />
               {btn.label}
             </button>
