@@ -333,32 +333,32 @@ export const SKINS: Skin[] = [
     },
   },
 
-  // ── 9. Chocolate Caramel — chocolate + caramelo dourado (magnum vibe) ──
-  // DARK: chocolate escuro + caramelo dourado glow
-  // LIGHT: creme baunilha + chocolate + caramelo
+  // ── 9. Chocolate Caramel — chocolate negro + caramelo dourado ─────────
+  // DARK: chocolate negro profundo + caramelo dourado glow
+  // LIGHT: creme baunilha + chocolate negro + caramelo
   {
     id: "chocolate-caramel",
     name: "Chocolate Caramel",
     description: "Dark chocolate + golden caramel, Magnum ice cream vibes",
     category: "Chocolate",
     dark: {
-      bg: "#1A0F08",
-      card: "#2B1A0F",
+      bg: "#0D0704",
+      card: "#1A0E07",
       text: "#F5E6D3",
-      muted: "#A08060",
+      muted: "#8A6B4A",
       accent: "#D4A055",
-      accentForeground: "#1A0F08",
-      border: "rgba(212, 160, 85, 0.20)",
+      accentForeground: "#0D0704",
+      border: "rgba(212, 160, 85, 0.18)",
       radius: "1rem",
-      shadow: "0 0 24px rgba(212, 160, 85, 0.12), 0 4px 16px rgba(0, 0, 0, 0.6)",
+      shadow: "0 0 24px rgba(212, 160, 85, 0.10), 0 4px 16px rgba(0, 0, 0, 0.7)",
       headingFont: "var(--font-jakarta), system-ui, sans-serif",
       bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "radial-gradient(circle at 30% 20%, rgba(212, 160, 85, 0.08) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(139, 90, 43, 0.06) 0%, transparent 40%)",
+      bgPattern: "radial-gradient(circle at 30% 20%, rgba(212, 160, 85, 0.06) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(101, 67, 33, 0.05) 0%, transparent 40%)",
     },
     light: {
       bg: "#FAF3E8",
       card: "#FFFFFF",
-      text: "#2B1A0F",
+      text: "#1A0E07",
       muted: "#7A6B5A",
       accent: "#B8860B",
       accentForeground: "#FFFFFF",
@@ -367,7 +367,7 @@ export const SKINS: Skin[] = [
       shadow: "0 2px 12px rgba(184, 134, 11, 0.08)",
       headingFont: "var(--font-jakarta), system-ui, sans-serif",
       bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "radial-gradient(circle at 30% 20%, rgba(212, 160, 85, 0.06) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(139, 90, 43, 0.04) 0%, transparent 40%)",
+      bgPattern: "radial-gradient(circle at 30% 20%, rgba(212, 160, 85, 0.06) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(101, 67, 33, 0.04) 0%, transparent 40%)",
     },
   },
 ];
