@@ -81,6 +81,19 @@ export function SectionHeader({
           );
         })}
       </div>
+      {/* Legenda de licenças */}
+      <div className="flex flex-wrap gap-1.5">
+        {["Free", "Freemium", "Subscrição"].map((lic) => (
+          <span key={lic} className={cn(
+            "rounded-full border px-2 py-0.5 text-[8px] font-bold",
+            lic === "Free" && "border-emerald-500/30 bg-emerald-500/5 text-emerald-500",
+            lic === "Freemium" && "border-amber-500/30 bg-amber-500/5 text-amber-500",
+            lic === "Subscrição" && "border-rose-500/30 bg-rose-500/5 text-rose-500",
+          )}>
+            {lic}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }

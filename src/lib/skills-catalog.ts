@@ -8,6 +8,8 @@
 
 export type SkillMode = "recomendada" | "alternativa" | "opcional" | "manual" | "off";
 
+export type Licenca = "Free" | "Freemium" | "Subscrição";
+
 export interface Skill {
   id: string;
   nome: string;
@@ -19,6 +21,7 @@ export interface Skill {
   url?: string;
   // Modo recomendado por defeito (baseado no nicho)
   modoDefault: SkillMode;
+  licenca: Licenca;
 }
 
 // ============================================================================
@@ -36,6 +39,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear, Resend, Cal.com — todos usam shadcn/ui.",
     url: "https://ui.shadcn.com",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "radix-ui",
@@ -47,6 +51,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "shadcn/ui é built on top of Radix. Linear, Vercel usam Radix diretamente.",
     url: "https://radix-ui.com",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "tailwind-4",
@@ -58,6 +63,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear, Stripe, GitHub — todos usam Tailwind.",
     url: "https://tailwindcss.com",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "next-themes",
@@ -69,6 +75,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear, shadcn/ui docs — todos usam next-themes.",
     url: "https://github.com/pacocoursey/next-themes",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "cmdk",
@@ -80,6 +87,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear, Raycast, GitHub — todos têm Cmd+K.",
     url: "https://cmdk.paco.me",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "sonner",
@@ -91,6 +99,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear, shadcn/ui — todos migraram para sonner.",
     url: "https://sonner.emilkowal.ski",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
 
   // ── Animações ──
@@ -104,6 +113,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear, Framer, Stripe — todos usam Motion.",
     url: "https://motion.dev",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "lenis",
@@ -115,6 +125,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Awwwards SOTD, Framer, Apple product pages.",
     url: "https://lenis.studiofreight.com",
     modoDefault: "alternativa",
+    licenca: "Freemium",
   },
   {
     id: "gsap",
@@ -126,6 +137,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Awwwards sites, Apple product pages, Nike stories.",
     url: "https://gsap.com",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "rive",
@@ -137,6 +149,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Mailchimp, Slack onboarding, Cash App.",
     url: "https://rive.app",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "lottie",
@@ -148,6 +161,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Airbnb, Slack, Dropbox, Google.",
     url: "https://lottiefiles.com",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "react-three-fiber",
@@ -159,6 +173,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Apple Vision Pro, Nike By You, Awwwards 3D sites.",
     url: "https://docs.pmnd.rs/react-three-fiber",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
 
   // ── MCP (Model Context Protocol) ──
@@ -172,6 +187,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear, Resend — todos usam Figma MCP para handoff.",
     url: "https://github.com/GLips/Figma-Context-MCP",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "context7-mcp",
@@ -183,6 +199,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Recomendado por Cursor, Claude Code, Windsurf.",
     url: "https://context7.com",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "browser-tools-mcp",
@@ -194,6 +211,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Agências e equipas que fazem QA visual rigoroso.",
     url: "https://github.com/AgentDeskAI/browser-tools-mcp",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "github-mcp",
@@ -205,6 +223,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Qualquer equipa que usa GitHub.",
     url: "https://github.com/modelcontextprotocol/servers/tree/main/src/github",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "filesystem-mcp",
@@ -216,6 +235,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Claude Code, Cursor com scaffolding.",
     url: "https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "sequential-thinking-mcp",
@@ -227,6 +247,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Modelscope, Anthropic recomenda para chain-of-thought.",
     url: "https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "magic-mcp",
@@ -238,6 +259,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "21st.dev community, usado por agências premium.",
     url: "https://21st.dev",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "puppeteer-mcp",
@@ -249,6 +271,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Equipas que usam Puppeteer para CI/CD.",
     url: "https://github.com/modelcontextprotocol/servers/tree/main/src/puppeteer",
     modoDefault: "opcional",
+    licenca: "Free",
   },
 
   // ── Backend ──
@@ -262,6 +285,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Cal.com, Vercel, Linear — todos usam Prisma.",
     url: "https://prisma.io",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "supabase",
@@ -273,6 +297,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "1Calendar, Markprompt, Mintlify — usam Supabase.",
     url: "https://supabase.com",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "nextauth",
@@ -284,6 +309,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Cal.com, Vercel dashboard, shadcn/ui admin.",
     url: "https://authjs.dev",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "upstash",
@@ -295,6 +321,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Next.js apps que precisam de cache edge.",
     url: "https://upstash.com",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "neon",
@@ -306,6 +333,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Replit, Vercel recommend Neon.",
     url: "https://neon.tech",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
 
   // ── IA ──
@@ -319,6 +347,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel AI Chat, ChatGPT clones, Perplexity-like apps.",
     url: "https://sdk.vercel.ai",
     modoDefault: "recomendada",
+    licenca: "Freemium",
   },
   {
     id: "openai",
@@ -330,6 +359,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Quase todo SaaS com IA usa OpenAI.",
     url: "https://platform.openai.com",
     modoDefault: "alternativa",
+    licenca: "Freemium",
   },
   {
     id: "anthropic",
@@ -341,6 +371,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Cursor, Replit, Notion AI usam Claude.",
     url: "https://anthropic.com",
     modoDefault: "opcional",
+    licenca: "Freemium",
   },
   {
     id: "glm",
@@ -352,6 +383,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Inaugura-Base usa GLM-5.2 para geração de specs.",
     url: "https://z.ai",
     modoDefault: "recomendada",
+    licenca: "Freemium",
   },
 
   // ── DevOps ──
@@ -365,6 +397,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear, Cal.com, Resend — todos hosted na Vercel.",
     url: "https://vercel.com",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "sentry",
@@ -376,6 +409,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear, Discord — todos usam Sentry.",
     url: "https://sentry.io",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "posthog",
@@ -387,6 +421,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Y Combinator startups.",
     url: "https://posthog.com",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "github-actions",
@@ -398,6 +433,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Qualquer repo GitHub sério usa Actions.",
     url: "https://github.com/features/actions",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
 
   // ── Design ──
@@ -411,6 +447,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Designers em agências premium usam para validar pairing.",
     url: "https://figma.com/community",
     modoDefault: "opcional",
+    licenca: "Freemium",
   },
   {
     id: "figma-tokens",
@@ -422,6 +459,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Equipas que fazem design system sério.",
     url: "https://figma.com/community/plugin/843461159747178978",
     modoDefault: "alternativa",
+    licenca: "Subscrição",
   },
   {
     id: "chroma-js",
@@ -433,6 +471,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Inaugura-Base usa chroma.js para validar WCAG AA.",
     url: "https://gka.github.io/chroma.js",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "zod",
@@ -444,6 +483,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear, shadcn/ui form — todos usam Zod.",
     url: "https://zod.dev",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   // NOVAS skills — mais cobertura
   {
@@ -456,6 +496,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel dashboard, Linear, Cal.com admin.",
     url: "https://tanstack.com/query",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "zustand",
@@ -467,6 +508,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear, shadcn/ui examples.",
     url: "https://zustand-demo.pmnd.rs",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "react-hook-form",
@@ -478,6 +520,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear, shadcn/ui form — todos usam RHF + Zod.",
     url: "https://react-hook-form.com",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "lucide-react",
@@ -489,6 +532,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear, shadcn/ui — todos usam Lucide.",
     url: "https://lucide.dev",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "nuqs",
@@ -500,6 +544,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel dashboard, Linear filters.",
     url: "https://nuqs.47ng.com",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "drizzle-orm",
@@ -511,6 +556,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel recommends Drizzle for edge.",
     url: "https://orm.drizzle.team",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "turso",
@@ -522,6 +568,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel edge apps, Cloudflare Workers.",
     url: "https://turso.tech",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "inngest",
@@ -533,6 +580,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Cal.com, Resend, Vercel apps.",
     url: "https://inngest.com",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "trigger-dev",
@@ -544,6 +592,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "YC startups, indie hackers.",
     url: "https://trigger.dev",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "resend-react-email",
@@ -555,6 +604,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear, Cal.com.",
     url: "https://react.email",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "shadcn-table",
@@ -566,6 +616,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear admin, shadcn/ui examples.",
     url: "https://ui.shadcn.com/docs/components/data-table",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "embla-carousel",
@@ -577,6 +628,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "shadcn/ui carousel component.",
     url: "https://embla-carousel.vercel.app",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "vaul",
@@ -588,6 +640,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "shadcn/ui drawer, iOS apps.",
     url: "https://vaul.emilkowal.dev",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "react-resizable-panels",
@@ -599,6 +652,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel dashboard, Linear, Figma-like UIs.",
     url: "https://react-resizable-panels.vercel.app",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   // ── NOVAS Skills (pesquisa Julho 2026 — top trending) ──────────────────
   {
@@ -611,6 +665,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Trending no Reddit r/nextjs 2025, usado por startups.",
     url: "https://once-ui.com",
     modoDefault: "alternativa",
+    licenca: "Subscrição",
   },
   {
     id: "magic-ui",
@@ -622,6 +677,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Trending no GitHub 2025, usado por agências e startups.",
     url: "https://magicui.design",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "aceternity-ui",
@@ -633,6 +689,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Trending no Twitter/X 2025, awwwards-style components.",
     url: "https://ui.aceternity.com",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "tremor",
@@ -644,6 +701,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Stripe dashboards usam componentes similares.",
     url: "https://tremor.so",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "recharts",
@@ -655,6 +713,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel analytics, Linear, Cal.com dashboards.",
     url: "https://recharts.org",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "nivo",
@@ -666,6 +725,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Data-heavy dashboards, analytics platforms.",
     url: "https://nivo.rocks",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "tanstack-table",
@@ -677,6 +737,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "shadcn/ui Table, Vercel, Linear admin.",
     url: "https://tanstack.com/table",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "dnd-kit",
@@ -688,6 +749,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Linear, Notion, Trello-like boards.",
     url: "https://dndkit.com",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "react-day-picker",
@@ -699,6 +761,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "shadcn/ui Calendar, Cal.com, Booking apps.",
     url: "https://daypicker.dev",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "react-dropzone",
@@ -710,6 +773,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "UploadThing usa, Vercel, Notion attachments.",
     url: "https://react-dropzone.js.org",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "fullcalendar",
@@ -721,6 +785,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Cal.com, Google Calendar-like apps.",
     url: "https://fullcalendar.io",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "mantine",
@@ -732,6 +797,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Usado por empresas que querem rapidez sem customizar.",
     url: "https://mantine.dev",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "mui",
@@ -743,6 +809,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Google, JP Morgan, Bloomberg.",
     url: "https://mui.com",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "ant-design",
@@ -754,6 +821,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Alibaba, Tencent, Blibli.",
     url: "https://ant.design",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "unistyles",
@@ -765,6 +833,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Trending GitHub 2025, React Native community.",
     url: "https://unistyl.es",
     modoDefault: "opcional",
+    licenca: "Freemium",
   },
   {
     id: "tw-animate-css",
@@ -776,6 +845,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "shadcn/ui New York usa tw-animate-css.",
     url: "https://github.com/romboHQ/tw-animate-css",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "nuqs",
@@ -787,6 +857,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel dashboard filters, Linear.",
     url: "https://nuqs.47ng.com",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "millions-dev",
@@ -798,6 +869,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Trending 2025, usado por startups premium.",
     url: "https://millions.dev",
     modoDefault: "opcional",
+    licenca: "Freemium",
   },
   {
     id: "rive-react",
@@ -809,6 +881,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Mailchimp, Cash App, Slack.",
     url: "https://rive.app",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "valtio",
@@ -820,6 +893,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "PMNDROS ecosystem, usado com R3F.",
     url: "https://valtio.pmnd.rs",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "jotai",
@@ -831,6 +905,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "PMNDROS ecosystem, used with R3F and complex UIs.",
     url: "https://jotai.org",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "immer",
@@ -842,6 +917,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Redux Toolkit usa Immer internamente.",
     url: "https://immerjs.github.io/immer",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "react-aria",
@@ -853,6 +929,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Adobe Spectrum, React Aria Components.",
     url: "https://react-spectrum.adobe.com/react-aria",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "downshift",
@@ -864,6 +941,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Used by Uber, Atlassian, Netflix.",
     url: "https://downshift-js.com",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "react-window",
@@ -875,6 +953,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel logs, Spotify-like lists.",
     url: "https://github.com/bvaughn/react-window",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "react-hook-form-resolvers",
@@ -886,6 +965,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "shadcn/ui Form, Vercel forms, Linear settings.",
     url: "https://github.com/react-hook-form/resolvers",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: " bcryptjs",
@@ -897,6 +977,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Auth.js recomenda bcryptjs.",
     url: "https://github.com/dcodeIO/bcrypt.js",
     modoDefault: "recomendada",
+    licenca: "Freemium",
   },
   {
     id: "next-safe-action",
@@ -908,6 +989,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Trending GitHub 2025, usado por Vercel apps.",
     url: "https://next-safe-action.dev",
     modoDefault: "alternativa",
+    licenca: "Freemium",
   },
   {
     id: "drizzle-zod",
@@ -919,6 +1001,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel recommends Drizzle + Zod for edge.",
     url: "https://orm.drizzle.team/docs/zod",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "prisma-zod",
@@ -930,6 +1013,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Cal.com, Vercel apps com Prisma.",
     url: "https://github.com/CodedogLit/Prisma-zod-generator",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "better-auth",
@@ -941,6 +1025,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Trending 2025, GitHub stars a crescer.",
     url: "https://better-auth.com",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "clerk-next",
@@ -952,6 +1037,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Replit, Vercel apps, YC startups.",
     url: "https://clerk.com/nextjs",
     modoDefault: "alternativa",
+    licenca: "Freemium",
   },
   {
     id: "stripe-webhooks",
@@ -963,6 +1049,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel Stripe starter, Cal.com.",
     url: "https://stripe.com/docs/webhooks",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "react-email-render",
@@ -974,6 +1061,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Resend, Vercel, Linear.",
     url: "https://react.email",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "ai-sdk-tools",
@@ -985,6 +1073,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel AI Chat, Perplexity-like apps, chatbot.co.",
     url: "https://sdk.vercel.ai",
     modoDefault: "recomendada",
+    licenca: "Freemium",
   },
   {
     id: "langchain-js",
@@ -996,6 +1085,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Used by enterprise AI apps, Notion AI, ChatPDF.",
     url: "https://js.langchain.com",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "ai-sdk-rag",
@@ -1007,6 +1097,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel AI Chatbot template, Notion AI.",
     url: "https://sdk.vercel.ai/docs/rag",
     modoDefault: "opcional",
+    licenca: "Freemium",
   },
   {
     id: "openai-realtime",
@@ -1018,6 +1109,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "ChatGPT voice mode, customer support AI.",
     url: "https://platform.openai.com/docs/guides/realtime",
     modoDefault: "opcional",
+    licenca: "Freemium",
   },
   {
     id: "pinecone",
@@ -1029,6 +1121,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Microsoft, Notion AI, many AI startups.",
     url: "https://pinecone.io",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "vercel-kv",
@@ -1040,6 +1133,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel apps, Next.js rate limiting.",
     url: "https://vercel.com/kv",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "vercel-blob",
@@ -1051,6 +1145,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel apps, alternativa ao S3 para pequenos projetos.",
     url: "https://vercel.com/blob",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "vercel-edge-config",
@@ -1062,6 +1157,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, usado para Edge A/B testing.",
     url: "https://vercel.com/edge-config",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "react-scan",
@@ -1073,6 +1169,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Trending GitHub 2025, by million.js creator.",
     url: "https://github.com/aidenybai/react-scan",
     modoDefault: "opcional",
+    licenca: "Freemium",
   },
   {
     id: "playwright",
@@ -1084,6 +1181,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Microsoft, Google usam Playwright.",
     url: "https://playwright.dev",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "vitest",
@@ -1095,6 +1193,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear, shadcn/ui — todos usam Vitest.",
     url: "https://vitest.dev",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "biome",
@@ -1106,6 +1205,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Trending 2025, growing GitHub stars.",
     url: "https://biomejs.dev",
     modoDefault: "opcional",
+    licenca: "Freemium",
   },
   {
     id: "turbopack",
@@ -1117,6 +1217,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Next.js 16 usa Turbopack por defeito.",
     url: "https://turbo.build/pack",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "figma-ai-typography",
@@ -1128,6 +1229,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Designers em agências premium.",
     url: "https://figma.com/community",
     modoDefault: "opcional",
+    licenca: "Freemium",
   },
   {
     id: "figma-tokens-plugin",
@@ -1139,6 +1241,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Equipas com design system sério.",
     url: "https://tokens.studio",
     modoDefault: "alternativa",
+    licenca: "Freemium",
   },
   {
     id: "figma-anima",
@@ -1150,6 +1253,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Agências, equipas que designam no Figma primeiro.",
     url: "https://animaapp.com",
     modoDefault: "opcional",
+    licenca: "Freemium",
   },
   {
     id: "figma-builder-io",
@@ -1161,6 +1265,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Hugo, large e-commerce.",
     url: "https://builder.io",
     modoDefault: "opcional",
+    licenca: "Freemium",
   },
   {
     id: "style-dictionary",
@@ -1172,6 +1277,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Amazon, Adobe, used by large design systems.",
     url: "https://styledictionary.com",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   // ── TOP 25 SKILLS (SKILL.md) — Melhores das melhores (Julho 2026) ──────
   {
@@ -1184,6 +1290,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Anthropic oficial skills repo. Combina com Figma MCP + Playwright.",
     url: "https://github.com/anthropics/skills",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "skill-superpowers",
@@ -1195,6 +1302,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "GitHub #1 starred skills repo. Inclui TDD, debugging, plans, sub-agents.",
     url: "https://github.com/obra/superpowers",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "skill-grill-me",
@@ -1206,6 +1314,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Matt Pocock skills. Top installs em Awesome Skills.",
     url: "https://github.com/mattpocock/skills",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "skill-web-artifacts",
@@ -1217,6 +1326,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Anthropic oficial. Combina com frontend-design.",
     url: "https://github.com/anthropics/skills",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "skill-ui-ux-pro-max",
@@ -1228,6 +1338,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "nextlevelbuilder / community skill. Top em Agent Skills Leaderboard.",
     url: "https://skillsdirectory.com",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "skill-systematic-debugging",
@@ -1239,6 +1350,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Incluído no Superpowers pack. Top debugging skill.",
     url: "https://github.com/obra/superpowers",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "skill-tdd",
@@ -1250,6 +1362,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Incluído no Superpowers. Top TDD skill para agentes.",
     url: "https://github.com/obra/superpowers",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "skill-brainstorming",
@@ -1261,6 +1374,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Incluído no Superpowers. Excelente para Extended mode.",
     url: "https://github.com/obra/superpowers",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "skill-code-reviewer",
@@ -1272,6 +1386,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Superpowers + standalone versions. Top em Awesome Skills.",
     url: "https://github.com/obra/superpowers",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "skill-verification",
@@ -1283,6 +1398,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Superpowers. Top em leaderboards de qualidade.",
     url: "https://github.com/obra/superpowers",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "skill-git-commit-writer",
@@ -1294,6 +1410,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Awesome lists, top em dev workflow skills.",
     url: "https://skillsdirectory.com",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "skill-diagram-maker",
@@ -1305,6 +1422,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Top em Agent Skills Leaderboard. Visual docs.",
     url: "https://skillsdirectory.com",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "skill-accessibility",
@@ -1316,6 +1434,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Community + Anthropic. Top em quality skills.",
     url: "https://skillsdirectory.com",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "skill-browser-use",
@@ -1327,6 +1446,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Top em Agent Skills Marketplace. 3,200+ skills no Shyft.",
     url: "https://browser-use.com",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "skill-remotion",
@@ -1338,6 +1458,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Remotion ecosystem. Trending para product demos.",
     url: "https://remotion.dev",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "skill-karpathy-rules",
@@ -1349,6 +1470,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "multica-ai / community. Trending para clean code.",
     url: "https://skillsdirectory.com",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "skill-readme-generator",
@@ -1360,6 +1482,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Awesome Copilot / community. Top em docs skills.",
     url: "https://skillsdirectory.com",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "skill-dispatch-agents",
@@ -1371,6 +1494,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Superpowers. Top em multi-agent orchestration.",
     url: "https://github.com/obra/superpowers",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "skill-addy-osmani",
@@ -1382,6 +1506,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Community / official-ish. Top em performance skills.",
     url: "https://skillsdirectory.com",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "skill-env-doctor",
@@ -1393,6 +1518,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Community skill. Top em setup/diagnostic skills.",
     url: "https://skillsdirectory.com",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "skill-skill-creator",
@@ -1404,6 +1530,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Anthropic oficial. Meta-skill para agent development.",
     url: "https://github.com/anthropics/skills",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "skill-theme-factory",
@@ -1415,6 +1542,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Anthropic / community. Top em design system skills.",
     url: "https://skillsdirectory.com",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "skill-vercel-best-practices",
@@ -1426,6 +1554,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel skills. Oficial.",
     url: "https://skillsdirectory.com",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "skill-feature-dev",
@@ -1437,6 +1566,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Anthropic / community. Top em feature dev skills.",
     url: "https://skillsdirectory.com",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "skill-top-design-awwwards",
@@ -1448,6 +1578,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "MCP Market / directories. Top em design quality skills.",
     url: "https://skillsdirectory.com",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   // ── UI TOP 25 — Melhores component libraries ───────────────────────────
   {
@@ -1460,6 +1591,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear usam Phosphor em alguns produtos.",
     url: "https://phosphoricons.com",
     modoDefault: "opcional",
+    licenca: "Freemium",
   },
   {
     id: "origin-ui",
@@ -1471,6 +1603,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "21st.dev community, trending 2025.",
     url: "https://21st.dev",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "park-ui",
@@ -1482,6 +1615,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Growing 2025, Ark UI ecosystem.",
     url: "https://park-ui.com",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "floating-ui",
@@ -1493,6 +1627,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Radix UI, Floating UI used by Vercel, Linear.",
     url: "https://floating-ui.com",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   {
     id: "headless-ui",
@@ -1504,6 +1639,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Tailwind Labs oficial. Usado por muitos projetos Tailwind.",
     url: "https://headlessui.com",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "chakra-v3",
@@ -1515,6 +1651,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Trending 2025, v3 é rewrite completo.",
     url: "https://chakra-ui.com",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "nextui",
@@ -1526,6 +1663,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Growing 2025, beautiful defaults.",
     url: "https://nextui.org",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "react-bits",
@@ -1537,6 +1675,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Trending 2025, awwwards-style components.",
     url: "https://reactbits.dev",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "untitled-ui",
@@ -1548,10 +1687,11 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Top Figma design system 2025.",
     url: "https://untitledui.com",
     modoDefault: "opcional",
+    licenca: "Freemium",
   },
   {
     id: "open-props",
-    name: "Open Props",
+    nome: "Open Props",
     categoria: "UI",
     icone: "Palette",
     descricao: "CSS variables design tokens. Spacing, colors, fonts, shadows. Sem framework.",
@@ -1559,7 +1699,8 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Trending GitHub, CSS-first approach.",
     url: "https://open-props.style",
     modoDefault: "opcional",
-  } as any,
+    licenca: "Free",
+  },
   // ── ANIMAÇÕES TOP 25 — Melhores ────────────────────────────────────────
   {
     id: "anime-js",
@@ -1571,6 +1712,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Sites awwwards, Apple-like animations.",
     url: "https://animejs.com",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "theatre-js",
@@ -1582,10 +1724,11 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Awwwards sites, motion designers.",
     url: "https://theatrejs.com",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "auto-animate",
-    name: "Auto-Animate (@formkit)",
+    nome: "Auto-Animate (@formkit)",
     categoria: "Animações",
     icone: "Zap",
     descricao: "Animações automáticas para layout changes. 1 linha, sem config.",
@@ -1593,7 +1736,8 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "FormKit, usado por Vue e React projects.",
     url: "https://auto-animate.formkit.com",
     modoDefault: "alternativa",
-  } as any,
+    licenca: "Free",
+  },
   {
     id: "aos",
     nome: "AOS (Animate On Scroll)",
@@ -1604,6 +1748,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Muitos sites WordPress, landing pages simples.",
     url: "https://michalsnik.github.io/aos",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "spline",
@@ -1615,6 +1760,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Apple, Nike, Google usam Spline.",
     url: "https://spline.design",
     modoDefault: "opcional",
+    licenca: "Freemium",
   },
   {
     id: "motion-one",
@@ -1626,6 +1772,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Trending 2025, WAAPI-based.",
     url: "https://motion.dev",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "css-scroll-animations",
@@ -1637,6 +1784,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Chrome 115+, View Transitions API. Trending 2025.",
     url: "https://developer.mozilla.org/en-US/docs/Web/CSS/animation-timeline",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "view-transitions-api",
@@ -1648,6 +1796,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Chrome 111+, Next.js View Transitions. Trending 2025-2026.",
     url: "https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   // ── BACKEND TOP 25 adicionais ──────────────────────────────────────────
   {
@@ -1660,6 +1809,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Cloudflare Workers, Deno Deploy, Bun.",
     url: "https://hono.dev",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "trpc",
@@ -1671,6 +1821,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Cal.com, Vercel apps, trending 2025.",
     url: "https://trpc.io",
     modoDefault: "alternativa",
+    licenca: "Free",
   },
   {
     id: "planetscale",
@@ -1682,6 +1833,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Used by many SaaS, trending 2025.",
     url: "https://planetscale.com",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "convex",
@@ -1693,10 +1845,11 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "YC startups, trending 2025.",
     url: "https://convex.dev",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "partykit",
-    name: "PartyKit",
+    nome: "PartyKit",
     categoria: "Backend",
     icone: "Radio",
     descricao: "Realtime collaboration infrastructure. Multiplayer, cursors, presence.",
@@ -1704,7 +1857,8 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Figma-like apps, multiplayer editors.",
     url: "https://partykit.io",
     modoDefault: "opcional",
-  } as any,
+    licenca: "Subscrição",
+  },
   {
     id: "bullmq",
     nome: "BullMQ",
@@ -1715,6 +1869,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, many SaaS use BullMQ.",
     url: "https://docs.bullmq.io",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "graphql-yoga",
@@ -1726,6 +1881,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "The Guild, used by many enterprises.",
     url: "https://the-guild.dev/graphql/yoga-server",
     modoDefault: "opcional",
+    licenca: "Free",
   },
   {
     id: "pgvector",
@@ -1737,6 +1893,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Supabase, Neon suportam pgvector nativamente.",
     url: "https://github.com/pgvector/pgvector",
     modoDefault: "recomendada",
+    licenca: "Free",
   },
   // ── IA TOP 25 adicionais ───────────────────────────────────────────────
   {
@@ -1749,6 +1906,7 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Trending 2025, TS-native agent framework.",
     url: "https://mastra.ai",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "langgraph",
@@ -1760,10 +1918,11 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "LangChain ecosystem, enterprise AI apps.",
     url: "https://langchain-ai.github.io/langgraph",
     modoDefault: "opcional",
+    licenca: "Subscrição",
   },
   {
     id: "instructor",
-    name: "Instructor / structured extraction",
+    nome: "Instructor / structured extraction",
     categoria: "IA",
     icone: "ShieldCheck",
     descricao: "Structured data extraction from LLMs. Pydantic/Zod for outputs.",
@@ -1771,10 +1930,11 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Trending 2025, used by many AI startups.",
     url: "https://instructor-ai.com",
     modoDefault: "opcional",
-  } as any,
+    licenca: "Subscrição",
+  },
   {
     id: "mem0",
-    name: "Mem0 / memory layers",
+    nome: "Mem0 / memory layers",
     categoria: "IA",
     icone: "Brain",
     descricao: "Memory layer for AI agents. Persistent context, user preferences.",
@@ -1782,10 +1942,11 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Trending 2025, memory for AI apps.",
     url: "https://mem0.ai",
     modoDefault: "opcional",
-  } as any,
+    licenca: "Subscrição",
+  },
   {
     id: "langfuse",
-    name: "Langfuse / observability AI",
+    nome: "Langfuse / observability AI",
     categoria: "IA",
     icone: "Eye",
     descricao: "Observability for LLM apps. Traces, evals, prompts management.",
@@ -1793,11 +1954,12 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Open source, used by many AI startups.",
     url: "https://langfuse.com",
     modoDefault: "opcional",
-  } as any,
+    licenca: "Subscrição",
+  },
   // ── DEVOPS TOP 25 adicionais ───────────────────────────────────────────
   {
     id: "turborepo",
-    name: "Turborepo",
+    nome: "Turborepo",
     categoria: "DevOps",
     icone: "Zap",
     descricao: "Monorepo build system. Cache, parallel, remote builds. Vercel.",
@@ -1805,10 +1967,11 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Next.js, shadcn/ui — todos usam Turborepo.",
     url: "https://turbo.build",
     modoDefault: "recomendada",
-  } as any,
+    licenca: "Freemium",
+  },
   {
     id: "chromatic",
-    name: "Chromatic / Percy (visual testing)",
+    nome: "Chromatic / Percy (visual testing)",
     categoria: "DevOps",
     icone: "Eye",
     descricao: "Visual regression testing. Screenshots diff, UI review, Storybook.",
@@ -1816,10 +1979,11 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Storybook, Chromatic, Percy by BrowserStack.",
     url: "https://chromatic.com",
     modoDefault: "opcional",
-  } as any,
+    licenca: "Subscrição",
+  },
   {
     id: "lighthouse-ci",
-    name: "Lighthouse CI",
+    nome: "Lighthouse CI",
     categoria: "DevOps",
     icone: "Gauge",
     descricao: "Performance auditing automático. Core Web Vitals em CI.",
@@ -1827,10 +1991,11 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Google, Vercel, many CI/CD pipelines.",
     url: "https://github.com/GoogleChrome/lighthouse-ci",
     modoDefault: "recomendada",
-  } as any,
+    licenca: "Freemium",
+  },
   {
     id: "bundle-analyzer",
-    name: "Bundle Analyzer",
+    nome: "Bundle Analyzer",
     categoria: "DevOps",
     icone: "Package",
     descricao: "Analisa bundle size. Identifica dependências pesadas. next-bundle-analyzer.",
@@ -1838,10 +2003,11 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Next.js apps.",
     url: "https://github.com/vercel/next.js/tree/canary/packages/next-bundle-analyzer",
     modoDefault: "recomendada",
-  } as any,
+    licenca: "Freemium",
+  },
   {
     id: "infisical",
-    name: "Infisical / Doppler (secrets)",
+    nome: "Infisical / Doppler (secrets)",
     categoria: "DevOps",
     icone: "Lock",
     descricao: "Secret management. Env vars, API keys, secrets sync. Open source.",
@@ -1849,10 +2015,11 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Infisical open source, Doppler SaaS.",
     url: "https://infisical.com",
     modoDefault: "opcional",
-  } as any,
+    licenca: "Subscrição",
+  },
   {
     id: "renovate",
-    name: "Renovate / Dependabot",
+    nome: "Renovate / Dependabot",
     categoria: "DevOps",
     icone: "RefreshCw",
     descricao: "Automated dependency updates. PRs automáticos para updates.",
@@ -1860,11 +2027,12 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "GitHub Dependabot, Renovate Bot.",
     url: "https://renovatebot.com",
     modoDefault: "recomendada",
-  } as any,
+    licenca: "Freemium",
+  },
   // ── DESIGN TOP 25 adicionais ───────────────────────────────────────────
   {
     id: "storybook",
-    name: "Storybook + Chromatic",
+    nome: "Storybook + Chromatic",
     categoria: "Design",
     icone: "BookOpen",
     descricao: "Component development environment. Isolate, test, document components.",
@@ -1872,10 +2040,11 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel, Linear, shadcn/ui — todos usam Storybook.",
     url: "https://storybook.js.org",
     modoDefault: "alternativa",
-  } as any,
+    licenca: "Free",
+  },
   {
     id: "penpot",
-    name: "Penpot (open-source Figma)",
+    nome: "Penpot (open-source Figma)",
     categoria: "Design",
     icone: "PenTool",
     descricao: "Design tool open source. Alternative to Figma. Self-hostable.",
@@ -1883,10 +2052,11 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Growing open source community 2025.",
     url: "https://penpot.app",
     modoDefault: "opcional",
-  } as any,
+    licenca: "Free",
+  },
   {
     id: "excalidraw",
-    name: "Excalidraw / Whimsical",
+    nome: "Excalidraw / Whimsical",
     categoria: "Design",
     icone: "PenTool",
     descricao: "Diagramas e wireframes hand-drawn. Flowcharts, architecture, mind maps.",
@@ -1894,10 +2064,11 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Excalidraw open source, Whimsical SaaS.",
     url: "https://excalidraw.com",
     modoDefault: "opcional",
-  } as any,
+    licenca: "Free",
+  },
   {
     id: "coolors",
-    name: "Coolors / Huemint / Realtime Colors",
+    nome: "Coolors / Huemint / Realtime Colors",
     categoria: "Design",
     icone: "Palette",
     descricao: "Geradores de paletas. Explore, lock, export. AI-powered color schemes.",
@@ -1905,10 +2076,11 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Designers, agencies, rapid prototyping.",
     url: "https://coolors.co",
     modoDefault: "opcional",
-  } as any,
+    licenca: "Free",
+  },
   {
     id: "fontsource",
-    name: "Fontsource (self-host fonts)",
+    nome: "Fontsource (self-host fonts)",
     categoria: "Design",
     icone: "Type",
     descricao: "Self-host Google Fonts via npm. Sem Google CDN. GDPR-friendly.",
@@ -1916,10 +2088,11 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Vercel apps, GDPR-conscious projects.",
     url: "https://fontsource.org",
     modoDefault: "alternativa",
-  } as any,
+    licenca: "Free",
+  },
   {
     id: "utopia",
-    name: "Utopia (fluid type/spacing)",
+    nome: "Utopia (fluid type/spacing)",
     categoria: "Design",
     icone: "Type",
     descricao: "Fluid typography e spacing scales. Responsive sem breakpoints.",
@@ -1927,10 +2100,11 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Trending 2025, CSS fluid design.",
     url: "https://utopia.fyi",
     modoDefault: "opcional",
-  } as any,
+    licenca: "Free",
+  },
   {
     id: "radix-colors",
-    name: "Radix Colors",
+    nome: "Radix Colors",
     categoria: "Design",
     icone: "Palette",
     descricao: "Sistema de cores completo. 12 scales, light/dark, WCAG AA/AAA.",
@@ -1938,7 +2112,8 @@ export const SKILLS_CATALOG: Skill[] = [
     exemplo: "Radix UI, shadcn/ui base colors.",
     url: "https://radix-ui.com/colors",
     modoDefault: "recomendada",
-  } as any,
+    licenca: "Free",
+  },
 ];
 
 // ============================================================================
@@ -1954,140 +2129,141 @@ export interface Integracao {
   exemplo: string;
   url?: string;
   modoDefault: SkillMode;
+  licenca: Licenca;
 }
 
 export const INTEGRACOES_CATALOG: Integracao[] = [
   // Pagamentos
-  { id: "stripe", nome: "Stripe", categoria: "Pagamentos", icone: "CreditCard", descricao: "Pagamentos online. Subscriptions, one-time, marketplace, billing.", quandoUsar: "Para qualquer e-commerce ou SaaS com pagamentos.", exemplo: "Vercel, Linear, Notion — todos usam Stripe.", url: "https://stripe.com", modoDefault: "recomendada" },
-  { id: "paypal", nome: "PayPal", categoria: "Pagamentos", icone: "CreditCard", descricao: "Alternative payment method. Popular em US/EU.", quandoUsar: "Como alternativa ao Stripe ou em mercados onde PayPal domina.", exemplo: "Etsy, eBay, freelancers.", url: "https://paypal.com", modoDefault: "opcional" },
-  { id: "mbway", nome: "MB WAY", categoria: "Pagamentos", icone: "CreditCard", descricao: "Pagamentos via telemóvel. Popular em Portugal.", quandoUsar: "Para e-commerce em Portugal.", exemplo: "Lojas portuguesas, Continente, Worten.", modoDefault: "opcional" },
-  { id: "lemon-squeezy", nome: "Lemon Squeezy", categoria: "Pagamentos", icone: "CreditCard", descricao: "Merchant of record para SaaS. Handles VAT/tax globalmente.", quandoUsar: "Para SaaS que vende globalmente sem lidar com tax.", exemplo: "Indie hackers, SaaS solo founders.", url: "https://lemonsqueezy.com", modoDefault: "alternativa" },
+  { id: "stripe", nome: "Stripe", categoria: "Pagamentos", icone: "CreditCard", descricao: "Pagamentos online. Subscriptions, one-time, marketplace, billing.", quandoUsar: "Para qualquer e-commerce ou SaaS com pagamentos.", exemplo: "Vercel, Linear, Notion — todos usam Stripe.", url: "https://stripe.com", modoDefault: "recomendada", licenca: "Free" },
+  { id: "paypal", nome: "PayPal", categoria: "Pagamentos", icone: "CreditCard", descricao: "Alternative payment method. Popular em US/EU.", quandoUsar: "Como alternativa ao Stripe ou em mercados onde PayPal domina.", exemplo: "Etsy, eBay, freelancers.", url: "https://paypal.com", modoDefault: "opcional", licenca: "Freemium" },
+  { id: "mbway", nome: "MB WAY", categoria: "Pagamentos", icone: "CreditCard", descricao: "Pagamentos via telemóvel. Popular em Portugal.", quandoUsar: "Para e-commerce em Portugal.", exemplo: "Lojas portuguesas, Continente, Worten.", modoDefault: "opcional", licenca: "Freemium" },
+  { id: "lemon-squeezy", nome: "Lemon Squeezy", categoria: "Pagamentos", icone: "CreditCard", descricao: "Merchant of record para SaaS. Handles VAT/tax globalmente.", quandoUsar: "Para SaaS que vende globalmente sem lidar com tax.", exemplo: "Indie hackers, SaaS solo founders.", url: "https://lemonsqueezy.com", modoDefault: "alternativa", licenca: "Free" },
 
   // Email
-  { id: "resend", nome: "Resend", categoria: "Email", icone: "Mail", descricao: "Email API para developers. React Email, DKIM, tracking.", quandoUsar: "Para enviar emails transacionais (welcome, reset, receipts).", exemplo: "Vercel, Linear, Cal.com — todos usam Resend.", url: "https://resend.com", modoDefault: "recomendada" },
-  { id: "sendgrid", nome: "SendGrid", categoria: "Email", icone: "Mail", descricao: "Email delivery platform. Marketing + transactional.", quandoUsar: "Para volume alto de emails ou marketing campaigns.", exemplo: "Spotify, Airbnb, Uber.", url: "https://sendgrid.com", modoDefault: "alternativa" },
-  { id: "react-email", nome: "React Email", categoria: "Email", icone: "Mail", descricao: "Escreve emails com React components. Preview, templates.", quandoUsar: "Sempre que usas Resend ou similar para templates.", exemplo: "Resend, Vercel, Linear.", url: "https://react.email", modoDefault: "recomendada" },
+  { id: "resend", nome: "Resend", categoria: "Email", icone: "Mail", descricao: "Email API para developers. React Email, DKIM, tracking.", quandoUsar: "Para enviar emails transacionais (welcome, reset, receipts).", exemplo: "Vercel, Linear, Cal.com — todos usam Resend.", url: "https://resend.com", modoDefault: "recomendada", licenca: "Free" },
+  { id: "sendgrid", nome: "SendGrid", categoria: "Email", icone: "Mail", descricao: "Email delivery platform. Marketing + transactional.", quandoUsar: "Para volume alto de emails ou marketing campaigns.", exemplo: "Spotify, Airbnb, Uber.", url: "https://sendgrid.com", modoDefault: "alternativa", licenca: "Subscrição" },
+  { id: "react-email", nome: "React Email", categoria: "Email", icone: "Mail", descricao: "Escreve emails com React components. Preview, templates.", quandoUsar: "Sempre que usas Resend ou similar para templates.", exemplo: "Resend, Vercel, Linear.", url: "https://react.email", modoDefault: "recomendada", licenca: "Free" },
 
   // Analytics
-  { id: "google-analytics", nome: "Google Analytics 4", categoria: "Analytics", icone: "BarChart3", descricao: "Web analytics standard. Eventos, conversões, audiências.", quandoUsar: "Para tracking básico de tráfego (standard da indústria).", exemplo: "Quase todo site usa GA4.", url: "https://analytics.google.com", modoDefault: "recomendada" },
-  { id: "plausible", nome: "Plausible", categoria: "Analytics", icone: "BarChart3", descricao: "Analytics privacy-friendly, sem cookies. GDPR compliant.", quandoUsar: "Para analytics privacy-first (GDPR, sem cookies).", exemplo: "Vercel docs, Laravel, Bun.", url: "https://plausible.io", modoDefault: "alternativa" },
-  { id: "mixpanel", nome: "Mixpanel", categoria: "Analytics", icone: "BarChart3", descricao: "Product analytics profundo. Funnels, retention, cohorts.", quandoUsar: "Para SaaS que precisa de product analytics detalhado.", exemplo: "Uber, Airbnb, OpenAI.", url: "https://mixpanel.com", modoDefault: "opcional" },
+  { id: "google-analytics", nome: "Google Analytics 4", categoria: "Analytics", icone: "BarChart3", descricao: "Web analytics standard. Eventos, conversões, audiências.", quandoUsar: "Para tracking básico de tráfego (standard da indústria).", exemplo: "Quase todo site usa GA4.", url: "https://analytics.google.com", modoDefault: "recomendada", licenca: "Subscrição" },
+  { id: "plausible", nome: "Plausible", categoria: "Analytics", icone: "BarChart3", descricao: "Analytics privacy-friendly, sem cookies. GDPR compliant.", quandoUsar: "Para analytics privacy-first (GDPR, sem cookies).", exemplo: "Vercel docs, Laravel, Bun.", url: "https://plausible.io", modoDefault: "alternativa", licenca: "Free" },
+  { id: "mixpanel", nome: "Mixpanel", categoria: "Analytics", icone: "BarChart3", descricao: "Product analytics profundo. Funnels, retention, cohorts.", quandoUsar: "Para SaaS que precisa de product analytics detalhado.", exemplo: "Uber, Airbnb, OpenAI.", url: "https://mixpanel.com", modoDefault: "opcional", licenca: "Subscrição" },
 
   // Auth
-  { id: "clerk", nome: "Clerk", categoria: "Auth", icone: "Lock", descricao: "Auth-as-a-service. UI components prontos, social login, orgs.", quandoUsar: "Alternativa ao NextAuth quando queres UI pronto e rápido.", exemplo: "Replit, Vercel apps, YC startups.", url: "https://clerk.com", modoDefault: "alternativa" },
-  { id: "auth0", nome: "Auth0", categoria: "Auth", icone: "Lock", descricao: "Enterprise auth. SSO, SAML, MFA, compliance.", quandoUsar: "Para enterprise/B2B que precisa de SSO/SAML.", exemplo: "Atlassian, Slack enterprise.", url: "https://auth0.com", modoDefault: "opcional" },
+  { id: "clerk", nome: "Clerk", categoria: "Auth", icone: "Lock", descricao: "Auth-as-a-service. UI components prontos, social login, orgs.", quandoUsar: "Alternativa ao NextAuth quando queres UI pronto e rápido.", exemplo: "Replit, Vercel apps, YC startups.", url: "https://clerk.com", modoDefault: "alternativa", licenca: "Freemium" },
+  { id: "auth0", nome: "Auth0", categoria: "Auth", icone: "Lock", descricao: "Enterprise auth. SSO, SAML, MFA, compliance.", quandoUsar: "Para enterprise/B2B que precisa de SSO/SAML.", exemplo: "Atlassian, Slack enterprise.", url: "https://auth0.com", modoDefault: "opcional", licenca: "Subscrição" },
 
   // Storage
-  { id: "uploadthing", nome: "UploadThing", categoria: "Storage", icone: "Upload", descricao: "File uploads para Next.js. Type-safe, sem backend.", quandoUsar: "Para upload de imagens/ficheiros em Next.js.", exemplo: "Vercel apps, indie hackers.", url: "https://uploadthing.com", modoDefault: "recomendada" },
-  { id: "cloudinary", nome: "Cloudinary", categoria: "Storage", icone: "Image", descricao: "Image/video CDN com transformações on-the-fly.", quandoUsar: "Para manipulação de imagens (resize, format, optimize).", exemplo: "Etsy, News sites, e-commerce.", url: "https://cloudinary.com", modoDefault: "alternativa" },
+  { id: "uploadthing", nome: "UploadThing", categoria: "Storage", icone: "Upload", descricao: "File uploads para Next.js. Type-safe, sem backend.", quandoUsar: "Para upload de imagens/ficheiros em Next.js.", exemplo: "Vercel apps, indie hackers.", url: "https://uploadthing.com", modoDefault: "recomendada", licenca: "Free" },
+  { id: "cloudinary", nome: "Cloudinary", categoria: "Storage", icone: "Image", descricao: "Image/video CDN com transformações on-the-fly.", quandoUsar: "Para manipulação de imagens (resize, format, optimize).", exemplo: "Etsy, News sites, e-commerce.", url: "https://cloudinary.com", modoDefault: "alternativa", licenca: "Free" },
 
   // Search
-  { id: "algolia", nome: "Algolia", categoria: "Search", icone: "Search", descricao: "Search-as-a-service. Instant search, typo tolerance, faceting.", quandoUsar: "Para e-commerce ou sites com muito conteúdo pesquisável.", exemplo: "Stripe docs, Notion, Loom.", url: "https://algolia.com", modoDefault: "alternativa" },
-  { id: "meilisearch", nome: "Meilisearch", categoria: "Search", icone: "Search", descricao: "Search open source. Self-hosted ou cloud. Rápido.", quandoUsar: "Alternativa self-hosted ao Algolia.", exemplo: "Indie hackers, open source projects.", url: "https://meilisearch.com", modoDefault: "opcional" },
+  { id: "algolia", nome: "Algolia", categoria: "Search", icone: "Search", descricao: "Search-as-a-service. Instant search, typo tolerance, faceting.", quandoUsar: "Para e-commerce ou sites com muito conteúdo pesquisável.", exemplo: "Stripe docs, Notion, Loom.", url: "https://algolia.com", modoDefault: "alternativa", licenca: "Free" },
+  { id: "meilisearch", nome: "Meilisearch", categoria: "Search", icone: "Search", descricao: "Search open source. Self-hosted ou cloud. Rápido.", quandoUsar: "Alternativa self-hosted ao Algolia.", exemplo: "Indie hackers, open source projects.", url: "https://meilisearch.com", modoDefault: "opcional", licenca: "Free" },
 
   // Comunicação
-  { id: "livechat", nome: "LiveChat / Intercom", categoria: "Comunicação", icone: "MessageCircle", descricao: "Chat ao vivo para suporte. Bots, tickets, helpdesk.", quandoUsar: "Para SaaS/e-commerce que precisa de suporte ao cliente.", exemplo: "SaaS B2B, e-commerce premium.", url: "https://intercom.com", modoDefault: "opcional" },
-  { id: "pusher", nome: "Pusher / Ably", categoria: "Comunicação", icone: "Radio", descricao: "Realtime websockets. Chat, live updates, collaboration.", quandoUsar: "Para features realtime (chat, cursors, live data).", exemplo: "Figma, Linear, Google Docs.", url: "https://pusher.com", modoDefault: "opcional" },
+  { id: "livechat", nome: "LiveChat / Intercom", categoria: "Comunicação", icone: "MessageCircle", descricao: "Chat ao vivo para suporte. Bots, tickets, helpdesk.", quandoUsar: "Para SaaS/e-commerce que precisa de suporte ao cliente.", exemplo: "SaaS B2B, e-commerce premium.", url: "https://intercom.com", modoDefault: "opcional", licenca: "Free" },
+  { id: "pusher", nome: "Pusher / Ably", categoria: "Comunicação", icone: "Radio", descricao: "Realtime websockets. Chat, live updates, collaboration.", quandoUsar: "Para features realtime (chat, cursors, live data).", exemplo: "Figma, Linear, Google Docs.", url: "https://pusher.com", modoDefault: "opcional", licenca: "Free" },
 
   // ── CMS ──
-  { id: "sanity", nome: "Sanity", categoria: "CMS", icone: "Database", descricao: "CMS headless com real-time editor. Structured content, GROQ.", quandoUsar: "Para blogs, portfolios, sites com conteúdo dinâmico.", exemplo: "Linear blog, Vercel, Figma Community.", url: "https://sanity.io", modoDefault: "recomendada" },
-  { id: "contentful", nome: "Contentful", categoria: "CMS", icone: "Database", descricao: "CMS headless enterprise. Multi-language, workflows.", quandoUsar: "Para enterprise, grandes equipas de conteúdo.", exemplo: "Spotify, Nike, Shopify enterprise.", url: "https://contentful.com", modoDefault: "alternativa" },
-  { id: "strapi", nome: "Strapi", categoria: "CMS", icone: "Database", descricao: "CMS headless open source. Self-hosted, REST + GraphQL.", quandoUsar: "Para self-hosted, controlo total, custo zero.", exemplo: "Indie hackers, open source projects.", url: "https://strapi.io", modoDefault: "alternativa" },
-  { id: "payload-cms", nome: "Payload CMS", categoria: "CMS", icone: "Database", descricao: "CMS headless Node.js + MongoDB/Postgres. Type-safe.", quandoUsar: "Para Next.js com CMS integrado, type-safe.", exemplo: "Vercel recommends Payload.", url: "https://payloadcms.com", modoDefault: "alternativa" },
-  { id: "builder-io", nome: "Builder.io", categoria: "CMS", icone: "Boxes", descricao: "Visual page builder + headless CMS. Drag-drop editing.", quandoUsar: "Para marketing teams que querem editar visualmente.", exemplo: "Vercel, Hugo, large e-commerce.", url: "https://builder.io", modoDefault: "opcional" },
-  { id: "wordpress-headless", nome: "WordPress Headless", categoria: "CMS", icone: "Database", descricao: "WP REST API + Next.js frontend. Backend familiar.", quandoUsar: "Para equipas que já conhecem WordPress.", exemplo: "News sites, blogs grandes.", url: "https://wordpress.org", modoDefault: "opcional" },
+  { id: "sanity", nome: "Sanity", categoria: "CMS", icone: "Database", descricao: "CMS headless com real-time editor. Structured content, GROQ.", quandoUsar: "Para blogs, portfolios, sites com conteúdo dinâmico.", exemplo: "Linear blog, Vercel, Figma Community.", url: "https://sanity.io", modoDefault: "recomendada", licenca: "Free" },
+  { id: "contentful", nome: "Contentful", categoria: "CMS", icone: "Database", descricao: "CMS headless enterprise. Multi-language, workflows.", quandoUsar: "Para enterprise, grandes equipas de conteúdo.", exemplo: "Spotify, Nike, Shopify enterprise.", url: "https://contentful.com", modoDefault: "alternativa", licenca: "Subscrição" },
+  { id: "strapi", nome: "Strapi", categoria: "CMS", icone: "Database", descricao: "CMS headless open source. Self-hosted, REST + GraphQL.", quandoUsar: "Para self-hosted, controlo total, custo zero.", exemplo: "Indie hackers, open source projects.", url: "https://strapi.io", modoDefault: "alternativa", licenca: "Free" },
+  { id: "payload-cms", nome: "Payload CMS", categoria: "CMS", icone: "Database", descricao: "CMS headless Node.js + MongoDB/Postgres. Type-safe.", quandoUsar: "Para Next.js com CMS integrado, type-safe.", exemplo: "Vercel recommends Payload.", url: "https://payloadcms.com", modoDefault: "alternativa", licenca: "Free" },
+  { id: "builder-io", nome: "Builder.io", categoria: "CMS", icone: "Boxes", descricao: "Visual page builder + headless CMS. Drag-drop editing.", quandoUsar: "Para marketing teams que querem editar visualmente.", exemplo: "Vercel, Hugo, large e-commerce.", url: "https://builder.io", modoDefault: "opcional", licenca: "Subscrição" },
+  { id: "wordpress-headless", nome: "WordPress Headless", categoria: "CMS", icone: "Database", descricao: "WP REST API + Next.js frontend. Backend familiar.", quandoUsar: "Para equipas que já conhecem WordPress.", exemplo: "News sites, blogs grandes.", url: "https://wordpress.org", modoDefault: "opcional", licenca: "Free" },
 
   // ── Cloud ──
-  { id: "cloudflare", nome: "Cloudflare", categoria: "Cloud", icone: "Cloud", descricao: "CDN + edge computing + DNS + security. R2 storage, Workers.", quandoUsar: "Para CDN, edge functions, DDoS protection.", exemplo: "Discord, 1Password, Shopify.", url: "https://cloudflare.com", modoDefault: "recomendada" },
-  { id: "aws", nome: "AWS", categoria: "Cloud", icone: "Cloud", descricao: "Amazon Web Services. EC2, S3, Lambda, RDS, full stack.", quandoUsar: "Para enterprise, infra complexa, multi-service.", exemplo: "Netflix, Airbnb, Slack.", url: "https://aws.amazon.com", modoDefault: "alternativa" },
-  { id: "gcp", nome: "Google Cloud", categoria: "Cloud", icone: "Cloud", descricao: "Google Cloud Platform. Compute, storage, AI/ML, BigQuery.", quandoUsar: "Para data-heavy, AI/ML, BigQuery analytics.", exemplo: "Spotify, PayPal, Twitter.", url: "https://cloud.google.com", modoDefault: "opcional" },
-  { id: "fly-io", nome: "Fly.io", categoria: "Cloud", icone: "Cloud", descricao: "Deploy apps globalmente perto dos utilizadores. Edge-first.", quandoUsar: "Para apps que precisam de baixa latência global.", exemplo: "Indie hackers, Phoenix/Elixir apps.", url: "https://fly.io", modoDefault: "opcional" },
-  { id: "railway", nome: "Railway", categoria: "Cloud", icone: "Train", descricao: "Deploy backend apps sem configuração. DB + app em 1 click.", quandoUsar: "Para MVPs rápidos, protótipos backend.", exemplo: "YC startups, indie hackers.", url: "https://railway.app", modoDefault: "opcional" },
-  { id: "digitalocean", nome: "DigitalOcean", categoria: "Cloud", icone: "Cloud", descricao: "VPS simples e barato. Droplets, App Platform, Spaces.", quandoUsar: "Para self-hosted, orçamento apertado.", exemplo: "Indie hackers, small businesses.", url: "https://digitalocean.com", modoDefault: "opcional" },
+  { id: "cloudflare", nome: "Cloudflare", categoria: "Cloud", icone: "Cloud", descricao: "CDN + edge computing + DNS + security. R2 storage, Workers.", quandoUsar: "Para CDN, edge functions, DDoS protection.", exemplo: "Discord, 1Password, Shopify.", url: "https://cloudflare.com", modoDefault: "recomendada", licenca: "Free" },
+  { id: "aws", nome: "AWS", categoria: "Cloud", icone: "Cloud", descricao: "Amazon Web Services. EC2, S3, Lambda, RDS, full stack.", quandoUsar: "Para enterprise, infra complexa, multi-service.", exemplo: "Netflix, Airbnb, Slack.", url: "https://aws.amazon.com", modoDefault: "alternativa", licenca: "Subscrição" },
+  { id: "gcp", nome: "Google Cloud", categoria: "Cloud", icone: "Cloud", descricao: "Google Cloud Platform. Compute, storage, AI/ML, BigQuery.", quandoUsar: "Para data-heavy, AI/ML, BigQuery analytics.", exemplo: "Spotify, PayPal, Twitter.", url: "https://cloud.google.com", modoDefault: "opcional", licenca: "Subscrição" },
+  { id: "fly-io", nome: "Fly.io", categoria: "Cloud", icone: "Cloud", descricao: "Deploy apps globalmente perto dos utilizadores. Edge-first.", quandoUsar: "Para apps que precisam de baixa latência global.", exemplo: "Indie hackers, Phoenix/Elixir apps.", url: "https://fly.io", modoDefault: "opcional", licenca: "Free" },
+  { id: "railway", nome: "Railway", categoria: "Cloud", icone: "Train", descricao: "Deploy backend apps sem configuração. DB + app em 1 click.", quandoUsar: "Para MVPs rápidos, protótipos backend.", exemplo: "YC startups, indie hackers.", url: "https://railway.app", modoDefault: "opcional", licenca: "Free" },
+  { id: "digitalocean", nome: "DigitalOcean", categoria: "Cloud", icone: "Cloud", descricao: "VPS simples e barato. Droplets, App Platform, Spaces.", quandoUsar: "Para self-hosted, orçamento apertado.", exemplo: "Indie hackers, small businesses.", url: "https://digitalocean.com", modoDefault: "opcional", licenca: "Free" },
 
   // ── Monitoring ──
-  { id: "sentry-integration", nome: "Sentry (integration)", categoria: "Monitoring", icone: "AlertCircle", descricao: "Error tracking + performance monitoring. Session replay.", quandoUsar: "Production. Essencial para monitorar erros.", exemplo: "Vercel, Linear, Discord.", url: "https://sentry.io", modoDefault: "recomendada" },
-  { id: "logrocket", nome: "LogRocket", categoria: "Monitoring", icone: "Eye", descricao: "Session replay + console logs. Vê o que o user vê.", quandoUsar: "Para debug de issues em produção com contexto visual.", exemplo: "SaaS B2B, e-commerce.", url: "https://logrocket.com", modoDefault: "alternativa" },
-  { id: "datadog", nome: "Datadog", categoria: "Monitoring", icone: "BarChart3", descricao: "Full-stack monitoring. Logs, metrics, traces, APM.", quandoUsar: "Para enterprise, infra complexa.", exemplo: "Airbnb, Samsung, 23andMe.", url: "https://datadoghq.com", modoDefault: "opcional" },
-  { id: "better-stack", nome: "Better Stack", categoria: "Monitoring", icone: "Bell", descricao: "Uptime monitoring + logging + status pages.", quandoUsar: "Para monitoring simples e status pages.", exemplo: "Indie hackers, small teams.", url: "https://betterstack.com", modoDefault: "alternativa" },
+  { id: "sentry-integration", nome: "Sentry (integration)", categoria: "Monitoring", icone: "AlertCircle", descricao: "Error tracking + performance monitoring. Session replay.", quandoUsar: "Production. Essencial para monitorar erros.", exemplo: "Vercel, Linear, Discord.", url: "https://sentry.io", modoDefault: "recomendada", licenca: "Freemium" },
+  { id: "logrocket", nome: "LogRocket", categoria: "Monitoring", icone: "Eye", descricao: "Session replay + console logs. Vê o que o user vê.", quandoUsar: "Para debug de issues em produção com contexto visual.", exemplo: "SaaS B2B, e-commerce.", url: "https://logrocket.com", modoDefault: "alternativa", licenca: "Subscrição" },
+  { id: "datadog", nome: "Datadog", categoria: "Monitoring", icone: "BarChart3", descricao: "Full-stack monitoring. Logs, metrics, traces, APM.", quandoUsar: "Para enterprise, infra complexa.", exemplo: "Airbnb, Samsung, 23andMe.", url: "https://datadoghq.com", modoDefault: "opcional", licenca: "Subscrição" },
+  { id: "better-stack", nome: "Better Stack", categoria: "Monitoring", icone: "Bell", descricao: "Uptime monitoring + logging + status pages.", quandoUsar: "Para monitoring simples e status pages.", exemplo: "Indie hackers, small teams.", url: "https://betterstack.com", modoDefault: "alternativa", licenca: "Free" },
 
   // ── Marketing ──
-  { id: "mailchimp", nome: "Mailchimp", categoria: "Marketing", icone: "Mail", descricao: "Email marketing + automation + landing pages.", quandoUsar: "Para newsletters, campaigns, marketing automation.", exemplo: "Small businesses, e-commerce.", url: "https://mailchimp.com", modoDefault: "alternativa" },
-  { id: "convertkit", nome: "ConvertKit", categoria: "Marketing", icone: "Mail", descricao: "Email marketing para creators. Newsletters, courses.", quandoUsar: "Para creators, bloggers, course sellers.", exemplo: "Indie hackers, YouTubers.", url: "https://convertkit.com", modoDefault: "opcional" },
-  { id: "hubspot", nome: "HubSpot", categoria: "Marketing", icone: "Briefcase", descricao: "CRM + marketing + sales + service. All-in-one.", quandoUsar: "Para SaaS B2B que precisa de CRM + marketing.", exemplo: "B2B SaaS, enterprise.", url: "https://hubspot.com", modoDefault: "opcional" },
-  { id: "segment", nome: "Segment", categoria: "Marketing", icone: "Split", descricao: "Customer data platform. Um SDK → múltiplos destinos.", quandoUsar: "Para integrar múltiplos analytics/marketing tools.", exemplo: "Vercel, Linear, enterprise.", url: "https://segment.com", modoDefault: "opcional" },
+  { id: "mailchimp", nome: "Mailchimp", categoria: "Marketing", icone: "Mail", descricao: "Email marketing + automation + landing pages.", quandoUsar: "Para newsletters, campaigns, marketing automation.", exemplo: "Small businesses, e-commerce.", url: "https://mailchimp.com", modoDefault: "alternativa", licenca: "Free" },
+  { id: "convertkit", nome: "ConvertKit", categoria: "Marketing", icone: "Mail", descricao: "Email marketing para creators. Newsletters, courses.", quandoUsar: "Para creators, bloggers, course sellers.", exemplo: "Indie hackers, YouTubers.", url: "https://convertkit.com", modoDefault: "opcional", licenca: "Free" },
+  { id: "hubspot", nome: "HubSpot", categoria: "Marketing", icone: "Briefcase", descricao: "CRM + marketing + sales + service. All-in-one.", quandoUsar: "Para SaaS B2B que precisa de CRM + marketing.", exemplo: "B2B SaaS, enterprise.", url: "https://hubspot.com", modoDefault: "opcional", licenca: "Subscrição" },
+  { id: "segment", nome: "Segment", categoria: "Marketing", icone: "Split", descricao: "Customer data platform. Um SDK → múltiplos destinos.", quandoUsar: "Para integrar múltiplos analytics/marketing tools.", exemplo: "Vercel, Linear, enterprise.", url: "https://segment.com", modoDefault: "opcional", licenca: "Free" },
 
   // ── Maps ──
-  { id: "mapbox", nome: "Mapbox", categoria: "Maps", icone: "Map", descricao: "Maps customizáveis, geocoding, directions. Developer-first.", quandoUsar: "Para mapas interativos, delivery, real estate.", exemplo: "Strava, Snapchat, Shopify.", url: "https://mapbox.com", modoDefault: "recomendada" },
-  { id: "google-maps", nome: "Google Maps API", categoria: "Maps", icone: "Map", descricao: "Maps, places, routes, street view. Standard da indústria.", quandoUsar: "Para maps, location search, directions.", exemplo: "Uber, Airbnb, food delivery.", url: "https://maps.google.com", modoDefault: "alternativa" },
-  { id: "leaflet", nome: "Leaflet", categoria: "Maps", icone: "Map", descricao: "Maps open source, leve. Sem API key necessário.", quandoUsar: "Para maps simples, self-hosted, sem custo.", exemplo: "Open source projects, gov sites.", url: "https://leafletjs.com", modoDefault: "opcional" },
+  { id: "mapbox", nome: "Mapbox", categoria: "Maps", icone: "Map", descricao: "Maps customizáveis, geocoding, directions. Developer-first.", quandoUsar: "Para mapas interativos, delivery, real estate.", exemplo: "Strava, Snapchat, Shopify.", url: "https://mapbox.com", modoDefault: "recomendada", licenca: "Free" },
+  { id: "google-maps", nome: "Google Maps API", categoria: "Maps", icone: "Map", descricao: "Maps, places, routes, street view. Standard da indústria.", quandoUsar: "Para maps, location search, directions.", exemplo: "Uber, Airbnb, food delivery.", url: "https://maps.google.com", modoDefault: "alternativa", licenca: "Free" },
+  { id: "leaflet", nome: "Leaflet", categoria: "Maps", icone: "Map", descricao: "Maps open source, leve. Sem API key necessário.", quandoUsar: "Para maps simples, self-hosted, sem custo.", exemplo: "Open source projects, gov sites.", url: "https://leafletjs.com", modoDefault: "opcional", licenca: "Free" },
 
   // ── NOVAS Integrações (pesquisa Julho 2026) ────────────────────────────
   // CMS adicionais
-  { id: "sanity-next", nome: "Sanity (Next.js)", categoria: "CMS", icone: "Database", descricao: "Sanity Studio integrado com Next.js. Real-time preview, GROQ.", quandoUsar: "Para blogs e conteúdo dinâmico com preview real-time.", exemplo: "Linear blog, Vercel blog.", url: "https://sanity.io/nextjs", modoDefault: "recomendada" },
-  { id: "payload-next", nome: "Payload (Next.js)", categoria: "CMS", icone: "Database", descricao: "Payload 3.0 integrado nativamente com Next.js App Router. Local API.", quandoUsar: "Para Next.js com CMS sem external service. Type-safe.", exemplo: "Vercel recommends Payload.", url: "https://payloadcms.com", modoDefault: "alternativa" },
-  { id: "prismic", nome: "Prismic", categoria: "CMS", icone: "Database", descricao: "Headless CMS com Slice Machine. Visual editor, type-safe.", quandoUsar: "Para marketing teams que querem editar conteúdo visualmente.", exemplo: "Netflix, Google, Slack.", url: "https://prismic.io", modoDefault: "alternativa" },
-  { id: "hygraph", nome: "Hygraph", categoria: "CMS", icone: "Database", descricao: "Headless CMS GraphQL-first. Real-time, content federation.", quandoUsar: "Para projetos GraphQL, content federation.", exemplo: "Samsung, Dr Oetker.", url: "https://hygraph.com", modoDefault: "opcional" },
-  { id: "storyblok", nome: "Storyblok", categoria: "CMS", icone: "Database", descricao: "Headless CMS com visual editor. Component-based, multi-language.", quandoUsar: "Para equipas que querem editor visual drag-drop.", exemplo: "Adidas, Marriott, Renault.", url: "https://storyblok.com", modoDefault: "alternativa" },
-  { id: "directus", nome: "Directus", categoria: "CMS", icone: "Database", descricao: "Headless CMS + BaaS. SQL database wrapper. Self-hosted ou cloud.", quandoUsar: "Para self-hosted com SQL existente. Free open source.", exemplo: "Samsung, Honda, Raytheon.", url: "https://directus.io", modoDefault: "opcional" },
+  { id: "sanity-next", nome: "Sanity (Next.js)", categoria: "CMS", icone: "Database", descricao: "Sanity Studio integrado com Next.js. Real-time preview, GROQ.", quandoUsar: "Para blogs e conteúdo dinâmico com preview real-time.", exemplo: "Linear blog, Vercel blog.", url: "https://sanity.io/nextjs", modoDefault: "recomendada", licenca: "Free" },
+  { id: "payload-next", nome: "Payload (Next.js)", categoria: "CMS", icone: "Database", descricao: "Payload 3.0 integrado nativamente com Next.js App Router. Local API.", quandoUsar: "Para Next.js com CMS sem external service. Type-safe.", exemplo: "Vercel recommends Payload.", url: "https://payloadcms.com", modoDefault: "alternativa", licenca: "Free" },
+  { id: "prismic", nome: "Prismic", categoria: "CMS", icone: "Database", descricao: "Headless CMS com Slice Machine. Visual editor, type-safe.", quandoUsar: "Para marketing teams que querem editar conteúdo visualmente.", exemplo: "Netflix, Google, Slack.", url: "https://prismic.io", modoDefault: "alternativa", licenca: "Free" },
+  { id: "hygraph", nome: "Hygraph", categoria: "CMS", icone: "Database", descricao: "Headless CMS GraphQL-first. Real-time, content federation.", quandoUsar: "Para projetos GraphQL, content federation.", exemplo: "Samsung, Dr Oetker.", url: "https://hygraph.com", modoDefault: "opcional", licenca: "Free" },
+  { id: "storyblok", nome: "Storyblok", categoria: "CMS", icone: "Database", descricao: "Headless CMS com visual editor. Component-based, multi-language.", quandoUsar: "Para equipas que querem editor visual drag-drop.", exemplo: "Adidas, Marriott, Renault.", url: "https://storyblok.com", modoDefault: "alternativa", licenca: "Free" },
+  { id: "directus", nome: "Directus", categoria: "CMS", icone: "Database", descricao: "Headless CMS + BaaS. SQL database wrapper. Self-hosted ou cloud.", quandoUsar: "Para self-hosted com SQL existente. Free open source.", exemplo: "Samsung, Honda, Raytheon.", url: "https://directus.io", modoDefault: "opcional", licenca: "Free" },
 
   // Cloud adicionais
-  { id: "render", nome: "Render", categoria: "Cloud", icone: "Cloud", descricao: "Cloud platform. Web services, DBs, background workers. Free tier.", quandoUsar: "Alternativa ao Railway, mais estável. Free SSL + CDN.", exemplo: "Indie hackers, small businesses.", url: "https://render.com", modoDefault: "opcional" },
-  { id: "hetzner", nome: "Hetzner Cloud", categoria: "Cloud", icone: "Cloud", descricao: "VPS barato e potente. Europeu, GDPR-friendly. Best price/performance.", quandoUsar: "Para self-hosted barato. Best value cloud 2025-2026.", exemplo: "Growing popularity 2025-2026, YouTube devs recommend.", url: "https://hetzner.com/cloud", modoDefault: "opcional" },
-  { id: "coolify", nome: "Coolify", categoria: "Cloud", icone: "Server", descricao: "Self-hosted Heroku/Vercel alternative. Open source. Deploy any app.", quandoUsar: "Para self-hosted Vercel-like experience on your own VPS.", exemplo: "Trending GitHub 2025, open source Vercel alternative.", url: "https://coolify.io", modoDefault: "opcional" },
-  { id: "docker", nome: "Docker", categoria: "Cloud", icone: "Box", descricao: "Container platform. Empacota app + deps. Standard de deployment.", quandoUsar: "Para deployment consistente. Essencial para qualquer backend.", exemplo: "Quase toda empresa usa Docker.", url: "https://docker.com", modoDefault: "recomendada" },
+  { id: "render", nome: "Render", categoria: "Cloud", icone: "Cloud", descricao: "Cloud platform. Web services, DBs, background workers. Free tier.", quandoUsar: "Alternativa ao Railway, mais estável. Free SSL + CDN.", exemplo: "Indie hackers, small businesses.", url: "https://render.com", modoDefault: "opcional", licenca: "Free" },
+  { id: "hetzner", nome: "Hetzner Cloud", categoria: "Cloud", icone: "Cloud", descricao: "VPS barato e potente. Europeu, GDPR-friendly. Best price/performance.", quandoUsar: "Para self-hosted barato. Best value cloud 2025-2026.", exemplo: "Growing popularity 2025-2026, YouTube devs recommend.", url: "https://hetzner.com/cloud", modoDefault: "opcional", licenca: "Free" },
+  { id: "coolify", nome: "Coolify", categoria: "Cloud", icone: "Server", descricao: "Self-hosted Heroku/Vercel alternative. Open source. Deploy any app.", quandoUsar: "Para self-hosted Vercel-like experience on your own VPS.", exemplo: "Trending GitHub 2025, open source Vercel alternative.", url: "https://coolify.io", modoDefault: "opcional", licenca: "Free" },
+  { id: "docker", nome: "Docker", categoria: "Cloud", icone: "Box", descricao: "Container platform. Empacota app + deps. Standard de deployment.", quandoUsar: "Para deployment consistente. Essencial para qualquer backend.", exemplo: "Quase toda empresa usa Docker.", url: "https://docker.com", modoDefault: "recomendada", licenca: "Free" },
 
   // Monitoring adicionais
-  { id: "axiom", nome: "Axiom", categoria: "Monitoring", icone: "BarChart3", descricao: "Log management + analytics. Serverless-friendly. Vercel integration.", quandoUsar: "Para logs em serverless (Vercel não tem logs persistentes).", exemplo: "Vercel recommends Axiom for logs.", url: "https://axiom.co", modoDefault: "alternativa" },
-  { id: "checkly", nome: "Checkly", categoria: "Monitoring", icone: "Check", descricao: "Monitoring + E2E testing. Playwright-based checks, API monitoring.", quandoUsar: "Para monitoring ativo (testar se site funciona a cada minuto).", exemplo: "Vercel, GitHub, Stripe.", url: "https://checklyhq.com", modoDefault: "opcional" },
+  { id: "axiom", nome: "Axiom", categoria: "Monitoring", icone: "BarChart3", descricao: "Log management + analytics. Serverless-friendly. Vercel integration.", quandoUsar: "Para logs em serverless (Vercel não tem logs persistentes).", exemplo: "Vercel recommends Axiom for logs.", url: "https://axiom.co", modoDefault: "alternativa", licenca: "Free" },
+  { id: "checkly", nome: "Checkly", categoria: "Monitoring", icone: "Check", descricao: "Monitoring + E2E testing. Playwright-based checks, API monitoring.", quandoUsar: "Para monitoring ativo (testar se site funciona a cada minuto).", exemplo: "Vercel, GitHub, Stripe.", url: "https://checklyhq.com", modoDefault: "opcional", licenca: "Free" },
 
   // Marketing adicionais
-  { id: "posthog-next", nome: "PostHog (Next.js)", categoria: "Marketing", icone: "BarChart3", descricao: "Product analytics + feature flags + session replay. Open source. Next.js SDK.", quandoUsar: "Para entender como users usam o site. All-in-one.", exemplo: "Vercel, Y Combinator startups.", url: "https://posthog.com/docs/nextjs", modoDefault: "recomendada" },
-  { id: "koala", nome: "Koala", categoria: "Marketing", icone: "BarChart3", descricao: "Product analytics. Funnels, retention. Server-side tracking.", quandoUsar: "Alternativa ao PostHog para analytics server-side.", exemplo: "Notion, Loom, Vercel.", url: "https://getkoala.com", modoDefault: "opcional" },
-  { id: "customerio", nome: "Customer.io", categoria: "Marketing", icone: "Mail", descricao: "Marketing automation. Email, SMS, push. Behavioral triggers.", quandoUsar: "Para marketing automation com triggers comportamentais.", exemplo: "Notion, BuzzFeed, Blank Street.", url: "https://customer.io", modoDefault: "opcional" },
+  { id: "posthog-next", nome: "PostHog (Next.js)", categoria: "Marketing", icone: "BarChart3", descricao: "Product analytics + feature flags + session replay. Open source. Next.js SDK.", quandoUsar: "Para entender como users usam o site. All-in-one.", exemplo: "Vercel, Y Combinator startups.", url: "https://posthog.com/docs/nextjs", modoDefault: "recomendada", licenca: "Free" },
+  { id: "koala", nome: "Koala", categoria: "Marketing", icone: "BarChart3", descricao: "Product analytics. Funnels, retention. Server-side tracking.", quandoUsar: "Alternativa ao PostHog para analytics server-side.", exemplo: "Notion, Loom, Vercel.", url: "https://getkoala.com", modoDefault: "opcional", licenca: "Freemium" },
+  { id: "customerio", nome: "Customer.io", categoria: "Marketing", icone: "Mail", descricao: "Marketing automation. Email, SMS, push. Behavioral triggers.", quandoUsar: "Para marketing automation com triggers comportamentais.", exemplo: "Notion, BuzzFeed, Blank Street.", url: "https://customer.io", modoDefault: "opcional", licenca: "Subscrição" },
 
   // Search adicionais
-  { id: "elastic", nome: "Elasticsearch", categoria: "Search", icone: "Search", descricao: "Search engine potente. Full-text, analytics, logs. Self-hosted ou cloud.", quandoUsar: "Para search com grande volume ou analytics complexo.", exemplo: "Wikipedia, GitHub, Netflix.", url: "https://elastic.co", modoDefault: "opcional" },
-  { id: "typesense", nome: "Typesense", categoria: "Search", icone: "Search", descricao: "Search engine open source. Typo-tolerant, fast. Alternativa ao Algolia.", quandoUsar: "Alternativa self-hosted ao Algolia. Mais barato.", exemplo: "Growing popularity 2025, open source.", url: "https://typesense.org", modoDefault: "opcional" },
+  { id: "elastic", nome: "Elasticsearch", categoria: "Search", icone: "Search", descricao: "Search engine potente. Full-text, analytics, logs. Self-hosted ou cloud.", quandoUsar: "Para search com grande volume ou analytics complexo.", exemplo: "Wikipedia, GitHub, Netflix.", url: "https://elastic.co", modoDefault: "opcional", licenca: "Free" },
+  { id: "typesense", nome: "Typesense", categoria: "Search", icone: "Search", descricao: "Search engine open source. Typo-tolerant, fast. Alternativa ao Algolia.", quandoUsar: "Alternativa self-hosted ao Algolia. Mais barato.", exemplo: "Growing popularity 2025, open source.", url: "https://typesense.org", modoDefault: "opcional", licenca: "Free" },
 
   // Pagamentos adicionais
-  { id: "paddle", nome: "Paddle", categoria: "Pagamentos", icone: "CreditCard", descricao: "Merchant of record para SaaS. Handles tax, VAT, compliance global.", quandoUsar: "Para SaaS que vende globalmente sem lidar com tax/VAT.", exemplo: "Notion, Evernote, Setapp.", url: "https://paddle.com", modoDefault: "alternativa" },
-  { id: "mollie", nome: "Mollie", categoria: "Pagamentos", icone: "CreditCard", descricao: "Pagamentos europeus. iDEAL, Bancontact, SEPA. Popular na EU.", quandoUsar: "Para e-commerce na Europa (iDEAL, Bancontact, SEPA).", exemplo: "Popular nos Países Baixos, Bélgica, Alemanha.", url: "https://mollie.com", modoDefault: "opcional" },
+  { id: "paddle", nome: "Paddle", categoria: "Pagamentos", icone: "CreditCard", descricao: "Merchant of record para SaaS. Handles tax, VAT, compliance global.", quandoUsar: "Para SaaS que vende globalmente sem lidar com tax/VAT.", exemplo: "Notion, Evernote, Setapp.", url: "https://paddle.com", modoDefault: "alternativa", licenca: "Free" },
+  { id: "mollie", nome: "Mollie", categoria: "Pagamentos", icone: "CreditCard", descricao: "Pagamentos europeus. iDEAL, Bancontact, SEPA. Popular na EU.", quandoUsar: "Para e-commerce na Europa (iDEAL, Bancontact, SEPA).", exemplo: "Popular nos Países Baixos, Bélgica, Alemanha.", url: "https://mollie.com", modoDefault: "opcional", licenca: "Free" },
 
   // Auth adicionais
-  { id: "stytch", nome: "Stytch", categoria: "Auth", icone: "Lock", descricao: "Passwordless auth. Magic links, passkeys, WebAuthn. Developer-first.", quandoUsar: "Para auth passwordless moderno (passkeys, magic links).", exemplo: "Growing 2025, passwordless trend.", url: "https://stytch.com", modoDefault: "opcional" },
-  { id: "workos", nome: "WorkOS", categoria: "Auth", icone: "Lock", descricao: "Auth for B2B SaaS. SSO, SAML, SCIM, directory sync. Enterprise-ready.", quandoUsar: "Para B2B SaaS que precisa de SSO/SAML enterprise.", exemplo: "Vercel, Loom, Perplexity use WorkOS.", url: "https://workos.com", modoDefault: "alternativa" },
+  { id: "stytch", nome: "Stytch", categoria: "Auth", icone: "Lock", descricao: "Passwordless auth. Magic links, passkeys, WebAuthn. Developer-first.", quandoUsar: "Para auth passwordless moderno (passkeys, magic links).", exemplo: "Growing 2025, passwordless trend.", url: "https://stytch.com", modoDefault: "opcional", licenca: "Free" },
+  { id: "workos", nome: "WorkOS", categoria: "Auth", icone: "Lock", descricao: "Auth for B2B SaaS. SSO, SAML, SCIM, directory sync. Enterprise-ready.", quandoUsar: "Para B2B SaaS que precisa de SSO/SAML enterprise.", exemplo: "Vercel, Loom, Perplexity use WorkOS.", url: "https://workos.com", modoDefault: "alternativa", licenca: "Free" },
 
   // Storage adicionais
-  { id: "imagekit", nome: "ImageKit", categoria: "Storage", icone: "Image", descricao: "Image CDN com transformações real-time. Resize, format, optimize.", quandoUsar: "Alternativa ao Cloudinary. Real-time image optimization.", exemplo: "Flipkart, TechCrunch, 10MB.io.", url: "https://imagekit.io", modoDefault: "alternativa" },
-  { id: "imgix", nome: "Imgix", categoria: "Storage", icone: "Image", descricao: "Image CDN + processing. Resize, crop, format, watermark.", quandoUsar: "Para manipulação de imagens em CDN. Premium.", exemplo: "Netflix, Spotify, Reddit.", url: "https://imgix.com", modoDefault: "opcional" },
+  { id: "imagekit", nome: "ImageKit", categoria: "Storage", icone: "Image", descricao: "Image CDN com transformações real-time. Resize, format, optimize.", quandoUsar: "Alternativa ao Cloudinary. Real-time image optimization.", exemplo: "Flipkart, TechCrunch, 10MB.io.", url: "https://imagekit.io", modoDefault: "alternativa", licenca: "Free" },
+  { id: "imgix", nome: "Imgix", categoria: "Storage", icone: "Image", descricao: "Image CDN + processing. Resize, crop, format, watermark.", quandoUsar: "Para manipulação de imagens em CDN. Premium.", exemplo: "Netflix, Spotify, Reddit.", url: "https://imgix.com", modoDefault: "opcional", licenca: "Free" },
 
   // ── APPS & WIDGETS (Top 25) — Widgets para embutir por nicho ───────────
-  { id: "elfsight", nome: "Elfsight", categoria: "Apps & Widgets", icone: "LayoutGrid", descricao: "90+ widgets prontos: reviews, social feed, chat, forms, menu. Embed universal.", quandoUsar: "Para qualquer site que precisa de widgets prontos (reviews, social, forms).", exemplo: "Restaurantes, e-commerce, SaaS. Mais popular widget platform.", url: "https://elfsight.com", modoDefault: "recomendada" },
-  { id: "embeddable-co", nome: "Embeddable.co", categoria: "Apps & Widgets", icone: "Component", descricao: "Builder no-code de widgets com IA. Popups, quizzes, calculadoras, booking.", quandoUsar: "Para criar widgets custom sem código.", exemplo: "Agências, small businesses.", url: "https://embeddable.co", modoDefault: "alternativa" },
-  { id: "common-ninja", nome: "Common Ninja", categoria: "Apps & Widgets", icone: "Boxes", descricao: "Plataforma de widgets com biblioteca ampla de pré-construídos, scheduling, forms.", quandoUsar: "Para widgets pré-construídos sem configuração.", exemplo: "E-commerce, SaaS, agencies.", url: "https://commoninja.com", modoDefault: "alternativa" },
-  { id: "calendly", nome: "Calendly", categoria: "Apps & Widgets", icone: "Calendar", descricao: "Agendamento de reuniões. Sync Google/Outlook/Apple. Bloqueia slots automaticamente.", quandoUsar: "Para SaaS (demos), clínicas (consultas), agências (calls). #1 scheduling.", exemplo: "Vercel, Stripe, HubSpot. Standard da indústria.", url: "https://calendly.com", modoDefault: "recomendada" },
-  { id: "cal-com", nome: "Cal.com", categoria: "Apps & Widgets", icone: "Calendar", descricao: "Alternativa open-source ao Calendly. Self-hostable, TypeScript, API completa.", quandoUsar: "Para self-hosted scheduling ou quando precisas de API completa.", exemplo: "Open source, growing community.", url: "https://cal.com", modoDefault: "recomendada" },
-  { id: "calconic", nome: "Calconic", categoria: "Apps & Widgets", icone: "Calculator", descricao: "Calculadoras interativas para negócios de serviços. Preço antes de marcação.", quandoUsar: "Para negócios de serviços onde o preço precisa ser calculado antes.", exemplo: "Clínicas, advogados, consultoria, fitness.", url: "https://calconic.com", modoDefault: "alternativa" },
-  { id: "involve-me", nome: "Involve.me", categoria: "Apps & Widgets", icone: "FormInput", descricao: "Funis interativos: quizzes, forms, calculadoras, surveys, lead scoring com IA.", quandoUsar: "Para lead generation com funis interativos e scoring.", exemplo: "Agências, SaaS, e-commerce.", url: "https://involve.me", modoDefault: "alternativa" },
-  { id: "outgrow", nome: "Outgrow", categoria: "Apps & Widgets", icone: "TrendingUp", descricao: "Calculadoras, quizzes, polls, surveys, chatbots para lead generation.", quandoUsar: "Para lead gen com conteúdo interativo (quizzes, calculadoras).", exemplo: "B2B SaaS, marketing agencies.", url: "https://outgrow.co", modoDefault: "opcional" },
-  { id: "zipchat-ai", nome: "Zipchat AI / HelpJet", categoria: "Apps & Widgets", icone: "MessageCircle", descricao: "Chat widget AI-first. Agente IA treinado no teu conteúdo, escala para humano.", quandoUsar: "Para suporte AI-first. Reduz tickets e responde 24/7.", exemplo: "E-commerce, SaaS B2B, agencies.", url: "https://zipchat.ai", modoDefault: "recomendada" },
-  { id: "trustpilot-widget", nome: "Trustpilot Widget", categoria: "Apps & Widgets", icone: "Star", descricao: "Widget de reviews reais. Constroi confiança com reviews verificadas.", quandoUsar: "Para e-commerce e serviços. Social proof essential.", exemplo: "E-commerce, SaaS, restaurants.", url: "https://trustpilot.com", modoDefault: "recomendada" },
-  { id: "yotpo", nome: "Yotpo", categoria: "Apps & Widgets", icone: "Star", descricao: "Widgets de reviews customizáveis: carrosséis, popups, sidebars. Integra Google Shopping.", quandoUsar: "Para e-commerce com reviews rich content + integrations.", exemplo: "Shopify stores, e-commerce premium.", url: "https://yotpo.com", modoDefault: "alternativa" },
-  { id: "tripadvisor-widget", nome: "TripAdvisor Widget", categoria: "Apps & Widgets", icone: "Map", descricao: "Reviews reais de viajantes. Essencial para hotelaria/restaurantes/turismo.", quandoUsar: "Para hotelaria, restaurantes, turismo. Constroi confiança e gera reservas.", exemplo: "Hotéis, restaurantes, agências de viagens.", url: "https://tripadvisor.com", modoDefault: "recomendada" },
-  { id: "google-reviews-widget", nome: "Google Reviews Widget", categoria: "Apps & Widgets", icone: "Star", descricao: "Widget de reviews do Google. Mostra estrelas e comentários reais.", quandoUsar: "Para qualquer negócio local. Social proof do Google Maps.", exemplo: "Restaurantes, clínicas, serviços locais.", url: "https://elfsight.com/google-reviews-widget", modoDefault: "recomendada" },
-  { id: "social-feed-widget", nome: "Instagram/Social Feed Widget", categoria: "Apps & Widgets", icone: "Instagram", descricao: "Exibe conteúdo do Instagram ou redes sociais no site. Auto-update.", quandoUsar: "Para marcas com presença social forte. E-commerce, restaurantes, lifestyle.", exemplo: "Fashion brands, restaurants, influencers.", url: "https://elfsight.com/instagram-feed-widget", modoDefault: "alternativa" },
-  { id: "messenger-chat-widget", nome: "Facebook Messenger Chat", categoria: "Apps & Widgets", icone: "MessageCircle", descricao: "Chat via Facebook Messenger. Visitantes conversam sem sair do site.", quandoUsar: "Para negócios com presença Facebook. Gratuito.", exemplo: "E-commerce, small businesses, pages com Facebook ativo.", url: "https://developers.facebook.com/docs/messenger-platform", modoDefault: "opcional" },
-  { id: "whatsapp-widget", nome: "WhatsApp Widget", categoria: "Apps & Widgets", icone: "MessageCircle", descricao: "Botão flutuante WhatsApp. Visitantes contactam instantaneamente.", quandoUsar: "Para qualquer negócio em mercados onde WhatsApp domina (Europa, LATAM).", exemplo: "Restaurantes, clínicas, e-commerce, serviços.", url: "https://elfsight.com/whatsapp-chat-widget", modoDefault: "recomendada" },
-  { id: "callpage", nome: "CallPage / Limecall", categoria: "Apps & Widgets", icone: "Phone", descricao: "Callback instantâneo. Visitantes pedem call e são conectados em 25 segundos.", quandoUsar: "Para B2B, imobiliário, serviços onde uma call fecha negócio.", exemplo: "SaaS B2B, agências imobiliárias, consultoria.", url: "https://callpage.io", modoDefault: "alternativa" },
-  { id: "picreel", nome: "Picreel", categoria: "Apps & Widgets", icone: "Target", descricao: "Popups com 100+ templates otimizados para conversão. Exit-intent, 700+ integrações.", quandoUsar: "Para e-commerce e SaaS. Captura leads antes de sair.", exemplo: "E-commerce, SaaS landing pages.", url: "https://picreel.com", modoDefault: "alternativa" },
-  { id: "gleam", nome: "Gleam", categoria: "Apps & Widgets", icone: "Gift", descricao: "Widgets de concursos e giveaways. Aumenta alcance e engagement.", quandoUsar: "Para marcas que querem growth viral (contests, giveaways).", exemplo: "E-commerce, D2C brands, community apps.", url: "https://gleam.io", modoDefault: "opcional" },
-  { id: "wheel-fortune", nome: "Wheel of Fortune / Gamified Popup", categoria: "Apps & Widgets", icone: "Disc", descricao: "Popups gamificados. Elemento de jogo no signup aumenta conversão.", quandoUsar: "Para e-commerce. Lead collection com gamificação.", exemplo: "OptinMonster, Wheelio. E-commerce stores.", url: "https://optinmonster.com", modoDefault: "opcional" },
-  { id: "loyaltylion", nome: "LoyaltyLion / Smile.io", categoria: "Apps & Widgets", icone: "Award", descricao: "Plataforma de fidelização para e-commerce. Pontos, recompensas, VIP tiers.", quandoUsar: "Para e-commerce que quer reter clientes com programa de recompensas.", exemplo: "Shopify stores, D2C brands.", url: "https://loyaltylion.com", modoDefault: "alternativa" },
-  { id: "reviews-io", nome: "Reviews.io / Judge.me", categoria: "Apps & Widgets", icone: "Star", descricao: "Alternativas mais leves ao Yotpo. Reviews widgets para e-commerce.", quandoUsar: "Para e-commerce Shopify que precisa de reviews simples e baratas.", exemplo: "Shopify stores, small e-commerce.", url: "https://reviews.io", modoDefault: "alternativa" },
-  { id: "typeform", nome: "Typeform / Tally / Fillout", categoria: "Apps & Widgets", icone: "FormInput", descricao: "Forms interativos bonitos. Logic jumps, embeds, pagamentos.", quandoUsar: "Para surveys, quizzes, lead forms premium.", exemplo: "Typeform (premium), Tally (free), Fillout (no-code).", url: "https://typeform.com", modoDefault: "recomendada" },
-  { id: "menu-digital", nome: "Menu Digital (Elfsight)", categoria: "Apps & Widgets", icone: "UtensilsCrossed", descricao: "Apresenta pratos e bebidas do restaurante de forma clara e acessível.", quandoUsar: "Para restaurantes. Menu digital embed no site.", exemplo: "Restaurantes, cafés, bares, food trucks.", url: "https://elfsight.com/menu-widget", modoDefault: "recomendada" },
-  { id: "app-store-reviews", nome: "App Store Reviews Widget", categoria: "Apps & Widgets", icone: "Star", descricao: "Mostra reviews de App Store/Google Play. 400+ templates.", quandoUsar: "Para marcas com app mobile que querem mostrar reviews no site.", exemplo: "Mobile apps, SaaS with mobile.", url: "https://elfsight.com/app-store-reviews-widget", modoDefault: "opcional" },
+  { id: "elfsight", nome: "Elfsight", categoria: "Apps & Widgets", icone: "LayoutGrid", descricao: "90+ widgets prontos: reviews, social feed, chat, forms, menu. Embed universal.", quandoUsar: "Para qualquer site que precisa de widgets prontos (reviews, social, forms).", exemplo: "Restaurantes, e-commerce, SaaS. Mais popular widget platform.", url: "https://elfsight.com", modoDefault: "recomendada", licenca: "Free" },
+  { id: "embeddable-co", nome: "Embeddable.co", categoria: "Apps & Widgets", icone: "Component", descricao: "Builder no-code de widgets com IA. Popups, quizzes, calculadoras, booking.", quandoUsar: "Para criar widgets custom sem código.", exemplo: "Agências, small businesses.", url: "https://embeddable.co", modoDefault: "alternativa", licenca: "Free" },
+  { id: "common-ninja", nome: "Common Ninja", categoria: "Apps & Widgets", icone: "Boxes", descricao: "Plataforma de widgets com biblioteca ampla de pré-construídos, scheduling, forms.", quandoUsar: "Para widgets pré-construídos sem configuração.", exemplo: "E-commerce, SaaS, agencies.", url: "https://commoninja.com", modoDefault: "alternativa", licenca: "Free" },
+  { id: "calendly", nome: "Calendly", categoria: "Apps & Widgets", icone: "Calendar", descricao: "Agendamento de reuniões. Sync Google/Outlook/Apple. Bloqueia slots automaticamente.", quandoUsar: "Para SaaS (demos), clínicas (consultas), agências (calls). #1 scheduling.", exemplo: "Vercel, Stripe, HubSpot. Standard da indústria.", url: "https://calendly.com", modoDefault: "recomendada", licenca: "Free" },
+  { id: "cal-com", nome: "Cal.com", categoria: "Apps & Widgets", icone: "Calendar", descricao: "Alternativa open-source ao Calendly. Self-hostable, TypeScript, API completa.", quandoUsar: "Para self-hosted scheduling ou quando precisas de API completa.", exemplo: "Open source, growing community.", url: "https://cal.com", modoDefault: "recomendada", licenca: "Free" },
+  { id: "calconic", nome: "Calconic", categoria: "Apps & Widgets", icone: "Calculator", descricao: "Calculadoras interativas para negócios de serviços. Preço antes de marcação.", quandoUsar: "Para negócios de serviços onde o preço precisa ser calculado antes.", exemplo: "Clínicas, advogados, consultoria, fitness.", url: "https://calconic.com", modoDefault: "alternativa", licenca: "Free" },
+  { id: "involve-me", nome: "Involve.me", categoria: "Apps & Widgets", icone: "FormInput", descricao: "Funis interativos: quizzes, forms, calculadoras, surveys, lead scoring com IA.", quandoUsar: "Para lead generation com funis interativos e scoring.", exemplo: "Agências, SaaS, e-commerce.", url: "https://involve.me", modoDefault: "alternativa", licenca: "Free" },
+  { id: "outgrow", nome: "Outgrow", categoria: "Apps & Widgets", icone: "TrendingUp", descricao: "Calculadoras, quizzes, polls, surveys, chatbots para lead generation.", quandoUsar: "Para lead gen com conteúdo interativo (quizzes, calculadoras).", exemplo: "B2B SaaS, marketing agencies.", url: "https://outgrow.co", modoDefault: "opcional", licenca: "Free" },
+  { id: "zipchat-ai", nome: "Zipchat AI / HelpJet", categoria: "Apps & Widgets", icone: "MessageCircle", descricao: "Chat widget AI-first. Agente IA treinado no teu conteúdo, escala para humano.", quandoUsar: "Para suporte AI-first. Reduz tickets e responde 24/7.", exemplo: "E-commerce, SaaS B2B, agencies.", url: "https://zipchat.ai", modoDefault: "recomendada", licenca: "Freemium" },
+  { id: "trustpilot-widget", nome: "Trustpilot Widget", categoria: "Apps & Widgets", icone: "Star", descricao: "Widget de reviews reais. Constroi confiança com reviews verificadas.", quandoUsar: "Para e-commerce e serviços. Social proof essential.", exemplo: "E-commerce, SaaS, restaurants.", url: "https://trustpilot.com", modoDefault: "recomendada", licenca: "Free" },
+  { id: "yotpo", nome: "Yotpo", categoria: "Apps & Widgets", icone: "Star", descricao: "Widgets de reviews customizáveis: carrosséis, popups, sidebars. Integra Google Shopping.", quandoUsar: "Para e-commerce com reviews rich content + integrations.", exemplo: "Shopify stores, e-commerce premium.", url: "https://yotpo.com", modoDefault: "alternativa", licenca: "Free" },
+  { id: "tripadvisor-widget", nome: "TripAdvisor Widget", categoria: "Apps & Widgets", icone: "Map", descricao: "Reviews reais de viajantes. Essencial para hotelaria/restaurantes/turismo.", quandoUsar: "Para hotelaria, restaurantes, turismo. Constroi confiança e gera reservas.", exemplo: "Hotéis, restaurantes, agências de viagens.", url: "https://tripadvisor.com", modoDefault: "recomendada", licenca: "Free" },
+  { id: "google-reviews-widget", nome: "Google Reviews Widget", categoria: "Apps & Widgets", icone: "Star", descricao: "Widget de reviews do Google. Mostra estrelas e comentários reais.", quandoUsar: "Para qualquer negócio local. Social proof do Google Maps.", exemplo: "Restaurantes, clínicas, serviços locais.", url: "https://elfsight.com/google-reviews-widget", modoDefault: "recomendada", licenca: "Free" },
+  { id: "social-feed-widget", nome: "Instagram/Social Feed Widget", categoria: "Apps & Widgets", icone: "Instagram", descricao: "Exibe conteúdo do Instagram ou redes sociais no site. Auto-update.", quandoUsar: "Para marcas com presença social forte. E-commerce, restaurantes, lifestyle.", exemplo: "Fashion brands, restaurants, influencers.", url: "https://elfsight.com/instagram-feed-widget", modoDefault: "alternativa", licenca: "Free" },
+  { id: "messenger-chat-widget", nome: "Facebook Messenger Chat", categoria: "Apps & Widgets", icone: "MessageCircle", descricao: "Chat via Facebook Messenger. Visitantes conversam sem sair do site.", quandoUsar: "Para negócios com presença Facebook. Gratuito.", exemplo: "E-commerce, small businesses, pages com Facebook ativo.", url: "https://developers.facebook.com/docs/messenger-platform", modoDefault: "opcional", licenca: "Free" },
+  { id: "whatsapp-widget", nome: "WhatsApp Widget", categoria: "Apps & Widgets", icone: "MessageCircle", descricao: "Botão flutuante WhatsApp. Visitantes contactam instantaneamente.", quandoUsar: "Para qualquer negócio em mercados onde WhatsApp domina (Europa, LATAM).", exemplo: "Restaurantes, clínicas, e-commerce, serviços.", url: "https://elfsight.com/whatsapp-chat-widget", modoDefault: "recomendada", licenca: "Free" },
+  { id: "callpage", nome: "CallPage / Limecall", categoria: "Apps & Widgets", icone: "Phone", descricao: "Callback instantâneo. Visitantes pedem call e são conectados em 25 segundos.", quandoUsar: "Para B2B, imobiliário, serviços onde uma call fecha negócio.", exemplo: "SaaS B2B, agências imobiliárias, consultoria.", url: "https://callpage.io", modoDefault: "alternativa", licenca: "Free" },
+  { id: "picreel", nome: "Picreel", categoria: "Apps & Widgets", icone: "Target", descricao: "Popups com 100+ templates otimizados para conversão. Exit-intent, 700+ integrações.", quandoUsar: "Para e-commerce e SaaS. Captura leads antes de sair.", exemplo: "E-commerce, SaaS landing pages.", url: "https://picreel.com", modoDefault: "alternativa", licenca: "Free" },
+  { id: "gleam", nome: "Gleam", categoria: "Apps & Widgets", icone: "Gift", descricao: "Widgets de concursos e giveaways. Aumenta alcance e engagement.", quandoUsar: "Para marcas que querem growth viral (contests, giveaways).", exemplo: "E-commerce, D2C brands, community apps.", url: "https://gleam.io", modoDefault: "opcional", licenca: "Free" },
+  { id: "wheel-fortune", nome: "Wheel of Fortune / Gamified Popup", categoria: "Apps & Widgets", icone: "Disc", descricao: "Popups gamificados. Elemento de jogo no signup aumenta conversão.", quandoUsar: "Para e-commerce. Lead collection com gamificação.", exemplo: "OptinMonster, Wheelio. E-commerce stores.", url: "https://optinmonster.com", modoDefault: "opcional", licenca: "Free" },
+  { id: "loyaltylion", nome: "LoyaltyLion / Smile.io", categoria: "Apps & Widgets", icone: "Award", descricao: "Plataforma de fidelização para e-commerce. Pontos, recompensas, VIP tiers.", quandoUsar: "Para e-commerce que quer reter clientes com programa de recompensas.", exemplo: "Shopify stores, D2C brands.", url: "https://loyaltylion.com", modoDefault: "alternativa", licenca: "Free" },
+  { id: "reviews-io", nome: "Reviews.io / Judge.me", categoria: "Apps & Widgets", icone: "Star", descricao: "Alternativas mais leves ao Yotpo. Reviews widgets para e-commerce.", quandoUsar: "Para e-commerce Shopify que precisa de reviews simples e baratas.", exemplo: "Shopify stores, small e-commerce.", url: "https://reviews.io", modoDefault: "alternativa", licenca: "Free" },
+  { id: "typeform", nome: "Typeform / Tally / Fillout", categoria: "Apps & Widgets", icone: "FormInput", descricao: "Forms interativos bonitos. Logic jumps, embeds, pagamentos.", quandoUsar: "Para surveys, quizzes, lead forms premium.", exemplo: "Typeform (premium), Tally (free), Fillout (no-code).", url: "https://typeform.com", modoDefault: "recomendada", licenca: "Free" },
+  { id: "menu-digital", nome: "Menu Digital (Elfsight)", categoria: "Apps & Widgets", icone: "UtensilsCrossed", descricao: "Apresenta pratos e bebidas do restaurante de forma clara e acessível.", quandoUsar: "Para restaurantes. Menu digital embed no site.", exemplo: "Restaurantes, cafés, bares, food trucks.", url: "https://elfsight.com/menu-widget", modoDefault: "recomendada", licenca: "Free" },
+  { id: "app-store-reviews", nome: "App Store Reviews Widget", categoria: "Apps & Widgets", icone: "Star", descricao: "Mostra reviews de App Store/Google Play. 400+ templates.", quandoUsar: "Para marcas com app mobile que querem mostrar reviews no site.", exemplo: "Mobile apps, SaaS with mobile.", url: "https://elfsight.com/app-store-reviews-widget", modoDefault: "opcional", licenca: "Free" },
 ];
 
 // ============================================================================

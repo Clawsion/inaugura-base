@@ -144,7 +144,19 @@ export function IntegrationsSection({ briefing, nicho, selectedIntegrations, onC
                 <div><div className="text-[9px] font-bold uppercase text-muted-foreground">Quando usar</div><p className="text-[10px] text-foreground/80">{activeItem.quandoUsar}</p></div>
                 <div><div className="text-[9px] font-bold uppercase text-muted-foreground">Exemplos</div><p className="text-[10px] italic text-muted-foreground">{activeItem.exemplo}</p></div>
               </div>
-              {activeItem.url && <a href={activeItem.url} target="_blank" rel="noreferrer" className="mt-1.5 inline-block text-[10px] text-primary hover:underline">{activeItem.url} →</a>}
+              <div className="mt-2 flex items-center gap-2">
+                {activeItem.licenca && (
+                  <span className={cn(
+                    "rounded-full border px-2 py-0.5 text-[9px] font-bold",
+                    activeItem.licenca === "Free" && "border-emerald-500/30 bg-emerald-500/10 text-emerald-500",
+                    activeItem.licenca === "Freemium" && "border-amber-500/30 bg-amber-500/10 text-amber-500",
+                    activeItem.licenca === "Subscrição" && "border-rose-500/30 bg-rose-500/10 text-rose-500",
+                  )}>
+                    {activeItem.licenca}
+                  </span>
+                )}
+                {activeItem.url && <a href={activeItem.url} target="_blank" rel="noreferrer" className="text-[10px] text-primary hover:underline">{activeItem.url} →</a>}
+              </div>
             </div>
           </motion.div>
         )}
