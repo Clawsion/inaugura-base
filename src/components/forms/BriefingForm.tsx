@@ -482,9 +482,9 @@ export function BriefingForm({
             // Aplica a combo ao form: fonts + paleta + skin
             onChange({
               fontsPlayground: [
-                { fonte: combo.fonts.heading.family, pesos: combo.fonts.heading.pesos.slice(0, 2) },
-                { fonte: combo.fonts.body.family, pesos: combo.fonts.body.pesos.slice(0, 2) },
-                ...(combo.fonts.mono ? [{ fonte: combo.fonts.mono.family, pesos: combo.fonts.mono.pesos.slice(0, 2) }] : []),
+                { fonte: combo.fonts.heading.family, pesos: (combo.fonts.heading.pesos ?? [400]).slice(0, 2) },
+                { fonte: combo.fonts.body.family, pesos: (combo.fonts.body.pesos ?? [400]).slice(0, 2) },
+                ...(combo.fonts.mono ? [{ fonte: combo.fonts.mono.family, pesos: (combo.fonts.mono.pesos ?? [400]).slice(0, 2) }] : []),
               ] as any,
               paletaMode: "manual" as const,
               paletaManual: [

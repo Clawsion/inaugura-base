@@ -236,10 +236,49 @@ ${
     ? input.fontsPlayground
         .map(
           (f, i) =>
-            `${i + 1}. ${f.fonte}${f.transform ? ` (com transform: ${f.transform})` : ""}`
+            `${i + 1}. ${f.fonte}${f.transformId ? ` (com transform: ${f.transformId})` : ""}`
         )
         .join("\n")
     : "(nenhuma preferência expressa)"
+}
+
+# DESIGN VISUAL SELECIONADO
+${
+  input.selectedDesignVisual && input.selectedDesignVisual.length > 0
+    ? input.selectedDesignVisual.join(", ")
+    : "(nenhum — escolhe tu com base no nicho)"
+}
+
+# SKILLS & FERRAMENTAS SELECIONADAS
+${
+  input.selectedSkills && input.selectedSkills.length > 0
+    ? input.selectedSkills.join(", ")
+    : "(nenhuma — recomenda as essenciais)"
+}
+
+# INTEGRAÇÕES SELECIONADAS
+${
+  input.selectedIntegrations && input.selectedIntegrations.length > 0
+    ? input.selectedIntegrations.join(", ")
+    : "(nenhuma — recomenda as essenciais)"
+}
+
+# REFERÊNCIAS DE WEBSITES
+${
+  input.referencias && input.referencias.filter((r) => r.trim()).length > 0
+    ? input.referencias.filter((r) => r.trim()).map((r, i) => `${i + 1}. ${r}`).join("\n")
+    : "(nenhuma referência fornecida)"
+}
+
+# CONTEÚDO
+- Textos/Imagens/Logotipo — Preciso de ajuda: ${input.conteudoTextos ? "SIM" : "não"}${input.conteudoTextosObs ? ` (${input.conteudoTextosObs})` : ""}
+- Vídeos/Catálogo/Testemunhos — Preciso de ajuda: ${input.conteudoVideos ? "SIM" : "não"}${input.conteudoVideosObs ? ` (${input.conteudoVideosObs})` : ""}
+
+# FUNCIONALIDADES ESPECIAIS
+${
+  input.funcionalidadesEspeciais && input.funcionalidadesEspeciais.length > 0
+    ? input.funcionalidadesEspeciais.join(", ")
+    : "(nenhuma funcionalidade especial selecionada)"
 }
 `;
 }
