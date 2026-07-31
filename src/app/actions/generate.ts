@@ -111,79 +111,105 @@ async function chamarModelo(
 export async function generateProject(
   input: FormValues
 ): Promise<GenerateResult> {
-  const systemPrompt = buildSystemPrompt(input);
-  let lastError = "";
+  try {
+    // Validação inicial: garante que o input é serializável e tem campos mínimos
+    if (!input || typeof input !== "object") {
+      return {
+        ok: false,
+        error: "Input inválido: esperado objeto com dados do formulário.",
+        tentativas: 0,
+      };
+    }
 
-  for (let tentativa = 1; tentativa <= MAX_TENTATIVAS; tentativa++) {
-    try {
-      // Chama o modelo (com feedback de erro se não for a 1ª tentativa)
-      const extraMsg = tentativa > 1 && lastError
-        ? `A tua resposta anterior falhou validação. Corrige e re-emite a tool. Erros:\n${lastError}`
-        : undefined;
-      const { arguments: argsJson, content } = await chamarModelo(systemPrompt, extraMsg);
+    if (!input.briefing || input.briefing.trim().length < 5) {
+      return {
+        ok: false,
+        error: "Briefing demasiado curto. Escreve pelo menos uma frase descritiva.",
+        tentativas: 0,
+      };
+    }
 
-      // Tenta fazer parse do JSON
-      let parsed: unknown;
+    const systemPrompt = buildSystemPrompt(input);
+    let lastError = "";
+
+    for (let tentativa = 1; tentativa <= MAX_TENTATIVAS; tentativa++) {
       try {
-        parsed = JSON.parse(argsJson);
-      } catch {
-        // Fallback: extrai JSON do content
-        if (content) {
-          const m = content.match(/\{[\s\S]*\}/);
-          if (m) {
-            try { parsed = JSON.parse(m[0]); } catch { continue; }
+        // Chama o modelo (com feedback de erro se não for a 1ª tentativa)
+        const extraMsg = tentativa > 1 && lastError
+          ? `A tua resposta anterior falhou validação. Corrige e re-emite a tool. Erros:\n${lastError}`
+          : undefined;
+        const { arguments: argsJson, content } = await chamarModelo(systemPrompt, extraMsg);
+
+        // Tenta fazer parse do JSON
+        let parsed: unknown;
+        try {
+          parsed = JSON.parse(argsJson);
+        } catch {
+          // Fallback: extrai JSON do content
+          if (content) {
+            const m = content.match(/\{[\s\S]*\}/);
+            if (m) {
+              try { parsed = JSON.parse(m[0]); } catch { continue; }
+            } else { continue; }
           } else { continue; }
-        } else { continue; }
-      }
+        }
 
-      // Valida com Zod
-      const result = ProjectSpecSchema.safeParse(parsed);
-      if (result.success) {
-        // Pós-processamento: valida/ajusta contraste da paleta
-        const paletaValidada = validarEAnalisarPaleta(result.data.palette);
-        const dataFinal: ProjectSpec = {
-          ...result.data,
-          palette: paletaValidada.map((c) => ({
-            nome: c.nome,
-            hex: c.hex,
-            uso: c.uso,
-          })),
-        };
-        return {
-          ok: true,
-          data: { ...dataFinal, paletaValidada },
-          tentativas: tentativa,
-        };
-      }
+        // Valida com Zod
+        const result = ProjectSpecSchema.safeParse(parsed);
+        if (result.success) {
+          // Pós-processamento: valida/ajusta contraste da paleta
+          const paletaValidada = validarEAnalisarPaleta(result.data.palette);
+          const dataFinal: ProjectSpec = {
+            ...result.data,
+            palette: paletaValidada.map((c) => ({
+              nome: c.nome,
+              hex: c.hex,
+              uso: c.uso,
+            })),
+          };
+          return {
+            ok: true,
+            data: { ...dataFinal, paletaValidada },
+            tentativas: tentativa,
+          };
+        }
 
-      // Zod falhou → prepara feedback
-      lastError = result.error.issues
-        .map((i) => `- ${i.path.join(".")}: ${i.message}`)
-        .join("\n");
+        // Zod falhou → prepara feedback
+        lastError = result.error.issues
+          .map((i) => `- ${i.path.join(".")}: ${i.message}`)
+          .join("\n");
 
-      if (tentativa === MAX_TENTATIVAS) {
-        return {
-          ok: false,
-          error: `Falha na validação após ${MAX_TENTATIVAS} tentativas:\n${lastError}`,
-          tentativas: tentativa,
-        };
-      }
-      // Continua para a próxima tentativa com lastError
-    } catch (err: any) {
-      lastError = err?.message ?? String(err);
-      if (tentativa === MAX_TENTATIVAS) {
-        return {
-          ok: false,
-          error: `Erro na geração: ${lastError}`,
-          tentativas: tentativa,
-        };
+        if (tentativa === MAX_TENTATIVAS) {
+          return {
+            ok: false,
+            error: `Falha na validação após ${MAX_TENTATIVAS} tentativas:\n${lastError}`,
+            tentativas: tentativa,
+          };
+        }
+        // Continua para a próxima tentativa com lastError
+      } catch (err: any) {
+        lastError = err?.message ?? String(err);
+        if (tentativa === MAX_TENTATIVAS) {
+          return {
+            ok: false,
+            error: `Erro na geração: ${lastError}`,
+            tentativas: tentativa,
+          };
+        }
       }
     }
-  }
 
-  return {
-    ok: false,
-    error: "Falha desconhecida na geração.",
-    tentativas: MAX_TENTATIVAS,
-  };
+    return {
+      ok: false,
+      error: "Falha desconhecida na geração.",
+      tentativas: MAX_TENTATIVAS,
+    };
+  } catch (outerErr: any) {
+    // Catch-all para erros inesperados (ex.: serialização, config)
+    return {
+      ok: false,
+      error: `Erro inesperado: ${outerErr?.message ?? String(outerErr)}`,
+      tentativas: 0,
+    };
+  }
 }
