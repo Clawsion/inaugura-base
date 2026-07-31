@@ -9,6 +9,7 @@ import { ResultsPanel } from "@/components/results/ResultsPanel";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SkinSwitcher } from "@/components/skins/SkinSwitcher";
 import { Logo } from "@/components/logo";
+import { ProjectManager } from "@/components/project-manager";
 import { generateProject, type GenerateResult } from "@/app/actions/generate";
 import type { FormValues } from "@/lib/schemas";
 import { getSkinById } from "@/lib/skins";
@@ -246,6 +247,28 @@ export default function Home() {
                   <Github className="h-4 w-4" />
                 </a>
               </Button>
+              <ProjectManager
+                form={form}
+                onResetAll={() => setForm(FORM_INIT)}
+                onResetSection={(section) => {
+                  const patches: Record<string, Partial<FormValues>> = {
+                    briefing: { briefing: "", nicho: "" },
+                    design: { selectedDesignVisual: [], efeitos: [] },
+                    skills: { selectedSkills: [], selectedIntegrations: [] },
+                    fonts: { fontsPlayground: FORM_INIT.fontsPlayground },
+                    palette: { paletaMode: "auto" as const, paletaManual: FORM_INIT.paletaManual },
+                    typography: { typographyMode: "auto" as const },
+                    extras: { incluirMockups: true, incluirDesignTokens: true, incluirRoadmap: false, nivel: "production" as const, idioma: "pt" as const },
+                  };
+                  const patch = patches[section] ?? {};
+                  setForm((f) => ({ ...f, ...patch }));
+                }}
+                onLoadProject={(loadedForm) => {
+                  setForm(loadedForm);
+                  setShowForm(true);
+                  setResult(null);
+                }}
+              />
               <ThemeToggle />
             </div>
           </div>
