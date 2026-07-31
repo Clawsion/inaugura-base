@@ -6,6 +6,7 @@ import { X, Plug } from "lucide-react";
 import { INTEGRACOES_CATALOG, getIntegracoesForNicho, type Integracao, type SkillMode } from "@/lib/skills-catalog";
 import { detectarNicho } from "@/lib/perfect-combo";
 import { cn } from "@/lib/utils";
+import { SectionHeader } from "@/components/skills/SectionHeader";
 import { CategoryAccordion } from "./CategoryAccordion";
 
 interface IntegrationsSectionProps {
@@ -71,14 +72,6 @@ export function IntegrationsSection({ briefing, nicho, selectedIntegrations, onC
     });
   };
 
-  const setAllModeInCat = (cat: string, mode: SkillMode) => {
-    setModes((prev) => {
-      const next = { ...prev };
-      for (const i of INTEGRACOES_CATALOG) { if (i.categoria === cat) next[i.id] = mode; }
-      syncOnChange(next);
-      return next;
-    });
-  };
 
   const toggleLockCat = (cat: string) => {
     setLockedCats((prev) => { const n = new Set(prev); if (n.has(cat)) n.delete(cat); else n.add(cat); return n; });
@@ -86,6 +79,20 @@ export function IntegrationsSection({ briefing, nicho, selectedIntegrations, onC
 
   const toggleCat = (cat: string) => {
     setExpandedCats((prev) => { const n = new Set(prev); if (n.has(cat)) n.delete(cat); else n.add(cat); return n; });
+  };
+
+  const setAllModeGlobal = (mode: SkillMode) => {
+    const c: Record<string, SkillMode> = {};
+    for (const item of INTEGRACOES_CATALOG) {
+      // Respect locked categories
+      if (lockedCats.has(item.categoria)) {
+        c[item.id] = modes[item.id] ?? "off";
+      } else {
+        c[item.id] = mode;
+      }
+    }
+    setModes(c);
+    syncOnChange(c);
   };
 
   const setAllOff = () => { const c: Record<string, SkillMode> = {}; for (const i of INTEGRACOES_CATALOG) c[i.id] = "off"; setModes(c); onChange([]); };
@@ -104,17 +111,17 @@ export function IntegrationsSection({ briefing, nicho, selectedIntegrations, onC
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="flex items-center gap-1.5 text-sm font-semibold"><Plug className="h-3.5 w-3.5 text-primary" />Integrações</h3>
-          <p className="text-[11px] text-muted-foreground">CMS, cloud, pagamentos, email, maps. R/A/O/M = quick-select. Lock = bloqueia.</p>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">{activeCount} ativas</span>
-          <button type="button" onClick={setAllRecommended} disabled={!nichoDetetado} className="rounded-md border border-primary/40 px-2 py-0.5 text-[9px] font-medium text-primary hover:bg-primary/10 disabled:opacity-40">Auto</button>
-          <button type="button" onClick={setAllOff} className="rounded-md border border-border px-2 py-0.5 text-[9px] font-medium text-muted-foreground hover:text-foreground">Limpar</button>
-        </div>
-      </div>
+      <SectionHeader
+        title="Integrações"
+        iconName={<Plug className="h-3.5 w-3.5 text-primary" />}
+        description="CMS, cloud, pagamentos, email, maps. R/A/O/M no header aplica a todas. Lock = bloqueia."
+        activeCount={activeCount}
+        totalCount={INTEGRACOES_CATALOG.length}
+        nichoDetetado={nichoDetetado}
+        onSetAllMode={setAllModeGlobal}
+        onAuto={setAllRecommended}
+        onClear={setAllOff}
+      />
       <div className="flex flex-wrap gap-1.5">
         {(["recomendada", "alternativa", "opcional", "manual", "off"] as SkillMode[]).map((m) => (
           <div key={m} className={cn("flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-medium", MODE_COLORS[m])}>
@@ -131,7 +138,6 @@ export function IntegrationsSection({ briefing, nicho, selectedIntegrations, onC
             onToggleExpand={() => toggleCat(cat)}
             onToggleLock={() => toggleLockCat(cat)}
             onToggleMode={toggleMode}
-            onSetAllMode={(mode) => setAllModeInCat(cat, mode)}
             onHover={setHovered}
             onPin={(id) => setPinned((p) => (p === id ? null : id))}
             pinnedId={pinned}

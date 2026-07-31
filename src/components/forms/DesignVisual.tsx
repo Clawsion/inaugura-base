@@ -6,6 +6,7 @@ import { X, Palette } from "lucide-react";
 import { DESIGN_VISUAL_CATALOG, getDesignVisualForNicho, type DesignVisualOption, type SkillMode } from "@/lib/design-visual-catalog";
 import { detectarNicho } from "@/lib/perfect-combo";
 import { cn } from "@/lib/utils";
+import { SectionHeader } from "@/components/skills/SectionHeader";
 import { CategoryAccordion } from "@/components/skills/CategoryAccordion";
 
 interface DesignVisualProps {
@@ -71,14 +72,6 @@ export function DesignVisual({ briefing, nicho, selectedOptions, onChange }: Des
     });
   };
 
-  const setAllModeInCat = (cat: string, mode: SkillMode) => {
-    setModes((prev) => {
-      const next = { ...prev };
-      for (const o of DESIGN_VISUAL_CATALOG) { if (o.categoria === cat) next[o.id] = mode; }
-      syncOnChange(next);
-      return next;
-    });
-  };
 
   const toggleLockCat = (cat: string) => {
     setLockedCats((prev) => { const n = new Set(prev); if (n.has(cat)) n.delete(cat); else n.add(cat); return n; });
@@ -86,6 +79,20 @@ export function DesignVisual({ briefing, nicho, selectedOptions, onChange }: Des
 
   const toggleCat = (cat: string) => {
     setExpandedCats((prev) => { const n = new Set(prev); if (n.has(cat)) n.delete(cat); else n.add(cat); return n; });
+  };
+
+  const setAllModeGlobal = (mode: SkillMode) => {
+    const c: Record<string, SkillMode> = {};
+    for (const item of DESIGN_VISUAL_CATALOG) {
+      // Respect locked categories
+      if (lockedCats.has(item.categoria)) {
+        c[item.id] = modes[item.id] ?? "off";
+      } else {
+        c[item.id] = mode;
+      }
+    }
+    setModes(c);
+    syncOnChange(c);
   };
 
   const setAllOff = () => { const c: Record<string, SkillMode> = {}; for (const o of DESIGN_VISUAL_CATALOG) c[o.id] = "off"; setModes(c); onChange([]); };
@@ -104,17 +111,17 @@ export function DesignVisual({ briefing, nicho, selectedOptions, onChange }: Des
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="flex items-center gap-1.5 text-sm font-semibold"><Palette className="h-3.5 w-3.5 text-primary" />Design Visual</h3>
-          <p className="text-[11px] text-muted-foreground">Estética, patterns, textures, effects. R/A/O/M = quick-select. Lock = bloqueia.</p>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">{activeCount} ativas</span>
-          <button type="button" onClick={setAllRecommended} disabled={!nichoDetetado} className="rounded-md border border-primary/40 px-2 py-0.5 text-[9px] font-medium text-primary hover:bg-primary/10 disabled:opacity-40">Auto</button>
-          <button type="button" onClick={setAllOff} className="rounded-md border border-border px-2 py-0.5 text-[9px] font-medium text-muted-foreground hover:text-foreground">Limpar</button>
-        </div>
-      </div>
+      <SectionHeader
+        title="Design Visual"
+        iconName={<Palette className="h-3.5 w-3.5 text-primary" />}
+        description="Estética, patterns, textures, effects. R/A/O/M no header aplica a todas. Lock = bloqueia."
+        activeCount={activeCount}
+        totalCount={DESIGN_VISUAL_CATALOG.length}
+        nichoDetetado={nichoDetetado}
+        onSetAllMode={setAllModeGlobal}
+        onAuto={setAllRecommended}
+        onClear={setAllOff}
+      />
       <div className="flex flex-wrap gap-1.5">
         {(["recomendada", "alternativa", "opcional", "manual", "off"] as SkillMode[]).map((m) => (
           <div key={m} className={cn("flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-medium", MODE_COLORS[m])}>
@@ -131,7 +138,6 @@ export function DesignVisual({ briefing, nicho, selectedOptions, onChange }: Des
             onToggleExpand={() => toggleCat(cat)}
             onToggleLock={() => toggleLockCat(cat)}
             onToggleMode={toggleMode}
-            onSetAllMode={(mode) => setAllModeInCat(cat, mode)}
             onHover={setHovered}
             onPin={(id) => setPinned((p) => (p === id ? null : id))}
             pinnedId={pinned}

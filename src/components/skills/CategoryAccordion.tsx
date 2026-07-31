@@ -1,17 +1,10 @@
 "use client";
 
 // ============================================================================
-// CategoryAccordion — componente partilhado com lock + quick-select R/A/O/M
+// CategoryAccordion — componente partilhado (apenas expand/collapse + lock)
 // ============================================================================
-// Props:
-//  - categoria: nome da categoria
-//  - items: lista de items dessa categoria
-//  - modes: record de id → SkillMode
-//  - locked: se a categoria está bloqueada
-//  - onToggleLock: callback para toggle do lock
-//  - onToggleMode: callback para toggle individual
-//  - onSetAllMode: callback para setAll de uma categoria a um modo
-//  - onHover/onPin: para o info painel
+// Os botões R/A/O/M foram movidos para o header PRINCIPAL de cada secção.
+// Aqui fica só o expand/collapse da categoria + lock individual + grid de items.
 // ============================================================================
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -35,13 +28,6 @@ const MODE_DOT: Record<SkillMode, string> = {
   off: "bg-zinc-500",
 };
 
-const QUICK_SELECT: { mode: SkillMode; label: string; color: string }[] = [
-  { mode: "recomendada", label: "R", color: "text-emerald-500 border-emerald-500/40 hover:bg-emerald-500/10" },
-  { mode: "alternativa", label: "A", color: "text-blue-500 border-blue-500/40 hover:bg-blue-500/10" },
-  { mode: "opcional", label: "O", color: "text-amber-500 border-amber-500/40 hover:bg-amber-500/10" },
-  { mode: "manual", label: "M", color: "text-fuchsia-500 border-fuchsia-500/40 hover:bg-fuchsia-500/10" },
-];
-
 interface CategoryAccordionProps {
   categoria: string;
   items: { id: string; nome: string }[];
@@ -51,7 +37,6 @@ interface CategoryAccordionProps {
   onToggleExpand: () => void;
   onToggleLock: () => void;
   onToggleMode: (id: string) => void;
-  onSetAllMode: (mode: SkillMode) => void;
   onHover: (id: string | null) => void;
   onPin: (id: string) => void;
   pinnedId: string | null;
@@ -59,7 +44,7 @@ interface CategoryAccordionProps {
 
 export function CategoryAccordion({
   categoria, items, modes, locked, isExpanded,
-  onToggleExpand, onToggleLock, onToggleMode, onSetAllMode,
+  onToggleExpand, onToggleLock, onToggleMode,
   onHover, onPin, pinnedId,
 }: CategoryAccordionProps) {
   const activeInCat = items.filter((i) => modes[i.id] !== "off").length;
@@ -79,7 +64,7 @@ export function CategoryAccordion({
           </span>
         </button>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           {/* Contador */}
           <span className={cn(
             "rounded-full px-1.5 py-0 text-[8px] font-bold",
@@ -87,26 +72,6 @@ export function CategoryAccordion({
           )}>
             {activeInCat}/{items.length}
           </span>
-
-          {/* Quick-select R/A/O/M — aparece quando expandido */}
-          {isExpanded && !locked && (
-            <div className="flex gap-0.5">
-              {QUICK_SELECT.map((qs) => (
-                <button
-                  key={qs.mode}
-                  type="button"
-                  onClick={() => onSetAllMode(qs.mode)}
-                  className={cn(
-                    "flex h-4 w-4 items-center justify-center rounded border text-[8px] font-bold transition-all",
-                    qs.color
-                  )}
-                  title={`Set all to ${qs.mode}`}
-                >
-                  {qs.label}
-                </button>
-              ))}
-            </div>
-          )}
 
           {/* Lock button */}
           <button
@@ -165,3 +130,4 @@ export function CategoryAccordion({
     </div>
   );
 }
+
