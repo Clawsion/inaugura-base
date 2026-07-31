@@ -1947,7 +1947,7 @@ export const SKILLS_CATALOG: Skill[] = [
 export interface Integracao {
   id: string;
   nome: string;
-  categoria: "Pagamentos" | "Email" | "Analytics" | "Auth" | "Storage" | "Search" | "Comunicação" | "CMS" | "Cloud" | "Monitoring" | "Marketing" | "Maps" | "Outro";
+  categoria: "Pagamentos" | "Email" | "Analytics" | "Auth" | "Storage" | "Search" | "Comunicação" | "CMS" | "Cloud" | "Monitoring" | "Marketing" | "Maps" | "Apps & Widgets" | "Outro";
   icone: string;
   descricao: string;
   quandoUsar: string;
@@ -2061,6 +2061,33 @@ export const INTEGRACOES_CATALOG: Integracao[] = [
   // Storage adicionais
   { id: "imagekit", nome: "ImageKit", categoria: "Storage", icone: "Image", descricao: "Image CDN com transformações real-time. Resize, format, optimize.", quandoUsar: "Alternativa ao Cloudinary. Real-time image optimization.", exemplo: "Flipkart, TechCrunch, 10MB.io.", url: "https://imagekit.io", modoDefault: "alternativa" },
   { id: "imgix", nome: "Imgix", categoria: "Storage", icone: "Image", descricao: "Image CDN + processing. Resize, crop, format, watermark.", quandoUsar: "Para manipulação de imagens em CDN. Premium.", exemplo: "Netflix, Spotify, Reddit.", url: "https://imgix.com", modoDefault: "opcional" },
+
+  // ── APPS & WIDGETS (Top 25) — Widgets para embutir por nicho ───────────
+  { id: "elfsight", nome: "Elfsight", categoria: "Apps & Widgets", icone: "LayoutGrid", descricao: "90+ widgets prontos: reviews, social feed, chat, forms, menu. Embed universal.", quandoUsar: "Para qualquer site que precisa de widgets prontos (reviews, social, forms).", exemplo: "Restaurantes, e-commerce, SaaS. Mais popular widget platform.", url: "https://elfsight.com", modoDefault: "recomendada" },
+  { id: "embeddable-co", nome: "Embeddable.co", categoria: "Apps & Widgets", icone: "Component", descricao: "Builder no-code de widgets com IA. Popups, quizzes, calculadoras, booking.", quandoUsar: "Para criar widgets custom sem código.", exemplo: "Agências, small businesses.", url: "https://embeddable.co", modoDefault: "alternativa" },
+  { id: "common-ninja", nome: "Common Ninja", categoria: "Apps & Widgets", icone: "Boxes", descricao: "Plataforma de widgets com biblioteca ampla de pré-construídos, scheduling, forms.", quandoUsar: "Para widgets pré-construídos sem configuração.", exemplo: "E-commerce, SaaS, agencies.", url: "https://commoninja.com", modoDefault: "alternativa" },
+  { id: "calendly", nome: "Calendly", categoria: "Apps & Widgets", icone: "Calendar", descricao: "Agendamento de reuniões. Sync Google/Outlook/Apple. Bloqueia slots automaticamente.", quandoUsar: "Para SaaS (demos), clínicas (consultas), agências (calls). #1 scheduling.", exemplo: "Vercel, Stripe, HubSpot. Standard da indústria.", url: "https://calendly.com", modoDefault: "recomendada" },
+  { id: "cal-com", nome: "Cal.com", categoria: "Apps & Widgets", icone: "Calendar", descricao: "Alternativa open-source ao Calendly. Self-hostable, TypeScript, API completa.", quandoUsar: "Para self-hosted scheduling ou quando precisas de API completa.", exemplo: "Open source, growing community.", url: "https://cal.com", modoDefault: "recomendada" },
+  { id: "calconic", nome: "Calconic", categoria: "Apps & Widgets", icone: "Calculator", descricao: "Calculadoras interativas para negócios de serviços. Preço antes de marcação.", quandoUsar: "Para negócios de serviços onde o preço precisa ser calculado antes.", exemplo: "Clínicas, advogados, consultoria, fitness.", url: "https://calconic.com", modoDefault: "alternativa" },
+  { id: "involve-me", nome: "Involve.me", categoria: "Apps & Widgets", icone: "FormInput", descricao: "Funis interativos: quizzes, forms, calculadoras, surveys, lead scoring com IA.", quandoUsar: "Para lead generation com funis interativos e scoring.", exemplo: "Agências, SaaS, e-commerce.", url: "https://involve.me", modoDefault: "alternativa" },
+  { id: "outgrow", nome: "Outgrow", categoria: "Apps & Widgets", icone: "TrendingUp", descricao: "Calculadoras, quizzes, polls, surveys, chatbots para lead generation.", quandoUsar: "Para lead gen com conteúdo interativo (quizzes, calculadoras).", exemplo: "B2B SaaS, marketing agencies.", url: "https://outgrow.co", modoDefault: "opcional" },
+  { id: "zipchat-ai", nome: "Zipchat AI / HelpJet", categoria: "Apps & Widgets", icone: "MessageCircle", descricao: "Chat widget AI-first. Agente IA treinado no teu conteúdo, escala para humano.", quandoUsar: "Para suporte AI-first. Reduz tickets e responde 24/7.", exemplo: "E-commerce, SaaS B2B, agencies.", url: "https://zipchat.ai", modoDefault: "recomendada" },
+  { id: "trustpilot-widget", nome: "Trustpilot Widget", categoria: "Apps & Widgets", icone: "Star", descricao: "Widget de reviews reais. Constroi confiança com reviews verificadas.", quandoUsar: "Para e-commerce e serviços. Social proof essential.", exemplo: "E-commerce, SaaS, restaurants.", url: "https://trustpilot.com", modoDefault: "recomendada" },
+  { id: "yotpo", nome: "Yotpo", categoria: "Apps & Widgets", icone: "Star", descricao: "Widgets de reviews customizáveis: carrosséis, popups, sidebars. Integra Google Shopping.", quandoUsar: "Para e-commerce com reviews rich content + integrations.", exemplo: "Shopify stores, e-commerce premium.", url: "https://yotpo.com", modoDefault: "alternativa" },
+  { id: "tripadvisor-widget", nome: "TripAdvisor Widget", categoria: "Apps & Widgets", icone: "Map", descricao: "Reviews reais de viajantes. Essencial para hotelaria/restaurantes/turismo.", quandoUsar: "Para hotelaria, restaurantes, turismo. Constroi confiança e gera reservas.", exemplo: "Hotéis, restaurantes, agências de viagens.", url: "https://tripadvisor.com", modoDefault: "recomendada" },
+  { id: "google-reviews-widget", nome: "Google Reviews Widget", categoria: "Apps & Widgets", icone: "Star", descricao: "Widget de reviews do Google. Mostra estrelas e comentários reais.", quandoUsar: "Para qualquer negócio local. Social proof do Google Maps.", exemplo: "Restaurantes, clínicas, serviços locais.", url: "https://elfsight.com/google-reviews-widget", modoDefault: "recomendada" },
+  { id: "social-feed-widget", nome: "Instagram/Social Feed Widget", categoria: "Apps & Widgets", icone: "Instagram", descricao: "Exibe conteúdo do Instagram ou redes sociais no site. Auto-update.", quandoUsar: "Para marcas com presença social forte. E-commerce, restaurantes, lifestyle.", exemplo: "Fashion brands, restaurants, influencers.", url: "https://elfsight.com/instagram-feed-widget", modoDefault: "alternativa" },
+  { id: "messenger-chat-widget", nome: "Facebook Messenger Chat", categoria: "Apps & Widgets", icone: "MessageCircle", descricao: "Chat via Facebook Messenger. Visitantes conversam sem sair do site.", quandoUsar: "Para negócios com presença Facebook. Gratuito.", exemplo: "E-commerce, small businesses, pages com Facebook ativo.", url: "https://developers.facebook.com/docs/messenger-platform", modoDefault: "opcional" },
+  { id: "whatsapp-widget", nome: "WhatsApp Widget", categoria: "Apps & Widgets", icone: "MessageCircle", descricao: "Botão flutuante WhatsApp. Visitantes contactam instantaneamente.", quandoUsar: "Para qualquer negócio em mercados onde WhatsApp domina (Europa, LATAM).", exemplo: "Restaurantes, clínicas, e-commerce, serviços.", url: "https://elfsight.com/whatsapp-chat-widget", modoDefault: "recomendada" },
+  { id: "callpage", nome: "CallPage / Limecall", categoria: "Apps & Widgets", icone: "Phone", descricao: "Callback instantâneo. Visitantes pedem call e são conectados em 25 segundos.", quandoUsar: "Para B2B, imobiliário, serviços onde uma call fecha negócio.", exemplo: "SaaS B2B, agências imobiliárias, consultoria.", url: "https://callpage.io", modoDefault: "alternativa" },
+  { id: "picreel", nome: "Picreel", categoria: "Apps & Widgets", icone: "Target", descricao: "Popups com 100+ templates otimizados para conversão. Exit-intent, 700+ integrações.", quandoUsar: "Para e-commerce e SaaS. Captura leads antes de sair.", exemplo: "E-commerce, SaaS landing pages.", url: "https://picreel.com", modoDefault: "alternativa" },
+  { id: "gleam", nome: "Gleam", categoria: "Apps & Widgets", icone: "Gift", descricao: "Widgets de concursos e giveaways. Aumenta alcance e engagement.", quandoUsar: "Para marcas que querem growth viral (contests, giveaways).", exemplo: "E-commerce, D2C brands, community apps.", url: "https://gleam.io", modoDefault: "opcional" },
+  { id: "wheel-fortune", nome: "Wheel of Fortune / Gamified Popup", categoria: "Apps & Widgets", icone: "Disc", descricao: "Popups gamificados. Elemento de jogo no signup aumenta conversão.", quandoUsar: "Para e-commerce. Lead collection com gamificação.", exemplo: "OptinMonster, Wheelio. E-commerce stores.", url: "https://optinmonster.com", modoDefault: "opcional" },
+  { id: "loyaltylion", nome: "LoyaltyLion / Smile.io", categoria: "Apps & Widgets", icone: "Award", descricao: "Plataforma de fidelização para e-commerce. Pontos, recompensas, VIP tiers.", quandoUsar: "Para e-commerce que quer reter clientes com programa de recompensas.", exemplo: "Shopify stores, D2C brands.", url: "https://loyaltylion.com", modoDefault: "alternativa" },
+  { id: "reviews-io", nome: "Reviews.io / Judge.me", categoria: "Apps & Widgets", icone: "Star", descricao: "Alternativas mais leves ao Yotpo. Reviews widgets para e-commerce.", quandoUsar: "Para e-commerce Shopify que precisa de reviews simples e baratas.", exemplo: "Shopify stores, small e-commerce.", url: "https://reviews.io", modoDefault: "alternativa" },
+  { id: "typeform", nome: "Typeform / Tally / Fillout", categoria: "Apps & Widgets", icone: "FormInput", descricao: "Forms interativos bonitos. Logic jumps, embeds, pagamentos.", quandoUsar: "Para surveys, quizzes, lead forms premium.", exemplo: "Typeform (premium), Tally (free), Fillout (no-code).", url: "https://typeform.com", modoDefault: "recomendada" },
+  { id: "menu-digital", nome: "Menu Digital (Elfsight)", categoria: "Apps & Widgets", icone: "UtensilsCrossed", descricao: "Apresenta pratos e bebidas do restaurante de forma clara e acessível.", quandoUsar: "Para restaurantes. Menu digital embed no site.", exemplo: "Restaurantes, cafés, bares, food trucks.", url: "https://elfsight.com/menu-widget", modoDefault: "recomendada" },
+  { id: "app-store-reviews", nome: "App Store Reviews Widget", categoria: "Apps & Widgets", icone: "Star", descricao: "Mostra reviews de App Store/Google Play. 400+ templates.", quandoUsar: "Para marcas com app mobile que querem mostrar reviews no site.", exemplo: "Mobile apps, SaaS with mobile.", url: "https://elfsight.com/app-store-reviews-widget", modoDefault: "opcional" },
 ];
 
 // ============================================================================
@@ -2093,15 +2120,36 @@ export function getSkillsForNicho(nicho: string): Skill[] {
 export function getIntegracoesForNicho(nicho: string): Integracao[] {
   const base = INTEGRACOES_CATALOG.filter((i) => i.modoDefault === "recomendada");
 
+  // Apps & Widgets + integrações adicionais por nicho
   const adicionais: Record<string, string[]> = {
-    "SaaS B2B": ["clerk"],
-    "E-commerce Moda": ["stripe", "cloudinary", "algolia"],
-    "E-commerce Geral": ["stripe", "cloudinary"],
-    "FinTech": ["stripe"],
+    "SaaS B2B": ["clerk", "calendly", "zipchat-ai", "typeform"],
+    "E-commerce Moda": ["stripe", "cloudinary", "algolia", "yotpo", "loyaltylion", "picreel", "social-feed-widget"],
+    "E-commerce Geral": ["stripe", "cloudinary", "reviews-io", "loyaltylion", "wheel-fortune"],
+    "FinTech": ["stripe", "sentry"],
+    "HealthTech": ["calendly", "cal-com", "zipchat-ai", "google-reviews-widget", "callpage"],
+    "EdTech": ["typeform", "calendly"],
+    "Imobiliário": ["mapbox", "callpage", "typeform", "whatsapp-widget"],
+    "Restaurantes / Food": ["menu-digital", "tripadvisor-widget", "google-reviews-widget", "whatsapp-widget", "social-feed-widget"],
+    "Viagens & Turismo": ["tripadvisor-widget", "google-reviews-widget", "calendly", "whatsapp-widget", "mapbox"],
+    "Agência Criativa": ["typeform", "calendly", "trustpilot-widget"],
+    "Portfólio Pessoal": ["trustpilot-widget", "social-feed-widget"],
+    "Blog / Media": ["algolia", "social-feed-widget", "disqus"],
+    "Gaming": ["app-store-reviews", "social-feed-widget"],
+    "Crypto / Web3": ["trustpilot-widget"],
+    "Fitness / Wellness": ["calendly", "cal-com", "google-reviews-widget", "whatsapp-widget"],
+    "Beleza / Cosmética": ["social-feed-widget", "google-reviews-widget", "calendly", "reviews-io"],
+    "Imobiliário de Luxo": ["callpage", "trustpilot-widget", "typeform", "mapbox"],
+    "Advocacia / Jurídico": ["calendly", "callpage", "typeform", "google-reviews-widget"],
+    "Consultoria": ["calendly", "callpage", "typeform", "trustpilot-widget"],
+    "ONG / Impacto Social": ["trustpilot-widget", "social-feed-widget", "typeform"],
   };
 
   const extraIds = adicionais[nicho] ?? [];
   const extras = INTEGRACOES_CATALOG.filter((i) => extraIds.includes(i.id));
 
-  return [...base, ...extras];
+  // Dedup
+  const seen = new Set(base.map((b) => b.id));
+  const uniqueExtras = extras.filter((e) => !seen.has(e.id));
+
+  return [...base, ...uniqueExtras];
 }
