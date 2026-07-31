@@ -80,6 +80,12 @@ export const SecoesInfo: SecaoInfo[] = [
   { id: "checkout", pt: "Checkout", en: "Checkout" },
   { id: "cart", pt: "Carrinho", en: "Cart" },
   { id: "product-detail", pt: "Detalhe de Produto", en: "Product Detail" },
+  // NOVAS
+  { id: "loja", pt: "Loja", en: "Shop" },
+  { id: "map", pt: "Mapa", en: "Map" },
+  { id: "calendar", pt: "Calendário", en: "Calendar" },
+  { id: "chat", pt: "Chat", en: "Chat" },
+  { id: "notifications", pt: "Notificações", en: "Notifications" },
 ];
 
 // Retro-compatibilidade — usa PT por defeito

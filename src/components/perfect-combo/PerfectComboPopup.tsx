@@ -36,6 +36,17 @@ export function PerfectComboPopup({
   const nichoDetetado = nicho || (briefing ? detectarNicho(briefing) : null);
   const comboRecomendada = nichoDetetado ? getComboForNicho(nichoDetetado) : null;
 
+  // NOVO: mostrar só recomendados (se nicho detetado, mostra a combo + 2 alternativas)
+  // Se não deteta nicho, mostra todas as 8
+  const combosAMostrar = nichoDetetado && comboRecomendada
+    ? combos.filter((c) => {
+        // Mostra a recomendada + 2 alternativas do mesmo estilo
+        if (c.id === comboRecomendada.id) return true;
+        // Alternativas: partilham pelo menos 1 estilo
+        return c.estilos.some((e) => comboRecomendada.estilos.includes(e));
+      }).slice(0, 3)
+    : combos;
+
   const handleSelect = async (combo: PerfectCombo) => {
     setSelectedCombo(combo);
     await Promise.all([
@@ -119,7 +130,7 @@ export function PerfectComboPopup({
           {/* Lista de combos (esquerda) */}
           <div className="overflow-y-auto border-r border-border p-2">
             <div className="space-y-1">
-              {combos.map((combo) => (
+              {combosAMostrar.map((combo) => (
                 <button
                   key={combo.id}
                   type="button"
