@@ -445,6 +445,161 @@ export const SKILLS_CATALOG: Skill[] = [
     url: "https://zod.dev",
     modoDefault: "recomendada",
   },
+  // NOVAS skills — mais cobertura
+  {
+    id: "tanstack-query",
+    nome: "TanStack Query",
+    categoria: "Backend",
+    icone: "Database",
+    descricao: "Data fetching + caching para React. Server state management.",
+    quandoUsar: "Para apps com data fetching complexo (dashboards, admin panels).",
+    exemplo: "Vercel dashboard, Linear, Cal.com admin.",
+    url: "https://tanstack.com/query",
+    modoDefault: "alternativa",
+  },
+  {
+    id: "zustand",
+    nome: "Zustand",
+    categoria: "UI",
+    icone: "Boxes",
+    descricao: "State management minimalista. Simples, sem boilerplate.",
+    quandoUsar: "Para client state complexo (carts, multi-step forms, dashboards).",
+    exemplo: "Vercel, Linear, shadcn/ui examples.",
+    url: "https://zustand-demo.pmnd.rs",
+    modoDefault: "alternativa",
+  },
+  {
+    id: "react-hook-form",
+    nome: "React Hook Form",
+    categoria: "UI",
+    icone: "FormInput",
+    descricao: "Forms performant para React. Validação com Zod, sem re-renders.",
+    quandoUsar: "SEMPRE para forms (login, registro, checkout, settings).",
+    exemplo: "Vercel, Linear, shadcn/ui form — todos usam RHF + Zod.",
+    url: "https://react-hook-form.com",
+    modoDefault: "recomendada",
+  },
+  {
+    id: "lucide-react",
+    nome: "Lucide Icons",
+    categoria: "UI",
+    icone: "Icon",
+    descricao: "1000+ ícones open source. Tree-shakeable, consistentes.",
+    quandoUsar: "SEMPRE. É o standard de ícones para shadcn/ui.",
+    exemplo: "Vercel, Linear, shadcn/ui — todos usam Lucide.",
+    url: "https://lucide.dev",
+    modoDefault: "recomendada",
+  },
+  {
+    id: "nuqs",
+    nome: "Nuqs (URL state)",
+    categoria: "UI",
+    icone: "Link",
+    descricao: "URL search params state management. Shareable, bookmarkable.",
+    quandoUsar: "Para filtros, tabs, pagination que devem ser partilháveis via URL.",
+    exemplo: "Vercel dashboard, Linear filters.",
+    url: "https://nuqs.47ng.com",
+    modoDefault: "opcional",
+  },
+  {
+    id: "drizzle-orm",
+    nome: "Drizzle ORM",
+    categoria: "Backend",
+    icone: "Database",
+    descricao: "ORM type-safe leve. SQL-like API, edge-compatible.",
+    quandoUsar: "Alternativa ao Prisma para edge/serverless (mais leve).",
+    exemplo: "Vercel recommends Drizzle for edge.",
+    url: "https://orm.drizzle.team",
+    modoDefault: "alternativa",
+  },
+  {
+    id: "turso",
+    nome: "Turso (SQLite edge)",
+    categoria: "Backend",
+    icone: "Database",
+    descricao: "SQLite distribuído na edge. Latência baixa global.",
+    quandoUsar: "Para apps que precisam de DB na edge (baixa latência).",
+    exemplo: "Vercel edge apps, Cloudflare Workers.",
+    url: "https://turso.tech",
+    modoDefault: "opcional",
+  },
+  {
+    id: "inngest",
+    nome: "Inngest",
+    categoria: "Backend",
+    icone: "Workflow",
+    descricao: "Background jobs, queues, cron. Serverless-first.",
+    quandoUsar: "Para jobs assíncronos (email, processing, webhooks).",
+    exemplo: "Cal.com, Resend, Vercel apps.",
+    url: "https://inngest.com",
+    modoDefault: "opcional",
+  },
+  {
+    id: "trigger-dev",
+    nome: "Trigger.dev",
+    categoria: "Backend",
+    icone: "Workflow",
+    descricao: "Background jobs type-safe. Alternative to Inngest.",
+    quandoUsar: "Para jobs complexos com retries, schedules.",
+    exemplo: "YC startups, indie hackers.",
+    url: "https://trigger.dev",
+    modoDefault: "opcional",
+  },
+  {
+    id: "resend-react-email",
+    nome: "React Email + Resend",
+    categoria: "Backend",
+    icone: "Mail",
+    descricao: "Escreve emails com React. Preview, templates, DKIM.",
+    quandoUsar: "Para emails transacionais (welcome, reset, receipts).",
+    exemplo: "Vercel, Linear, Cal.com.",
+    url: "https://react.email",
+    modoDefault: "recomendada",
+  },
+  {
+    id: "shadcn-table",
+    nome: "shadcn/ui Table",
+    categoria: "UI",
+    icone: "Table",
+    descricao: "Data table com sorting, filtering, pagination. Built on TanStack Table.",
+    quandoUsar: "Para admin panels, dashboards, listas de dados.",
+    exemplo: "Vercel, Linear admin, shadcn/ui examples.",
+    url: "https://ui.shadcn.com/docs/components/data-table",
+    modoDefault: "alternativa",
+  },
+  {
+    id: "embla-carousel",
+    nome: "Embla Carousel",
+    categoria: "UI",
+    icone: "Image",
+    descricao: "Carousel lightweight e acessível. Usado pelo shadcn/ui.",
+    quandoUsar: "Para carouséis, sliders, image galleries.",
+    exemplo: "shadcn/ui carousel component.",
+    url: "https://embla-carousel.vercel.app",
+    modoDefault: "opcional",
+  },
+  {
+    id: "vaul",
+    nome: "Vaul (Drawer)",
+    categoria: "UI",
+    icone: "PanelBottom",
+    descricao: "Drawer component para mobile. Bottom sheet animado.",
+    quandoUsar: "Para filtros e navegação mobile (bottom sheet).",
+    exemplo: "shadcn/ui drawer, iOS apps.",
+    url: "https://vaul.emilkowal.dev",
+    modoDefault: "opcional",
+  },
+  {
+    id: "react-resizable-panels",
+    nome: "Resizable Panels",
+    categoria: "UI",
+    icone: "Columns",
+    descricao: "Painéis redimensionáveis. Split screen, IDE-like layouts.",
+    quandoUsar: "Para IDEs, dashboards, editors com painéis.",
+    exemplo: "Vercel dashboard, Linear, Figma-like UIs.",
+    url: "https://react-resizable-panels.vercel.app",
+    modoDefault: "opcional",
+  },
 ];
 
 // ============================================================================
@@ -453,7 +608,7 @@ export const SKILLS_CATALOG: Skill[] = [
 export interface Integracao {
   id: string;
   nome: string;
-  categoria: "Pagamentos" | "Email" | "Analytics" | "Auth" | "Storage" | "Search" | "Comunicação" | "Outro";
+  categoria: "Pagamentos" | "Email" | "Analytics" | "Auth" | "Storage" | "Search" | "Comunicação" | "CMS" | "Cloud" | "Monitoring" | "Marketing" | "Maps" | "Outro";
   icone: string;
   descricao: string;
   quandoUsar: string;
@@ -494,6 +649,39 @@ export const INTEGRACOES_CATALOG: Integracao[] = [
   // Comunicação
   { id: "livechat", nome: "LiveChat / Intercom", categoria: "Comunicação", icone: "MessageCircle", descricao: "Chat ao vivo para suporte. Bots, tickets, helpdesk.", quandoUsar: "Para SaaS/e-commerce que precisa de suporte ao cliente.", exemplo: "SaaS B2B, e-commerce premium.", url: "https://intercom.com", modoDefault: "opcional" },
   { id: "pusher", nome: "Pusher / Ably", categoria: "Comunicação", icone: "Radio", descricao: "Realtime websockets. Chat, live updates, collaboration.", quandoUsar: "Para features realtime (chat, cursors, live data).", exemplo: "Figma, Linear, Google Docs.", url: "https://pusher.com", modoDefault: "opcional" },
+
+  // ── CMS ──
+  { id: "sanity", nome: "Sanity", categoria: "CMS", icone: "Database", descricao: "CMS headless com real-time editor. Structured content, GROQ.", quandoUsar: "Para blogs, portfolios, sites com conteúdo dinâmico.", exemplo: "Linear blog, Vercel, Figma Community.", url: "https://sanity.io", modoDefault: "recomendada" },
+  { id: "contentful", nome: "Contentful", categoria: "CMS", icone: "Database", descricao: "CMS headless enterprise. Multi-language, workflows.", quandoUsar: "Para enterprise, grandes equipas de conteúdo.", exemplo: "Spotify, Nike, Shopify enterprise.", url: "https://contentful.com", modoDefault: "alternativa" },
+  { id: "strapi", nome: "Strapi", categoria: "CMS", icone: "Database", descricao: "CMS headless open source. Self-hosted, REST + GraphQL.", quandoUsar: "Para self-hosted, controlo total, custo zero.", exemplo: "Indie hackers, open source projects.", url: "https://strapi.io", modoDefault: "alternativa" },
+  { id: "payload-cms", nome: "Payload CMS", categoria: "CMS", icone: "Database", descricao: "CMS headless Node.js + MongoDB/Postgres. Type-safe.", quandoUsar: "Para Next.js com CMS integrado, type-safe.", exemplo: "Vercel recommends Payload.", url: "https://payloadcms.com", modoDefault: "alternativa" },
+  { id: "builder-io", nome: "Builder.io", categoria: "CMS", icone: "Boxes", descricao: "Visual page builder + headless CMS. Drag-drop editing.", quandoUsar: "Para marketing teams que querem editar visualmente.", exemplo: "Vercel, Hugo, large e-commerce.", url: "https://builder.io", modoDefault: "opcional" },
+  { id: "wordpress-headless", nome: "WordPress Headless", categoria: "CMS", icone: "Database", descricao: "WP REST API + Next.js frontend. Backend familiar.", quandoUsar: "Para equipas que já conhecem WordPress.", exemplo: "News sites, blogs grandes.", url: "https://wordpress.org", modoDefault: "opcional" },
+
+  // ── Cloud ──
+  { id: "cloudflare", nome: "Cloudflare", categoria: "Cloud", icone: "Cloud", descricao: "CDN + edge computing + DNS + security. R2 storage, Workers.", quandoUsar: "Para CDN, edge functions, DDoS protection.", exemplo: "Discord, 1Password, Shopify.", url: "https://cloudflare.com", modoDefault: "recomendada" },
+  { id: "aws", nome: "AWS", categoria: "Cloud", icone: "Cloud", descricao: "Amazon Web Services. EC2, S3, Lambda, RDS, full stack.", quandoUsar: "Para enterprise, infra complexa, multi-service.", exemplo: "Netflix, Airbnb, Slack.", url: "https://aws.amazon.com", modoDefault: "alternativa" },
+  { id: "gcp", nome: "Google Cloud", categoria: "Cloud", icone: "Cloud", descricao: "Google Cloud Platform. Compute, storage, AI/ML, BigQuery.", quandoUsar: "Para data-heavy, AI/ML, BigQuery analytics.", exemplo: "Spotify, PayPal, Twitter.", url: "https://cloud.google.com", modoDefault: "opcional" },
+  { id: "fly-io", nome: "Fly.io", categoria: "Cloud", icone: "Cloud", descricao: "Deploy apps globalmente perto dos utilizadores. Edge-first.", quandoUsar: "Para apps que precisam de baixa latência global.", exemplo: "Indie hackers, Phoenix/Elixir apps.", url: "https://fly.io", modoDefault: "opcional" },
+  { id: "railway", nome: "Railway", categoria: "Cloud", icone: "Train", descricao: "Deploy backend apps sem configuração. DB + app em 1 click.", quandoUsar: "Para MVPs rápidos, protótipos backend.", exemplo: "YC startups, indie hackers.", url: "https://railway.app", modoDefault: "opcional" },
+  { id: "digitalocean", nome: "DigitalOcean", categoria: "Cloud", icone: "Cloud", descricao: "VPS simples e barato. Droplets, App Platform, Spaces.", quandoUsar: "Para self-hosted, orçamento apertado.", exemplo: "Indie hackers, small businesses.", url: "https://digitalocean.com", modoDefault: "opcional" },
+
+  // ── Monitoring ──
+  { id: "sentry-integration", nome: "Sentry (integration)", categoria: "Monitoring", icone: "AlertCircle", descricao: "Error tracking + performance monitoring. Session replay.", quandoUsar: "Production. Essencial para monitorar erros.", exemplo: "Vercel, Linear, Discord.", url: "https://sentry.io", modoDefault: "recomendada" },
+  { id: "logrocket", nome: "LogRocket", categoria: "Monitoring", icone: "Eye", descricao: "Session replay + console logs. Vê o que o user vê.", quandoUsar: "Para debug de issues em produção com contexto visual.", exemplo: "SaaS B2B, e-commerce.", url: "https://logrocket.com", modoDefault: "alternativa" },
+  { id: "datadog", nome: "Datadog", categoria: "Monitoring", icone: "BarChart3", descricao: "Full-stack monitoring. Logs, metrics, traces, APM.", quandoUsar: "Para enterprise, infra complexa.", exemplo: "Airbnb, Samsung, 23andMe.", url: "https://datadoghq.com", modoDefault: "opcional" },
+  { id: "better-stack", nome: "Better Stack", categoria: "Monitoring", icone: "Bell", descricao: "Uptime monitoring + logging + status pages.", quandoUsar: "Para monitoring simples e status pages.", exemplo: "Indie hackers, small teams.", url: "https://betterstack.com", modoDefault: "alternativa" },
+
+  // ── Marketing ──
+  { id: "mailchimp", nome: "Mailchimp", categoria: "Marketing", icone: "Mail", descricao: "Email marketing + automation + landing pages.", quandoUsar: "Para newsletters, campaigns, marketing automation.", exemplo: "Small businesses, e-commerce.", url: "https://mailchimp.com", modoDefault: "alternativa" },
+  { id: "convertkit", nome: "ConvertKit", categoria: "Marketing", icone: "Mail", descricao: "Email marketing para creators. Newsletters, courses.", quandoUsar: "Para creators, bloggers, course sellers.", exemplo: "Indie hackers, YouTubers.", url: "https://convertkit.com", modoDefault: "opcional" },
+  { id: "hubspot", nome: "HubSpot", categoria: "Marketing", icone: "Briefcase", descricao: "CRM + marketing + sales + service. All-in-one.", quandoUsar: "Para SaaS B2B que precisa de CRM + marketing.", exemplo: "B2B SaaS, enterprise.", url: "https://hubspot.com", modoDefault: "opcional" },
+  { id: "segment", nome: "Segment", categoria: "Marketing", icone: "Split", descricao: "Customer data platform. Um SDK → múltiplos destinos.", quandoUsar: "Para integrar múltiplos analytics/marketing tools.", exemplo: "Vercel, Linear, enterprise.", url: "https://segment.com", modoDefault: "opcional" },
+
+  // ── Maps ──
+  { id: "mapbox", nome: "Mapbox", categoria: "Maps", icone: "Map", descricao: "Maps customizáveis, geocoding, directions. Developer-first.", quandoUsar: "Para mapas interativos, delivery, real estate.", exemplo: "Strava, Snapchat, Shopify.", url: "https://mapbox.com", modoDefault: "recomendada" },
+  { id: "google-maps", nome: "Google Maps API", categoria: "Maps", icone: "Map", descricao: "Maps, places, routes, street view. Standard da indústria.", quandoUsar: "Para maps, location search, directions.", exemplo: "Uber, Airbnb, food delivery.", url: "https://maps.google.com", modoDefault: "alternativa" },
+  { id: "leaflet", nome: "Leaflet", categoria: "Maps", icone: "Map", descricao: "Maps open source, leve. Sem API key necessário.", quandoUsar: "Para maps simples, self-hosted, sem custo.", exemplo: "Open source projects, gov sites.", url: "https://leafletjs.com", modoDefault: "opcional" },
 ];
 
 // ============================================================================

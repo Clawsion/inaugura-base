@@ -50,6 +50,7 @@ import {
 import { PaletteInput } from "./PaletteInput";
 import { TypographyInput } from "./TypographyInput";
 import { LayoutSelector } from "./LayoutSelector";
+import { DesignVisual } from "./DesignVisual";
 import { SkillsSelector } from "@/components/skills/SkillsSelector";
 import { IntegrationsSection } from "@/components/skills/IntegrationsSection";
 import { FontPlayground, type FontSlotState } from "@/components/fonts/FontPlayground";
@@ -232,6 +233,16 @@ export function BriefingForm({
           </Select>
         </motion.div>
       </div>
+
+      {/* 2.5 Design Visual — estética, patterns, textures, effects (modos) */}
+      <motion.div variants={fadeUp} custom={2.5}>
+        <DesignVisual
+          briefing={value.briefing}
+          nicho={value.nicho}
+          selectedOptions={value.selectedDesignVisual ?? []}
+          onChange={(selectedDesignVisual) => onChange({ selectedDesignVisual })}
+        />
+      </motion.div>
 
       {/* 3. Secções (multi-select tags) — com toggle PT/EN + botão Recomendar */}
       <motion.div variants={fadeUp} custom={3} className="space-y-2">

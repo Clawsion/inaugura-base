@@ -132,9 +132,10 @@ export const FormSchema = z.object({
   incluirRoadmap: z.boolean(),
   nivel: z.enum(["mvp", "production"]),
   idioma: z.enum(["pt", "en"]),
-  // NOVOS: skills e integrações selecionadas
+  // NOVOS: skills, integrações e design visual selecionados
   selectedSkills: z.array(z.string()).default([]),
   selectedIntegrations: z.array(z.string()).default([]),
+  selectedDesignVisual: z.array(z.string()).default([]),
 });
 
 export type FormValues = z.infer<typeof FormSchema>;

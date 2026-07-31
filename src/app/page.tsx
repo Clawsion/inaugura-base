@@ -46,6 +46,7 @@ const FORM_INIT: FormValues = {
   idioma: "pt",
   selectedSkills: [],
   selectedIntegrations: [],
+  selectedDesignVisual: [],
 };
 
 export default function Home() {
