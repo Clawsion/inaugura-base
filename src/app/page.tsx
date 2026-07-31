@@ -12,6 +12,75 @@ import { Logo } from "@/components/logo";
 import { ProjectManager } from "@/components/project-manager";
 import { generateProject, type GenerateResult } from "@/app/actions/generate";
 import type { FormValues } from "@/lib/schemas";
+
+/**
+ * Chama a API route /api/generate com STREAMING.
+ * Isto previne "NetworkError" quando o gateway corta conexões idle após ~60s.
+ * Os keepalive chunks mantêm a conexão ativa enquanto o GLM-5.2 processa.
+ */
+async function callGenerateStreaming(form: FormValues): Promise<GenerateResult> {
+  const response = await fetch("/api/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(form),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  }
+
+  // Lê o stream NDJSON linha a linha
+  const reader = response.body?.getReader();
+  if (!reader) throw new Error("Stream não disponível.");
+
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let lastResult: GenerateResult | null = null;
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+
+    // Processa linhas completas (separadas por \n)
+    const lines = buffer.split("\n");
+    buffer = lines.pop() ?? ""; // mantém linha incompleta no buffer
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith(":")) continue; // skip keepalive/empty
+
+      try {
+        const data = JSON.parse(trimmed);
+        // Se tem campo "ok", é o resultado final
+        if (data.ok !== undefined) {
+          lastResult = data as GenerateResult;
+        }
+      } catch {
+        // linha não-JSON (keepalive), ignora
+      }
+    }
+  }
+
+  // Processa qualquer buffer restante
+  if (buffer.trim() && !buffer.trim().startsWith(":")) {
+    try {
+      const data = JSON.parse(buffer.trim());
+      if (data.ok !== undefined) {
+        lastResult = data as GenerateResult;
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  if (!lastResult) {
+    throw new Error("Stream terminou sem resultado.");
+  }
+
+  return lastResult;
+}
 import { getSkinById } from "@/lib/skins";
 import { toast } from "sonner";
 import { Github, AlertCircle, RotateCcw } from "lucide-react";
@@ -170,7 +239,7 @@ export default function Home() {
     setResult(null);
     setShowForm(false);
     try {
-      const r = await generateProject(form);
+      const r = await callGenerateStreaming(form);
       setResult(r);
       if (!r.ok) {
         toast.error("Falha na geração. Vê os detalhes abaixo.");
@@ -199,7 +268,7 @@ export default function Home() {
     if (!result?.ok) return;
     setRegenerating(true);
     try {
-      const r = await generateProject(form);
+      const r = await callGenerateStreaming(form);
       if (r.ok) {
         setResult(r);
         toast.success("Novas alternativas geradas!");
