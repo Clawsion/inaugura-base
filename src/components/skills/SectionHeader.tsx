@@ -1,19 +1,22 @@
 "use client";
 
 // ============================================================================
-// SectionHeader — header principal com R/A/O/M + Auto + Limpar
+// SectionHeader — header principal com 5 botões toggle de modo
 // ============================================================================
-// Os botões R/A/O/M aplicam o modo a TODAS as categorias dessa secção.
+// Botões: Recomendada | Alternativa | Opcional | Manual | Off
+// Cada botão aplica as skills adequadas para esse modo + nicho detetado.
+// O botão ativo fica destacado com a sua cor.
 // ============================================================================
 
 import { cn } from "@/lib/utils";
 import type { SkillMode } from "@/lib/skills-catalog";
 
-const QUICK_SELECT: { mode: SkillMode; label: string; fullLabel: string; color: string; bg: string }[] = [
-  { mode: "recomendada", label: "R", fullLabel: "Recomendada", color: "text-emerald-500", bg: "border-emerald-500/40 hover:bg-emerald-500/10" },
-  { mode: "alternativa", label: "A", fullLabel: "Alternativa", color: "text-blue-500", bg: "border-blue-500/40 hover:bg-blue-500/10" },
-  { mode: "opcional", label: "O", fullLabel: "Opcional", color: "text-amber-500", bg: "border-amber-500/40 hover:bg-amber-500/10" },
-  { mode: "manual", label: "M", fullLabel: "Manual", color: "text-fuchsia-500", bg: "border-fuchsia-500/40 hover:bg-fuchsia-500/10" },
+const MODE_BUTTONS: { mode: SkillMode; label: string; color: string; activeBg: string }[] = [
+  { mode: "recomendada", label: "Recomendada", color: "text-emerald-500", activeBg: "border-emerald-500 bg-emerald-500/10 text-emerald-500" },
+  { mode: "alternativa", label: "Alternativa", color: "text-blue-500", activeBg: "border-blue-500 bg-blue-500/10 text-blue-500" },
+  { mode: "opcional", label: "Opcional", color: "text-amber-500", activeBg: "border-amber-500 bg-amber-500/10 text-amber-500" },
+  { mode: "manual", label: "Manual", color: "text-fuchsia-500", activeBg: "border-fuchsia-500 bg-fuchsia-500/10 text-fuchsia-500" },
+  { mode: "off", label: "Off", color: "text-zinc-400", activeBg: "border-zinc-500 bg-zinc-500/10 text-zinc-300" },
 ];
 
 interface SectionHeaderProps {
@@ -23,71 +26,60 @@ interface SectionHeaderProps {
   activeCount: number;
   totalCount: number;
   nichoDetetado: string | null;
-  onSetAllMode: (mode: SkillMode) => void;
-  onAuto: () => void;
-  onClear: () => void;
+  activeMode: SkillMode | null;
+  onModeSelect: (mode: SkillMode) => void;
 }
 
 export function SectionHeader({
   title, iconName, description, activeCount, totalCount,
-  nichoDetetado, onSetAllMode, onAuto, onClear,
+  nichoDetetado, activeMode, onModeSelect,
 }: SectionHeaderProps) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2">
-      <div>
-        <h3 className="flex items-center gap-1.5 text-sm font-semibold">
-          {iconName}
-          {title}
-        </h3>
-        <p className="text-[11px] text-muted-foreground">{description}</p>
-      </div>
-
-      <div className="flex items-center gap-1.5">
-        {/* Contador */}
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="flex items-center gap-1.5 text-sm font-semibold">
+            {iconName}
+            {title}
+          </h3>
+          <p className="text-[11px] text-muted-foreground">{description}</p>
+        </div>
         <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
           {activeCount} ativas
         </span>
+      </div>
 
-        {/* R/A/O/M — botões principais que aplicam a TODAS as categorias */}
-        <div className="flex gap-0.5 rounded-md border border-border bg-card/50 p-0.5">
-          {QUICK_SELECT.map((qs) => (
+      {/* 5 botões toggle de modo */}
+      <div className="flex flex-wrap gap-1.5">
+        {MODE_BUTTONS.map((btn) => {
+          const isActive = activeMode === btn.mode;
+          return (
             <button
-              key={qs.mode}
+              key={btn.mode}
               type="button"
-              onClick={() => onSetAllMode(qs.mode)}
+              onClick={() => onModeSelect(btn.mode)}
               className={cn(
-                "flex h-5 items-center justify-center rounded px-1.5 text-[9px] font-bold transition-all",
-                qs.color,
-                qs.bg,
-                "border border-transparent"
+                "flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-bold transition-all active:scale-95",
+                isActive
+                  ? btn.activeBg
+                  : "border-border bg-card/40 text-muted-foreground hover:text-foreground"
               )}
-              title={`Aplicar "${qs.fullLabel}" a todas as categorias`}
+              title={
+                btn.mode === "recomendada" ? `Aplica as skills essenciais para ${nichoDetetado ?? "o nicho"}` :
+                btn.mode === "alternativa" ? "Aplica boas alternativas" :
+                btn.mode === "opcional" ? "Aplica skills nice-to-have" :
+                btn.mode === "manual" ? "Limpa tudo para escolheres manualmente" :
+                "Desativa tudo"
+              }
             >
-              {qs.label}
+              <span className={cn(
+                "h-2 w-2 rounded-full",
+                isActive ? btn.color.replace("text-", "bg-") : "bg-zinc-500"
+              )} />
+              {btn.label}
             </button>
-          ))}
-        </div>
-
-        {/* Auto (recomendado por nicho) */}
-        <button
-          type="button"
-          onClick={onAuto}
-          disabled={!nichoDetetado}
-          className="rounded-md border border-primary/40 px-2 py-0.5 text-[9px] font-medium text-primary hover:bg-primary/10 disabled:opacity-40"
-          title="Aplica automaticamente as recomendações para o nicho detetado"
-        >
-          Auto
-        </button>
-
-        {/* Limpar */}
-        <button
-          type="button"
-          onClick={onClear}
-          className="rounded-md border border-border px-2 py-0.5 text-[9px] font-medium text-muted-foreground hover:text-foreground"
-          title="Desativa todos"
-        >
-          Limpar
-        </button>
+          );
+        })}
       </div>
     </div>
   );

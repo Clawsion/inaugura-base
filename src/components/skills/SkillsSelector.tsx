@@ -6,8 +6,8 @@ import { X, Lightbulb } from "lucide-react";
 import { SKILLS_CATALOG, getSkillsForNicho, type Skill, type SkillMode } from "@/lib/skills-catalog";
 import { detectarNicho } from "@/lib/perfect-combo";
 import { cn } from "@/lib/utils";
-import { SectionHeader } from "@/components/skills/SectionHeader";
 import { CategoryAccordion } from "./CategoryAccordion";
+import { SectionHeader } from "./SectionHeader";
 
 interface SkillsSelectorProps {
   briefing: string;
@@ -34,27 +34,15 @@ export function SkillsSelector({ briefing, nicho, selectedSkills, onChange }: Sk
   const [hovered, setHovered] = useState<string | null>(null);
   const [pinned, setPinned] = useState<string | null>(null);
   const [expandedCats, setExpandedCats] = useState<Set<string>>(new Set());
+  const [activeMode, setActiveMode] = useState<SkillMode | null>(null);
   const prevNicho = useRef<string | null>(null);
   const nichoDetetado = nicho || (briefing ? detectarNicho(briefing) : null);
 
+  // Auto-aplicar quando nicho é detetado
   useEffect(() => {
     if (!nichoDetetado || prevNicho.current === nichoDetetado) return;
     prevNicho.current = nichoDetetado;
-    const recommended = getSkillsForNicho(nichoDetetado);
-    const newModes: Record<string, SkillMode> = {};
-    for (const skill of SKILLS_CATALOG) {
-      const isRec = recommended.some((r) => r.id === skill.id);
-      if (isRec) newModes[skill.id] = skill.modoDefault === "alternativa" ? "alternativa" : "recomendada";
-      else if (skill.modoDefault === "alternativa") newModes[skill.id] = "alternativa";
-      else if (skill.modoDefault === "opcional") newModes[skill.id] = "opcional";
-      else newModes[skill.id] = "off";
-    }
-    setModes(newModes);
-    const cats = new Set<string>();
-    for (const s of SKILLS_CATALOG) { if (newModes[s.id] === "recomendada") cats.add(s.categoria); }
-    setExpandedCats(cats);
-    const activeIds = Object.entries(newModes).filter(([, m]) => m !== "off").map(([k]) => k);
-    onChange(activeIds);
+    applyMode("recomendada");
   }, [nichoDetetado]);
 
   const syncOnChange = (newModes: Record<string, SkillMode>) => {
@@ -62,7 +50,45 @@ export function SkillsSelector({ briefing, nicho, selectedSkills, onChange }: Sk
     onChange(activeIds);
   };
 
+  // Aplicar um modo a todos os items (respeitando locks)
+  const applyMode = (mode: SkillMode) => {
+    setActiveMode(mode);
+    const recommended = nichoDetetado ? getSkillsForNicho(nichoDetetado) : [];
+    const recIds = new Set(recommended.map((r) => r.id));
+
+    const newModes: Record<string, SkillMode> = {};
+    for (const skill of SKILLS_CATALOG) {
+      if (lockedCats.has(skill.categoria)) {
+        newModes[skill.id] = modes[skill.id] ?? "off";
+        continue;
+      }
+      if (mode === "off") {
+        newModes[skill.id] = "off";
+      } else if (mode === "manual") {
+        // Manual = tudo off, utilizador escolhe
+        newModes[skill.id] = "off";
+      } else if (mode === "recomendada") {
+        // Recomendada = apenas as essenciais do nicho + as que são sempre recomendadas
+        newModes[skill.id] = recIds.has(skill.id) || skill.modoDefault === "recomendada" ? "recomendada" : "off";
+      } else if (mode === "alternativa") {
+        // Alternativa = as alternativas + as recomendadas (conjunto maior)
+        newModes[skill.id] = (skill.modoDefault === "alternativa" || skill.modoDefault === "recomendada") ? "alternativa" : "off";
+      } else if (mode === "opcional") {
+        // Opcional = tudo que não é off (recomendadas + alternativas + opcionais)
+        newModes[skill.id] = skill.modoDefault !== "off" ? "opcional" : "off";
+      }
+    }
+    setModes(newModes);
+    syncOnChange(newModes);
+
+    // Auto-expande categorias que têm itens ativos
+    const cats = new Set<string>();
+    for (const s of SKILLS_CATALOG) { if (newModes[s.id] !== "off") cats.add(s.categoria); }
+    setExpandedCats(cats);
+  };
+
   const toggleMode = (id: string) => {
+    setActiveMode(null); // modo manual quando utilizador toggles individual
     setModes((prev) => {
       const current = prev[id] ?? "off";
       const cycle: SkillMode[] = ["off", "recomendada", "alternativa", "opcional", "manual"];
@@ -72,36 +98,12 @@ export function SkillsSelector({ briefing, nicho, selectedSkills, onChange }: Sk
     });
   };
 
-
   const toggleLockCat = (cat: string) => {
     setLockedCats((prev) => { const n = new Set(prev); if (n.has(cat)) n.delete(cat); else n.add(cat); return n; });
   };
 
   const toggleCat = (cat: string) => {
     setExpandedCats((prev) => { const n = new Set(prev); if (n.has(cat)) n.delete(cat); else n.add(cat); return n; });
-  };
-
-  const setAllModeGlobal = (mode: SkillMode) => {
-    const c: Record<string, SkillMode> = {};
-    for (const item of SKILLS_CATALOG) {
-      // Respect locked categories
-      if (lockedCats.has(item.categoria)) {
-        c[item.id] = modes[item.id] ?? "off";
-      } else {
-        c[item.id] = mode;
-      }
-    }
-    setModes(c);
-    syncOnChange(c);
-  };
-
-  const setAllOff = () => { const c: Record<string, SkillMode> = {}; for (const s of SKILLS_CATALOG) c[s.id] = "off"; setModes(c); onChange([]); };
-  const setAllRecommended = () => {
-    if (!nichoDetetado) return;
-    const rec = getSkillsForNicho(nichoDetetado);
-    const c: Record<string, SkillMode> = {};
-    for (const s of SKILLS_CATALOG) c[s.id] = rec.some((r) => r.id === s.id) ? "recomendada" : "off";
-    setModes(c); syncOnChange(c);
   };
 
   const activeInfo = pinned ?? hovered;
@@ -114,21 +116,13 @@ export function SkillsSelector({ briefing, nicho, selectedSkills, onChange }: Sk
       <SectionHeader
         title="Skills & Ferramentas"
         iconName={<Lightbulb className="h-3.5 w-3.5 text-primary" />}
-        description="Clica numa categoria para expandir. R/A/O/M no header aplica a todas. Lock = bloqueia categoria."
+        description="Carrega num modo para aplicar automaticamente. Lock = bloqueia categoria."
         activeCount={activeCount}
         totalCount={SKILLS_CATALOG.length}
         nichoDetetado={nichoDetetado}
-        onSetAllMode={setAllModeGlobal}
-        onAuto={setAllRecommended}
-        onClear={setAllOff}
+        activeMode={activeMode}
+        onModeSelect={applyMode}
       />
-      <div className="flex flex-wrap gap-1.5">
-        {(["recomendada", "alternativa", "opcional", "manual", "off"] as SkillMode[]).map((m) => (
-          <div key={m} className={cn("flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-medium", MODE_COLORS[m])}>
-            <span className="h-1.5 w-1.5 rounded-full bg-current" />{MODE_LABELS[m]}
-          </div>
-        ))}
-      </div>
       <div className="space-y-1">
         {Object.entries(byCategory).map(([cat, skills]) => (
           <CategoryAccordion

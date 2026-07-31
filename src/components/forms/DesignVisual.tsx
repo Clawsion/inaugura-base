@@ -6,8 +6,8 @@ import { X, Palette } from "lucide-react";
 import { DESIGN_VISUAL_CATALOG, getDesignVisualForNicho, type DesignVisualOption, type SkillMode } from "@/lib/design-visual-catalog";
 import { detectarNicho } from "@/lib/perfect-combo";
 import { cn } from "@/lib/utils";
-import { SectionHeader } from "@/components/skills/SectionHeader";
 import { CategoryAccordion } from "@/components/skills/CategoryAccordion";
+import { SectionHeader } from "@/components/skills/SectionHeader";
 
 interface DesignVisualProps {
   briefing: string;
@@ -34,27 +34,14 @@ export function DesignVisual({ briefing, nicho, selectedOptions, onChange }: Des
   const [hovered, setHovered] = useState<string | null>(null);
   const [pinned, setPinned] = useState<string | null>(null);
   const [expandedCats, setExpandedCats] = useState<Set<string>>(new Set());
+  const [activeMode, setActiveMode] = useState<SkillMode | null>(null);
   const prevNicho = useRef<string | null>(null);
   const nichoDetetado = nicho || (briefing ? detectarNicho(briefing) : null);
 
   useEffect(() => {
     if (!nichoDetetado || prevNicho.current === nichoDetetado) return;
     prevNicho.current = nichoDetetado;
-    const recommended = getDesignVisualForNicho(nichoDetetado);
-    const newModes: Record<string, SkillMode> = {};
-    for (const opt of DESIGN_VISUAL_CATALOG) {
-      const isRec = recommended.some((r) => r.id === opt.id);
-      if (isRec) newModes[opt.id] = "recomendada";
-      else if (opt.modoDefault === "alternativa") newModes[opt.id] = "alternativa";
-      else if (opt.modoDefault === "opcional") newModes[opt.id] = "opcional";
-      else newModes[opt.id] = "off";
-    }
-    setModes(newModes);
-    const cats = new Set<string>();
-    for (const o of DESIGN_VISUAL_CATALOG) { if (newModes[o.id] === "recomendada") cats.add(o.categoria); }
-    setExpandedCats(cats);
-    const activeIds = Object.entries(newModes).filter(([, m]) => m !== "off").map(([k]) => k);
-    onChange(activeIds);
+    applyMode("recomendada");
   }, [nichoDetetado]);
 
   const syncOnChange = (newModes: Record<string, SkillMode>) => {
@@ -62,7 +49,36 @@ export function DesignVisual({ briefing, nicho, selectedOptions, onChange }: Des
     onChange(activeIds);
   };
 
+  const applyMode = (mode: SkillMode) => {
+    setActiveMode(mode);
+    const recommended = nichoDetetado ? getDesignVisualForNicho(nichoDetetado) : [];
+    const recIds = new Set(recommended.map((r) => r.id));
+
+    const newModes: Record<string, SkillMode> = {};
+    for (const opt of DESIGN_VISUAL_CATALOG) {
+      if (lockedCats.has(opt.categoria)) {
+        newModes[opt.id] = modes[opt.id] ?? "off";
+        continue;
+      }
+      if (mode === "off" || mode === "manual") {
+        newModes[opt.id] = "off";
+      } else if (mode === "recomendada") {
+        newModes[opt.id] = recIds.has(opt.id) || opt.modoDefault === "recomendada" ? "recomendada" : "off";
+      } else if (mode === "alternativa") {
+        newModes[opt.id] = (opt.modoDefault === "alternativa" || opt.modoDefault === "recomendada") ? "alternativa" : "off";
+      } else if (mode === "opcional") {
+        newModes[opt.id] = opt.modoDefault !== "off" ? "opcional" : "off";
+      }
+    }
+    setModes(newModes);
+    syncOnChange(newModes);
+    const cats = new Set<string>();
+    for (const o of DESIGN_VISUAL_CATALOG) { if (newModes[o.id] !== "off") cats.add(o.categoria); }
+    setExpandedCats(cats);
+  };
+
   const toggleMode = (id: string) => {
+    setActiveMode(null);
     setModes((prev) => {
       const current = prev[id] ?? "off";
       const cycle: SkillMode[] = ["off", "recomendada", "alternativa", "opcional", "manual"];
@@ -72,36 +88,12 @@ export function DesignVisual({ briefing, nicho, selectedOptions, onChange }: Des
     });
   };
 
-
   const toggleLockCat = (cat: string) => {
     setLockedCats((prev) => { const n = new Set(prev); if (n.has(cat)) n.delete(cat); else n.add(cat); return n; });
   };
 
   const toggleCat = (cat: string) => {
     setExpandedCats((prev) => { const n = new Set(prev); if (n.has(cat)) n.delete(cat); else n.add(cat); return n; });
-  };
-
-  const setAllModeGlobal = (mode: SkillMode) => {
-    const c: Record<string, SkillMode> = {};
-    for (const item of DESIGN_VISUAL_CATALOG) {
-      // Respect locked categories
-      if (lockedCats.has(item.categoria)) {
-        c[item.id] = modes[item.id] ?? "off";
-      } else {
-        c[item.id] = mode;
-      }
-    }
-    setModes(c);
-    syncOnChange(c);
-  };
-
-  const setAllOff = () => { const c: Record<string, SkillMode> = {}; for (const o of DESIGN_VISUAL_CATALOG) c[o.id] = "off"; setModes(c); onChange([]); };
-  const setAllRecommended = () => {
-    if (!nichoDetetado) return;
-    const rec = getDesignVisualForNicho(nichoDetetado);
-    const c: Record<string, SkillMode> = {};
-    for (const o of DESIGN_VISUAL_CATALOG) c[o.id] = rec.some((r) => r.id === o.id) ? "recomendada" : "off";
-    setModes(c); syncOnChange(c);
   };
 
   const activeInfo = pinned ?? hovered;
@@ -114,21 +106,13 @@ export function DesignVisual({ briefing, nicho, selectedOptions, onChange }: Des
       <SectionHeader
         title="Design Visual"
         iconName={<Palette className="h-3.5 w-3.5 text-primary" />}
-        description="Estética, patterns, textures, effects. R/A/O/M no header aplica a todas. Lock = bloqueia."
+        description="Carrega num modo para aplicar automaticamente. Lock = bloqueia categoria."
         activeCount={activeCount}
         totalCount={DESIGN_VISUAL_CATALOG.length}
         nichoDetetado={nichoDetetado}
-        onSetAllMode={setAllModeGlobal}
-        onAuto={setAllRecommended}
-        onClear={setAllOff}
+        activeMode={activeMode}
+        onModeSelect={applyMode}
       />
-      <div className="flex flex-wrap gap-1.5">
-        {(["recomendada", "alternativa", "opcional", "manual", "off"] as SkillMode[]).map((m) => (
-          <div key={m} className={cn("flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-medium", MODE_COLORS[m])}>
-            <span className="h-1.5 w-1.5 rounded-full bg-current" />{MODE_LABELS[m]}
-          </div>
-        ))}
-      </div>
       <div className="space-y-1">
         {Object.entries(byCategory).map(([cat, items]) => (
           <CategoryAccordion

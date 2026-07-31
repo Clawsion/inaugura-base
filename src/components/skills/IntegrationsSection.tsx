@@ -6,8 +6,8 @@ import { X, Plug } from "lucide-react";
 import { INTEGRACOES_CATALOG, getIntegracoesForNicho, type Integracao, type SkillMode } from "@/lib/skills-catalog";
 import { detectarNicho } from "@/lib/perfect-combo";
 import { cn } from "@/lib/utils";
-import { SectionHeader } from "@/components/skills/SectionHeader";
 import { CategoryAccordion } from "./CategoryAccordion";
+import { SectionHeader } from "./SectionHeader";
 
 interface IntegrationsSectionProps {
   briefing: string;
@@ -34,27 +34,14 @@ export function IntegrationsSection({ briefing, nicho, selectedIntegrations, onC
   const [hovered, setHovered] = useState<string | null>(null);
   const [pinned, setPinned] = useState<string | null>(null);
   const [expandedCats, setExpandedCats] = useState<Set<string>>(new Set());
+  const [activeMode, setActiveMode] = useState<SkillMode | null>(null);
   const prevNicho = useRef<string | null>(null);
   const nichoDetetado = nicho || (briefing ? detectarNicho(briefing) : null);
 
   useEffect(() => {
     if (!nichoDetetado || prevNicho.current === nichoDetetado) return;
     prevNicho.current = nichoDetetado;
-    const recommended = getIntegracoesForNicho(nichoDetetado);
-    const newModes: Record<string, SkillMode> = {};
-    for (const integ of INTEGRACOES_CATALOG) {
-      const isRec = recommended.some((r) => r.id === integ.id);
-      if (isRec) newModes[integ.id] = integ.modoDefault === "alternativa" ? "alternativa" : "recomendada";
-      else if (integ.modoDefault === "alternativa") newModes[integ.id] = "alternativa";
-      else if (integ.modoDefault === "opcional") newModes[integ.id] = "opcional";
-      else newModes[integ.id] = "off";
-    }
-    setModes(newModes);
-    const cats = new Set<string>();
-    for (const i of INTEGRACOES_CATALOG) { if (newModes[i.id] === "recomendada") cats.add(i.categoria); }
-    setExpandedCats(cats);
-    const activeIds = Object.entries(newModes).filter(([, m]) => m !== "off").map(([k]) => k);
-    onChange(activeIds);
+    applyMode("recomendada");
   }, [nichoDetetado]);
 
   const syncOnChange = (newModes: Record<string, SkillMode>) => {
@@ -62,7 +49,36 @@ export function IntegrationsSection({ briefing, nicho, selectedIntegrations, onC
     onChange(activeIds);
   };
 
+  const applyMode = (mode: SkillMode) => {
+    setActiveMode(mode);
+    const recommended = nichoDetetado ? getIntegracoesForNicho(nichoDetetado) : [];
+    const recIds = new Set(recommended.map((r) => r.id));
+
+    const newModes: Record<string, SkillMode> = {};
+    for (const integ of INTEGRACOES_CATALOG) {
+      if (lockedCats.has(integ.categoria)) {
+        newModes[integ.id] = modes[integ.id] ?? "off";
+        continue;
+      }
+      if (mode === "off" || mode === "manual") {
+        newModes[integ.id] = "off";
+      } else if (mode === "recomendada") {
+        newModes[integ.id] = recIds.has(integ.id) || integ.modoDefault === "recomendada" ? "recomendada" : "off";
+      } else if (mode === "alternativa") {
+        newModes[integ.id] = (integ.modoDefault === "alternativa" || integ.modoDefault === "recomendada") ? "alternativa" : "off";
+      } else if (mode === "opcional") {
+        newModes[integ.id] = integ.modoDefault !== "off" ? "opcional" : "off";
+      }
+    }
+    setModes(newModes);
+    syncOnChange(newModes);
+    const cats = new Set<string>();
+    for (const i of INTEGRACOES_CATALOG) { if (newModes[i.id] !== "off") cats.add(i.categoria); }
+    setExpandedCats(cats);
+  };
+
   const toggleMode = (id: string) => {
+    setActiveMode(null);
     setModes((prev) => {
       const current = prev[id] ?? "off";
       const cycle: SkillMode[] = ["off", "recomendada", "alternativa", "opcional", "manual"];
@@ -72,36 +88,12 @@ export function IntegrationsSection({ briefing, nicho, selectedIntegrations, onC
     });
   };
 
-
   const toggleLockCat = (cat: string) => {
     setLockedCats((prev) => { const n = new Set(prev); if (n.has(cat)) n.delete(cat); else n.add(cat); return n; });
   };
 
   const toggleCat = (cat: string) => {
     setExpandedCats((prev) => { const n = new Set(prev); if (n.has(cat)) n.delete(cat); else n.add(cat); return n; });
-  };
-
-  const setAllModeGlobal = (mode: SkillMode) => {
-    const c: Record<string, SkillMode> = {};
-    for (const item of INTEGRACOES_CATALOG) {
-      // Respect locked categories
-      if (lockedCats.has(item.categoria)) {
-        c[item.id] = modes[item.id] ?? "off";
-      } else {
-        c[item.id] = mode;
-      }
-    }
-    setModes(c);
-    syncOnChange(c);
-  };
-
-  const setAllOff = () => { const c: Record<string, SkillMode> = {}; for (const i of INTEGRACOES_CATALOG) c[i.id] = "off"; setModes(c); onChange([]); };
-  const setAllRecommended = () => {
-    if (!nichoDetetado) return;
-    const rec = getIntegracoesForNicho(nichoDetetado);
-    const c: Record<string, SkillMode> = {};
-    for (const i of INTEGRACOES_CATALOG) c[i.id] = rec.some((r) => r.id === i.id) ? "recomendada" : "off";
-    setModes(c); syncOnChange(c);
   };
 
   const activeInfo = pinned ?? hovered;
@@ -114,21 +106,13 @@ export function IntegrationsSection({ briefing, nicho, selectedIntegrations, onC
       <SectionHeader
         title="Integrações"
         iconName={<Plug className="h-3.5 w-3.5 text-primary" />}
-        description="CMS, cloud, pagamentos, email, maps. R/A/O/M no header aplica a todas. Lock = bloqueia."
+        description="Carrega num modo para aplicar automaticamente. Lock = bloqueia categoria."
         activeCount={activeCount}
         totalCount={INTEGRACOES_CATALOG.length}
         nichoDetetado={nichoDetetado}
-        onSetAllMode={setAllModeGlobal}
-        onAuto={setAllRecommended}
-        onClear={setAllOff}
+        activeMode={activeMode}
+        onModeSelect={applyMode}
       />
-      <div className="flex flex-wrap gap-1.5">
-        {(["recomendada", "alternativa", "opcional", "manual", "off"] as SkillMode[]).map((m) => (
-          <div key={m} className={cn("flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-medium", MODE_COLORS[m])}>
-            <span className="h-1.5 w-1.5 rounded-full bg-current" />{MODE_LABELS[m]}
-          </div>
-        ))}
-      </div>
       <div className="space-y-1">
         {Object.entries(byCategory).map(([cat, items]) => (
           <CategoryAccordion
