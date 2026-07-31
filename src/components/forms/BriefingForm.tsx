@@ -50,6 +50,8 @@ import {
 import { PaletteInput } from "./PaletteInput";
 import { TypographyInput } from "./TypographyInput";
 import { LayoutSelector } from "./LayoutSelector";
+import { SkillsSelector } from "@/components/skills/SkillsSelector";
+import { IntegrationsSection } from "@/components/skills/IntegrationsSection";
 import { FontPlayground, type FontSlotState } from "@/components/fonts/FontPlayground";
 import { PerfectComboPopup } from "@/components/perfect-combo/PerfectComboPopup";
 import type { PerfectCombo } from "@/lib/perfect-combo";
@@ -299,6 +301,26 @@ export function BriefingForm({
         efeitos={value.efeitos}
         onToggle={(efeito) => toggleArrayItem("efeitos", efeito)}
       />
+
+      {/* 4.5 Skills & Ferramentas — modos: Recomendada/Alternativa/Opcional/Manual */}
+      <motion.div variants={fadeUp} custom={4.2}>
+        <SkillsSelector
+          briefing={value.briefing}
+          nicho={value.nicho}
+          selectedSkills={value.selectedSkills ?? []}
+          onChange={(selectedSkills) => onChange({ selectedSkills })}
+        />
+      </motion.div>
+
+      {/* 4.6 Integrações — mesmo padrão dos skills */}
+      <motion.div variants={fadeUp} custom={4.3}>
+        <IntegrationsSection
+          briefing={value.briefing}
+          nicho={value.nicho}
+          selectedIntegrations={value.selectedIntegrations ?? []}
+          onChange={(selectedIntegrations) => onChange({ selectedIntegrations })}
+        />
+      </motion.div>
 
       {/* 5. Font Playground — 5 slots + 50 transforms + 10 sources + filtro */}
       <motion.div variants={fadeUp} custom={4}>

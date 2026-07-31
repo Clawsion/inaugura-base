@@ -112,37 +112,34 @@ export async function generateProject(
   input: FormValues
 ): Promise<GenerateResult> {
   const systemPrompt = buildSystemPrompt(input);
+  let lastError = "";
 
-  let ultimaTentativa = 0;
   for (let tentativa = 1; tentativa <= MAX_TENTATIVAS; tentativa++) {
-    ultimaTentativa = tentativa;
     try {
-      const { arguments: argsJson, content } = await chamarModelo(
-        systemPrompt,
-        tentativa === 1
-          ? undefined
-          : `A tua resposta anterior falhou validação. Corrige e re-emite a tool. Erros: ${
-              (ultimaTentativa as any) ?? ""
-            }`
-      );
+      // Chama o modelo (com feedback de erro se não for a 1ª tentativa)
+      const extraMsg = tentativa > 1 && lastError
+        ? `A tua resposta anterior falhou validação. Corrige e re-emite a tool. Erros:\n${lastError}`
+        : undefined;
+      const { arguments: argsJson, content } = await chamarModelo(systemPrompt, extraMsg);
 
+      // Tenta fazer parse do JSON
       let parsed: unknown;
       try {
         parsed = JSON.parse(argsJson);
-      } catch (e) {
-        // Tenta extrair JSON do content como último recurso
+      } catch {
+        // Fallback: extrai JSON do content
         if (content) {
           const m = content.match(/\{[\s\S]*\}/);
-          if (m) parsed = JSON.parse(m[0]);
-          else throw e;
-        } else {
-          throw e;
-        }
+          if (m) {
+            try { parsed = JSON.parse(m[0]); } catch { continue; }
+          } else { continue; }
+        } else { continue; }
       }
 
+      // Valida com Zod
       const result = ProjectSpecSchema.safeParse(parsed);
       if (result.success) {
-        // Pós-processamento: valida/ajusta contraste da paleta.
+        // Pós-processamento: valida/ajusta contraste da paleta
         const paletaValidada = validarEAnalisarPaleta(result.data.palette);
         const dataFinal: ProjectSpec = {
           ...result.data,
@@ -159,74 +156,34 @@ export async function generateProject(
         };
       }
 
-      // Zod falhou → prepara feedback para a próxima tentativa
-      const erros = result.error.issues
-        .map(
-          (i) =>
-            `- ${i.path.join(".")}: ${i.message} (recebido: ${JSON.stringify(
-              (i as any).received ?? "n/a"
-            ).slice(0, 100)})`
-        )
+      // Zod falhou → prepara feedback
+      lastError = result.error.issues
+        .map((i) => `- ${i.path.join(".")}: ${i.message}`)
         .join("\n");
 
       if (tentativa === MAX_TENTATIVAS) {
         return {
           ok: false,
-          error: `Falha na validação após ${MAX_TENTATIVAS} tentativas:\n${erros}`,
+          error: `Falha na validação após ${MAX_TENTATIVAS} tentativas:\n${lastError}`,
           tentativas,
         };
       }
-
-      // Próxima iteração: o loop recomeça com a mensagem de erro.
-      // Guardamos os erros numa variável acessível ao próximo chamarModelo.
-      (ultimaTentativa as any) = erros;
-      // Reescrevemos a chamada para incluir o erro — ver abaixo.
-      const { arguments: args2 } = await chamarModelo(
-        systemPrompt +
-          "\n\n# FEEDBACK DE CORREÇÃO\nA tua última resposta falhou validação Zod. Erros:\n" +
-          erros +
-          "\nRe-emite a tool corrigindo exatamente estes campos.",
-        "Corrige e re-emite a tool emitProjectSpec com os campos inválidos ajustados."
-      );
-
-      let parsed2: unknown;
-      try {
-        parsed2 = JSON.parse(args2);
-      } catch {
-        continue;
-      }
-      const result2 = ProjectSpecSchema.safeParse(parsed2);
-      if (result2.success) {
-        const paletaValidada = validarEAnalisarPaleta(result2.data.palette);
-        const dataFinal: ProjectSpec = {
-          ...result2.data,
-          palette: paletaValidada.map((c) => ({
-            nome: c.nome,
-            hex: c.hex,
-            uso: c.uso,
-          })),
-        };
-        return {
-          ok: true,
-          data: { ...dataFinal, paletaValidada },
-          tentativas: tentativa + 1,
-        };
-      }
+      // Continua para a próxima tentativa com lastError
     } catch (err: any) {
+      lastError = err?.message ?? String(err);
       if (tentativa === MAX_TENTATIVAS) {
         return {
           ok: false,
-          error: `Erro na geração: ${err?.message ?? String(err)}`,
+          error: `Erro na geração: ${lastError}`,
           tentativas,
         };
       }
-      // tenta de novo
     }
   }
 
   return {
     ok: false,
     error: "Falha desconhecida na geração.",
-    tentativas: ultimaTentativa,
+    tentativas: MAX_TENTATIVAS,
   };
 }

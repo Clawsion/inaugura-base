@@ -44,6 +44,8 @@ const FORM_INIT: FormValues = {
   incluirRoadmap: false,
   nivel: "production",
   idioma: "pt",
+  selectedSkills: [],
+  selectedIntegrations: [],
 };
 
 export default function Home() {
