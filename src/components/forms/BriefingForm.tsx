@@ -8,7 +8,7 @@
 // são renderizados aqui dentro para coesão visual.
 // ============================================================================
 
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -44,9 +44,8 @@ import {
   getPresetByNicho,
   getSecaoLabel,
   getSecaoId,
-  type FormValues,
-  type SiteType,
 } from "@/lib/form-options";
+import type { FormValues, SiteType } from "@/lib/schemas";
 import { PaletteInput } from "./PaletteInput";
 import { TypographyInput } from "./TypographyInput";
 import { LayoutSelector } from "./LayoutSelector";
@@ -76,7 +75,7 @@ const SITE_TYPE_LABELS: Record<SiteType, string> = {
   outro: "Outro",
 };
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 16 },
   visible: (i: number) => ({
     opacity: 1,

@@ -165,7 +165,7 @@ export async function generateProject(
         return {
           ok: false,
           error: `Falha na validação após ${MAX_TENTATIVAS} tentativas:\n${lastError}`,
-          tentativas,
+          tentativas: tentativa,
         };
       }
       // Continua para a próxima tentativa com lastError
@@ -175,7 +175,7 @@ export async function generateProject(
         return {
           ok: false,
           error: `Erro na geração: ${lastError}`,
-          tentativas,
+          tentativas: tentativa,
         };
       }
     }

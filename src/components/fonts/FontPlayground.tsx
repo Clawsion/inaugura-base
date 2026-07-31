@@ -397,7 +397,7 @@ interface FontBarProps {
   onRemove: () => void;
   canRemove: boolean;
   uploadedFonts: UploadedFont[];
-  onUploadFont: (file: File) => void;
+  onUploadFont: (file: File) => Promise<void>;
   filtro: string;
   sourceFilter: string;
   allFontsCatalog: FontInfo[];

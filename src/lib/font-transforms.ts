@@ -256,7 +256,7 @@ export const FONT_TRANSFORMS: FontTransform[] = [
   {
     id: "low-contrast",
     name: "Low Contrast",
-    category: "Low Contrast",
+    category: "Blur & Contrast",
     description: "Contraste reduzido",
     css: { filter: "contrast(0.5)" } as React.CSSProperties,
   },
