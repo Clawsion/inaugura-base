@@ -93,16 +93,32 @@ export function generateColor(
   if (!info) return "#6B7280";
 
   const base = chroma(info.baseHex);
-  // Converte sliders para HSL
-  // Brilho 50 = luminância média da família; <50 escurece, >50 clareia
-  const baseLuma = base.luminance();
-  const targetLuma = Math.max(0.05, Math.min(0.95, baseLuma * (brilho / 50)));
+  // Para preto/branco puro, usa grayscale diretamente (chroma.js lida mal com saturação 0)
+  const isAchromatic = base.get("hsl.s") < 0.01;
 
-  // Saturação: 0 = dessaturar para cinza, 100 = manter saturação original
-  const baseSat = base.get("hsl.s");
-  const targetSat = baseSat * (saturacao / 100);
+  // Brilho: 0 = escuro, 50 = médio, 100 = claro
+  // Converte diretamente para luminância 0-1
+  const targetLuma = Math.max(0.01, Math.min(0.99, brilho / 100));
 
-  let adjusted = base.set("hsl.s", targetSat).luminance(targetLuma);
+  let adjusted: chroma.Color;
+
+  if (isAchromatic) {
+    // Para preto/branco/cinza, usa apenas luminância (sem saturação)
+    adjusted = chroma.lch(targetLuma * 100, 0, 0);
+  } else {
+    // Saturação: 0 = dessaturar para cinza, 100 = manter saturação original
+    const baseSat = base.get("hsl.s");
+    const targetSat = Math.max(0, baseSat * (saturacao / 100));
+    // Mantém o hue original
+    const baseHue = base.get("hsl.h");
+    adjusted = chroma.hsl(baseHue, targetSat, targetLuma);
+    // Usa luminance() para ajustar precisamente
+    try {
+      adjusted = adjusted.luminance(targetLuma);
+    } catch {
+      // fallback se chroma não conseguir
+    }
+  }
 
   // Contraste: se > 50, afasta do cinza médio (mais escuro ou mais claro conforme brilho)
   if (contraste > 50) {
@@ -134,16 +150,18 @@ export function generatePaletteFromFamily(
 
   const { brilho, saturacao, contraste } = styleInfo.defaults;
 
-  // Background: muito escuro (brilho baixo) com a família
-  const bg = generateColor(family, Math.max(5, brilho - 75), Math.max(10, saturacao - 40), contraste);
+  // Background: muito escuro (brilho baixo)
+  const bg = generateColor(family, Math.max(3, brilho - 75), Math.max(5, saturacao - 40), contraste);
   // Card: ligeiramente mais claro que bg
-  const card = generateColor(family, Math.max(10, brilho - 65), Math.max(15, saturacao - 35), contraste - 10);
-  // Text: claro (alto brilho)
-  const text = generateColor(family === "preto" ? "branco" : family, Math.min(95, brilho + 40), Math.max(5, saturacao - 50), contraste);
-  // Accent: saturado e vibrante
-  const accent = generateColor(family, brilho + 10, Math.min(100, saturacao + 20), contraste + 10);
+  const card = generateColor(family, Math.max(8, brilho - 65), Math.max(10, saturacao - 35), Math.max(10, contraste - 10));
+  // Text: claro (alto brilho) — se família é escura, usa branco
+  const textFamily = (family === "preto" || family === "castanho") ? "branco" : family;
+  const text = generateColor(textFamily, Math.min(95, brilho + 40), Math.max(5, saturacao - 50), contraste);
+  // Accent: usa uma família com cor se a original é acromática
+  const accentFamily = (family === "preto" || family === "branco" || family === "cinza") ? "azul" : family;
+  const accent = generateColor(accentFamily, Math.min(95, brilho + 10), Math.min(100, saturacao + 20), Math.min(100, contraste + 10));
   // Muted: meio termo
-  const muted = generateColor(family, brilho - 20, Math.max(5, saturacao - 30), Math.max(20, contraste - 30));
+  const muted = generateColor(family, Math.max(10, brilho - 20), Math.max(5, saturacao - 30), Math.max(20, contraste - 30));
 
   return [
     { nome: "Background", hex: bg, uso: "Background" },
