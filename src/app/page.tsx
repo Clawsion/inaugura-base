@@ -14,9 +14,9 @@ import { generateProject, type GenerateResult } from "@/app/actions/generate";
 import type { FormValues } from "@/lib/schemas";
 
 /**
- * Chama a API route /api/generate com STREAMING.
- * Isto previne "NetworkError" quando o gateway corta conexões idle após ~60s.
- * Os keepalive chunks mantêm a conexão ativa enquanto o GLM-5.2 processa.
+ * Chama /api/generate com SSE streaming.
+ * Lê eventos "progress", "result", "error" do stream.
+ * Keepalive (`:`) mantém conexão ativa através do gateway.
  */
 async function callGenerateStreaming(form: FormValues): Promise<GenerateResult> {
   const response = await fetch("/api/generate", {
@@ -29,7 +29,6 @@ async function callGenerateStreaming(form: FormValues): Promise<GenerateResult> 
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
   }
 
-  // Lê o stream NDJSON linha a linha
   const reader = response.body?.getReader();
   if (!reader) throw new Error("Stream não disponível.");
 
@@ -37,48 +36,45 @@ async function callGenerateStreaming(form: FormValues): Promise<GenerateResult> 
   let buffer = "";
   let lastResult: GenerateResult | null = null;
 
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-
-    buffer += decoder.decode(value, { stream: true });
-
-    // Processa linhas completas (separadas por \n)
-    const lines = buffer.split("\n");
-    buffer = lines.pop() ?? ""; // mantém linha incompleta no buffer
-
-    for (const line of lines) {
-      const trimmed = line.trim();
-      if (!trimmed || trimmed.startsWith(":")) continue; // skip keepalive/empty
-
+  const parseSSE = (chunk: string) => {
+    const events = chunk.split("\n\n");
+    for (const evt of events) {
+      const lines = evt.split("\n");
+      let eventType = "";
+      let dataStr = "";
+      for (const line of lines) {
+        if (line.startsWith("event: ")) eventType = line.slice(7).trim();
+        else if (line.startsWith("data: ")) dataStr += line.slice(6);
+        else if (line.startsWith(":")) continue; // keepalive
+      }
+      if (!dataStr) continue;
       try {
-        const data = JSON.parse(trimmed);
-        // Se tem campo "ok", é o resultado final
-        if (data.ok !== undefined) {
+        const data = JSON.parse(dataStr);
+        if (eventType === "result" || (data && data.ok !== undefined)) {
           lastResult = data as GenerateResult;
         }
       } catch {
-        // linha não-JSON (keepalive), ignora
+        // ignore parse errors (keepalive etc)
       }
     }
-  }
+  };
 
-  // Processa qualquer buffer restante
-  if (buffer.trim() && !buffer.trim().startsWith(":")) {
-    try {
-      const data = JSON.parse(buffer.trim());
-      if (data.ok !== undefined) {
-        lastResult = data as GenerateResult;
-      }
-    } catch {
-      // ignore
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    // Processa eventos completos (separados por \n\n)
+    const idx = buffer.lastIndexOf("\n\n");
+    if (idx >= 0) {
+      const complete = buffer.slice(0, idx + 2);
+      buffer = buffer.slice(idx + 2);
+      parseSSE(complete);
     }
   }
+  // Processa restante
+  if (buffer.trim()) parseSSE(buffer + "\n\n");
 
-  if (!lastResult) {
-    throw new Error("Stream terminou sem resultado.");
-  }
-
+  if (!lastResult) throw new Error("Stream terminou sem resultado.");
   return lastResult;
 }
 import { getSkinById } from "@/lib/skins";
