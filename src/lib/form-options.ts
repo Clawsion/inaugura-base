@@ -64,6 +64,22 @@ export const SecoesInfo: SecaoInfo[] = [
   { id: "404", pt: "Página 404", en: "404 Page" },
   { id: "cookies", pt: "Banner Cookies", en: "Cookies Banner" },
   { id: "services", pt: "Serviços", en: "Services" },
+  // NOVAS secções
+  { id: "about", pt: "Sobre nós", en: "About" },
+  { id: "process", pt: "Processo", en: "Process" },
+  { id: "case-studies", pt: "Casos de estudo", en: "Case Studies" },
+  { id: "careers", pt: "Carreiras", en: "Careers" },
+  { id: "partners", pt: "Parceiros", en: "Partners" },
+  { id: "awards", pt: "Prémios", en: "Awards" },
+  { id: "blog-list", pt: "Lista de Blog", en: "Blog List" },
+  { id: "blog-post", pt: "Artigo de Blog", en: "Blog Post" },
+  { id: "search", pt: "Pesquisa", en: "Search" },
+  { id: "settings", pt: "Definições", en: "Settings" },
+  { id: "profile", pt: "Perfil", en: "Profile" },
+  { id: "onboarding", pt: "Onboarding", en: "Onboarding" },
+  { id: "checkout", pt: "Checkout", en: "Checkout" },
+  { id: "cart", pt: "Carrinho", en: "Cart" },
+  { id: "product-detail", pt: "Detalhe de Produto", en: "Product Detail" },
 ];
 
 // Retro-compatibilidade — usa PT por defeito
@@ -258,6 +274,106 @@ export const EfeitosInfo: EfeitoInfo[] = [
     ondeAplicar:
       "Logos bars, testimonial carousels, partner showcases, ticker tapes.",
     exemplo: "Stripe customers, Linear logos, Vercel trusted by.",
+  },
+  // ── NOVOS 9 efeitos (total 24) ─────────────────────────────────────────
+  {
+    nome: "Magnetic Hover",
+    icon: "Magnet",
+    descricao:
+      "Elementos que seguem o cursor com física suave (spring). Botões e cards que se atraem ao rato.",
+    quandoAplicar:
+      "Para dar personalidade lúdica a CTAs, ícones e cards interativos.",
+    ondeAplicar:
+      "Botões principais, cards de features, ícones de navegação, hero elements.",
+    exemplo: "Vercel hero, Framer buttons, Awwwards magnetic CTAs.",
+  },
+  {
+    nome: "Text Reveal Mask",
+    icon: "Type",
+    descricao:
+      "Texto revelado por máscara que se move ao scroll ou hover. Cada linha aparece progressivamente.",
+    quandoAplicar:
+      "Para headlines impactantes com narrativa — cada palavra ganha vida.",
+    ondeAplicar:
+      "Hero headlines, section titles, manifesto texts, brand statements.",
+    exemplo: "Apple marketing, Stripe homepage, Linear hero.",
+  },
+  {
+    nome: "Cursor Custom",
+    icon: "MousePointerClick",
+    descricao:
+      "Cursor customizado que muda conforme o elemento sob ele (hover states, blend modes, sizes).",
+    quandoAplicar:
+      "Em sites premium onde cada detalhe conta. Cria sensação de app nativa.",
+    ondeAplicar:
+      "Todo o site. Especialmente em portfolios, agências, e-commerce premium.",
+    exemplo: "Framer, Vercel, Awwwards SOTD, Arc browser.",
+  },
+  {
+    nome: "Scroll Progress",
+    icon: "BarChart3",
+    descricao:
+      "Barra de progresso no topo que mostra quanto do site já foi scrollado. Visual feedback claro.",
+    quandoAplicar:
+      "Em páginas longas (landing pages, blog posts, case studies) para orientar o utilizador.",
+    ondeAplicar:
+      "Topo da página (fixed). Funciona em qualquer site com scroll vertical.",
+    exemplo: "Vercel blog, GitHub docs, Medium articles.",
+  },
+  {
+    nome: "Image Reveal Clip",
+    icon: "Image",
+    descricao:
+      "Imagens reveladas com clip-path animado ao scroll (wipe, circle expand, diagonal).",
+    quandoAplicar:
+      "Para galerias, hero images, product showcases — cada imagem surge com drama.",
+    ondeAplicar:
+      "Hero images, gallery grids, product cards, case study images.",
+    exemplo: "Apple product reveals, Nike stories, Awwwards galleries.",
+  },
+  {
+    nome: "Number Counter",
+    icon: "Hash",
+    descricao:
+      "Números que contam progressivamente (0 → valor final) ao entrar no viewport. Animação de stats.",
+    quandoAplicar:
+      "Para destacar métricas, resultados, social proof numérico.",
+    ondeAplicar:
+      "Stats sections, results showcases, dashboards, case studies.",
+    exemplo: "Stripe stats, Linear metrics, Vercel performance numbers.",
+  },
+  {
+    nome: "Tilt 3D Cards",
+    icon: "Box",
+    descricao:
+      "Cards que inclinam em 3D seguindo o cursor (perspective transform). Profundidade sem WebGL.",
+    quandoAplicar:
+      "Para product cards, feature cards, portfolio pieces — interatividade premium.",
+    ondeAplicar:
+      "Product grids, feature sections, portfolio cards, team member cards.",
+    exemplo: "Apple product cards, Vercel features, Stripe product grid.",
+  },
+  {
+    nome: "Gradient Mesh BG",
+    icon: "Palette",
+    descricao:
+      "Background com gradient mesh animado (múltiplos pontos de cor que se movem suavemente).",
+    quandoAplicar:
+      "Para backgrounds vivos e premium sem usar imagens. Substitui gradientes estáticos.",
+    ondeAplicar:
+      "Hero sections, auth pages, empty states, onboarding backgrounds.",
+    exemplo: "Stripe, Linear, Vercel, Framer landing backgrounds.",
+  },
+  {
+    nome: "Accordion Smooth",
+    icon: "ChevronDown",
+    descricao:
+      "Acordeões com animação suave de altura (height auto via Motion layout). FAQ e specs expansíveis.",
+    quandoAplicar:
+      "Para FAQ, specs técnicas, descriptions longas que podem ser colapsadas.",
+    ondeAplicar:
+      "FAQ sections, product specs, pricing details, filter sidebars.",
+    exemplo: "Stripe FAQ, Vercel pricing, Linear changelog.",
   },
 ];
 

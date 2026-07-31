@@ -27,6 +27,7 @@ import {
   Sliders, Wand2,
 } from "lucide-react";
 import { isHexValido } from "@/lib/color-utils";
+import chroma from "chroma-js";
 import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { ColorPreviewPopup } from "@/components/palette/ColorPreviewPopup";
@@ -87,11 +88,17 @@ export function PaletteInput({
   const [saturacao, setSaturacao] = useState(60);
   const [contraste, setContraste] = useState(50);
 
-  // Cor gerada em tempo real pelos sliders
-  const generatedColor = useMemo(
-    () => generateColor(selectedFamily, brilho, saturacao, contraste),
-    [selectedFamily, brilho, saturacao, contraste]
-  );
+  // NOVO: estado para override manual do HEX da cor gerada
+  const [manualHex, setManualHex] = useState<string>("");
+  const [generatedColorOverride, setGeneratedColorOverride] = useState<string | null>(null);
+
+  // Cor gerada em tempo real pelos sliders (ou override manual)
+  const generatedColor = useMemo(() => {
+    if (generatedColorOverride && isHexValido(generatedColorOverride)) {
+      return generatedColorOverride.toUpperCase();
+    }
+    return generateColor(selectedFamily, brilho, saturacao, contraste);
+  }, [selectedFamily, brilho, saturacao, contraste, generatedColorOverride]);
 
   const adicionar = () =>
     onManualChange([
@@ -142,6 +149,43 @@ export function PaletteInput({
     toast.success(`Cor ${i + 1} = ${generatedColor}`);
   };
 
+  // NOVO: aplicar variação de tom a TODAS as cores (mantém harmonia)
+  const applyToneVariation = (tone: "lighter" | "darker" | "professional" | "auto") => {
+    if (tone === "auto") {
+      // Restaura as cores originais via palette generator
+      const palette = generatePaletteFromFamily(selectedFamily, selectedStyle);
+      const next = manual.map((c, i) => c.locked ? c : (palette[i] ?? c));
+      onManualChange(next);
+      setGeneratedColorOverride(null);
+      setManualHex("");
+      toast.success("Tons restaurados (auto)");
+      return;
+    }
+    // Aplica a variação a cada cor não bloqueada
+    const next = manual.map((c) => {
+      if (c.locked) return c;
+      if (!isHexValido(c.hex)) return c;
+      try {
+        let adjusted = chroma(c.hex);
+        if (tone === "lighter") {
+          adjusted = adjusted.brighten(0.8);
+        } else if (tone === "darker") {
+          adjusted = adjusted.darken(0.8);
+        } else if (tone === "professional") {
+          // Reduz saturação 20% para tom mais sóbrio
+          const hsl = adjusted.hsl();
+          adjusted = chroma.hsl(hsl[0], hsl[1] * 0.8, hsl[2]);
+        }
+        return { ...c, hex: adjusted.hex().toUpperCase() };
+      } catch {
+        return c;
+      }
+    });
+    onManualChange(next);
+    const labels = { lighter: "mais claro", darker: "mais escuro", professional: "profissional" };
+    toast.success(`Tons aplicados: ${labels[tone]} (mantém harmonia)`);
+  };
+
   // Atualizar sliders quando muda o estilo
   const applyStyle = (style: ColorStyle) => {
     setSelectedStyle(style);
@@ -151,7 +195,15 @@ export function PaletteInput({
       setSaturacao(styleInfo.defaults.saturacao);
       setContraste(styleInfo.defaults.contraste);
     }
+    // Limpa override manual quando muda o estilo
+    setGeneratedColorOverride(null);
+    setManualHex("");
   };
+
+  // Quando os sliders mudam, limpa o override manual
+  const handleBrilho = (v: number) => { setBrilho(v); setGeneratedColorOverride(null); setManualHex(""); };
+  const handleSaturacao = (v: number) => { setSaturacao(v); setGeneratedColorOverride(null); setManualHex(""); };
+  const handleContraste = (v: number) => { setContraste(v); setGeneratedColorOverride(null); setManualHex(""); };
 
   return (
     <div className="space-y-3">
@@ -218,6 +270,7 @@ export function PaletteInput({
           <AnimatePresence>
             {familyMode && (
               <motion.div
+                id="advanced-color-options"
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
@@ -283,46 +336,104 @@ export function PaletteInput({
                     <SliderControl
                       label="Brilho"
                       value={brilho}
-                      onChange={setBrilho}
+                      onChange={handleBrilho}
                       desc="0 = escuro · 100 = claro"
                     />
                     <SliderControl
                       label="Mate (Saturação)"
                       value={saturacao}
-                      onChange={setSaturacao}
+                      onChange={handleSaturacao}
                       desc="0 = cinza · 100 = saturado"
                     />
                     <SliderControl
                       label="Contraste"
                       value={contraste}
-                      onChange={setContraste}
+                      onChange={handleContraste}
                       desc="0 = suave · 100 = intenso"
                     />
                   </div>
 
-                  {/* Preview da cor gerada + botão aplicar paleta */}
-                  <div className="flex items-center gap-2 rounded-lg border border-border bg-card/50 p-2">
-                    <div
-                      className="h-12 w-12 shrink-0 rounded-md border-2 border-border"
-                      style={{ backgroundColor: generatedColor }}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[10px] font-semibold uppercase text-muted-foreground">
-                        Cor gerada
+                  {/* Preview da cor gerada + HEX input manual + tons */}
+                  <div className="space-y-2 rounded-lg border border-border bg-card/50 p-2">
+                    {/* Linha 1: preview + HEX input + aplicar */}
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="h-12 w-12 shrink-0 rounded-md border-2 border-border"
+                        style={{ backgroundColor: generatedColor }}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[10px] font-semibold uppercase text-muted-foreground">
+                          Cor gerada
+                        </div>
+                        {/* NOVO: input HEX manual (podes escrever o hex diretamente) */}
+                        <input
+                          type="text"
+                          value={manualHex || generatedColor}
+                          onChange={(e) => {
+                            const val = e.target.value.toUpperCase();
+                            setManualHex(val);
+                            // Aplica imediatamente se for válido
+                            if (isHexValido(val)) {
+                              setGeneratedColorOverride(val);
+                            }
+                          }}
+                          className="w-full rounded border border-border bg-background/50 px-1.5 py-0.5 font-mono text-xs font-bold"
+                          placeholder="#RRGGBB"
+                        />
+                        <div className="text-[9px] text-muted-foreground">
+                          {COLOR_FAMILIES.find(f => f.id === selectedFamily)?.ralExamples[0]} · {selectedStyle}
+                        </div>
                       </div>
-                      <div className="font-mono text-sm font-bold">{generatedColor}</div>
-                      <div className="text-[9px] text-muted-foreground">
-                        {COLOR_FAMILIES.find(f => f.id === selectedFamily)?.ralExamples[0]} · {selectedStyle}
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={applyFamilyPalette}
+                        className="h-7 gap-1 bg-primary text-[10px] text-primary-foreground hover:bg-primary/90"
+                      >
+                        <Wand2 className="h-3 w-3" /> Aplicar paleta
+                      </Button>
+                    </div>
+
+                    {/* NOVO: Controlo de tons — manter cores mas mais claro/escuro/profissional */}
+                    <div className="border-t border-border pt-2">
+                      <div className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                        Tons (mantém as cores definidas)
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        <button
+                          type="button"
+                          onClick={() => applyToneVariation("lighter")}
+                          className="rounded-md border border-border bg-card/50 px-2 py-0.5 text-[9px] font-medium hover:border-primary/40 hover:text-foreground"
+                          title="Torna todas as cores 15% mais claras (mantém a harmonia)"
+                        >
+                          ☀ Mais claro
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => applyToneVariation("darker")}
+                          className="rounded-md border border-border bg-card/50 px-2 py-0.5 text-[9px] font-medium hover:border-primary/40 hover:text-foreground"
+                          title="Torna todas as cores 15% mais escuras (mantém a harmonia)"
+                        >
+                          🌙 Mais escuro
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => applyToneVariation("professional")}
+                          className="rounded-md border border-border bg-card/50 px-2 py-0.5 text-[9px] font-medium hover:border-primary/40 hover:text-foreground"
+                          title="Reduz saturação 20% para tom mais profissional/sóbrio"
+                        >
+                          💼 Profissional
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => applyToneVariation("auto")}
+                          className="rounded-md border border-primary/40 bg-primary/10 px-2 py-0.5 text-[9px] font-medium text-primary hover:bg-primary/20"
+                          title="Restaura as cores originais (auto)"
+                        >
+                          ✨ Auto
+                        </button>
                       </div>
                     </div>
-                    <Button
-                      type="button"
-                      size="sm"
-                      onClick={applyFamilyPalette}
-                      className="h-7 gap-1 bg-primary text-[10px] text-primary-foreground hover:bg-primary/90"
-                    >
-                      <Wand2 className="h-3 w-3" /> Aplicar paleta
-                    </Button>
                   </div>
                 </div>
               </motion.div>
@@ -389,6 +500,23 @@ export function PaletteInput({
                             <Wand2 className="h-3 w-3" />
                           </ActionBtn>
                         )}
+                        {/* NOVO: botão para abrir opções avançadas com esta cor carregada */}
+                        <ActionBtn
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // Abre opções avançadas e carrega esta cor no HEX manual
+                            setFamilyMode(true);
+                            setManualHex(cor.hex.toUpperCase());
+                            setGeneratedColorOverride(cor.hex.toUpperCase());
+                            setTimeout(() => {
+                              document.getElementById("advanced-color-options")?.scrollIntoView({ behavior: "smooth", block: "center" });
+                            }, 100);
+                          }}
+                          isDark={isDark}
+                          title="Abrir opções avançadas com esta cor"
+                        >
+                          <Sliders className="h-3 w-3" />
+                        </ActionBtn>
                         <ColorPreviewPopup cor={cor} outrasCores={manual} fontEscolhida={fontsPlayground?.[0]?.fonte} />
                         <ActionBtn
                           onClick={(e) => { e.stopPropagation(); setShowSwatches(showSwatches === i ? null : i); }}
