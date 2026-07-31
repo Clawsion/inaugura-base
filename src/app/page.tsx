@@ -47,6 +47,12 @@ const FORM_INIT: FormValues = {
   selectedSkills: [],
   selectedIntegrations: [],
   selectedDesignVisual: [],
+  referencias: [],
+  conteudoTextos: false,
+  conteudoTextosObs: "",
+  conteudoVideos: false,
+  conteudoVideosObs: "",
+  funcionalidadesEspeciais: [],
 };
 
 export default function Home() {

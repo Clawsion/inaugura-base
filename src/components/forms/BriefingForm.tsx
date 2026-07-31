@@ -56,7 +56,7 @@ import { IntegrationsSection } from "@/components/skills/IntegrationsSection";
 import { FontPlayground, type FontSlotState } from "@/components/fonts/FontPlayground";
 import { PerfectComboPopup } from "@/components/perfect-combo/PerfectComboPopup";
 import type { PerfectCombo } from "@/lib/perfect-combo";
-import { Check, ChevronsUpDown, Wand2, Sparkles, Lightbulb, Languages } from "lucide-react";
+import { Check, ChevronsUpDown, Wand2, Sparkles, Lightbulb, Languages, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -233,6 +233,134 @@ export function BriefingForm({
           </Select>
         </motion.div>
       </div>
+
+      {/* 2.1 Referências de Websites (1-3 com botão +) */}
+      <motion.div variants={fadeUp} custom={2.1} className="space-y-2">
+        <Label className="text-sm font-semibold">Referências de Websites</Label>
+        <p className="text-[11px] text-muted-foreground">Indica 1-3 sites que servem de inspiração (concorrentes, referências visuais, etc.)</p>
+        <div className="space-y-1.5">
+          {(value.referencias ?? []).map((ref, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <Input
+                placeholder="https://exemplo.com"
+                value={ref}
+                onChange={(e) => {
+                  const next = [...(value.referencias ?? [])];
+                  next[i] = e.target.value;
+                  onChange({ referencias: next });
+                }}
+                className="h-8 border-border bg-card/50 text-xs"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => onChange({ referencias: (value.referencias ?? []).filter((_, idx) => idx !== i) })}
+                className="h-8 shrink-0 text-muted-foreground hover:text-destructive"
+              >
+                <Trash2 className="h-3 w-3" />
+              </Button>
+            </div>
+          ))}
+          {(value.referencias ?? []).length < 3 && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => onChange({ referencias: [...(value.referencias ?? []), ""] })}
+              className="border-dashed"
+            >
+              <Plus className="mr-1 h-3 w-3" /> Adicionar referência
+            </Button>
+          )}
+        </div>
+      </motion.div>
+
+      {/* 2.2 CONTEÚDO — Textos/Imagens/Logo + Vídeos/Catálogo/Testemunhos */}
+      <motion.div variants={fadeUp} custom={2.2} className="space-y-3 rounded-2xl border border-border bg-card/30 p-4">
+        <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Conteúdo</Label>
+        <div className="space-y-3">
+          {/* Textos/Imagens/Logo */}
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="conteudo-textos"
+                checked={value.conteudoTextos ?? false}
+                onCheckedChange={(c) => onChange({ conteudoTextos: c === true })}
+              />
+              <Label htmlFor="conteudo-textos" className="cursor-pointer text-xs font-medium">
+                Textos / Imagens / Logotipo — Preciso de ajuda
+              </Label>
+            </div>
+            {(value.conteudoTextos) && (
+              <Input
+                placeholder="Observações: o que já tens, o que falta, formato, etc."
+                value={value.conteudoTextosObs ?? ""}
+                onChange={(e) => onChange({ conteudoTextosObs: e.target.value })}
+                className="h-8 border-border bg-card/50 text-xs"
+              />
+            )}
+          </div>
+          {/* Vídeos/Catálogo/Testemunhos */}
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="conteudo-videos"
+                checked={value.conteudoVideos ?? false}
+                onCheckedChange={(c) => onChange({ conteudoVideos: c === true })}
+              />
+              <Label htmlFor="conteudo-videos" className="cursor-pointer text-xs font-medium">
+                Vídeos / Catálogo / Testemunhos — Preciso de ajuda
+              </Label>
+            </div>
+            {(value.conteudoVideos) && (
+              <Input
+                placeholder="Observações: que tipo de vídeos, catálogo de produtos, testemunhos, etc."
+                value={value.conteudoVideosObs ?? ""}
+                onChange={(e) => onChange({ conteudoVideosObs: e.target.value })}
+                className="h-8 border-border bg-card/50 text-xs"
+              />
+            )}
+          </div>
+        </div>
+      </motion.div>
+
+      {/* 2.3 FUNCIONALIDADES ESPECIAIS — 16 checkboxes */}
+      <motion.div variants={fadeUp} custom={2.3} className="space-y-3 rounded-2xl border border-border bg-card/30 p-4">
+        <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Funcionalidades Especiais</Label>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {[
+            "Formulário", "Newsletter", "Multi-idioma", "WhatsApp",
+            "Instagram", "Maps", "Reservas", "Pagamentos",
+            "Login", "Admin", "API", "CRM",
+            "Analytics", "Pixel FB", "Pixel Google", "Live chat",
+          ].map((func) => {
+            const active = (value.funcionalidadesEspeciais ?? []).includes(func);
+            return (
+              <button
+                key={func}
+                type="button"
+                onClick={() => {
+                  const arr = value.funcionalidadesEspeciais ?? [];
+                  onChange({
+                    funcionalidadesEspeciais: arr.includes(func)
+                      ? arr.filter((f) => f !== func)
+                      : [...arr, func],
+                  });
+                }}
+                className={cn(
+                  "rounded-lg border px-2 py-1.5 text-[10px] font-medium transition-all active:scale-95",
+                  active
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border bg-card/50 text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                )}
+              >
+                {func}
+              </button>
+            );
+          })}
+        </div>
+      </motion.div>
 
       {/* 2.5 Design Visual — estética, patterns, textures, effects (modos) */}
       <motion.div variants={fadeUp} custom={2.5}>

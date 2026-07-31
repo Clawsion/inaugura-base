@@ -136,6 +136,13 @@ export const FormSchema = z.object({
   selectedSkills: z.array(z.string()).default([]),
   selectedIntegrations: z.array(z.string()).default([]),
   selectedDesignVisual: z.array(z.string()).default([]),
+  // NOVOS: referências, conteúdo e funcionalidades especiais
+  referencias: z.array(z.string()).default([]),
+  conteudoTextos: z.boolean().default(false),
+  conteudoTextosObs: z.string().default(""),
+  conteudoVideos: z.boolean().default(false),
+  conteudoVideosObs: z.string().default(""),
+  funcionalidadesEspeciais: z.array(z.string()).default([]),
 });
 
 export type FormValues = z.infer<typeof FormSchema>;
