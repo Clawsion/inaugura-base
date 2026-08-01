@@ -22,10 +22,12 @@ export interface SimpleForgeValues {
   palette: "auto" | "light" | "dark" | "brand";
   colorPreset: string;
   colorAdjust: { brightness: number; contrast: number; saturation: number };
+  customColors: { hex: string; role: string }[];
   typographyPref: "auto" | "modern-sans" | "geometric" | "humanist" | "editorial-serif" | "mono-tech";
   fontHeading: string;
   fontBody: string;
   fontMono: string;
+  customFonts: string[];
   animations: boolean;
   motionCombo: string;
   stackPref: "auto" | "modern" | "fullstack" | "supabase" | "python" | "ai-first" | "custom";
@@ -311,6 +313,42 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           <Slider label="Saturação" value={value.colorAdjust.saturation} onChange={(v) => onChange({ colorAdjust: { ...value.colorAdjust, saturation: v } })} />
         </div>
 
+        {/* Cores personalizadas — opção + (máx 4, combos de 3-4) */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] text-muted-foreground">Cores personalizadas (máx 4 · ideal 3)</span>
+            {value.customColors.length < 4 && (
+              <button type="button" onClick={() => {
+                const roles = ["Background", "Secundária", "Suporte", "Destaque"];
+                onChange({ customColors: [...value.customColors, { hex: "#5E6AD2", role: roles[value.customColors.length] ?? "Extra" }] });
+              }} className="flex items-center gap-0.5 text-[10px] text-primary hover:underline">
+                <Plus className="h-3 w-3" /> Adicionar cor
+              </button>
+            )}
+          </div>
+          {value.customColors.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {value.customColors.map((cc, i) => (
+                <div key={i} className="flex items-center gap-1.5 rounded-lg border border-border bg-card/30 p-1">
+                  <input type="color" value={cc.hex} onChange={(e) => {
+                    const colors = [...value.customColors]; colors[i] = { ...colors[i], hex: e.target.value };
+                    onChange({ customColors: colors });
+                  }} className="h-6 w-6 cursor-pointer rounded border-0 bg-transparent" />
+                  <span className="text-[9px] text-muted-foreground">{cc.role}</span>
+                  <button type="button" onClick={() => onChange({ customColors: value.customColors.filter((_, idx) => idx !== i) })} className="text-muted-foreground hover:text-destructive">
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          {value.customColors.length > 0 && (
+            <p className="text-[9px] text-muted-foreground">
+              Distribuição ideal: 60% bg · 20% secundária · 10% suporte · 10% destaque
+            </p>
+          )}
+        </div>
+
         {/* Tipografia + I'm Lucky */}
         <div className="flex items-center gap-2">
           <span className="text-[11px] text-muted-foreground">Tipografia:</span>
@@ -327,7 +365,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           </Button>
         </div>
 
-        {/* Preview de font escolhida */}
+        {/* Preview de font escolhida + opção + para fonts personalizadas (máx 3) */}
         <div className="rounded-lg border border-border bg-card/20 p-3">
           <div className="flex items-center justify-between text-[10px] text-muted-foreground">
             <span>Heading: {value.fontHeading || "Auto"}</span>
@@ -339,6 +377,44 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
             <div className="text-sm" style={{ fontFamily: value.fontBody || "inherit" }}>jumps over the lazy dog — 0123456789</div>
             <div className="text-xs font-mono" style={{ fontFamily: value.fontMono || "monospace" }}>const hello = "world";</div>
           </div>
+
+          {/* Fonts personalizadas — opção + (máx 3) */}
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            {value.customFonts.map((font, i) => (
+              <div key={i} className="flex items-center gap-1 rounded-md border border-border bg-card/30 px-1.5 py-0.5">
+                <span className="text-[9px]" style={{ fontFamily: font }}>{font}</span>
+                <button type="button" onClick={() => onChange({ customFonts: value.customFonts.filter((_, idx) => idx !== i) })} className="text-muted-foreground hover:text-destructive">
+                  <X className="h-2.5 w-2.5" />
+                </button>
+              </div>
+            ))}
+            {value.customFonts.length < 3 && (
+              <div className="flex items-center gap-1">
+                <input type="text" placeholder="Nome da font" onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    const val = (e.target as HTMLInputElement).value.trim();
+                    if (val) {
+                      onChange({ customFonts: [...value.customFonts, val] });
+                      (e.target as HTMLInputElement).value = "";
+                    }
+                  }
+                }} className="w-24 rounded-md border border-border bg-card/50 px-1.5 py-0.5 text-[9px]" />
+                <button type="button" onClick={() => {
+                  const input = document.querySelector('input[placeholder="Nome da font"]') as HTMLInputElement;
+                  if (input && input.value.trim()) {
+                    onChange({ customFonts: [...value.customFonts, input.value.trim()] });
+                    input.value = "";
+                  }
+                }} className="flex items-center gap-0.5 text-[10px] text-primary hover:underline">
+                  <Plus className="h-3 w-3" /> Font
+                </button>
+              </div>
+            )}
+            {value.customFonts.length > 0 && (
+              <span className="text-[9px] text-muted-foreground">Máx 3 fonts (1 heading + 1 body + 1 mono)</span>
+            )}
+          </div>
+
           <button type="button" onClick={() => setShowFontPopup(!showFontPopup)} className="mt-2 flex items-center gap-1 text-[10px] text-primary hover:underline">
             <Layers className="h-3 w-3" /> {showFontPopup ? "Fechar" : "Expandir"} mockup tipografia
           </button>
@@ -415,7 +491,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
         </AnimatePresence>
       </div>
 
-      {/* Stack & Combos */}
+      {/* Stack & Combos — organizado por categoria com expand/recolher */}
       <div className="space-y-3">
         <Label className="text-xs font-semibold">Stack & Combos</Label>
         {/* Preferência de stack */}
@@ -428,28 +504,42 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           ))}
         </div>
 
-        {/* Filtros + Combos prontos */}
-        <div className="flex flex-wrap gap-1">
-          {STACK_COMBO_CATEGORIES.map((cat) => (
-            <button key={cat.id} type="button" onClick={() => setStackComboFilter(cat.id)}
-              className={cn("rounded-md px-2 py-0.5 text-[10px] font-medium transition-all", stackComboFilter === cat.id ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground hover:bg-muted")}>
-              {cat.label}
-            </button>
-          ))}
-        </div>
-        <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
-          {filteredStackCombos.map((combo) => {
-            const isActive = value.stackCombo === combo.id;
-            const badge = combo.badge ? COMBO_BADGES[combo.badge] : null;
+        {/* Filtros por categoria — clicar expande/recolhe essa categoria */}
+        <div className="space-y-1.5">
+          {STACK_COMBO_CATEGORIES.filter((c) => c.id !== "all").map((cat) => {
+            const combos = CATALOG.stackCombos.filter((c) => c.category === cat.id);
+            if (combos.length === 0) return null;
+            const isExpanded = stackComboFilter === cat.id;
             return (
-              <button key={combo.id} type="button" onClick={() => onChange({ stackCombo: isActive ? "" : combo.id })}
-                className={cn("flex flex-col gap-1 rounded-lg border p-2 text-left transition-all", isActive ? "border-primary bg-primary/10 ring-1 ring-primary" : "border-border bg-card/30 hover:border-primary/40")}>
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-semibold">{combo.name}</span>
-                  {badge && <span className={cn("rounded px-1 py-0.5 text-[8px] font-bold", badge.color)}>{badge.label}</span>}
-                </div>
-                <span className="text-[9px] text-muted-foreground line-clamp-2">{combo.stack}</span>
-              </button>
+              <div key={cat.id} className="overflow-hidden rounded-lg border border-border bg-card/20">
+                <button type="button" onClick={() => setStackComboFilter(isExpanded ? "all" : cat.id)}
+                  className="flex w-full items-center justify-between p-2 hover:bg-accent/5">
+                  <span className="text-[11px] font-semibold">{cat.label} <span className="text-muted-foreground">({combos.length})</span></span>
+                  <ChevronDown className={cn("h-3.5 w-3.5 text-muted-foreground transition-transform", isExpanded && "rotate-180")} />
+                </button>
+                <AnimatePresence>
+                  {isExpanded && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="border-t border-border p-1.5">
+                      <div className="grid grid-cols-1 gap-1.5">
+                        {combos.map((combo) => {
+                          const isActive = value.stackCombo === combo.id;
+                          const badge = combo.badge ? COMBO_BADGES[combo.badge] : null;
+                          return (
+                            <button key={combo.id} type="button" onClick={() => onChange({ stackCombo: isActive ? "" : combo.id })}
+                              className={cn("flex flex-col gap-1 rounded-lg border p-2 text-left transition-all", isActive ? "border-primary bg-primary/10 ring-1 ring-primary" : "border-border bg-card/30 hover:border-primary/40")}>
+                              <div className="flex items-center justify-between">
+                                <span className="text-[11px] font-semibold">{combo.name}</span>
+                                {badge && <span className={cn("rounded px-1 py-0.5 text-[8px] font-bold", badge.color)}>{badge.label}</span>}
+                              </div>
+                              <span className="text-[9px] text-muted-foreground line-clamp-2">{combo.stack}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             );
           })}
         </div>
