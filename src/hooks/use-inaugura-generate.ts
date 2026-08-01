@@ -174,7 +174,14 @@ export function useInauguraGenerate() {
 // ============================================================================
 import type { FormValues } from "@/lib/schemas";
 
-export function formValuesToGenerateInput(form: FormValues): GenerateInput {
+export interface ExecParams {
+  mode: "individual" | "team" | "auto";
+  tier: string;
+  costProfile: "free_open" | "balanced" | "max";
+  hostPreference: "opencode" | "claude" | "codex" | "hybrid";
+}
+
+export function formValuesToGenerateInput(form: FormValues, exec?: ExecParams): GenerateInput {
   // Mapear siteType → project_type
   const projectTypeMap: Record<string, GenerateInput["project_type"]> = {
     "single-page": "portfolio",
@@ -199,9 +206,10 @@ export function formValuesToGenerateInput(form: FormValues): GenerateInput {
       font_prefs: form.typographyManual || undefined,
     },
     execution: {
-      mode: "auto",
-      cost_profile: "free_open",
-      host_preference: "opencode",
+      mode: exec?.mode ?? "auto",
+      cost_profile: exec?.costProfile ?? "free_open",
+      host_preference: exec?.hostPreference ?? "opencode",
+      team_functions: exec?.tier ? getTierFunctions(exec.tier) : undefined,
     },
     locks: {
       skills: form.selectedSkills || [],
@@ -215,4 +223,15 @@ export function formValuesToGenerateInput(form: FormValues): GenerateInput {
       include_zip_markdown: true,
     },
   };
+}
+
+function getTierFunctions(tierId: string): string[] | undefined {
+  // Import dinâmico para evitar circular dependency
+  try {
+    const { getTier } = require("@/lib/catalog");
+    const tier = getTier(tierId);
+    return tier?.team_functions;
+  } catch {
+    return undefined;
+  }
 }

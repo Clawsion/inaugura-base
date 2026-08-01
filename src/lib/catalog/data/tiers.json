@@ -1,0 +1,71 @@
+{
+  "version": "1.0.0",
+  "tiers": [
+    {
+      "id": "bronze",
+      "name": "Bronze",
+      "icon": "🥉",
+      "team_size": 3,
+      "team_functions": ["architect", "builder_ui", "ship"],
+      "description": "MVP / teste rápido",
+      "use_when": "Landing page simples, protótipo, validação de ideia",
+      "cost_profile": "free_open",
+      "estimated_days": "2-4"
+    },
+    {
+      "id": "prata",
+      "name": "Prata",
+      "icon": "🥈",
+      "team_size": 4,
+      "team_functions": ["architect", "frontend", "backend", "qa"],
+      "description": "Portfolio médio, site institucional",
+      "use_when": "Portfolio, site de agência, blog profissional",
+      "cost_profile": "free_open",
+      "estimated_days": "5-8"
+    },
+    {
+      "id": "ouro",
+      "name": "Ouro",
+      "icon": "🥇",
+      "team_size": 7,
+      "team_functions": ["architect", "design_system", "frontend", "motion", "backend", "qa", "deploy"],
+      "description": "Default Awwwards — site premium completo",
+      "use_when": "Sites premium, Awwwards, produto SaaS, e-commerce",
+      "cost_profile": "balanced",
+      "estimated_days": "10-18"
+    },
+    {
+      "id": "diamante",
+      "name": "Diamante",
+      "icon": "💎",
+      "team_size": 8,
+      "team_functions": ["architect", "design_system", "frontend", "motion", "backend", "security", "qa", "deploy"],
+      "description": "Auth/pay/dados sensíveis",
+      "use_when": "SaaS com auth, pagamentos, dados de utilizador, compliance",
+      "cost_profile": "balanced",
+      "estimated_days": "18-30"
+    },
+    {
+      "id": "titanium",
+      "name": "Titanium",
+      "icon": "🏆",
+      "team_size": 8,
+      "team_functions": ["architect", "design_system", "frontend", "motion", "backend", "security", "qa", "reviewer"],
+      "description": "Flagship — máximo polish + review",
+      "use_when": "Site flagship, concorrer a Awwwards SOTD, cliente premium",
+      "cost_profile": "max",
+      "estimated_days": "30-45"
+    },
+    {
+      "id": "custom",
+      "name": "Custom",
+      "icon": "⚙️",
+      "team_size": 3,
+      "team_functions": ["architect", "frontend", "deploy"],
+      "description": "Escolhe as funções manualmente",
+      "use_when": "Queres controlo total sobre a equipa",
+      "cost_profile": "free_open",
+      "estimated_days": "variável"
+    }
+  ]
+}

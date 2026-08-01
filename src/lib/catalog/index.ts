@@ -13,6 +13,7 @@ import functionsData from "./data/functions.json";
 import sectionsData from "./data/sections.json";
 import effectsData from "./data/effects.json";
 import presetsData from "./data/presets.json";
+import tiersData from "./data/tiers.json";
 
 export interface Skill {
   id: string;
@@ -82,6 +83,18 @@ export interface Preset {
   integrations?: string[];
 }
 
+export interface Tier {
+  id: string;
+  name: string;
+  icon: string;
+  team_size: number;
+  team_functions: string[];
+  description: string;
+  use_when: string;
+  cost_profile: "free_open" | "balanced" | "max";
+  estimated_days: string;
+}
+
 // ============================================================================
 // Catálogo em memória (cache de leitura)
 // ============================================================================
@@ -94,6 +107,7 @@ export const CATALOG = {
   sections: sectionsData.sections as Section[],
   effects: effectsData.effects as Effect[],
   presets: presetsData.presets as Preset[],
+  tiers: tiersData.tiers as Tier[],
   version: "1.0.0",
 };
 
@@ -123,6 +137,9 @@ export function getEffect(id: string): Effect | undefined {
 }
 export function getPreset(id: string): Preset | undefined {
   return CATALOG.presets.find((p) => p.id === id);
+}
+export function getTier(id: string): Tier | undefined {
+  return CATALOG.tiers.find((t) => t.id === id);
 }
 
 // Valida se um ID existe em qualquer catálogo

@@ -13,10 +13,14 @@ import { Logo } from "@/components/logo";
 import { ProjectManager } from "@/components/project-manager";
 import type { FormValues } from "@/lib/schemas";
 import { useInauguraGenerate, formValuesToGenerateInput } from "@/hooks/use-inaugura-generate";
+import { useAutosave } from "@/hooks/use-autosave";
 import type { InauguraPack, Recommendation } from "@/lib/schema/inaugura-pack";
+import { PresetSelector } from "@/components/forms/PresetSelector";
+import { ExecutionBlock } from "@/components/forms/ExecutionBlock";
+import type { Preset } from "@/lib/catalog";
 import { getSkinById } from "@/lib/skins";
 import { toast } from "sonner";
-import { Github, AlertCircle, RotateCcw } from "lucide-react";
+import { Github, AlertCircle, RotateCcw, Folder } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const FORM_INIT: FormValues = {
@@ -59,8 +63,14 @@ const FORM_INIT: FormValues = {
 };
 
 export default function Home() {
-  const [form, setForm] = useState<FormValues>(FORM_INIT);
+  const [form, setForm, resetForm] = useAutosave<FormValues>("inaugura:forge", FORM_INIT);
   const [showForm, setShowForm] = useState(true);
+  const [activePreset, setActivePreset] = useState<string | null>(null);
+  // Estado de execução (novos campos não estão no FormValues antigo)
+  const [execMode, setExecMode] = useState<"individual" | "team" | "auto">("auto");
+  const [execTier, setExecTier] = useState<string>("ouro");
+  const [execCost, setExecCost] = useState<"free_open" | "balanced" | "max">("free_open");
+  const [execHost, setExecHost] = useState<"opencode" | "claude" | "codex" | "hybrid">("opencode");
   // NOVO: skin ativo aplicado a toda a app (null = tema default)
   const [activeSkin, setActiveSkin] = useState<string | null>(null);
   const { theme, setTheme } = useTheme();
@@ -73,7 +83,36 @@ export default function Home() {
 
   const onChange = useCallback((patch: Partial<FormValues>) => {
     setForm((f) => ({ ...f, ...patch }));
-  }, []);
+  }, [setForm]);
+
+  // Aplicar preset: preenche locks do form
+  const applyPreset = useCallback((preset: Preset) => {
+    setActivePreset(preset.id);
+    setForm((f) => ({
+      ...f,
+      nicho: preset.project_type === "portfolio" ? "Portfólio Pessoal" :
+             preset.project_type === "agency" ? "Agência Criativa" :
+             preset.project_type === "saas" ? "SaaS B2B" :
+             preset.project_type === "ecommerce" ? "E-commerce" : f.nicho,
+      siteType: preset.project_type === "saas" ? "dashboard" :
+                preset.project_type === "ecommerce" ? "ecommerce" : "single-page",
+      seccoes: preset.sections,
+      efeitos: preset.effects,
+      selectedSkills: preset.skills,
+      selectedIntegrations: preset.integrations ?? [],
+      nivel: preset.level === "awwwards" ? "production" : preset.level === "lite" ? "mvp" : "production",
+    }));
+    // Aplica tier baseado no mode/size
+    if (preset.mode === "individual") {
+      setExecMode("individual");
+    } else if (preset.mode === "team") {
+      setExecMode("team");
+      // Mapear team_size para tier
+      const tierMap: Record<number, string> = { 3: "bronze", 4: "prata", 5: "prata", 6: "ouro", 7: "ouro", 8: "diamante" };
+      setExecTier(tierMap[preset.team_size ?? 6] ?? "ouro");
+    }
+    toast.success(`Preset "${preset.name}" aplicado`);
+  }, [setForm]);
 
   // Helper: gera o style object com CSS variables do skin ativo
   // USA o tema atual (dark OU light) — respeita o toggle ThemeToggle
@@ -170,26 +209,38 @@ export default function Home() {
 
   const onSubmit = useCallback(async () => {
     setShowForm(false);
-    const input = formValuesToGenerateInput(form);
+    const input = formValuesToGenerateInput(form, {
+      mode: execMode,
+      tier: execTier,
+      costProfile: execCost,
+      hostPreference: execHost,
+    });
     const r = await generate(input);
     if (r.ok) {
       toast.success("InauguraPack gerado com sucesso!");
     } else {
       toast.error("Falha na geração. Vê os detalhes abaixo.");
     }
-  }, [form, generate]);
+  }, [form, generate, execMode, execTier, execCost, execHost]);
 
   const onReset = useCallback(() => {
     resetGenerate();
+    resetForm();
+    setActivePreset(null);
     setShowForm(true);
-  }, [resetGenerate]);
+  }, [resetGenerate, resetForm]);
 
   // NOVO: regenerar alternativas
   const [regenerating, setRegenerating] = useState(false);
   const onRegenerate = useCallback(async () => {
     if (!genState.pack) return;
     setRegenerating(true);
-    const input = formValuesToGenerateInput(form);
+    const input = formValuesToGenerateInput(form, {
+      mode: execMode,
+      tier: execTier,
+      costProfile: execCost,
+      hostPreference: execHost,
+    });
     const r = await generate(input);
     if (r.ok) {
       toast.success("Novas alternativas geradas!");
@@ -197,7 +248,7 @@ export default function Home() {
       toast.error("Falha ao regenerar.");
     }
     setRegenerating(false);
-  }, [form, genState.pack, generate]);
+  }, [form, genState.pack, generate, execMode, execTier, execCost, execHost]);
 
   return (
     <main className="min-h-screen bg-background text-foreground" style={skinStyle}>
@@ -218,11 +269,20 @@ export default function Home() {
                   Inaugura<span className="text-primary">-Base</span>
                 </h1>
                 <p className="text-[10px] leading-tight text-muted-foreground">
-                  Briefing → spec production-ready
+                  Forge → Pack → Execute
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground"
+                onClick={() => window.location.href = "/projects"}
+              >
+                <Folder className="mr-1.5 h-3.5 w-3.5" />
+                Projetos
+              </Button>
               <Button
                 variant="ghost"
                 size="icon"
@@ -309,13 +369,55 @@ export default function Home() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0, y: -10 }}
+                className="space-y-4"
               >
+                {/* Presets no topo — 1 clique aplica locks */}
+                <PresetSelector activePreset={activePreset} onApply={applyPreset} />
+
+                {/* Form principal */}
                 <BriefingForm
                   value={form}
                   onChange={onChange}
                   onSubmit={onSubmit}
                   isLoading={genState.loading}
                 />
+
+                {/* Bloco Execução — Individual/Team + tiers + cost + host */}
+                <ExecutionBlock
+                  mode={execMode}
+                  tier={execTier}
+                  costProfile={execCost}
+                  hostPreference={execHost}
+                  onChange={(patch) => {
+                    if (patch.mode) setExecMode(patch.mode);
+                    if (patch.tier) setExecTier(patch.tier);
+                    if (patch.costProfile) setExecCost(patch.costProfile);
+                    if (patch.hostPreference) setExecHost(patch.hostPreference);
+                  }}
+                />
+
+                {/* Botão Gerar Pack (também no form, mas este é sticky-friendly) */}
+                <div className="sticky bottom-4 z-20 flex items-center justify-between gap-3 rounded-2xl border border-border bg-card/90 p-3 backdrop-blur-xl">
+                  <div className="text-xs text-muted-foreground">
+                    <span className="font-semibold text-foreground">
+                      {execMode === "individual" ? "Individual · 5 prompts" :
+                       execMode === "team" ? `Team · ${execTier} · ${form.seccoes?.length ?? 0} secções` :
+                       "Auto · router decide"}
+                    </span>
+                    <span className="mx-2">·</span>
+                    <span>{form.selectedSkills?.length ?? 0} skills</span>
+                    <span className="mx-1">·</span>
+                    <span>{form.selectedIntegrations?.length ?? 0} integrações</span>
+                  </div>
+                  <Button
+                    type="button"
+                    onClick={onSubmit}
+                    disabled={genState.loading || form.briefing.length < 20}
+                    className="min-w-[140px]"
+                  >
+                    {genState.loading ? "A gerar..." : "Gerar Pack →"}
+                  </Button>
+                </div>
               </motion.div>
             ) : genState.loading ? (
               <motion.div

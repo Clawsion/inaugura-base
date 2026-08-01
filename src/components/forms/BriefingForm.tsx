@@ -208,7 +208,7 @@ export function BriefingForm({
           {value.nicho === "" && (
             <p className="text-xs text-primary/70">
               <Sparkles className="mr-1 inline h-3 w-3" />
-              Auto-detetar a partir do briefing
+              Auto-detectar a partir do briefing
             </p>
           )}
         </motion.div>
@@ -626,7 +626,7 @@ export function BriefingForm({
         >
           <span className="relative z-10 flex items-center justify-center gap-2">
             <Wand2 className="h-5 w-5 transition-transform group-hover:rotate-12" />
-            {isLoading ? "A gerar…" : "Gerar Especificação"}
+            {isLoading ? "A gerar pack…" : "Gerar Pack"}
           </span>
         </Button>
         {value.briefing.length < 20 && (
