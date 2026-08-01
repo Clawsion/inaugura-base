@@ -24,7 +24,7 @@ import {
 import {
   Plus, Trash2, Sparkles, Info, Palette as PaletteIcon,
   Lock, Unlock, Copy, ClipboardPaste, Eye,
-  Sliders, Wand2,
+  Sliders, Wand2, ArrowUp, ArrowDown,
 } from "lucide-react";
 import { isHexValido } from "@/lib/color-utils";
 import chroma from "chroma-js";
@@ -571,6 +571,37 @@ export function PaletteInput({
                       >
                         <Trash2 className="mr-1 h-3 w-3" /> Remover
                       </Button>
+                      {/* Botões para mover cor para cima/baixo */}
+                      <div className="flex shrink-0 flex-col gap-0.5">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (i === 0) return;
+                            const next = [...manual];
+                            [next[i - 1], next[i]] = [next[i], next[i - 1]];
+                            onManualChange(next);
+                          }}
+                          disabled={i === 0}
+                          className="flex h-4 w-5 items-center justify-center rounded text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-30"
+                          title="Mover para cima"
+                        >
+                          <ArrowUp className="h-3 w-3" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (i === manual.length - 1) return;
+                            const next = [...manual];
+                            [next[i + 1], next[i]] = [next[i], next[i + 1]];
+                            onManualChange(next);
+                          }}
+                          disabled={i === manual.length - 1}
+                          className="flex h-4 w-5 items-center justify-center rounded text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-30"
+                          title="Mover para baixo"
+                        >
+                          <ArrowDown className="h-3 w-3" />
+                        </button>
+                      </div>
                     </div>
 
                     {/* Swatches expansíveis */}

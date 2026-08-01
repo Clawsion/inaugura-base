@@ -247,32 +247,28 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
   }, [value.fontHeading, value.fontBody, value.fontMono, value.fontLocked, onChange]);
 
   // Polimento — dá toque moderno à cor (ajusta HSL para tom premium visto em websites de topo)
-  const polishColor = useCallback((trendId?: string) => {
-    const trend = COLOR_TRENDS_2026.find((t) => t.id === trendId) ?? COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
-    const baseColor = trend.colors[0];
-    const hsl = hexToHsl(baseColor);
-    // Polimento: saturação 60-80%, lightness 45-55% (tom premium "vivo mas não gritante")
+  const polishColor = useCallback(() => {
+    // Usa a cor atual (seja de customColors ou da tendência ativa)
+    const currentColors: { hex: string; role: string }[] = value.customColors.length > 0
+      ? value.customColors
+      : (COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset)?.colors ?? COLOR_TRENDS_2026[0].colors).map((hex, i) => ({ hex, role: ["Background", "Secundária", "Suporte", "Destaque"][i] ?? `Cor ${i + 1}` }));
+    const baseHex = currentColors.find((_, i) => i === 2)?.hex ?? currentColors[0].hex;
+    const hsl = hexToHsl(baseHex);
     const polishedSat = Math.max(55, Math.min(85, hsl.s + 10));
     const polishedLight = Math.max(40, Math.min(58, hsl.l));
     const polishedHex = hslToHex(hsl.h, polishedSat, polishedLight);
-    // Gera paleta polida
     const count = value.colorCount;
-    const colors: { hex: string; role: string }[] = [];
     const roles = ["Background", "Secundária", "Suporte", "Destaque"];
+    const colors: { hex: string; role: string }[] = [];
     for (let i = 0; i < count; i++) {
-      if (i === 0) {
-        colors.push({ hex: hslToHex(hsl.h, Math.max(8, polishedSat * 0.15), 6), role: roles[0] });
-      } else if (i === 1) {
-        colors.push({ hex: hslToHex(hsl.h, polishedSat * 0.1, 95), role: roles[1] });
-      } else if (i === 2) {
-        colors.push({ hex: polishedHex, role: roles[2] });
-      } else {
-        colors.push({ hex: hslToHex((hsl.h + 30) % 360, polishedSat, polishedLight + 5), role: roles[3] });
-      }
+      if (i === 0) colors.push({ hex: hslToHex(hsl.h, Math.max(8, polishedSat * 0.15), 6), role: roles[0] });
+      else if (i === 1) colors.push({ hex: hslToHex(hsl.h, polishedSat * 0.1, 95), role: roles[1] });
+      else if (i === 2) colors.push({ hex: polishedHex, role: roles[2] });
+      else colors.push({ hex: hslToHex((hsl.h + 30) % 360, polishedSat, polishedLight + 5), role: roles[3] });
     }
     onChange({ customColors: colors });
     toast.success(`Polimento aplicado — tom premium ${polishedHex}`);
-  }, [value.colorCount, value.colorPreset, onChange]);
+  }, [value.customColors, value.colorCount, value.colorPreset, onChange]);
 
   // Generate — gera variação infinita de uma palete
   const generatePaletteVariation = useCallback((trendId?: string) => {
@@ -303,22 +299,25 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     return COLOR_TRENDS_2026.filter((t) => (TREND_FILTERS[t.id] ?? []).includes(paletteFilter));
   }, [paletteFilter]);
 
-  // Cor ativa para preview
-  const activePalette = value.customColors.length > 0
-    ? value.customColors
-    : (() => {
-        const trend = COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
-        return trend.colors.slice(0, value.colorCount).map((hex, i) => ({
-          hex,
-          role: ["Background", "Secundária", "Suporte", "Destaque"][i] ?? `Cor ${i + 1}`,
-        }));
-      })();
+  // Cor ativa para preview — SEMPRE usa customColors se existirem, senão gera da tendência
+  const activePalette = useMemo(() => {
+    if (value.customColors.length > 0) {
+      return value.customColors.slice(0, value.colorCount);
+    }
+    const trend = COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
+    return trend.colors.slice(0, value.colorCount).map((hex, i) => ({
+      hex,
+      role: ["Background", "Secundária", "Suporte", "Destaque"][i] ?? `Cor ${i + 1}`,
+    }));
+  }, [value.customColors, value.colorPreset, value.colorCount]);
 
-  // Preview colors (sempre do tamanho colorCount)
-  const previewColors = activePalette.slice(0, value.colorCount);
+  // Preview colors (sempre do tamanho colorCount) — actualizado em tempo real
+  const previewColors = activePalette;
   const previewAccent = previewColors.find((c) => c.role === "Destaque")?.hex ?? previewColors[0]?.hex ?? "#5E6AD2";
-  const previewBg = previewColors.find((c) => c.role === "Background")?.hex ?? "#0A0A0B";
-  const previewText = previewColors.length > 2 ? previewColors[1]?.hex ?? "#FAFAFA" : "#FAFAFA";
+  const previewBg = previewColors.find((c) => c.role === "Background")?.hex ?? previewColors[0]?.hex ?? "#0A0A0B";
+  const previewText = previewColors.find((c) => c.role === "Secundária")?.hex ?? "#FAFAFA";
+  const previewCard = previewColors.find((c) => c.role === "Suporte")?.hex ?? previewBg;
+  const previewMuted = previewText;
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">

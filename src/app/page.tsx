@@ -400,13 +400,15 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              {/* Skins dropdown — entre logo e toggle */}
-              {showForm && mounted && (
-                <SkinsDropdown activeSkin={activeSkin} onChange={setActiveSkin} />
-              )}
-              {/* Toggle Simplificada/Avançada */}
+              {/* Toggle Simplificada/Avançada — ao lado do logo */}
               {showForm && (
                 <SimpleAdvancedToggle mode={forgeMode} onToggle={toggleForgeMode} />
+              )}
+              {/* Espaço flexível */}
+              <div className="flex-1" />
+              {/* SKINS — ao lado de Projetos (extrema direita) */}
+              {showForm && mounted && (
+                <SkinsDropdown activeSkin={activeSkin} onChange={setActiveSkin} />
               )}
               <Button
                 variant="ghost"
