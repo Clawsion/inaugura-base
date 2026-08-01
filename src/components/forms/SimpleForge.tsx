@@ -16,6 +16,7 @@ import { adjustColor, generatePalette, hexToHsl, hslToHex, COLOR_TRENDS_2026 } f
 
 export interface SimpleForgeValues {
   briefing: string;
+  nicho: string;
   references: string[];
   projectType: string;
   aesthetic: string;
@@ -29,6 +30,7 @@ export interface SimpleForgeValues {
   fontHeading: string;
   fontBody: string;
   fontMono: string;
+  fontLocked: { heading: boolean; body: boolean; mono: boolean };
   customFonts: string[];
   animations: boolean;
   motionCombo: string;
@@ -89,9 +91,16 @@ const ALL_FONTS = [
   "Instrument Sans", "SWitzer", "Cabinet Grotesk", "Clash Display",
   "Outfit", "Space Grotesk", "Sora", "Syne", "Onest", "Hanken Grotesk",
   "Unbounded", "Bricolage Grotesque", "Geist Mono", "JetBrains Mono", "Space Mono",
+  // Fontshare (biblioteca online premium — infinitas possibilidades)
+  "Pixer", "Roxboro", "TT Commons Pro", "Suprapower", "Satoshi Variable",
+  "Migra", "Familjen Grotesk", "Hubot Sans", "Mona Sans", "Mier Book",
+  // Google Fonts (variable, moderno)
+  "Figtree", "DM Sans", "Manrope", "Albert Sans", "Be Vietnam Pro",
+  "Lexend", "Schibsted Grotesk", "Anybody", "Big Shoulders Display",
+  "Archivo", "Fraunces", "Newsreader", "Bricolage Grotesque",
 ];
 
-// Combos de fonts predefinidos (Perfect Combos)
+// Combos de fonts predefinidos (Perfect Combos) — expandido para I'm Lucky infinito
 const FONT_COMBOS = [
   { heading: "Geist", body: "Inter", mono: "Geist Mono" },
   { heading: "Plus Jakarta Sans", body: "Inter", mono: "JetBrains Mono" },
@@ -105,6 +114,18 @@ const FONT_COMBOS = [
   { heading: "Bricolage Grotesque", body: "Inter", mono: "Geist Mono" },
   { heading: "Unbounded", body: "Inter", mono: "Space Mono" },
   { heading: "Hanken Grotesk", body: "Hanken Grotesk", mono: "JetBrains Mono" },
+  { heading: "Figtree", body: "Figtree", mono: "Geist Mono" },
+  { heading: "DM Sans", body: "DM Sans", mono: "JetBrains Mono" },
+  { heading: "Manrope", body: "Manrope", mono: "Space Mono" },
+  { heading: "Albert Sans", body: "Albert Sans", mono: "Geist Mono" },
+  { heading: "Lexend", body: "Lexend", mono: "JetBrains Mono" },
+  { heading: "Archivo", body: "Inter", mono: "Geist Mono" },
+  { heading: "Fraunces", body: "Inter", mono: "JetBrains Mono" },
+  { heading: "Newsreader", body: "Inter", mono: "Space Mono" },
+  { heading: "Hubot Sans", body: "Inter", mono: "Geist Mono" },
+  { heading: "Mona Sans", body: "Mona Sans", mono: "JetBrains Mono" },
+  { heading: "Suprapower", body: "Inter", mono: "Space Mono" },
+  { heading: "Pixer", body: "Inter", mono: "Geist Mono" },
 ];
 
 const STACK_PREFS = [
@@ -202,18 +223,55 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     }
   }, [value, onChange]);
 
-  // I'm Lucky — escolhe combo de font aleatório
+  // I'm Lucky — escolhe combo de font aleatório (respeita locks)
   const imLuckyFont = useCallback(() => {
-    const pool = FONT_COMBOS.filter((f) => f.heading !== value.fontHeading);
-    const random = pool[Math.floor(Math.random() * pool.length)];
-    onChange({
-      fontHeading: random.heading,
-      fontBody: random.body,
-      fontMono: random.mono,
-      typographyPref: "auto",
+    const pool = FONT_COMBOS.filter((f) => {
+      // Se heading está locked, não muda heading
+      if (value.fontLocked.heading && f.heading !== value.fontHeading) return false;
+      if (value.fontLocked.body && f.body !== value.fontBody) return false;
+      if (value.fontLocked.mono && f.mono !== value.fontMono) return false;
+      return true;
     });
+    if (pool.length === 0) {
+      toast.info("Todas as fonts estão bloqueadas. Desbloqueia pelo menos uma.");
+      return;
+    }
+    const random = pool[Math.floor(Math.random() * pool.length)];
+    const patch: Partial<SimpleForgeValues> = { typographyPref: "auto" };
+    if (!value.fontLocked.heading) patch.fontHeading = random.heading;
+    if (!value.fontLocked.body) patch.fontBody = random.body;
+    if (!value.fontLocked.mono) patch.fontMono = random.mono;
+    onChange(patch);
     toast.success(`I'm Lucky! ${random.heading} + ${random.body} + ${random.mono}`);
-  }, [value.fontHeading, onChange]);
+  }, [value.fontHeading, value.fontBody, value.fontMono, value.fontLocked, onChange]);
+
+  // Polimento — dá toque moderno à cor (ajusta HSL para tom premium visto em websites de topo)
+  const polishColor = useCallback((trendId?: string) => {
+    const trend = COLOR_TRENDS_2026.find((t) => t.id === trendId) ?? COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
+    const baseColor = trend.colors[0];
+    const hsl = hexToHsl(baseColor);
+    // Polimento: saturação 60-80%, lightness 45-55% (tom premium "vivo mas não gritante")
+    const polishedSat = Math.max(55, Math.min(85, hsl.s + 10));
+    const polishedLight = Math.max(40, Math.min(58, hsl.l));
+    const polishedHex = hslToHex(hsl.h, polishedSat, polishedLight);
+    // Gera paleta polida
+    const count = value.colorCount;
+    const colors: { hex: string; role: string }[] = [];
+    const roles = ["Background", "Secundária", "Suporte", "Destaque"];
+    for (let i = 0; i < count; i++) {
+      if (i === 0) {
+        colors.push({ hex: hslToHex(hsl.h, Math.max(8, polishedSat * 0.15), 6), role: roles[0] });
+      } else if (i === 1) {
+        colors.push({ hex: hslToHex(hsl.h, polishedSat * 0.1, 95), role: roles[1] });
+      } else if (i === 2) {
+        colors.push({ hex: polishedHex, role: roles[2] });
+      } else {
+        colors.push({ hex: hslToHex((hsl.h + 30) % 360, polishedSat, polishedLight + 5), role: roles[3] });
+      }
+    }
+    onChange({ customColors: colors });
+    toast.success(`Polimento aplicado — tom premium ${polishedHex}`);
+  }, [value.colorCount, value.colorPreset, onChange]);
 
   // Generate — gera variação infinita de uma palete
   const generatePaletteVariation = useCallback((trendId?: string) => {
@@ -276,6 +334,14 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           className="min-h-[140px] resize-y border-border bg-card/50 text-sm leading-relaxed" />
         <p className="text-xs text-muted-foreground">{value.briefing.length} caracteres · mínimo 20</p>
       </motion.div>
+
+      {/* Tipo de Negócio / Nicho — por baixo do briefing */}
+      <div className="space-y-1.5">
+        <Label className="text-xs font-medium text-muted-foreground">Tipo de Negócio / Nicho</Label>
+        <input type="text" value={value.nicho} onChange={(e) => onChange({ nicho: e.target.value })}
+          placeholder="Ex: SaaS B2B, E-commerce moda, Restaurante, Agência criativa..."
+          className="w-full rounded-lg border border-border bg-card/50 px-3 py-2 text-sm" />
+      </div>
 
       {/* Referências */}
       <div className="space-y-2">
@@ -346,6 +412,10 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
             <Button type="button" size="sm" variant="outline" onClick={() => generatePaletteVariation()} className="h-6 gap-1 px-2 text-[10px]" title="Gerar palete aleatória infinita">
               <RefreshCw className="h-3 w-3" /> Generate
             </Button>
+            {/* Polimento — dá toque moderno à cor (visto em websites de topo) */}
+            <Button type="button" size="sm" variant="outline" onClick={() => polishColor()} className="h-6 gap-1 px-2 text-[10px]" title="Polimento — tom premium moderno">
+              <Sparkles className="h-3 w-3" /> Polimento
+            </Button>
           </div>
         </div>
 
@@ -393,33 +463,53 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                     <RefreshCw className="h-3 w-3" />
                   </button>
                 </div>
-                {/* Editor de cor individual (popup inline) */}
+                {/* Editor de cor individual (popup inline) — com botão OK para confirmar */}
                 <AnimatePresence>
                   {colorEditIndex !== null && isActive && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="mt-1.5 overflow-hidden rounded-md border border-border bg-card/50 p-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] text-muted-foreground">Cor {colorEditIndex + 1}:</span>
-                        <input type="color" value={colors[colorEditIndex] ?? "#5E6AD2"}
-                          onChange={(e) => {
-                            const newColors = [...value.customColors];
-                            while (newColors.length <= colorEditIndex) newColors.push({ hex: "#5E6AD2", role: "" });
-                            newColors[colorEditIndex] = { hex: e.target.value, role: ["Background", "Secundária", "Suporte", "Destaque"][colorEditIndex] ?? `Cor ${colorEditIndex + 1}` };
-                            onChange({ customColors: newColors });
-                          }}
-                          className="h-6 w-8 cursor-pointer rounded border-0 bg-transparent" />
-                        <code className="text-[9px] text-muted-foreground">{colors[colorEditIndex] ?? "#5E6AD2"}</code>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] text-muted-foreground">Cor {colorEditIndex + 1}:</span>
+                          <input type="color" value={previewColors[colorEditIndex]?.hex ?? "#5E6AD2"}
+                            onChange={(e) => {
+                              // Atualiza imediatamente — persiste em customColors
+                              const newColors = [...value.customColors];
+                              while (newColors.length <= colorEditIndex) newColors.push({ hex: "#5E6AD2", role: "" });
+                              newColors[colorEditIndex] = { hex: e.target.value, role: ["Background", "Secundária", "Suporte", "Destaque"][colorEditIndex] ?? `Cor ${colorEditIndex + 1}` };
+                              onChange({ customColors: newColors });
+                            }}
+                            className="h-6 w-8 cursor-pointer rounded border-0 bg-transparent" />
+                          <code className="text-[9px] text-muted-foreground">{previewColors[colorEditIndex]?.hex ?? "#5E6AD2"}</code>
+                          <Button type="button" size="sm" onClick={() => { setColorEditIndex(null); toast.success("Cor aplicada ao mockup"); }} className="h-5 gap-1 px-2 text-[9px]">OK</Button>
+                          <button type="button" onClick={() => setColorEditIndex(null)} className="ml-auto text-muted-foreground hover:text-foreground"><X className="h-3 w-3" /></button>
+                        </div>
                         {/* Sliders HSL individuais */}
-                        <div className="flex gap-1">
-                          <MiniSlider label="H" onChange={(v) => {
-                            const hsl = hexToHsl(colors[colorEditIndex] ?? "#5E6AD2");
+                        <div className="flex flex-wrap gap-2">
+                          <MiniSlider label="H" defaultValue={Math.round(hexToHsl(previewColors[colorEditIndex]?.hex ?? "#5E6AD2").h)} onChange={(v) => {
+                            const hsl = hexToHsl(previewColors[colorEditIndex]?.hex ?? "#5E6AD2");
                             const newHex = hslToHex(v, hsl.s, hsl.l);
                             const newColors = [...value.customColors];
                             while (newColors.length <= colorEditIndex) newColors.push({ hex: newHex, role: "" });
                             newColors[colorEditIndex] = { hex: newHex, role: ["Background", "Secundária", "Suporte", "Destaque"][colorEditIndex] ?? `Cor ${colorEditIndex + 1}` };
                             onChange({ customColors: newColors });
                           }} />
+                          <MiniSlider label="S" defaultValue={Math.round(hexToHsl(previewColors[colorEditIndex]?.hex ?? "#5E6AD2").s)} onChange={(v) => {
+                            const hsl = hexToHsl(previewColors[colorEditIndex]?.hex ?? "#5E6AD2");
+                            const newHex = hslToHex(hsl.h, v, hsl.l);
+                            const newColors = [...value.customColors];
+                            while (newColors.length <= colorEditIndex) newColors.push({ hex: newHex, role: "" });
+                            newColors[colorEditIndex] = { hex: newHex, role: ["Background", "Secundária", "Suporte", "Destaque"][colorEditIndex] ?? `Cor ${colorEditIndex + 1}` };
+                            onChange({ customColors: newColors });
+                          }} />
+                          <MiniSlider label="L" defaultValue={Math.round(hexToHsl(previewColors[colorEditIndex]?.hex ?? "#5E6AD2").l)} onChange={(v) => {
+                            const hsl = hexToHsl(previewColors[colorEditIndex]?.hex ?? "#5E6AD2");
+                            const newHex = hslToHex(hsl.h, hsl.s, v);
+                            const newColors = [...value.customColors];
+                            while (newColors.length <= colorEditIndex) newColors.push({ hex: newHex, role: "" });
+                            newColors[colorEditIndex] = { hex: newHex, role: ["Background", "Secundária", "Suporte", "Destaque"][colorEditIndex] ?? `Cor ${colorEditIndex + 1}` };
+                            onChange({ customColors: newColors });
+                          }} />
                         </div>
-                        <button type="button" onClick={() => setColorEditIndex(null)} className="ml-auto text-muted-foreground hover:text-foreground"><X className="h-3 w-3" /></button>
                       </div>
                     </motion.div>
                   )}
@@ -491,9 +581,9 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
 
         {/* Seletores de font individuais (Heading / Body / Mono) — escolha manual */}
         <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-3">
-          <FontSelector label="Heading" value={value.fontHeading} onChange={(v) => onChange({ fontHeading: v })} />
-          <FontSelector label="Body" value={value.fontBody} onChange={(v) => onChange({ fontBody: v })} />
-          <FontSelector label="Mono" value={value.fontMono} onChange={(v) => onChange({ fontMono: v })} />
+          <FontSelector label="Heading" value={value.fontHeading} locked={value.fontLocked.heading} onChange={(v) => onChange({ fontHeading: v })} onToggleLock={() => onChange({ fontLocked: { ...value.fontLocked, heading: !value.fontLocked.heading } })} />
+          <FontSelector label="Body" value={value.fontBody} locked={value.fontLocked.body} onChange={(v) => onChange({ fontBody: v })} onToggleLock={() => onChange({ fontLocked: { ...value.fontLocked, body: !value.fontLocked.body } })} />
+          <FontSelector label="Mono" value={value.fontMono} locked={value.fontLocked.mono} onChange={(v) => onChange({ fontMono: v })} onToggleLock={() => onChange({ fontLocked: { ...value.fontLocked, mono: !value.fontLocked.mono } })} />
         </div>
 
         {/* Preview de font em tempo real (influenciado pela palete de cores) */}
@@ -508,31 +598,49 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           </button>
         </div>
 
-        {/* Mockup tipografia expandido */}
+        {/* Mockup tipografia expandido — 3 vistas diferentes */}
         <AnimatePresence>
           {showFontPopup && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-              <div className="rounded-xl border-2 border-border bg-card p-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-muted-foreground">Mockup Tipografia</span>
-                  <button type="button" onClick={() => setShowFontPopup(false)} className="rounded p-1 text-xs text-muted-foreground hover:text-foreground"><X className="h-3 w-3" /></button>
+              <div className="space-y-3">
+                {/* Vista 1: Dark mode (usa palete de cores atual) */}
+                <div className="rounded-xl border-2 border-border p-4" style={{ background: previewBg, color: previewText }}>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-semibold opacity-60">Vista 1 · Dark/Light (palete atual)</span>
+                    <button type="button" onClick={() => setShowFontPopup(false)} className="rounded p-1 opacity-60 hover:opacity-100"><X className="h-3 w-3" /></button>
+                  </div>
+                  <div className="mt-3 space-y-3">
+                    <div className="text-3xl font-extrabold" style={{ fontFamily: value.fontHeading || "inherit" }}>The quick brown fox jumps</div>
+                    <div className="text-sm leading-relaxed opacity-80" style={{ fontFamily: value.fontBody || "inherit" }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                    <div className="text-xs font-mono opacity-60" style={{ fontFamily: value.fontMono || "monospace" }}>const inaugura = await generate();</div>
+                  </div>
                 </div>
-                <div className="mt-3 space-y-4">
-                  <div>
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Heading (H1)</div>
-                    <div className="text-4xl font-extrabold" style={{ fontFamily: value.fontHeading || "inherit" }}>The quick brown fox jumps</div>
+
+                {/* Vista 2: Light mode (fundo branco, texto escuro) */}
+                <div className="rounded-xl border-2 border-border bg-white p-4 text-zinc-900">
+                  <span className="text-[10px] font-semibold text-zinc-400">Vista 2 · Light Mode (branco)</span>
+                  <div className="mt-3 space-y-3">
+                    <div className="text-3xl font-extrabold" style={{ fontFamily: value.fontHeading || "inherit" }}>The quick brown fox jumps</div>
+                    <div className="text-sm leading-relaxed text-zinc-600" style={{ fontFamily: value.fontBody || "inherit" }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.</div>
+                    <div className="text-xs font-mono text-zinc-500" style={{ fontFamily: value.fontMono || "monospace" }}>const inaugura = await generate();</div>
                   </div>
-                  <div>
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Body Text</div>
-                    <div className="text-sm leading-relaxed" style={{ fontFamily: value.fontBody || "inherit" }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                </div>
+
+                {/* Vista 3: Card / Component (simula botão + card + UI) */}
+                <div className="rounded-xl border-2 border-border bg-zinc-100 p-4">
+                  <span className="text-[10px] font-semibold text-zinc-400">Vista 3 · Component / UI</span>
+                  <div className="mt-3 space-y-2">
+                    <div className="rounded-lg bg-white p-3 shadow-sm">
+                      <div className="text-lg font-bold" style={{ fontFamily: value.fontHeading || "inherit" }}>Card Title</div>
+                      <div className="text-xs text-zinc-500" style={{ fontFamily: value.fontBody || "inherit" }}>Card description with body font for readability.</div>
+                    </div>
+                    <button className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white" style={{ fontFamily: value.fontHeading || "inherit" }}>Button Action</button>
+                    <code className="block rounded-md bg-zinc-900 p-2 text-[10px] text-green-400" style={{ fontFamily: value.fontMono || "monospace" }}>npm install @inaugura/core</code>
                   </div>
-                  <div>
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Mono / Code</div>
-                    <div className="text-xs font-mono" style={{ fontFamily: value.fontMono || "monospace" }}>const inaugura = await generate();</div>
-                  </div>
-                  <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
-                    <Sparkles className="h-3 w-3" /> {value.fontHeading || "Auto"} + {value.fontBody || "Auto"} + {value.fontMono || "Auto"}
-                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                  <Sparkles className="h-3 w-3" /> {value.fontHeading || "Auto"} + {value.fontBody || "Auto"} + {value.fontMono || "Auto"}
                 </div>
               </div>
             </motion.div>
@@ -714,13 +822,20 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
 }
 
 // ============================================================================
-// FontSelector — dropdown de seleção manual de font
+// FontSelector — dropdown de seleção manual de font com botão bloquear
 // ============================================================================
-function FontSelector({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+function FontSelector({ label, value, locked, onChange, onToggleLock }: { label: string; value: string; locked: boolean; onChange: (v: string) => void; onToggleLock: () => void }) {
   return (
     <div className="space-y-0.5">
-      <span className="text-[9px] text-muted-foreground">{label}</span>
-      <select value={value} onChange={(e) => onChange(e.target.value)} className="w-full rounded-lg border border-border bg-card/50 px-2 py-1.5 text-[11px] font-medium">
+      <div className="flex items-center justify-between">
+        <span className="text-[9px] text-muted-foreground">{label}</span>
+        <button type="button" onClick={onToggleLock}
+          className={cn("flex h-4 w-4 items-center justify-center rounded text-[9px] transition-all", locked ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground hover:bg-muted")}
+          title={locked ? "Bloqueada — I'm Lucky não muda" : "Desbloqueada"}>
+          {locked ? "🔒" : "🔓"}
+        </button>
+      </div>
+      <select value={value} onChange={(e) => onChange(e.target.value)} className="w-full rounded-lg border border-border bg-card/50 px-2 py-1.5 text-[11px] font-medium" disabled={locked}>
         <option value="">Auto</option>
         {ALL_FONTS.map((f) => (
           <option key={f} value={f} style={{ fontFamily: f }}>{f}</option>
@@ -734,12 +849,12 @@ function FontSelector({ label, value, onChange }: { label: string; value: string
 // ============================================================================
 // MiniSlider — slider mini para edição HSL individual
 // ============================================================================
-function MiniSlider({ label, onChange }: { label: string; onChange: (v: number) => void }) {
+function MiniSlider({ label, defaultValue = 0, onChange }: { label: string; defaultValue?: number; onChange: (v: number) => void }) {
   return (
     <div className="flex items-center gap-1">
-      <span className="text-[8px] text-muted-foreground">{label}</span>
-      <input type="range" min={0} max={360} defaultValue={0} onChange={(e) => onChange(Number(e.target.value))}
-        className="h-1 w-12 cursor-pointer appearance-none rounded-full bg-muted accent-primary" />
+      <span className="text-[8px] text-muted-foreground w-3">{label}</span>
+      <input type="range" min={0} max={label === "H" ? 360 : 100} defaultValue={defaultValue} onChange={(e) => onChange(Number(e.target.value))}
+        className="h-1 w-16 cursor-pointer appearance-none rounded-full bg-muted accent-primary" />
     </div>
   );
 }

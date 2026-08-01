@@ -129,6 +129,7 @@ export default function Home() {
   const [form, setForm, resetForm] = useAutosave<FormValues>("inaugura:forge", FORM_INIT);
   const [simpleForm, setSimpleForm] = useAutosave<SimpleForgeValues>("inaugura:simple-forge", {
     briefing: "",
+    nicho: "",
     references: [],
     projectType: "landing",
     aesthetic: "modern-clean",
@@ -142,6 +143,7 @@ export default function Home() {
     fontHeading: "",
     fontBody: "",
     fontMono: "",
+    fontLocked: { heading: false, body: false, mono: false },
     customFonts: [],
     animations: true,
     motionCombo: "",
