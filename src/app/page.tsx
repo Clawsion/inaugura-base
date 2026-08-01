@@ -17,6 +17,7 @@ import { useAutosave } from "@/hooks/use-autosave";
 import type { InauguraPack, Recommendation } from "@/lib/schema/inaugura-pack";
 import { PresetSelector } from "@/components/forms/PresetSelector";
 import { ExecutionBlock } from "@/components/forms/ExecutionBlock";
+import { ModelsAgentsBlock } from "@/components/forms/ModelsAgentsBlock";
 import type { Preset } from "@/lib/catalog";
 import { getSkinById } from "@/lib/skins";
 import { toast } from "sonner";
@@ -399,6 +400,20 @@ export default function Home() {
 
                 {/* Bloco Execução — Individual/Team + tiers + cost + host */}
                 <ExecutionBlock
+                  mode={execMode}
+                  tier={execTier}
+                  costProfile={execCost}
+                  hostPreference={execHost}
+                  onChange={(patch) => {
+                    if (patch.mode) setExecMode(patch.mode);
+                    if (patch.tier) setExecTier(patch.tier);
+                    if (patch.costProfile) setExecCost(patch.costProfile);
+                    if (patch.hostPreference) setExecHost(patch.hostPreference);
+                  }}
+                />
+
+                {/* Bloco Modelos & Agentes — keys + routing por função + alternativas */}
+                <ModelsAgentsBlock
                   mode={execMode}
                   tier={execTier}
                   costProfile={execCost}

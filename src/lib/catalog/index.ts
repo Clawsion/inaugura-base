@@ -41,10 +41,17 @@ export interface Integration {
 export interface Model {
   id: string;
   name: string;
-  provider: string;
-  role: string;
-  cost: "free_open" | "balanced" | "max";
-  open: boolean;
+  provider: "anthropic" | "openai" | "google" | "moonshot" | "zhipu" | "deepseek" | "alibaba" | "minimax" | "nvidia" | "meta" | "mistral" | "xai" | "other";
+  access: "api" | "subscription" | "open_weight" | "both";
+  tier: "frontier" | "strong" | "value" | "flash" | "local";
+  roles: string[];
+  hosts: string[];
+  strengths: string[];
+  weaknesses: string[];
+  cost: "free" | "low" | "mid" | "high" | "max";
+  tool_calling: "excellent" | "good" | "fragile" | "unknown";
+  notes?: string;
+  enabled: boolean;
 }
 
 export interface AgentFunction {
