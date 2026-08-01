@@ -14,6 +14,8 @@ import sectionsData from "./data/sections.json";
 import effectsData from "./data/effects.json";
 import presetsData from "./data/presets.json";
 import tiersData from "./data/tiers.json";
+import stackCombosData from "./data/stack-combos.json";
+import motionCombosData from "./data/motion-combos.json";
 
 export interface Skill {
   id: string;
@@ -137,6 +139,26 @@ export interface Tier {
   }>;
 }
 
+export interface StackCombo {
+  id: string;
+  name: string;
+  category: string;
+  badge?: string;
+  stack: string;
+  tags: string[];
+}
+
+export interface MotionCombo {
+  id: string;
+  name: string;
+  level: "standard" | "secret";
+  complexity: number;
+  stack: string;
+  feeling: string;
+  when: string;
+  rarity?: string;
+}
+
 // ============================================================================
 // Catálogo em memória (cache de leitura)
 // ============================================================================
@@ -150,6 +172,9 @@ export const CATALOG = {
   effects: effectsData.effects as Effect[],
   presets: presetsData.presets as Preset[],
   tiers: tiersData.tiers as Tier[],
+  stackCombos: stackCombosData.combos as StackCombo[],
+  motionCombos: motionCombosData.motion_combos as MotionCombo[],
+  secretMotionCombos: motionCombosData.secret_combos as MotionCombo[],
   version: "1.0.0",
 };
 

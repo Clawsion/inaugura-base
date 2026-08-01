@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "combos": [
+    { "id": "saas-god-tier", "name": "SaaS God Tier", "category": "saas", "badge": "recommended", "stack": "Next.js 16 + React 19 + Tailwind v4 + shadcn + Better Auth + Drizzle + Neon + Stripe + Resend + Vercel + PostHog", "tags": ["Mais usado", "Default"] },
+    { "id": "supabase-power", "name": "Supabase Power", "category": "saas", "badge": "speed", "stack": "Next.js + Supabase (Auth+DB+Storage+Realtime) + shadcn + Stripe + Resend + Vercel", "tags": ["Mais rápido MVP"] },
+    { "id": "t3-classic", "name": "T3 Classic", "category": "saas", "stack": "Next.js + tRPC + Prisma + NextAuth + Tailwind", "tags": [] },
+    { "id": "remix-full-stack", "name": "Remix Full-Stack", "category": "saas", "stack": "Remix + Prisma + PostgreSQL + Tailwind", "tags": [] },
+    { "id": "sveltekit-modern", "name": "SvelteKit Modern", "category": "saas", "stack": "SvelteKit + Drizzle + Lucia Auth + Tailwind + Turso", "tags": [] },
+    { "id": "ai-native", "name": "AI-Native", "category": "ai", "badge": "trending", "stack": "Next.js + Vercel AI SDK + Supabase/Neon + Drizzle + Better Auth + OpenAI/Anthropic + shadcn + Stripe", "tags": ["Trending"] },
+    { "id": "rag-powerhouse", "name": "RAG Powerhouse", "category": "ai", "stack": "Next.js + LangChain/LlamaIndex + Pinecone/Weaviate + OpenAI + Supabase", "tags": [] },
+    { "id": "agent-builder", "name": "Agent Builder", "category": "ai", "stack": "Next.js + Vercel AI SDK + Zod + Drizzle + Neon + MCP tools", "tags": [] },
+    { "id": "ai-chat-app", "name": "AI Chat App", "category": "ai", "stack": "Next.js + Vercel AI SDK + Redis (streaming) + Supabase Auth", "tags": [] },
+    { "id": "indie-lightweight", "name": "Indie Lightweight", "category": "indie", "badge": "budget", "stack": "Next.js + Cloudflare D1/Drizzle + Better Auth + Polar/Lemon Squeezy + Resend", "tags": ["Mais barato"] },
+    { "id": "astro-micro-saas", "name": "Astro Micro-SaaS", "category": "indie", "stack": "Astro + Supabase + Stripe + Tailwind", "tags": [] },
+    { "id": "bun-speed-stack", "name": "Bun Speed Stack", "category": "indie", "stack": "Bun + Hono + SQLite/Turso + Better Auth", "tags": [] },
+    { "id": "solo-founder", "name": "Solo Founder", "category": "indie", "stack": "Next.js + Supabase + Lemon Squeezy + Resend", "tags": [] },
+    { "id": "enterprise-god-tier", "name": "Enterprise God Tier", "category": "enterprise", "badge": "enterprise", "stack": "Next.js + Clerk/WorkOS + Drizzle + PlanetScale + Stripe + Resend + PostHog", "tags": ["Melhor B2B"] },
+    { "id": "multi-tenant-saas", "name": "Multi-Tenant SaaS", "category": "enterprise", "stack": "Next.js + WorkOS (SSO/SAML) + Neon (RLS) + Stripe Billing", "tags": [] },
+    { "id": "corporate-dashboard", "name": "Corporate Dashboard", "category": "enterprise", "stack": "Next.js + Auth0 + PostgreSQL + tRPC + Recharts", "tags": [] },
+    { "id": "ecommerce-modern", "name": "E-commerce Modern", "category": "commerce", "stack": "Next.js + Shopify Hydrogen + Stripe + shadcn", "tags": [] },
+    { "id": "headless-commerce", "name": "Headless Commerce", "category": "commerce", "stack": "Next.js + Medusa.js + Stripe + Algolia", "tags": [] },
+    { "id": "marketplace", "name": "Marketplace", "category": "commerce", "stack": "Next.js + Supabase + Stripe Connect + Resend", "tags": [] },
+    { "id": "python-hybrid", "name": "Python Hybrid", "category": "python", "stack": "Next.js (frontend) + FastAPI + SQLModel + PostgreSQL", "tags": [] },
+    { "id": "django-full-stack", "name": "Django Full-Stack", "category": "python", "stack": "Django + HTMX + PostgreSQL + Tailwind", "tags": [] },
+    { "id": "ml-backend", "name": "ML Backend", "category": "python", "stack": "FastAPI + Next.js + PyTorch/scikit-learn + Redis + Postgres", "tags": [] },
+    { "id": "mobile-first", "name": "Mobile-First", "category": "mobile", "stack": "Expo (React Native) + Supabase + Stripe + NativeWind", "tags": [] },
+    { "id": "cross-platform-full", "name": "Cross-Platform Full", "category": "mobile", "stack": "Next.js (web) + Expo (mobile) + Supabase (shared)", "tags": [] },
+    { "id": "content-machine", "name": "Content Machine", "category": "content", "stack": "Next.js + Sanity/Payload CMS + Tailwind + Resend", "tags": [] }
+  ]
+}
