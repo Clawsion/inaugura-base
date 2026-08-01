@@ -20,6 +20,7 @@ import { ExecutionBlock } from "@/components/forms/ExecutionBlock";
 import { ModelsAgentsBlock } from "@/components/forms/ModelsAgentsBlock";
 import { SimpleForge, type SimpleForgeValues } from "@/components/forms/SimpleForge";
 import { SimpleAdvancedToggle } from "@/components/forms/SimpleAdvancedToggle";
+import { SkinsDropdown } from "@/components/skins/SkinsDropdown";
 import { useForgeMode } from "@/hooks/use-forge-mode";
 import type { Preset } from "@/lib/catalog";
 import { getSkinById } from "@/lib/skins";
@@ -385,6 +386,10 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center gap-2">
+              {/* Skins dropdown — entre logo e toggle */}
+              {showForm && mounted && (
+                <SkinsDropdown activeSkin={activeSkin} onChange={setActiveSkin} />
+              )}
               {/* Toggle Simplificada/Avançada */}
               {showForm && (
                 <SimpleAdvancedToggle mode={forgeMode} onToggle={toggleForgeMode} />
@@ -434,13 +439,6 @@ export default function Home() {
             </div>
           </div>
         </header>
-
-        {/* Secção de Skins — abaixo do header, todas visíveis (wrap) */}
-        <div className="border-b border-border bg-card/30">
-          <div className="mx-auto max-w-5xl px-4 py-2.5 sm:px-6">
-            <SkinSwitcher activeSkin={activeSkin} onChange={setActiveSkin} />
-          </div>
-        </div>
 
         {/* Hero — apenas quando o form está visível */}
         <AnimatePresence>
