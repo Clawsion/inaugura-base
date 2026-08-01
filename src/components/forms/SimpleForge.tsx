@@ -266,31 +266,33 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       else if (i === 2) colors.push({ hex: polishedHex, role: roles[2] });
       else colors.push({ hex: hslToHex((hsl.h + 30) % 360, polishedSat, polishedLight + 5), role: roles[3] });
     }
-    onChange({ customColors: colors });
+    onChange({ customColors: colors, colorPreset: value.colorPreset !== "auto" ? value.colorPreset : "electric-lavender" });
     toast.success(`Polimento aplicado — tom premium ${polishedHex}`);
   }, [value.customColors, value.colorCount, value.colorPreset, onChange]);
 
   // Generate — gera variação infinita de uma palete
   const generatePaletteVariation = useCallback((trendId?: string) => {
-    const trend = COLOR_TRENDS_2026.find((t) => t.id === trendId) ?? COLOR_TRENDS_2026[0];
+    // Se não há trendId, usa a tendência ativa ou a primeira
+    const effectiveTrendId = trendId ?? (value.colorPreset !== "auto" ? value.colorPreset : "electric-lavender");
+    const trend = COLOR_TRENDS_2026.find((t) => t.id === effectiveTrendId) ?? COLOR_TRENDS_2026[0];
     const baseColor = trend.colors[0];
     const hsl = hexToHsl(baseColor);
     // Varia hue aleatoriamente mantendo saturação e lightness
-    const newHue = (hsl.h + Math.random() * 60 - 30 + 360) % 360;
-    const newSat = Math.max(40, Math.min(90, hsl.s + (Math.random() * 20 - 10)));
-    const newLight = Math.max(35, Math.min(65, hsl.l + (Math.random() * 10 - 5)));
-    const newHex = hslToHex(newHue, newSat, newLight);
-    // Gera paleta com colorCount cores
+    const newHue = (hsl.h + Math.random() * 120 - 60 + 360) % 360;
+    const newSat = Math.max(40, Math.min(95, hsl.s + (Math.random() * 30 - 15)));
+    const newLight = Math.max(30, Math.min(70, hsl.l + (Math.random() * 20 - 10)));
     const count = value.colorCount;
-    const colors: { hex: string; role: string }[] = [];
     const roles = ["Background", "Secundária", "Suporte", "Destaque"];
+    const colors: { hex: string; role: string }[] = [];
     for (let i = 0; i < count; i++) {
-      const h = (newHue + i * (360 / count)) % 360;
-      const l = i === 0 ? 8 : i === 1 ? 90 : i === 2 ? 50 : 65;
-      colors.push({ hex: hslToHex(h, newSat, l), role: roles[i] ?? `Cor ${i + 1}` });
+      if (i === 0) colors.push({ hex: hslToHex(newHue, Math.max(8, newSat * 0.15), 6), role: roles[0] });
+      else if (i === 1) colors.push({ hex: hslToHex(newHue, newSat * 0.1, 95), role: roles[1] });
+      else if (i === 2) colors.push({ hex: hslToHex(newHue, newSat, newLight), role: roles[2] });
+      else colors.push({ hex: hslToHex((newHue + 30) % 360, newSat, newLight + 5), role: roles[3] });
     }
-    onChange({ customColors: colors, colorPreset: trendId ?? value.colorPreset });
-    toast.success(`Palete gerada: ${count} cores · ${hslToHex(newHue, newSat, newLight)}`);
+    // SEMPRE define colorPreset para o ID da tendência (nunca "auto") — para as swatches refletirem
+    onChange({ customColors: colors, colorPreset: effectiveTrendId });
+    toast.success(`Palete gerada: ${count} cores`);
   }, [value.colorCount, value.colorPreset, onChange]);
 
   // Paletes filtradas
@@ -301,13 +303,23 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
 
   // Cor ativa para preview — SEMPRE usa customColors se existirem, senão gera da tendência
   const activePalette = useMemo(() => {
-    if (value.customColors.length > 0) {
+    const roles = ["Background", "Secundária", "Suporte", "Destaque"];
+    if (value.customColors.length >= value.colorCount) {
       return value.customColors.slice(0, value.colorCount);
+    }
+    if (value.customColors.length > 0 && value.customColors.length < value.colorCount) {
+      // Tem customColors mas menos que colorCount — completar com cores da tendência
+      const trend = COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
+      const result = [...value.customColors];
+      for (let i = value.customColors.length; i < value.colorCount; i++) {
+        result.push({ hex: trend.colors[i] ?? "#5E6AD2", role: roles[i] ?? `Cor ${i + 1}` });
+      }
+      return result;
     }
     const trend = COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
     return trend.colors.slice(0, value.colorCount).map((hex, i) => ({
       hex,
-      role: ["Background", "Secundária", "Suporte", "Destaque"][i] ?? `Cor ${i + 1}`,
+      role: roles[i] ?? `Cor ${i + 1}`,
     }));
   }, [value.customColors, value.colorPreset, value.colorCount]);
 
@@ -460,7 +472,21 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
             {/* Seletor de número de cores: 2 / 3 / 4 */}
             <span className="text-[10px] text-muted-foreground">Cores:</span>
             {([2, 3, 4] as const).map((n) => (
-              <button key={n} type="button" onClick={() => onChange({ colorCount: n })}
+              <button key={n} type="button" onClick={() => {
+                // Ao mudar colorCount, ajustar customColors também
+                if (value.customColors.length > 0) {
+                  const roles = ["Background", "Secundária", "Suporte", "Destaque"];
+                  const trend = COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
+                  const newColors = [...value.customColors];
+                  while (newColors.length < n) {
+                    const idx = newColors.length;
+                    newColors.push({ hex: trend.colors[idx] ?? "#5E6AD2", role: roles[idx] ?? `Cor ${idx + 1}` });
+                  }
+                  onChange({ colorCount: n, customColors: newColors.slice(0, n) });
+                } else {
+                  onChange({ colorCount: n });
+                }
+              }}
                 className={cn("flex h-6 w-6 items-center justify-center rounded-md text-[10px] font-bold transition-all", value.colorCount === n ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground hover:bg-muted")}>
                 {n}
               </button>
@@ -490,7 +516,10 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
         <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
           {filteredPalettes.map((trend) => {
             const isActive = value.colorPreset === trend.id;
-            const colors = trend.colors.slice(0, value.colorCount);
+            // Se esta palete está ativa E tem customColors, mostra as cores personalizadas (não as estáticas)
+            const displayColors = isActive && value.customColors.length > 0
+              ? value.customColors.slice(0, value.colorCount).map(c => c.hex)
+              : trend.colors.slice(0, value.colorCount);
             return (
               <div key={trend.id} className={cn("rounded-lg border p-2 transition-all", isActive ? "border-primary bg-primary/10 ring-1 ring-primary" : "border-border bg-card/30 hover:border-primary/40")}>
                 <button type="button" onClick={() => onChange({ colorPreset: trend.id, customColors: [] })}
@@ -502,11 +531,22 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                 </button>
                 {/* Swatches — cada uma com ícone para editar individualmente */}
                 <div className="mt-1.5 flex gap-1">
-                  {colors.map((c, i) => (
+                  {displayColors.map((c, i) => (
                     <div key={i} className="group relative flex-1">
-                      <div className="h-8 rounded-md" style={{ background: c }} />
+                      <div className="h-8 rounded-md transition-colors duration-200" style={{ background: c }} />
                       {/* Ícone para ampliar cor individualmente */}
-                      <button type="button" onClick={() => setColorEditIndex(colorEditIndex === i ? null : i)}
+                      <button type="button" onClick={() => {
+                        // Ao abrir o editor, garantir que customColors tem as cores atuais
+                        if (value.customColors.length === 0) {
+                          const trend = COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
+                          const roles = ["Background", "Secundária", "Suporte", "Destaque"];
+                          const newCustom = trend.colors.slice(0, value.colorCount).map((hex, idx) => ({
+                            hex, role: roles[idx] ?? `Cor ${idx + 1}`,
+                          }));
+                          onChange({ customColors: newCustom });
+                        }
+                        setColorEditIndex(colorEditIndex === i ? null : i);
+                      }}
                         className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-bl-md rounded-tr-md bg-black/50 opacity-0 transition-opacity group-hover:opacity-100"
                         title="Editar cor individual">
                         <Maximize2 className="h-2.5 w-2.5 text-white" />
