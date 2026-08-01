@@ -2,69 +2,826 @@
   "version": "1.0.0",
   "presets": [
     {
-      "id": "awwwards-portfolio",
-      "name": "Awwwards Portfolio",
+      "id": "awwwards-folio-cinematic",
+      "name": "Awwwards Folio Cinematic",
+      "tagline": "Portfolio full-bleed, motion editorial, cases imersivos",
+      "category": "portfolio",
+      "badge": "awwwards",
       "project_type": "portfolio",
       "level": "awwwards",
-      "mode": "team",
-      "team_size": 6,
-      "team_functions": ["architect", "design_system", "frontend", "motion", "qa", "deploy"],
-      "sections": ["hero", "work", "about", "contact", "footer"],
-      "effects": ["reveal-scroll", "smooth-scroll", "parallax", "magnetic-buttons", "kinetic-typography"],
-      "skills": ["superpowers-using", "frontend-design", "ui-ux-pro-max", "premium-motion-principles", "react-best-practices", "web-design-guidelines"],
-      "mcps": ["context7", "github", "figma", "playwright"]
+      "cost_profile": "balanced",
+      "execution": { "mode": "team", "tier": "ouro", "team_size": 7, "host_preference": "hybrid" },
+      "visual": { "theme_id": "editorial-dark", "locks": { "aesthetic": "cinematic", "density": "editorial", "motion_language": "gsap" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "work", "priority": "P0" },
+        { "id": "about", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "services", "priority": "P1" },
+        { "id": "testimonials", "priority": "P1" },
+        { "id": "blog", "priority": "P2" }
+      ],
+      "effects": [
+        { "id": "smooth-scroll", "perf": "low" },
+        { "id": "reveal-scroll", "perf": "low" },
+        { "id": "parallax", "perf": "mid" },
+        { "id": "gsap-timeline", "perf": "high" }
+      ],
+      "features": ["i18n"],
+      "skills": ["frontend-design", "ui-ux-pro-max", "premium-motion-principles", "react-best-practices", "web-design-guidelines", "superpowers-using"],
+      "mcps": ["context7", "figma", "playwright", "github", "vercel"],
+      "excellence": {
+        "lighthouse_perf": 95,
+        "a11y": "AA",
+        "max_high_cost_effects": 2,
+        "must_have_done_when": ["reduced-motion obrigatório", "LCP image strategy no Architect", "cases com narrativa visual", "QA Playwright em mobile+desktop"]
+      },
+      "anti_slop": ["sem Inter default", "sem cards genéricos iguais", "tipografia Display distinta"]
     },
     {
-      "id": "agency",
-      "name": "Agency Site",
-      "project_type": "agency",
+      "id": "folio-minimal-swiss",
+      "name": "Folio Minimal Swiss",
+      "tagline": "Grelha rígida, tipo forte, quase zero decoração",
+      "category": "portfolio",
+      "badge": "speed",
+      "project_type": "portfolio",
       "level": "pro",
-      "mode": "team",
-      "team_size": 4,
-      "team_functions": ["architect", "design_system", "frontend", "deploy"],
-      "sections": ["hero", "services", "work", "about", "contact", "footer"],
-      "effects": ["reveal-scroll", "smooth-scroll", "parallax"],
-      "skills": ["superpowers-using", "frontend-design", "ui-ux-pro-max", "premium-motion-principles", "react-best-practices"],
-      "mcps": ["context7", "github", "figma"]
+      "cost_profile": "free_open",
+      "execution": { "mode": "team", "tier": "prata", "team_size": 4, "host_preference": "opencode" },
+      "visual": { "theme_id": "mono-ink", "locks": { "aesthetic": "swiss", "density": "minimal", "motion_language": "subtle" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "work", "priority": "P0" },
+        { "id": "about", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "services", "priority": "P1" }
+      ],
+      "effects": [
+        { "id": "smooth-scroll", "perf": "low" },
+        { "id": "reveal-scroll", "perf": "low" }
+      ],
+      "features": [],
+      "skills": ["frontend-design", "react-best-practices", "web-design-guidelines", "superpowers-using"],
+      "mcps": ["context7", "playwright", "github", "vercel"],
+      "excellence": {
+        "lighthouse_perf": 98,
+        "a11y": "AA",
+        "max_high_cost_effects": 0,
+        "must_have_done_when": ["CLS<0.05", "tipografia Display + Body coerente", "zero motion high-cost"]
+      },
+      "anti_slop": ["sem sombras soft genéricas", "sem gradientes", "tipografia faz o trabalho"]
     },
     {
-      "id": "saas-landing",
-      "name": "SaaS Landing",
+      "id": "folio-brutalist-raw",
+      "name": "Folio Brutalist Raw",
+      "tagline": "Assimétrico, tipo gritante, hover agressivo controlado",
+      "category": "portfolio",
+      "badge": "awwwards",
+      "project_type": "portfolio",
+      "level": "awwwards",
+      "cost_profile": "balanced",
+      "execution": { "mode": "team", "tier": "ouro", "team_size": 7, "host_preference": "hybrid" },
+      "visual": { "theme_id": "brutalist-ink", "locks": { "aesthetic": "brutalist", "density": "raw", "motion_language": "aggressive" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "work", "priority": "P0" },
+        { "id": "about", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "services", "priority": "P1" }
+      ],
+      "effects": [
+        { "id": "magnetic-buttons", "perf": "low" },
+        { "id": "smooth-scroll", "perf": "low" },
+        { "id": "kinetic-typography", "perf": "low" }
+      ],
+      "features": [],
+      "skills": ["frontend-design", "ui-ux-pro-max", "premium-motion-principles", "react-best-practices", "web-design-guidelines", "superpowers-using"],
+      "mcps": ["context7", "figma", "playwright", "github"],
+      "excellence": {
+        "lighthouse_perf": 92,
+        "a11y": "AA",
+        "max_high_cost_effects": 1,
+        "must_have_done_when": ["contraste AA em tipo grande", "motion capped", "grids quebrados intencionais"]
+      },
+      "anti_slop": ["nada de soft shadows genéricas", "grids quebrados intencionais", "sem purple gradient SaaS"]
+    },
+    {
+      "id": "agency-bento-premium",
+      "name": "Agency Bento Premium",
+      "tagline": "Studio criativo: bento, serviços, cases, contact CTA forte",
+      "category": "agency",
+      "badge": "awwwards",
+      "project_type": "agency",
+      "level": "awwwards",
+      "cost_profile": "balanced",
+      "execution": { "mode": "team", "tier": "ouro", "team_size": 7, "host_preference": "hybrid" },
+      "visual": { "theme_id": "bento", "locks": { "aesthetic": "bento", "density": "rich", "motion_language": "spring" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "services", "priority": "P0" },
+        { "id": "work", "priority": "P0" },
+        { "id": "about", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "stats", "priority": "P1" },
+        { "id": "blog", "priority": "P2" }
+      ],
+      "effects": [
+        { "id": "bento-grid", "perf": "low" },
+        { "id": "smooth-scroll", "perf": "low" },
+        { "id": "reveal-scroll", "perf": "low" },
+        { "id": "parallax", "perf": "mid" }
+      ],
+      "features": [],
+      "skills": ["ui-ux-pro-max", "frontend-design", "premium-motion-principles", "react-best-practices", "web-design-guidelines", "superpowers-using"],
+      "mcps": ["figma", "playwright", "github", "vercel", "context7"],
+      "excellence": {
+        "lighthouse_perf": 95,
+        "a11y": "AA",
+        "max_high_cost_effects": 1,
+        "must_have_done_when": ["CTA contact medível", "cases com métricas", "mobile bento reflow testado"]
+      },
+      "anti_slop": ["bento não = cards iguais", "sem lorem ipsum", "CTA claro não decorativo"]
+    },
+    {
+      "id": "saas-launch-conversion",
+      "name": "SaaS Launch Conversion",
+      "tagline": "Landing de produto: hero valor, features, pricing, FAQ, CTA",
+      "category": "saas",
+      "badge": "conversion",
       "project_type": "saas",
       "level": "pro",
-      "mode": "team",
-      "team_size": 5,
-      "team_functions": ["architect", "design_system", "frontend", "backend", "deploy"],
-      "sections": ["hero", "features", "pricing", "testimonials", "faq", "cta", "footer"],
-      "effects": ["reveal-scroll", "smooth-scroll", "bento-grid", "mesh-gradient"],
-      "skills": ["superpowers-using", "frontend-design", "react-best-practices", "tailwind-4-pro", "shadcn-registry"],
-      "mcps": ["context7", "github", "shadcn", "vercel"]
+      "cost_profile": "balanced",
+      "execution": { "mode": "team", "tier": "ouro", "team_size": 7, "host_preference": "hybrid" },
+      "visual": { "theme_id": "clean-saas", "locks": { "aesthetic": "clean-product", "density": "balanced", "motion_language": "subtle", "anti": "purple-slop" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "logos", "priority": "P0" },
+        { "id": "features", "priority": "P0" },
+        { "id": "pricing", "priority": "P0" },
+        { "id": "faq", "priority": "P0" },
+        { "id": "cta", "priority": "P0" },
+        { "id": "testimonials", "priority": "P1" },
+        { "id": "footer", "priority": "P0" }
+      ],
+      "effects": [
+        { "id": "reveal-scroll", "perf": "low" },
+        { "id": "bento-grid", "perf": "low" },
+        { "id": "mesh-gradient", "perf": "low" }
+      ],
+      "features": ["posthog", "sentry"],
+      "skills": ["react-best-practices", "frontend-design", "web-design-guidelines", "seo-audit", "security-basics", "superpowers-using"],
+      "mcps": ["context7", "playwright", "vercel", "github"],
+      "excellence": {
+        "lighthouse_perf": 95,
+        "a11y": "AA",
+        "max_high_cost_effects": 0,
+        "must_have_done_when": ["funnel CTA claro", "pricing a11y keyboard", "form/error states", "Lighthouse ≥95"]
+      },
+      "anti_slop": ["sem purple gradient SaaS genérico", "sem 3D hero que mata LCP", "copy específica não marketing vazio"]
     },
     {
-      "id": "ecommerce",
-      "name": "E-commerce",
+      "id": "ecommerce-boutique-premium",
+      "name": "Ecommerce Boutique Premium",
+      "tagline": "Loja pequena premium: PLP, PDP, cart, checkout",
+      "category": "commerce",
+      "badge": "enterprise",
+      "project_type": "ecommerce",
+      "level": "awwwards",
+      "cost_profile": "max",
+      "execution": { "mode": "team", "tier": "diamante", "team_size": 8, "host_preference": "hybrid" },
+      "visual": { "theme_id": "boutique-editorial", "locks": { "aesthetic": "boutique", "density": "editorial", "motion_language": "soft" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "features", "priority": "P0" },
+        { "id": "pricing", "priority": "P0" },
+        { "id": "cta", "priority": "P0" },
+        { "id": "testimonials", "priority": "P1" },
+        { "id": "footer", "priority": "P0" }
+      ],
+      "effects": [
+        { "id": "smooth-scroll", "perf": "low" },
+        { "id": "reveal-scroll", "perf": "low" }
+      ],
+      "features": ["stripe", "cloudinary", "resend"],
+      "skills": ["security-basics", "react-best-practices", "frontend-design", "webapp-testing", "superpowers-using"],
+      "mcps": ["stripe", "playwright", "vercel", "context7", "github"],
+      "excellence": {
+        "lighthouse_perf": 92,
+        "a11y": "AA",
+        "max_high_cost_effects": 0,
+        "must_have_done_when": ["checkout a11y", "error states completos", "Core Web Vitals PLP/PDP", "Security agent on"]
+      },
+      "anti_slop": ["sem horizontal scroll pesado no PLP", "checkout mobile-first", "imagens otimizadas AVIF/WebP"]
+    },
+    {
+      "id": "waitlist-startup-fast",
+      "name": "Waitlist Startup Fast",
+      "tagline": "1 página, email capture, social proof, ship em dias",
+      "category": "saas",
+      "badge": "speed",
+      "project_type": "saas",
+      "level": "lite",
+      "cost_profile": "free_open",
+      "execution": { "mode": "individual", "tier": "bronze", "team_size": 3, "host_preference": "opencode" },
+      "visual": { "theme_id": "minimal-launch", "locks": { "aesthetic": "minimal", "density": "sparse", "motion_language": "fade" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "features", "priority": "P0" },
+        { "id": "cta", "priority": "P0" },
+        { "id": "footer", "priority": "P0" }
+      ],
+      "effects": [
+        { "id": "reveal-scroll", "perf": "low" }
+      ],
+      "features": [],
+      "skills": ["react-best-practices", "frontend-design", "superpowers-using"],
+      "mcps": ["context7", "github", "vercel"],
+      "excellence": {
+        "lighthouse_perf": 99,
+        "a11y": "AA",
+        "max_high_cost_effects": 0,
+        "must_have_done_when": ["form + validation + success state", "spam protection", "Perf ≥99"]
+      },
+      "anti_slop": ["zero motion desnecessário", "1 página só", "copy direta"]
+    },
+    {
+      "id": "editorial-magazine",
+      "name": "Editorial Magazine",
+      "tagline": "Revista digital: artigos, tipografia, secções, autores",
+      "category": "content",
+      "badge": "awwwards",
+      "project_type": "corporate",
+      "level": "awwwards",
+      "cost_profile": "balanced",
+      "execution": { "mode": "team", "tier": "ouro", "team_size": 7, "host_preference": "hybrid" },
+      "visual": { "theme_id": "editorial-serif", "locks": { "aesthetic": "editorial", "density": "magazine", "motion_language": "reading" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "blog", "priority": "P0" },
+        { "id": "about", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "team", "priority": "P1" },
+        { "id": "footer", "priority": "P0" }
+      ],
+      "effects": [
+        { "id": "smooth-scroll", "perf": "low" },
+        { "id": "reveal-scroll", "perf": "low" }
+      ],
+      "features": ["i18n"],
+      "skills": ["frontend-design", "writing-seo", "react-best-practices", "web-design-guidelines", "superpowers-using"],
+      "mcps": ["context7", "playwright", "github", "vercel"],
+      "excellence": {
+        "lighthouse_perf": 95,
+        "a11y": "AA",
+        "max_high_cost_effects": 0,
+        "must_have_done_when": ["readable measure 65-75ch", "OG articles", "MDX/CMS", "dark mode opcional AA"]
+      },
+      "anti_slop": ["sem cards genéricos", "tipografia editorial real", "measure legível"]
+    },
+    {
+      "id": "flagship-awwwards-max",
+      "name": "Flagship Awwwards Max",
+      "tagline": "Site de assinatura: máximo craft, review final, zero atalhos",
+      "category": "experimental",
+      "badge": "flagship",
+      "project_type": "portfolio",
+      "level": "awwwards",
+      "cost_profile": "max",
+      "execution": { "mode": "team", "tier": "titanium", "team_size": 8, "host_preference": "hybrid" },
+      "visual": { "theme_id": "custom", "locks": { "aesthetic": "signature", "density": "custom", "motion_language": "gsap" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "work", "priority": "P0" },
+        { "id": "about", "priority": "P0" },
+        { "id": "services", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "testimonials", "priority": "P1" }
+      ],
+      "effects": [
+        { "id": "smooth-scroll", "perf": "low" },
+        { "id": "parallax", "perf": "mid" },
+        { "id": "gsap-timeline", "perf": "high" }
+      ],
+      "features": ["posthog"],
+      "skills": ["frontend-design", "ui-ux-pro-max", "premium-motion-principles", "react-best-practices", "web-design-guidelines", "superpowers-using", "security-basics", "webapp-testing"],
+      "mcps": ["context7", "figma", "playwright", "github", "vercel"],
+      "excellence": {
+        "lighthouse_perf": 95,
+        "a11y": "AA",
+        "max_high_cost_effects": 2,
+        "must_have_done_when": ["Reviewer sign-off obrigatório", "checklist entrega 100%", "Safari+Firefox QA", "reduced-motion", "≥2 refs Awwwards no brief"]
+      },
+      "anti_slop": ["zero atalhos", "processo Titanium + Reviewer", "não é mais effects, é mais rigor"],
+      "brief_seed": "Site de assinatura para [cliente]. Objetivo: Awwwards SOTD. Referências: [2-3 sites Awwwards]. Brief mínimo 200 chars com narrativa completa."
+    },
+    {
+      "id": "restaurant-orders-local",
+      "name": "Restaurant & Local Orders",
+      "tagline": "Menu, reservas, WhatsApp, Google Maps, horários",
+      "category": "local",
+      "badge": "conversion",
+      "project_type": "local_business",
+      "level": "pro",
+      "cost_profile": "free_open",
+      "execution": { "mode": "team", "tier": "prata", "team_size": 4, "host_preference": "opencode" },
+      "visual": { "theme_id": "warm-local", "locks": { "aesthetic": "warm", "density": "spacious", "motion_language": "subtle" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "services", "priority": "P0" },
+        { "id": "about", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "testimonials", "priority": "P1" },
+        { "id": "footer", "priority": "P0" }
+      ],
+      "effects": [{ "id": "reveal-scroll", "perf": "low" }],
+      "features": ["whatsapp", "calendly"],
+      "skills": ["frontend-design", "react-best-practices", "seo-audit", "superpowers-using"],
+      "mcps": ["context7", "playwright", "github", "vercel"],
+      "excellence": {
+        "lighthouse_perf": 96,
+        "a11y": "AA",
+        "max_high_cost_effects": 0,
+        "must_have_done_when": ["mobile-first real", "click-to-call", "horários estruturados schema", "SEO local"]
+      },
+      "anti_slop": ["sem imagens genéricas de stock", "menu real não placeholder", "horários atualizáveis"]
+    },
+    {
+      "id": "photographer-gallery-pro",
+      "name": "Photographer Gallery Pro",
+      "tagline": "Imagem first, lightbox, séries, zero ruído UI",
+      "category": "portfolio",
+      "badge": "awwwards",
+      "project_type": "portfolio",
+      "level": "pro",
+      "cost_profile": "balanced",
+      "execution": { "mode": "team", "tier": "ouro", "team_size": 7, "host_preference": "hybrid" },
+      "visual": { "theme_id": "carbon-gallery", "locks": { "aesthetic": "gallery", "density": "image-first", "motion_language": "ken-burns" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "work", "priority": "P0" },
+        { "id": "about", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "services", "priority": "P1" }
+      ],
+      "effects": [
+        { "id": "parallax", "perf": "mid" },
+        { "id": "smooth-scroll", "perf": "low" }
+      ],
+      "features": ["cloudinary"],
+      "skills": ["frontend-design", "react-best-practices", "web-design-guidelines", "superpowers-using"],
+      "mcps": ["playwright", "vercel", "context7"],
+      "excellence": {
+        "lighthouse_perf": 90,
+        "a11y": "AA",
+        "max_high_cost_effects": 1,
+        "must_have_done_when": ["LCP com priority + sizes", "AVIF/WebP", "gallery keyboard a11y", "budget de peso por página"]
+      },
+      "anti_slop": ["sem ruído UI", "imagem first sempre", "zero stock genérico"]
+    },
+    {
+      "id": "b2b-enterprise-trust",
+      "name": "B2B Enterprise Trust",
+      "tagline": "Enterprise: proof, security, compliance, contact sales",
+      "category": "saas",
+      "badge": "enterprise",
+      "project_type": "corporate",
+      "level": "pro",
+      "cost_profile": "max",
+      "execution": { "mode": "team", "tier": "diamante", "team_size": 8, "host_preference": "hybrid" },
+      "visual": { "theme_id": "corporate-calm", "locks": { "aesthetic": "corporate", "density": "structured", "motion_language": "minimal" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "features", "priority": "P0" },
+        { "id": "testimonials", "priority": "P0" },
+        { "id": "faq", "priority": "P0" },
+        { "id": "cta", "priority": "P0" },
+        { "id": "footer", "priority": "P0" }
+      ],
+      "effects": [{ "id": "reveal-scroll", "perf": "low" }],
+      "features": ["posthog", "sentry"],
+      "skills": ["react-best-practices", "frontend-design", "security-basics", "web-design-guidelines", "superpowers-using"],
+      "mcps": ["context7", "playwright", "vercel", "github"],
+      "excellence": {
+        "lighthouse_perf": 95,
+        "a11y": "AAA",
+        "max_high_cost_effects": 0,
+        "must_have_done_when": ["formulários robustos", "WCAG AAA", "zero motion high", "Security agent on"]
+      },
+      "anti_slop": ["menos animação, mais clareza", "prova social real", "compliance visível"]
+    },
+    {
+      "id": "ai-product-landing",
+      "name": "AI Product Landing",
+      "tagline": "Produto AI: demo, use-cases, trust, pricing, waitlist",
+      "category": "product",
+      "badge": "conversion",
+      "project_type": "saas",
+      "level": "pro",
+      "cost_profile": "balanced",
+      "execution": { "mode": "team", "tier": "ouro", "team_size": 7, "host_preference": "hybrid" },
+      "visual": { "theme_id": "future-clean", "locks": { "aesthetic": "future", "density": "balanced", "motion_language": "subtle", "anti": "neon-generic" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "features", "priority": "P0" },
+        { "id": "pricing", "priority": "P0" },
+        { "id": "faq", "priority": "P0" },
+        { "id": "cta", "priority": "P0" },
+        { "id": "testimonials", "priority": "P1" },
+        { "id": "footer", "priority": "P0" }
+      ],
+      "effects": [
+        { "id": "mesh-gradient", "perf": "low" },
+        { "id": "reveal-scroll", "perf": "low" }
+      ],
+      "features": ["posthog"],
+      "skills": ["react-best-practices", "frontend-design", "web-design-guidelines", "superpowers-using"],
+      "mcps": ["context7", "playwright", "vercel", "github"],
+      "excellence": {
+        "lighthouse_perf": 94,
+        "a11y": "AA",
+        "max_high_cost_effects": 0,
+        "must_have_done_when": ["trust/security copy", "waitlist rate-limit", "perf sem WebGL pesado default"]
+      },
+      "anti_slop": ["sem neon genérico", "demo real não screenshot", "trust visível"]
+    },
+    {
+      "id": "motion-studio-reel",
+      "name": "Motion Studio Reel",
+      "tagline": "Estúdio de motion: showreel, projetos, tech GSAP-first",
+      "category": "agency",
+      "badge": "awwwards",
+      "project_type": "agency",
+      "level": "awwwards",
+      "cost_profile": "balanced",
+      "execution": { "mode": "team", "tier": "ouro", "team_size": 7, "host_preference": "hybrid" },
+      "visual": { "theme_id": "kinetic", "locks": { "aesthetic": "kinetic", "density": "reel", "motion_language": "gsap" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "work", "priority": "P0" },
+        { "id": "about", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "services", "priority": "P1" }
+      ],
+      "effects": [
+        { "id": "smooth-scroll", "perf": "low" },
+        { "id": "gsap-timeline", "perf": "high" },
+        { "id": "parallax", "perf": "mid" },
+        { "id": "magnetic-buttons", "perf": "low" }
+      ],
+      "features": [],
+      "skills": ["frontend-design", "ui-ux-pro-max", "premium-motion-principles", "react-best-practices", "superpowers-using"],
+      "mcps": ["context7", "figma", "playwright", "github"],
+      "excellence": {
+        "lighthouse_perf": 90,
+        "a11y": "AA",
+        "max_high_cost_effects": 2,
+        "must_have_done_when": ["video poster LCP", "scrub 60fps checklist", "Safari QA obrigatório"]
+      },
+      "anti_slop": ["motion não = efeitos random", "reel com narrativa", "GSAP bem feito nãospaghetti"]
+    },
+    {
+      "id": "dev-folio-terminal",
+      "name": "Dev Folio Terminal",
+      "tagline": "Portfolio de developer: projetos, stack, OSS, blog técnico",
+      "category": "portfolio",
+      "badge": "speed",
+      "project_type": "portfolio",
+      "level": "pro",
+      "cost_profile": "free_open",
+      "execution": { "mode": "individual", "tier": "bronze", "team_size": 3, "host_preference": "opencode" },
+      "visual": { "theme_id": "mono-ink-terminal", "locks": { "aesthetic": "terminal", "density": "dev", "motion_language": "code" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "work", "priority": "P0" },
+        { "id": "about", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "blog", "priority": "P1" }
+      ],
+      "effects": [{ "id": "reveal-scroll", "perf": "low" }],
+      "features": [],
+      "skills": ["react-best-practices", "frontend-design", "superpowers-using"],
+      "mcps": ["context7", "github", "vercel"],
+      "excellence": {
+        "lighthouse_perf": 98,
+        "a11y": "AA",
+        "max_high_cost_effects": 0,
+        "must_have_done_when": ["RSS", "OG por post", "syntax highlight", "Perf ≥98"]
+      },
+      "anti_slop": ["sem design excessivo", "código legível", "stack real visível"]
+    },
+    {
+      "id": "architect-studio-spatial",
+      "name": "Architect Studio Spatial",
+      "tagline": "Projetos espaciais, plantas, fullscreen cases",
+      "category": "portfolio",
+      "badge": "awwwards",
+      "project_type": "portfolio",
+      "level": "awwwards",
+      "cost_profile": "balanced",
+      "execution": { "mode": "team", "tier": "ouro", "team_size": 7, "host_preference": "hybrid" },
+      "visual": { "theme_id": "editorial-light-spatial", "locks": { "aesthetic": "spatial", "density": "editorial", "motion_language": "smooth" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "work", "priority": "P0" },
+        { "id": "about", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "services", "priority": "P1" }
+      ],
+      "effects": [
+        { "id": "smooth-scroll", "perf": "low" },
+        { "id": "parallax", "perf": "mid" },
+        { "id": "reveal-scroll", "perf": "low" }
+      ],
+      "features": [],
+      "skills": ["frontend-design", "ui-ux-pro-max", "premium-motion-principles", "react-best-practices", "superpowers-using"],
+      "mcps": ["context7", "figma", "playwright", "github"],
+      "excellence": {
+        "lighthouse_perf": 93,
+        "a11y": "AA",
+        "max_high_cost_effects": 1,
+        "must_have_done_when": ["case detail com media set", "SEO por projeto", "schema CreativeWork"]
+      },
+      "anti_slop": ["sem imagens stock", "plantas reais", "tipografia editorial"]
+    },
+    {
+      "id": "agency-dark-luxury",
+      "name": "Agency Dark Luxury",
+      "tagline": "Tom luxury, espaçamento generoso, tipografia serif+sans",
+      "category": "agency",
+      "badge": "awwwards",
+      "project_type": "agency",
+      "level": "awwwards",
+      "cost_profile": "max",
+      "execution": { "mode": "team", "tier": "diamante", "team_size": 8, "host_preference": "hybrid" },
+      "visual": { "theme_id": "luxury-noir", "locks": { "aesthetic": "luxury", "density": "spacious", "motion_language": "slow" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "work", "priority": "P0" },
+        { "id": "about", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "services", "priority": "P1" }
+      ],
+      "effects": [
+        { "id": "reveal-scroll", "perf": "low" },
+        { "id": "smooth-scroll", "perf": "low" }
+      ],
+      "features": [],
+      "skills": ["frontend-design", "ui-ux-pro-max", "premium-motion-principles", "web-design-guidelines", "superpowers-using"],
+      "mcps": ["figma", "playwright", "github", "vercel"],
+      "excellence": {
+        "lighthouse_perf": 92,
+        "a11y": "AA",
+        "max_high_cost_effects": 0,
+        "must_have_done_when": ["contraste AA em gold/cream", "motion slow mas reduced-motion = hard cut"]
+      },
+      "anti_slop": ["nada de purple gradient SaaS", "espaçamento generoso", "serif+sans coerente"]
+    },
+    {
+      "id": "blog-authority-seo",
+      "name": "Blog Authority SEO",
+      "tagline": "Content engine: home, post, topic clusters, newsletter",
+      "category": "content",
+      "badge": "conversion",
+      "project_type": "corporate",
+      "level": "pro",
+      "cost_profile": "free_open",
+      "execution": { "mode": "individual", "tier": "prata", "team_size": 4, "host_preference": "opencode" },
+      "visual": { "theme_id": "content-clean", "locks": { "aesthetic": "content", "density": "readable", "motion_language": "none" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "blog", "priority": "P0" },
+        { "id": "about", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "footer", "priority": "P0" }
+      ],
+      "effects": [{ "id": "reveal-scroll", "perf": "low" }],
+      "features": [],
+      "skills": ["writing-seo", "seo-audit", "react-best-practices", "frontend-design", "superpowers-using"],
+      "mcps": ["context7", "github", "vercel"],
+      "excellence": {
+        "lighthouse_perf": 97,
+        "a11y": "AA",
+        "max_high_cost_effects": 0,
+        "must_have_done_when": ["SEO técnico completo", "sitemap", "schema Article", "Core Web Vitals posts com imagens"]
+      },
+      "anti_slop": ["sem popups agressivos", "copy de qualidade", "measure 65-75ch"]
+    },
+    {
+      "id": "event-conference-campaign",
+      "name": "Event & Conference Campaign",
+      "tagline": "Evento: lineup, schedule, speakers, tickets, venue",
+      "category": "experimental",
+      "badge": "awwwards",
+      "project_type": "corporate",
+      "level": "awwwards",
+      "cost_profile": "balanced",
+      "execution": { "mode": "team", "tier": "ouro", "team_size": 7, "host_preference": "hybrid" },
+      "visual": { "theme_id": "campaign-bold", "locks": { "aesthetic": "campaign", "density": "bold", "motion_language": "kinetic" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "features", "priority": "P0" },
+        { "id": "faq", "priority": "P0" },
+        { "id": "cta", "priority": "P0" },
+        { "id": "footer", "priority": "P0" }
+      ],
+      "effects": [
+        { "id": "kinetic-typography", "perf": "low" },
+        { "id": "smooth-scroll", "perf": "low" }
+      ],
+      "features": ["calendly"],
+      "skills": ["frontend-design", "ui-ux-pro-max", "premium-motion-principles", "react-best-practices", "superpowers-using"],
+      "mcps": ["context7", "playwright", "github", "vercel"],
+      "excellence": {
+        "lighthouse_perf": 93,
+        "a11y": "AA",
+        "max_high_cost_effects": 1,
+        "must_have_done_when": ["schedule mobile usável", "tickets CTA", "timezones", "Perf com assets de campanha"]
+      },
+      "anti_slop": ["sem countdown genérico", "schedule real", "speakers com foto"]
+    },
+    {
+      "id": "services-professional-firm",
+      "name": "Professional Services Firm",
+      "tagline": "Advogados/consultoria/clínica: confiança, serviços, equipa, contacto",
+      "category": "local",
+      "badge": "enterprise",
+      "project_type": "corporate",
+      "level": "pro",
+      "cost_profile": "balanced",
+      "execution": { "mode": "team", "tier": "prata", "team_size": 4, "host_preference": "hybrid" },
+      "visual": { "theme_id": "trust-corporate", "locks": { "aesthetic": "trust", "density": "structured", "motion_language": "minimal" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "services", "priority": "P0" },
+        { "id": "team", "priority": "P0" },
+        { "id": "testimonials", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "blog", "priority": "P1" },
+        { "id": "faq", "priority": "P1" }
+      ],
+      "effects": [{ "id": "reveal-scroll", "perf": "low" }],
+      "features": ["calendly"],
+      "skills": ["frontend-design", "react-best-practices", "seo-audit", "web-design-guidelines", "superpowers-using"],
+      "mcps": ["context7", "playwright", "github", "vercel"],
+      "excellence": {
+        "lighthouse_perf": 96,
+        "a11y": "AA",
+        "max_high_cost_effects": 0,
+        "must_have_done_when": ["formulário + LGPD/privacidade", "AA", "velocidade", "SEO serviços locais"]
+      },
+      "anti_slop": ["sem stock photos genéricas", "equipa real", "copy jurídico correto"]
+    },
+    {
+      "id": "real-estate-listings",
+      "name": "Real Estate Listings",
+      "tagline": "Listagens, filtros, detalhe imóvel, contacto agente",
+      "category": "local",
+      "badge": "conversion",
+      "project_type": "corporate",
+      "level": "pro",
+      "cost_profile": "balanced",
+      "execution": { "mode": "team", "tier": "ouro", "team_size": 7, "host_preference": "hybrid" },
+      "visual": { "theme_id": "property-light", "locks": { "aesthetic": "property", "density": "grid", "motion_language": "subtle" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "work", "priority": "P0" },
+        { "id": "about", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "footer", "priority": "P0" }
+      ],
+      "effects": [{ "id": "reveal-scroll", "perf": "low" }],
+      "features": ["algolia", "cloudinary"],
+      "skills": ["react-best-practices", "frontend-design", "web-design-guidelines", "superpowers-using"],
+      "mcps": ["context7", "playwright", "github", "vercel"],
+      "excellence": {
+        "lighthouse_perf": 92,
+        "a11y": "AA",
+        "max_high_cost_effects": 0,
+        "must_have_done_when": ["filtros a11y", "performance com muitas imagens", "BE/CMS agent on"]
+      },
+      "anti_slop": ["sem imagens gigantes não otimizadas", "filtros funcionais", "mapa real"]
+    },
+    {
+      "id": "podcast-video-hub",
+      "name": "Podcast & Video Hub",
+      "tagline": "Episódios, players, convidados, subscribe links",
+      "category": "content",
+      "badge": "conversion",
+      "project_type": "corporate",
+      "level": "pro",
+      "cost_profile": "balanced",
+      "execution": { "mode": "team", "tier": "ouro", "team_size": 7, "host_preference": "hybrid" },
+      "visual": { "theme_id": "media-dark", "locks": { "aesthetic": "media", "density": "hub", "motion_language": "subtle" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "blog", "priority": "P0" },
+        { "id": "about", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "footer", "priority": "P0" }
+      ],
+      "effects": [{ "id": "reveal-scroll", "perf": "low" }],
+      "features": [],
+      "skills": ["frontend-design", "react-best-practices", "web-design-guidelines", "superpowers-using"],
+      "mcps": ["context7", "playwright", "github", "vercel"],
+      "excellence": {
+        "lighthouse_perf": 90,
+        "a11y": "AA",
+        "max_high_cost_effects": 0,
+        "must_have_done_when": ["media fallback", "transcripts a11y", "performance com embeds"]
+      },
+      "anti_slop": ["sem auto-play", "transcripts reais", "subscribe links visíveis"]
+    },
+    {
+      "id": "headless-shop-performance",
+      "name": "Headless Shop Performance",
+      "tagline": "Commerce headless focado em velocidade e SEO",
+      "category": "commerce",
+      "badge": "speed",
       "project_type": "ecommerce",
       "level": "pro",
-      "mode": "team",
-      "team_size": 5,
-      "team_functions": ["architect", "design_system", "frontend", "backend", "qa"],
-      "sections": ["hero", "features", "pricing", "testimonials", "cta", "footer"],
-      "effects": ["reveal-scroll", "smooth-scroll"],
-      "skills": ["superpowers-using", "frontend-design", "react-best-practices", "security-basics"],
-      "mcps": ["context7", "github", "stripe", "supabase"],
-      "integrations": ["stripe", "cloudinary"]
+      "cost_profile": "max",
+      "execution": { "mode": "team", "tier": "diamante", "team_size": 8, "host_preference": "hybrid" },
+      "visual": { "theme_id": "clean-commerce", "locks": { "aesthetic": "clean", "density": "performance", "motion_language": "minimal" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "features", "priority": "P0" },
+        { "id": "pricing", "priority": "P0" },
+        { "id": "cta", "priority": "P0" },
+        { "id": "footer", "priority": "P0" }
+      ],
+      "effects": [{ "id": "reveal-scroll", "perf": "low" }],
+      "features": ["stripe", "cloudinary", "algolia"],
+      "skills": ["react-best-practices", "frontend-design", "seo-audit", "security-basics", "superpowers-using"],
+      "mcps": ["stripe", "playwright", "vercel", "context7"],
+      "excellence": {
+        "lighthouse_perf": 98,
+        "a11y": "AA",
+        "max_high_cost_effects": 0,
+        "must_have_done_when": ["LCP≤2.0s target", "edge caching notes no SPEC", "schema Product"]
+      },
+      "anti_slop": ["zero motion desnecessário", "edge-first", "schema completo"]
     },
     {
-      "id": "local-business",
-      "name": "Local Business",
-      "project_type": "local_business",
-      "level": "lite",
-      "mode": "individual",
-      "sections": ["hero", "services", "about", "contact", "footer"],
-      "effects": ["reveal-scroll", "smooth-scroll"],
-      "skills": ["superpowers-using", "frontend-design", "react-best-practices", "seo-audit"],
-      "mcps": ["context7", "github"],
-      "integrations": ["whatsapp", "calendly"]
+      "id": "product-design-studio",
+      "name": "Product Design Studio",
+      "tagline": "UX/UI studio: process, case metrics, design system showcase",
+      "category": "agency",
+      "badge": "conversion",
+      "project_type": "agency",
+      "level": "pro",
+      "cost_profile": "balanced",
+      "execution": { "mode": "team", "tier": "ouro", "team_size": 7, "host_preference": "hybrid" },
+      "visual": { "theme_id": "clean-product", "locks": { "aesthetic": "product", "density": "structured", "motion_language": "subtle" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "work", "priority": "P0" },
+        { "id": "services", "priority": "P0" },
+        { "id": "about", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "blog", "priority": "P1" }
+      ],
+      "effects": [{ "id": "reveal-scroll", "perf": "low" }],
+      "features": [],
+      "skills": ["ui-ux-pro-max", "frontend-design", "react-best-practices", "web-design-guidelines", "superpowers-using"],
+      "mcps": ["figma", "playwright", "github", "vercel"],
+      "excellence": {
+        "lighthouse_perf": 95,
+        "a11y": "AA",
+        "max_high_cost_effects": 0,
+        "must_have_done_when": ["cada case com before/after ou KPI", "a11y showcase real", "DS showcase"]
+      },
+      "anti_slop": ["sem cases sem métricas", "DS real visível", "processo documentado"]
+    },
+    {
+      "id": "saas-app-marketing-docs",
+      "name": "SaaS Marketing + Docs",
+      "tagline": "Marketing site + docs MDX + changelog",
+      "category": "saas",
+      "badge": "conversion",
+      "project_type": "saas",
+      "level": "pro",
+      "cost_profile": "balanced",
+      "execution": { "mode": "team", "tier": "ouro", "team_size": 7, "host_preference": "hybrid" },
+      "visual": { "theme_id": "product-docs-hybrid", "locks": { "aesthetic": "docs", "density": "hybrid", "motion_language": "subtle" } },
+      "sections": [
+        { "id": "hero", "priority": "P0" },
+        { "id": "features", "priority": "P0" },
+        { "id": "pricing", "priority": "P0" },
+        { "id": "blog", "priority": "P0" },
+        { "id": "contact", "priority": "P0" },
+        { "id": "footer", "priority": "P0" }
+      ],
+      "effects": [{ "id": "reveal-scroll", "perf": "low" }],
+      "features": ["i18n", "algolia"],
+      "skills": ["react-best-practices", "frontend-design", "writing-seo", "web-design-guidelines", "superpowers-using"],
+      "mcps": ["context7", "playwright", "vercel", "github"],
+      "excellence": {
+        "lighthouse_perf": 95,
+        "a11y": "AA",
+        "max_high_cost_effects": 0,
+        "must_have_done_when": ["docs nav keyboard", "search <100ms percebido", "SEO docs"]
+      },
+      "anti_slop": ["docs não = página estática", "search real", "changelog visível"]
     }
   ]
 }

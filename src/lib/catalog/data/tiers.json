@@ -6,22 +6,37 @@
       "name": "Bronze",
       "icon": "🥉",
       "team_size": 3,
-      "team_functions": ["architect", "builder_ui", "ship"],
-      "description": "MVP / teste rápido",
-      "use_when": "Landing page simples, protótipo, validação de ideia",
+      "team_functions": ["architect_design", "builder", "ship"],
+      "description": "MVP / teste rápido — landing simples",
+      "use_when": "Landing page simples, MVP rápido, teste de conceito",
       "cost_profile": "free_open",
-      "estimated_days": "2-4"
+      "estimated_days": "2-4",
+      "estimated_cost": "$0–15",
+      "avg_efficiency": 8.7,
+      "function_routing": {
+        "architect_design": { "model": "glm-5.2", "alt": "nemotron-3-ultra", "host": "opencode", "efficiency": 8.8, "why": "MIT, self-host, forte em specs+tokens de design" },
+        "builder": { "model": "kimi-k3", "alt": "deepseek-v4-pro", "host": "opencode", "efficiency": 8.9, "why": "Líder open em frontend coding; lógica simples sem trocar modelo" },
+        "ship": { "model": "deepseek-v4-flash", "alt": "minimax-m3", "host": "opencode", "efficiency": 8.5, "why": "Rápido, barato, smoke tests + deploy simples" }
+      }
     },
     {
       "id": "prata",
       "name": "Prata",
       "icon": "🥈",
       "team_size": 4,
-      "team_functions": ["architect", "frontend", "backend", "qa"],
-      "description": "Portfolio médio, site institucional",
+      "team_functions": ["architect", "frontend", "backend", "qa_deploy"],
+      "description": "Portfolio/agency médio — cliente pequeno",
       "use_when": "Portfolio, site de agência, blog profissional",
-      "cost_profile": "free_open",
-      "estimated_days": "5-8"
+      "cost_profile": "balanced",
+      "estimated_days": "5-8",
+      "estimated_cost": "$20–50",
+      "avg_efficiency": 8.9,
+      "function_routing": {
+        "architect": { "model": "claude-sonnet", "alt": "glm-5.2", "host": "claude", "efficiency": 9.0, "why": "Bom equilíbrio custo/qualidade em spec e riscos" },
+        "frontend": { "model": "kimi-k3", "alt": "gpt-5.6-terra", "host": "opencode", "efficiency": 9.1, "why": "Melhor open em UI/motion; funde bem as duas funções" },
+        "backend": { "model": "deepseek-v4-pro", "alt": "qwen-3.7-max", "host": "opencode", "efficiency": 8.9, "why": "Excelente SWE-bench, muito barato para lógica/API/CMS" },
+        "qa_deploy": { "model": "claude-haiku-4.5", "alt": "kimi-k2.7", "host": "claude", "efficiency": 8.7, "why": "Barato, rápido, smoke tests + deploy + docs" }
+      }
     },
     {
       "id": "ouro",
@@ -29,10 +44,21 @@
       "icon": "🥇",
       "team_size": 7,
       "team_functions": ["architect", "design_system", "frontend", "motion", "backend", "qa", "deploy"],
-      "description": "Default Awwwards — site premium completo",
+      "description": "Default Awwwards — site premium padrão",
       "use_when": "Sites premium, Awwwards, produto SaaS, e-commerce",
       "cost_profile": "balanced",
-      "estimated_days": "10-18"
+      "estimated_days": "10-18",
+      "estimated_cost": "$60–120",
+      "avg_efficiency": 9.3,
+      "function_routing": {
+        "architect": { "model": "claude-fable", "alt": "gpt-5.6-sol", "host": "claude", "efficiency": 9.6, "why": "Máximo raciocínio para spec/riscos/decisões de arquitetura" },
+        "design_system": { "model": "kimi-k3", "alt": "claude-sonnet", "host": "opencode", "efficiency": 9.3, "why": "Líder open Frontend Arena; tokens+estilo coerentes" },
+        "frontend": { "model": "kimi-k3", "alt": "gpt-5.6-terra", "host": "opencode", "efficiency": 9.4, "why": "Especialista comprovado em UI Awwwards-level" },
+        "motion": { "model": "kimi-k3", "alt": "claude-sonnet", "host": "opencode", "efficiency": 9.2, "why": "Mesma força de UI aplicada a GSAP/Lenis" },
+        "backend": { "model": "deepseek-v4-pro", "alt": "claude-opus", "host": "opencode", "efficiency": 9.1, "why": "Custo-benefício imbatível para APIs/CMS/forms" },
+        "qa": { "model": "claude-sonnet", "alt": "kimi-k2.7", "host": "claude", "efficiency": 9.0, "why": "Fiável com Playwright MCP, boa aderência a checklists" },
+        "deploy": { "model": "claude-sonnet", "alt": "gpt-5.6-terra", "host": "claude", "efficiency": 8.9, "why": "Consistente com Vercel MCP + docs de handover" }
+      }
     },
     {
       "id": "diamante",
@@ -40,21 +66,45 @@
       "icon": "💎",
       "team_size": 8,
       "team_functions": ["architect", "design_system", "frontend", "motion", "backend", "security", "qa", "deploy"],
-      "description": "Auth/pay/dados sensíveis",
+      "description": "Enterprise — auth/pay/dados sensíveis",
       "use_when": "SaaS com auth, pagamentos, dados de utilizador, compliance",
-      "cost_profile": "balanced",
-      "estimated_days": "18-30"
+      "cost_profile": "max",
+      "estimated_days": "18-30",
+      "estimated_cost": "$150–300",
+      "avg_efficiency": 9.4,
+      "function_routing": {
+        "architect": { "model": "claude-fable", "alt": "gpt-5.6-sol", "host": "claude", "efficiency": 9.7, "why": "Ceiling máximo para decisões de risco e arquitetura complexa" },
+        "design_system": { "model": "claude-fable", "alt": "kimi-k3", "host": "claude", "efficiency": 9.5, "why": "Direção de gosto/anti-slop ao nível mais alto" },
+        "frontend": { "model": "kimi-k3", "alt": "claude-opus", "host": "opencode", "efficiency": 9.5, "why": "Continua imbatível em UI premium mesmo neste tier" },
+        "motion": { "model": "kimi-k3", "alt": "gpt-5.3-codex-spark", "host": "opencode", "efficiency": 9.3, "why": "Consistência com Frontend, presets GSAP nativos" },
+        "backend": { "model": "claude-opus", "alt": "deepseek-v4-pro", "host": "claude", "efficiency": 9.4, "why": "Multi-ficheiro pesado, auth/payments exige mais raciocínio" },
+        "security": { "model": "claude-opus", "alt": "deepseek-v4-pro", "host": "claude", "efficiency": 9.0, "why": "Auditoria de auth/pagamentos exige o modelo mais cauteloso" },
+        "qa": { "model": "claude-sonnet", "alt": "gpt-5.6-terra", "host": "claude", "efficiency": 9.2, "why": "Fiabilidade comprovada com MCP em projetos críticos" },
+        "deploy": { "model": "claude-sonnet", "alt": "gpt-5.6-terra", "host": "claude", "efficiency": 9.1, "why": "Handover documentado, deploy limpo" }
+      }
     },
     {
       "id": "titanium",
       "name": "Titanium",
       "icon": "🏆",
       "team_size": 8,
-      "team_functions": ["architect", "design_system", "frontend", "motion", "backend", "security", "qa", "reviewer"],
-      "description": "Flagship — máximo polish + review",
+      "team_functions": ["architect", "design_system", "frontend_motion", "backend", "security", "qa", "reviewer", "deploy"],
+      "description": "Flagship — máximo absoluto, caça a prémios",
       "use_when": "Site flagship, concorrer a Awwwards SOTD, cliente premium",
       "cost_profile": "max",
-      "estimated_days": "30-45"
+      "estimated_days": "30-45",
+      "estimated_cost": "$300–600+",
+      "avg_efficiency": 9.5,
+      "function_routing": {
+        "architect": { "model": "claude-fable", "alt": "gpt-5.6-sol", "host": "claude", "efficiency": 9.8, "why": "Topo absoluto de raciocínio para specs de altíssimo risco (extended thinking)" },
+        "design_system": { "model": "claude-fable", "alt": "kimi-k3", "host": "claude", "efficiency": 9.6, "why": "Melhor juízo de gosto disponível para anti-slop total" },
+        "frontend_motion": { "model": "kimi-k3", "alt": "claude-opus", "host": "opencode", "efficiency": 9.6, "why": "Nenhum modelo supera K3 em frontend arena hoje; motion funde-se em frontend" },
+        "backend": { "model": "claude-opus", "alt": "gpt-5.6-sol", "host": "claude", "efficiency": 9.5, "why": "Máxima robustez para lógica crítica multi-ficheiro" },
+        "security": { "model": "claude-opus", "alt": "deepseek-v4-pro", "host": "claude", "efficiency": 9.3, "why": "Máximo cuidado em auth/payments/hardening" },
+        "qa": { "model": "claude-sonnet", "alt": "gpt-5.6-terra", "host": "claude", "efficiency": 9.4, "why": "Execução fiável de suites completas de teste + Playwright" },
+        "reviewer": { "model": "claude-fable", "alt": "gpt-5.6-sol", "host": "claude", "efficiency": 9.5, "why": "Único modelo com distância crítica suficiente para aprovar/rejeitar" },
+        "deploy": { "model": "claude-sonnet", "alt": "gpt-5.6-terra", "host": "claude", "efficiency": 9.2, "why": "Handover final impecável" }
+      }
     },
     {
       "id": "custom",
@@ -65,7 +115,10 @@
       "description": "Escolhe as funções manualmente",
       "use_when": "Queres controlo total sobre a equipa",
       "cost_profile": "free_open",
-      "estimated_days": "variável"
+      "estimated_days": "variável",
+      "estimated_cost": "variável",
+      "avg_efficiency": 0,
+      "function_routing": {}
     }
   ]
 }

@@ -71,16 +71,42 @@ export interface Effect {
 export interface Preset {
   id: string;
   name: string;
+  tagline: string;
+  category: "portfolio" | "agency" | "saas" | "commerce" | "content" | "local" | "product" | "experimental";
+  badge?: "awwwards" | "conversion" | "speed" | "enterprise" | "flagship";
+
+  // o que o preset aplica no Forge
   project_type: string;
-  level: string;
-  mode?: string;
-  team_size?: number;
-  team_functions?: string[];
-  sections: string[];
-  effects: string[];
+  level: "lite" | "pro" | "awwwards";
+  cost_profile: "free_open" | "balanced" | "max";
+  execution: {
+    mode: "individual" | "team";
+    tier?: string;
+    team_size?: number;
+    host_preference: "opencode" | "claude" | "codex" | "hybrid";
+  };
+
+  visual: {
+    theme_id: string;
+    locks: Record<string, string>;
+  };
+
+  sections: { id: string; priority: "P0" | "P1" | "P2" }[];
+  effects: { id: string; perf: "low" | "mid" | "high" }[];
+  features: string[];
   skills: string[];
   mcps: string[];
   integrations?: string[];
+
+  excellence: {
+    lighthouse_perf: number;
+    a11y: "AA" | "AAA";
+    max_high_cost_effects: number;
+    must_have_done_when: string[];
+  };
+
+  brief_seed?: string;
+  anti_slop: string[];
 }
 
 export interface Tier {
@@ -93,6 +119,15 @@ export interface Tier {
   use_when: string;
   cost_profile: "free_open" | "balanced" | "max";
   estimated_days: string;
+  estimated_cost: string;
+  avg_efficiency: number;
+  function_routing: Record<string, {
+    model: string;
+    alt: string;
+    host: string;
+    efficiency: number;
+    why: string;
+  }>;
 }
 
 // ============================================================================

@@ -85,34 +85,49 @@ export default function Home() {
     setForm((f) => ({ ...f, ...patch }));
   }, [setForm]);
 
-  // Aplicar preset: preenche locks do form
+  // Aplicar preset: preenche locks do form + execução + excellence
   const applyPreset = useCallback((preset: Preset) => {
     setActivePreset(preset.id);
+
+    // Sections: flatten P0/P1/P2 para seccoes (mantendo ordem P0 → P1 → P2)
+    const seccoes = [
+      ...preset.sections.filter(s => s.priority === "P0").map(s => s.id),
+      ...preset.sections.filter(s => s.priority === "P1").map(s => s.id),
+      ...preset.sections.filter(s => s.priority === "P2").map(s => s.id),
+    ];
+
+    // Effects: flatten para efeitos
+    const efeitos = preset.effects.map(e => e.id);
+
+    // Só preenche brief se vazio (não sobrescreve)
+    const newBrief = form.briefing.length < 20 && preset.brief_seed ? preset.brief_seed : form.briefing;
+
     setForm((f) => ({
       ...f,
-      nicho: preset.project_type === "portfolio" ? "Portfólio Pessoal" :
-             preset.project_type === "agency" ? "Agência Criativa" :
-             preset.project_type === "saas" ? "SaaS B2B" :
-             preset.project_type === "ecommerce" ? "E-commerce" : f.nicho,
+      briefing: newBrief,
+      nicho: preset.category === "portfolio" ? "Portfólio Pessoal" :
+             preset.category === "agency" ? "Agência Criativa" :
+             preset.category === "saas" ? "SaaS B2B" :
+             preset.category === "commerce" ? "E-commerce" :
+             preset.category === "content" ? "Blog / Media" :
+             preset.category === "local" ? "Negócio Local" : f.nicho,
       siteType: preset.project_type === "saas" ? "dashboard" :
                 preset.project_type === "ecommerce" ? "ecommerce" : "single-page",
-      seccoes: preset.sections,
-      efeitos: preset.effects,
+      seccoes,
+      efeitos,
       selectedSkills: preset.skills,
-      selectedIntegrations: preset.integrations ?? [],
+      selectedIntegrations: [...(preset.features ?? []), ...(preset.integrations ?? [])],
       nivel: preset.level === "awwwards" ? "production" : preset.level === "lite" ? "mvp" : "production",
     }));
-    // Aplica tier baseado no mode/size
-    if (preset.mode === "individual") {
-      setExecMode("individual");
-    } else if (preset.mode === "team") {
-      setExecMode("team");
-      // Mapear team_size para tier
-      const tierMap: Record<number, string> = { 3: "bronze", 4: "prata", 5: "prata", 6: "ouro", 7: "ouro", 8: "diamante" };
-      setExecTier(tierMap[preset.team_size ?? 6] ?? "ouro");
-    }
-    toast.success(`Preset "${preset.name}" aplicado`);
-  }, [setForm]);
+
+    // Aplica execução do preset
+    setExecMode(preset.execution.mode);
+    if (preset.execution.tier) setExecTier(preset.execution.tier);
+    setExecCost(preset.cost_profile as "free_open" | "balanced" | "max");
+    setExecHost(preset.execution.host_preference);
+
+    toast.success(`Preset "${preset.name}" aplicado · ${preset.sections.length} sec · ${preset.execution.tier ?? "individual"} · Perf≥${preset.excellence.lighthouse_perf}`);
+  }, [setForm, form.briefing]);
 
   // Helper: gera o style object com CSS variables do skin ativo
   // USA o tema atual (dark OU light) — respeita o toggle ThemeToggle
