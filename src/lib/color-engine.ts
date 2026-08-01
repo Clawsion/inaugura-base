@@ -112,6 +112,112 @@ export function generatePalette(baseHex: string, mode: "light" | "dark" = "dark"
 }
 
 // ============================================================================
+// GERAR PALETA ALEATÓRIA ROBUSTA — infinitas variações sempre válidas
+// ============================================================================
+export function generateRandomPalette(count: 2 | 3 | 4, baseTrendColors?: string[]): {
+  hex: string;
+  role: string;
+}[] {
+  const roles = ["Background", "Secundária", "Suporte", "Destaque"];
+
+  // Escolhe uma cor base aleatória: ou da tendência ou totalmente nova
+  let baseHue: number;
+  let baseSat: number;
+  let baseLight: number;
+
+  if (baseTrendColors && baseTrendColors.length > 0) {
+    // Varia a partir da cor base da tendência
+    const baseHsl = hexToHsl(baseTrendColors[0]);
+    baseHue = (baseHsl.h + (Math.random() - 0.5) * 180 + 360) % 360; // ±90 graus
+    baseSat = Math.max(45, Math.min(95, baseHsl.s + (Math.random() - 0.5) * 40));
+    baseLight = Math.max(35, Math.min(65, baseHsl.l + (Math.random() - 0.5) * 30));
+  } else {
+    // Cor totalmente aleatória
+    baseHue = Math.random() * 360;
+    baseSat = 50 + Math.random() * 40; // 50-90
+    baseLight = 40 + Math.random() * 25; // 40-65
+  }
+
+  // Gera cores complementares/análogas baseadas na teoria das cores
+  const colors: { hex: string; role: string }[] = [];
+
+  for (let i = 0; i < count; i++) {
+    let h: number, s: number, l: number;
+
+    if (i === 0) {
+      // Background — sempre escuro (dark mode) ou muito claro (light mode)
+      h = baseHue;
+      s = Math.max(5, baseSat * 0.15);
+      l = Math.random() > 0.5 ? 4 + Math.random() * 4 : 95 + Math.random() * 3;
+    } else if (i === 1 && count >= 2) {
+      // Secundária/Text — oposto do background (claro se bg escuro, escuro se bg claro)
+      h = baseHue;
+      s = Math.max(3, baseSat * 0.08);
+      const bgL = colors[0] ? hexToHsl(colors[0].hex).l : 6;
+      l = bgL < 20 ? 92 + Math.random() * 6 : 8 + Math.random() * 8;
+    } else if (i === 2 && count >= 3) {
+      // Suporte/Accent — a cor principal viva
+      h = baseHue;
+      s = baseSat;
+      l = baseLight;
+    } else {
+      // Destaque (i === 3) — cor complementar ou análoga vibrante
+      const offset = Math.random() > 0.5 ? 30 : 180; // 30 = análoga, 180 = complementar
+      h = (baseHue + offset) % 360;
+      s = Math.max(60, baseSat + 10);
+      l = Math.max(45, Math.min(60, baseLight + (Math.random() - 0.5) * 10));
+    }
+
+    colors.push({ hex: hslToHex(h, s, l), role: roles[i] ?? `Cor ${i + 1}` });
+  }
+
+  return colors;
+}
+
+// ============================================================================
+// POLIMENTO — dá toque moderno premium à cor (visto em websites de topo 2026)
+// ============================================================================
+export function polishPalette(colors: { hex: string; role: string }[]): {
+  hex: string;
+  role: string;
+}[] {
+  const roles = ["Background", "Secundária", "Suporte", "Destaque"];
+
+  // Encontra a cor principal (Suporte ou a mais saturada)
+  const accentColor = colors.find((c) => c.role === "Suporte" || c.role === "Destaque") ?? colors[0];
+  const hsl = hexToHsl(accentColor.hex);
+
+  // Polimento: ajusta para tom premium "vivo mas não gritante"
+  // Saturação 55-75% (não muito saturada, não desbotada)
+  const polishedSat = Math.max(55, Math.min(75, hsl.s));
+  // Lightness 42-55% (nem muito escura nem muito clara)
+  const polishedLight = Math.max(42, Math.min(55, hsl.l));
+  const polishedHex = hslToHex(hsl.h, polishedSat, polishedLight);
+
+  const count = colors.length;
+  const result: { hex: string; role: string }[] = [];
+
+  for (let i = 0; i < count; i++) {
+    if (i === 0) {
+      // Background — mantém escuro mas com leve tom da cor
+      result.push({ hex: hslToHex(hsl.h, Math.max(8, polishedSat * 0.12), 5), role: roles[0] });
+    } else if (i === 1) {
+      // Text — mantém claro mas com leve tom
+      result.push({ hex: hslToHex(hsl.h, Math.max(5, polishedSat * 0.08), 96), role: roles[1] });
+    } else if (i === 2) {
+      // Accent principal — a cor polida
+      result.push({ hex: polishedHex, role: roles[2] });
+    } else {
+      // Destaque — complementar polido
+      const compH = (hsl.h + 30) % 360;
+      result.push({ hex: hslToHex(compH, polishedSat, polishedLight + 3), role: roles[3] });
+    }
+  }
+
+  return result;
+}
+
+// ============================================================================
 // TENDÊNCIAS DE COR — Julho 2026
 // ============================================================================
 export interface ColorTrend {

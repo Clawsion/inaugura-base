@@ -12,7 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { CATALOG } from "@/lib/catalog";
-import { adjustColor, generatePalette, hexToHsl, hslToHex, COLOR_TRENDS_2026 } from "@/lib/color-engine";
+import { adjustColor, generatePalette, generateRandomPalette, polishPalette, hexToHsl, hslToHex, COLOR_TRENDS_2026 } from "@/lib/color-engine";
 
 export interface SimpleForgeValues {
   briefing: string;
@@ -246,53 +246,33 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     toast.success(`I'm Lucky! ${random.heading} + ${random.body} + ${random.mono}`);
   }, [value.fontHeading, value.fontBody, value.fontMono, value.fontLocked, onChange]);
 
-  // Polimento — dá toque moderno à cor (ajusta HSL para tom premium visto em websites de topo)
+  // Polimento — dá toque moderno premium à cor (usa engine robusto)
   const polishColor = useCallback(() => {
-    // Usa a cor atual (seja de customColors ou da tendência ativa)
+    // Garantir que customColors tem as cores atuais
     const currentColors: { hex: string; role: string }[] = value.customColors.length > 0
       ? value.customColors
-      : (COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset)?.colors ?? COLOR_TRENDS_2026[0].colors).map((hex, i) => ({ hex, role: ["Background", "Secundária", "Suporte", "Destaque"][i] ?? `Cor ${i + 1}` }));
-    const baseHex = currentColors.find((_, i) => i === 2)?.hex ?? currentColors[0].hex;
-    const hsl = hexToHsl(baseHex);
-    const polishedSat = Math.max(55, Math.min(85, hsl.s + 10));
-    const polishedLight = Math.max(40, Math.min(58, hsl.l));
-    const polishedHex = hslToHex(hsl.h, polishedSat, polishedLight);
-    const count = value.colorCount;
-    const roles = ["Background", "Secundária", "Suporte", "Destaque"];
-    const colors: { hex: string; role: string }[] = [];
-    for (let i = 0; i < count; i++) {
-      if (i === 0) colors.push({ hex: hslToHex(hsl.h, Math.max(8, polishedSat * 0.15), 6), role: roles[0] });
-      else if (i === 1) colors.push({ hex: hslToHex(hsl.h, polishedSat * 0.1, 95), role: roles[1] });
-      else if (i === 2) colors.push({ hex: polishedHex, role: roles[2] });
-      else colors.push({ hex: hslToHex((hsl.h + 30) % 360, polishedSat, polishedLight + 5), role: roles[3] });
-    }
-    onChange({ customColors: colors, colorPreset: value.colorPreset !== "auto" ? value.colorPreset : "electric-lavender" });
-    toast.success(`Polimento aplicado — tom premium ${polishedHex}`);
+      : (() => {
+          const trend = COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
+          const roles = ["Background", "Secundária", "Suporte", "Destaque"];
+          return trend.colors.slice(0, value.colorCount).map((hex, i) => ({ hex, role: roles[i] ?? `Cor ${i + 1}` }));
+        })();
+
+    // Usa a função robusta do color-engine
+    const polished = polishPalette(currentColors);
+    const effectiveTrendId = value.colorPreset !== "auto" ? value.colorPreset : "electric-lavender";
+    onChange({ customColors: polished, colorPreset: effectiveTrendId });
+    toast.success(`Polimento aplicado — tom premium ${polished.find(c => c.role === "Suporte")?.hex ?? polished[0].hex}`);
   }, [value.customColors, value.colorCount, value.colorPreset, onChange]);
 
-  // Generate — gera variação infinita de uma palete
+  // Generate — gera variação infinita robusta (usa engine com teoria das cores)
   const generatePaletteVariation = useCallback((trendId?: string) => {
-    // Se não há trendId, usa a tendência ativa ou a primeira
     const effectiveTrendId = trendId ?? (value.colorPreset !== "auto" ? value.colorPreset : "electric-lavender");
     const trend = COLOR_TRENDS_2026.find((t) => t.id === effectiveTrendId) ?? COLOR_TRENDS_2026[0];
-    const baseColor = trend.colors[0];
-    const hsl = hexToHsl(baseColor);
-    // Varia hue aleatoriamente mantendo saturação e lightness
-    const newHue = (hsl.h + Math.random() * 120 - 60 + 360) % 360;
-    const newSat = Math.max(40, Math.min(95, hsl.s + (Math.random() * 30 - 15)));
-    const newLight = Math.max(30, Math.min(70, hsl.l + (Math.random() * 20 - 10)));
-    const count = value.colorCount;
-    const roles = ["Background", "Secundária", "Suporte", "Destaque"];
-    const colors: { hex: string; role: string }[] = [];
-    for (let i = 0; i < count; i++) {
-      if (i === 0) colors.push({ hex: hslToHex(newHue, Math.max(8, newSat * 0.15), 6), role: roles[0] });
-      else if (i === 1) colors.push({ hex: hslToHex(newHue, newSat * 0.1, 95), role: roles[1] });
-      else if (i === 2) colors.push({ hex: hslToHex(newHue, newSat, newLight), role: roles[2] });
-      else colors.push({ hex: hslToHex((newHue + 30) % 360, newSat, newLight + 5), role: roles[3] });
-    }
-    // SEMPRE define colorPreset para o ID da tendência (nunca "auto") — para as swatches refletirem
+
+    // Usa a função robusta do color-engine
+    const colors = generateRandomPalette(value.colorCount, trend.colors);
     onChange({ customColors: colors, colorPreset: effectiveTrendId });
-    toast.success(`Palete gerada: ${count} cores`);
+    toast.success(`Palete gerada: ${value.colorCount} cores`);
   }, [value.colorCount, value.colorPreset, onChange]);
 
   // Paletes filtradas
