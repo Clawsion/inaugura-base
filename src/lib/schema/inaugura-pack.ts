@@ -154,6 +154,9 @@ export const InauguraPackSchema = z.object({
     created_at: z.string(),
     compiler_model: z.string(),
     polish_model: z.string().optional(),
+    // Versionamento (P0)
+    catalog_version: z.string().default("1.0.0"),
+    schema_version: z.string().default("1.0.0"),
   }),
 
   overview: z.object({

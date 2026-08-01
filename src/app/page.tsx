@@ -364,6 +364,11 @@ export default function Home() {
                     rec={genState.rec}
                     onRegenerate={onRegenerate}
                     regenerating={regenerating}
+                    packId={genState.packId}
+                    projectId={genState.projectId}
+                    provider={genState.provider}
+                    model={genState.model}
+                    latencyMs={genState.latencyMs}
                   />
                 ) : (
                   <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-6">

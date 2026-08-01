@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   Tabs,
@@ -23,6 +24,7 @@ import {
   Package,
   RefreshCw,
   Download,
+  Play,
 } from "lucide-react";
 
 interface Props {
@@ -30,10 +32,16 @@ interface Props {
   rec: Recommendation | null;
   onRegenerate?: () => void;
   regenerating?: boolean;
+  packId?: string | null;
+  projectId?: string | null;
+  provider?: string | null;
+  model?: string | null;
+  latencyMs?: number | null;
 }
 
-export function InauguraPackResults({ pack, rec, onRegenerate, regenerating }: Props) {
+export function InauguraPackResults({ pack, rec, onRegenerate, regenerating, packId, projectId, provider, model, latencyMs }: Props) {
   const [downloading, setDownloading] = useState(false);
+  const router = useRouter();
 
   const handleDownloadZip = async () => {
     setDownloading(true);
@@ -99,7 +107,13 @@ export function InauguraPackResults({ pack, rec, onRegenerate, regenerating }: P
               {regenerating ? "A regenerar..." : "Regenerar"}
             </Button>
           )}
-          <Button size="sm" onClick={handleDownloadZip} disabled={downloading}>
+          {packId && (
+            <Button size="sm" onClick={() => router.push(`/project/${packId}/execute`)}>
+              <Play className="mr-1.5 h-3 w-3" />
+              Abrir Painel de Execução
+            </Button>
+          )}
+          <Button size="sm" onClick={handleDownloadZip} disabled={downloading} variant="outline">
             <Download className="mr-1.5 h-3 w-3" />
             {downloading ? "A exportar..." : "Export pack"}
           </Button>
@@ -150,6 +164,20 @@ export function InauguraPackResults({ pack, rec, onRegenerate, regenerating }: P
                 <Stat label="Dias estimados" value={pack.overview.days_estimate} />
                 <Stat label="Tokens" value={pack.overview.token_cost_estimate} />
               </div>
+              {provider && model && (
+                <div className="rounded-lg border border-border bg-card/30 p-2 text-xs">
+                  <span className="text-muted-foreground">Gerado com: </span>
+                  <span className="font-mono text-primary">{model}</span>
+                  <span className="text-muted-foreground"> @ </span>
+                  <span className="font-mono">{provider}</span>
+                  {latencyMs && (
+                    <span className="text-muted-foreground"> · {(latencyMs / 1000).toFixed(1)}s</span>
+                  )}
+                  {pack.meta.catalog_version && (
+                    <span className="text-muted-foreground"> · catálogo v{pack.meta.catalog_version}</span>
+                  )}
+                </div>
+              )}
               <div>
                 <span className="text-xs uppercase tracking-wider text-muted-foreground">Stack</span>
                 <div className="mt-1 flex flex-wrap gap-2">

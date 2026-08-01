@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,20 +10,105 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ============================================================================
+// INAUGURA BASE — Schema de produção
+// ============================================================================
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  projects Project[]
 }
 
-model Post {
+model Project {
   id        String   @id @default(cuid())
+  userId    String?
   title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
+  brief     String
+  projectType String
+  level     String   @default("pro")
+  mode      String   @default("individual")
+  status    String   @default("draft") // draft | generated | executing | completed
+
+  // Input guardado (GenerateInput completo)
+  inputJson String
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  user      User?    @relation(fields: [userId], references: [id])
+  packs     Pack[]
+  executionStates PromptExecutionState[]
+}
+
+model Pack {
+  id        String   @id @default(cuid())
+  projectId String
+  version   Int      @default(1)
+
+  // Pack JSON completo (InauguraPack)
+  packJson  String
+
+  // Metadata
+  catalogVersion  String  @default("1.0.0")
+  schemaVersion   String  @default("1.0.0")
+  compilerModel   String
+  compilerProvider String
+  polishModel     String?
+
+  // Métricas da geração
+  attempts        Int     @default(1)
+  latencyMs       Int
+  tokenCostEstimate String?
+
+  createdAt DateTime @default(now())
+
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  logs      GenerationLog[]
+  executionStates PromptExecutionState[]
+}
+
+model GenerationLog {
+  id        String   @id @default(cuid())
+  packId    String
+  step      String   // normalize | recommend | compile | validate | polish
+  provider  String?
+  model     String?
+  latencyMs Int?
+  tokensIn  Int?
+  tokensOut Int?
+  costEstimate String?
+  status    String   // success | failed | retry
+  errorMessage String?
+  retryCount Int     @default(0)
+
+  createdAt DateTime @default(now())
+
+  pack      Pack     @relation(fields: [packId], references: [id], onDelete: Cascade)
+}
+
+// ============================================================================
+// Painel de Execução — estado de cada prompt/step
+// ============================================================================
+model PromptExecutionState {
+  id        String   @id @default(cuid())
+  projectId String
+  packId    String
+  stepId    String   // "architect", "frontend", etc.
+  stepIndex Int      // ordem (0, 1, 2...)
+  status    String   @default("todo") // todo | in_progress | blocked | done
+  aiUsed    String?  // qual AI usaste de facto
+  notes     String?  // "tive de ajustar X"
+  blockedReason String?
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  pack      Pack     @relation(fields: [packId], references: [id], onDelete: Cascade)
 }

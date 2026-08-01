@@ -14,6 +14,11 @@ export interface GenerateState {
   pack: InauguraPack | null;
   rec: Recommendation | null;
   error: string | null;
+  projectId: string | null;
+  packId: string | null;
+  provider: string | null;
+  model: string | null;
+  latencyMs: number | null;
 }
 
 export function useInauguraGenerate() {
@@ -24,6 +29,11 @@ export function useInauguraGenerate() {
     pack: null,
     rec: null,
     error: null,
+    projectId: null,
+    packId: null,
+    provider: null,
+    model: null,
+    latencyMs: null,
   });
 
   const generate = useCallback(async (input: GenerateInput) => {
@@ -34,6 +44,11 @@ export function useInauguraGenerate() {
       pack: null,
       rec: null,
       error: null,
+      projectId: null,
+      packId: null,
+      provider: null,
+      model: null,
+      latencyMs: null,
     });
 
     try {
@@ -87,6 +102,11 @@ export function useInauguraGenerate() {
                 pack: data.pack,
                 rec: data.rec,
                 loading: false,
+                projectId: data.projectId,
+                packId: data.packId,
+                provider: data.provider,
+                model: data.model,
+                latencyMs: data.latencyMs,
               }));
             } else if (eventType === "error") {
               errorMsg = data.error;
@@ -138,6 +158,11 @@ export function useInauguraGenerate() {
       pack: null,
       rec: null,
       error: null,
+      projectId: null,
+      packId: null,
+      provider: null,
+      model: null,
+      latencyMs: null,
     });
   }, []);
 
