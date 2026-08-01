@@ -18,6 +18,9 @@ import type { InauguraPack, Recommendation } from "@/lib/schema/inaugura-pack";
 import { PresetSelector } from "@/components/forms/PresetSelector";
 import { ExecutionBlock } from "@/components/forms/ExecutionBlock";
 import { ModelsAgentsBlock } from "@/components/forms/ModelsAgentsBlock";
+import { SimpleForge, type SimpleForgeValues } from "@/components/forms/SimpleForge";
+import { SimpleAdvancedToggle } from "@/components/forms/SimpleAdvancedToggle";
+import { useForgeMode } from "@/hooks/use-forge-mode";
 import type { Preset } from "@/lib/catalog";
 import { getSkinById } from "@/lib/skins";
 import { toast } from "sonner";
@@ -63,8 +66,79 @@ const FORM_INIT: FormValues = {
   funcionalidadesEspeciais: [],
 };
 
+// ============================================================================
+// Helper: converter SimpleForgeValues → GenerateInput (modo simplificado)
+// ============================================================================
+function simpleToGenerateInput(sf: SimpleForgeValues): import("@/lib/schema/inaugura-pack").GenerateInput {
+  const projectTypeMap: Record<string, import("@/lib/schema/inaugura-pack").GenerateInput["project_type"]> = {
+    landing: "portfolio",
+    saas: "saas",
+    ecommerce: "ecommerce",
+    portfolio: "portfolio",
+    dashboard: "saas",
+    blog: "corporate",
+    marketplace: "ecommerce",
+    other: "other",
+  };
+
+  // Mapear integrações simples para IDs do catálogo
+  const integrationMap: Record<string, string> = {
+    auth: "auth-clerk",
+    payments: "stripe",
+    database: "supabase",
+    email: "resend",
+    analytics: "posthog",
+    cms: "cms-sanity",
+    ai: "posthog", // placeholder
+    i18n: "i18n",
+  };
+
+  return {
+    locale: sf.idioma,
+    brief: sf.briefing,
+    project_type: projectTypeMap[sf.projectType] || "other",
+    references: sf.references.filter((r) => r.trim()).map((url) => ({ url, role: "visual_anchor" as const })),
+    features: sf.integrations.map((i) => integrationMap[i] ?? i),
+    sections_lock: [],
+    effects_lock: sf.animations ? ["reveal-scroll", "smooth-scroll"] : [],
+    visual: {
+      locks: { aesthetic: sf.aesthetic, mood: sf.mood.join(","), palette: sf.palette },
+    },
+    execution: {
+      mode: "auto",
+      cost_profile: sf.level === "enterprise" ? "max" : sf.level === "production" ? "balanced" : "free_open",
+      host_preference: "opencode",
+    },
+    locks: {
+      skills: [],
+      mcps: [],
+      integrations: sf.integrations.map((i) => integrationMap[i] ?? i),
+    },
+    level: sf.level === "enterprise" ? "awwwards" : sf.level === "production" ? "pro" : "lite",
+    options: {
+      polish_design: false,
+      include_opencode_json: true,
+      include_zip_markdown: true,
+    },
+  };
+}
+
 export default function Home() {
+  const { mode: forgeMode, toggle: toggleForgeMode, setAdvanced } = useForgeMode();
   const [form, setForm, resetForm] = useAutosave<FormValues>("inaugura:forge", FORM_INIT);
+  const [simpleForm, setSimpleForm] = useAutosave<SimpleForgeValues>("inaugura:simple-forge", {
+    briefing: "",
+    references: [],
+    projectType: "landing",
+    aesthetic: "modern-clean",
+    mood: [],
+    palette: "auto",
+    animations: true,
+    stackPref: "auto",
+    integrations: [],
+    level: "production",
+    idioma: "pt",
+  });
   const [showForm, setShowForm] = useState(true);
   const [activePreset, setActivePreset] = useState<string | null>(null);
   // Estado de execução (novos campos não estão no FormValues antigo)
@@ -225,19 +299,40 @@ export default function Home() {
 
   const onSubmit = useCallback(async () => {
     setShowForm(false);
-    const input = formValuesToGenerateInput(form, {
-      mode: execMode,
-      tier: execTier,
-      costProfile: execCost,
-      hostPreference: execHost,
-    });
+    let input;
+    if (forgeMode === "simple") {
+      // Converter SimpleForgeValues → GenerateInput
+      input = simpleToGenerateInput(simpleForm);
+    } else {
+      input = formValuesToGenerateInput(form, {
+        mode: execMode,
+        tier: execTier,
+        costProfile: execCost,
+        hostPreference: execHost,
+      });
+    }
     const r = await generate(input);
     if (r.ok) {
       toast.success("InauguraPack gerado com sucesso!");
     } else {
       toast.error("Falha na geração. Vê os detalhes abaixo.");
     }
-  }, [form, generate, execMode, execTier, execCost, execHost]);
+  }, [form, simpleForm, forgeMode, generate, execMode, execTier, execCost, execHost]);
+
+  const onSimpleSubmit = useCallback(async () => {
+    setShowForm(false);
+    const input = simpleToGenerateInput(simpleForm);
+    const r = await generate(input);
+    if (r.ok) {
+      toast.success("InauguraPack gerado com sucesso!");
+    } else {
+      toast.error("Falha na geração. Vê os detalhes abaixo.");
+    }
+  }, [simpleForm, generate]);
+
+  const onSimpleChange = useCallback((patch: Partial<SimpleForgeValues>) => {
+    setSimpleForm((f) => ({ ...f, ...patch }));
+  }, [setSimpleForm]);
 
   const onReset = useCallback(() => {
     resetGenerate();
@@ -290,6 +385,10 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center gap-2">
+              {/* Toggle Simplificada/Avançada */}
+              {showForm && (
+                <SimpleAdvancedToggle mode={forgeMode} onToggle={toggleForgeMode} />
+              )}
               <Button
                 variant="ghost"
                 size="sm"
@@ -381,73 +480,87 @@ export default function Home() {
           <AnimatePresence mode="wait">
             {showForm ? (
               <motion.div
-                key="form"
+                key={`form-${forgeMode}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0, y: -10 }}
                 className="space-y-4"
               >
-                {/* Presets no topo — 1 clique aplica locks */}
-                <PresetSelector activePreset={activePreset} onApply={applyPreset} />
+                {forgeMode === "simple" ? (
+                  // ── MODO SIMPLIFICADA ──
+                  <SimpleForge
+                    value={simpleForm}
+                    onChange={onSimpleChange}
+                    onSubmit={onSimpleSubmit}
+                    isLoading={genState.loading}
+                    onSwitchToAdvanced={() => setAdvanced()}
+                  />
+                ) : (
+                  // ── MODO AVANÇADA ──
+                  <>
+                    {/* Presets no topo — 1 clique aplica locks */}
+                    <PresetSelector activePreset={activePreset} onApply={applyPreset} />
 
-                {/* Form principal */}
-                <BriefingForm
-                  value={form}
-                  onChange={onChange}
-                  onSubmit={onSubmit}
-                  isLoading={genState.loading}
-                />
+                    {/* Form principal */}
+                    <BriefingForm
+                      value={form}
+                      onChange={onChange}
+                      onSubmit={onSubmit}
+                      isLoading={genState.loading}
+                    />
 
-                {/* Bloco Execução — Individual/Team + tiers + cost + host */}
-                <ExecutionBlock
-                  mode={execMode}
-                  tier={execTier}
-                  costProfile={execCost}
-                  hostPreference={execHost}
-                  onChange={(patch) => {
-                    if (patch.mode) setExecMode(patch.mode);
-                    if (patch.tier) setExecTier(patch.tier);
-                    if (patch.costProfile) setExecCost(patch.costProfile);
-                    if (patch.hostPreference) setExecHost(patch.hostPreference);
-                  }}
-                />
+                    {/* Bloco Execução — Individual/Team + tiers + cost + host */}
+                    <ExecutionBlock
+                      mode={execMode}
+                      tier={execTier}
+                      costProfile={execCost}
+                      hostPreference={execHost}
+                      onChange={(patch) => {
+                        if (patch.mode) setExecMode(patch.mode);
+                        if (patch.tier) setExecTier(patch.tier);
+                        if (patch.costProfile) setExecCost(patch.costProfile);
+                        if (patch.hostPreference) setExecHost(patch.hostPreference);
+                      }}
+                    />
 
-                {/* Bloco Modelos & Agentes — keys + routing por função + alternativas */}
-                <ModelsAgentsBlock
-                  mode={execMode}
-                  tier={execTier}
-                  costProfile={execCost}
-                  hostPreference={execHost}
-                  onChange={(patch) => {
-                    if (patch.mode) setExecMode(patch.mode);
-                    if (patch.tier) setExecTier(patch.tier);
-                    if (patch.costProfile) setExecCost(patch.costProfile);
-                    if (patch.hostPreference) setExecHost(patch.hostPreference);
-                  }}
-                />
+                    {/* Bloco Modelos & Agentes — keys + routing por função + alternativas */}
+                    <ModelsAgentsBlock
+                      mode={execMode}
+                      tier={execTier}
+                      costProfile={execCost}
+                      hostPreference={execHost}
+                      onChange={(patch) => {
+                        if (patch.mode) setExecMode(patch.mode);
+                        if (patch.tier) setExecTier(patch.tier);
+                        if (patch.costProfile) setExecCost(patch.costProfile);
+                        if (patch.hostPreference) setExecHost(patch.hostPreference);
+                      }}
+                    />
 
-                {/* Botão Gerar Pack (também no form, mas este é sticky-friendly) */}
-                <div className="sticky bottom-4 z-20 flex items-center justify-between gap-3 rounded-2xl border border-border bg-card/90 p-3 backdrop-blur-xl">
-                  <div className="text-xs text-muted-foreground">
-                    <span className="font-semibold text-foreground">
-                      {execMode === "individual" ? "Individual · 5 prompts" :
-                       execMode === "team" ? `Team · ${execTier} · ${form.seccoes?.length ?? 0} secções` :
-                       "Auto · router decide"}
-                    </span>
-                    <span className="mx-2">·</span>
-                    <span>{form.selectedSkills?.length ?? 0} skills</span>
-                    <span className="mx-1">·</span>
-                    <span>{form.selectedIntegrations?.length ?? 0} integrações</span>
-                  </div>
-                  <Button
-                    type="button"
-                    onClick={onSubmit}
-                    disabled={genState.loading || form.briefing.length < 20}
-                    className="min-w-[140px]"
-                  >
-                    {genState.loading ? "A gerar..." : "Gerar Pack →"}
-                  </Button>
-                </div>
+                    {/* Botão Gerar Pack (sticky) */}
+                    <div className="sticky bottom-4 z-20 flex items-center justify-between gap-3 rounded-2xl border border-border bg-card/90 p-3 backdrop-blur-xl">
+                      <div className="text-xs text-muted-foreground">
+                        <span className="font-semibold text-foreground">
+                          {execMode === "individual" ? "Individual · 5 prompts" :
+                           execMode === "team" ? `Team · ${execTier} · ${form.seccoes?.length ?? 0} secções` :
+                           "Auto · router decide"}
+                        </span>
+                        <span className="mx-2">·</span>
+                        <span>{form.selectedSkills?.length ?? 0} skills</span>
+                        <span className="mx-1">·</span>
+                        <span>{form.selectedIntegrations?.length ?? 0} integrações</span>
+                      </div>
+                      <Button
+                        type="button"
+                        onClick={onSubmit}
+                        disabled={genState.loading || form.briefing.length < 20}
+                        className="min-w-[140px]"
+                      >
+                        {genState.loading ? "A gerar..." : "Gerar Pack →"}
+                      </Button>
+                    </div>
+                  </>
+                )}
               </motion.div>
             ) : genState.loading ? (
               <motion.div
