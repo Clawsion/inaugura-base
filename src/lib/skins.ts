@@ -1,5 +1,8 @@
 // ============================================================================
-// skins.ts — 6 SKINS DE VERDADE
+// skins.ts — Skins atualizados 2026
+// ============================================================================
+// 3 skins principais novos (Linear Dark, Neural, Cloud) + alguns clássicos.
+// O logo da app muda de cor conforme o accent do skin ativo.
 // ============================================================================
 
 export interface SkinTokens {
@@ -8,366 +11,235 @@ export interface SkinTokens {
   text: string;
   muted: string;
   accent: string;
-  accentForeground: string; // cor do texto/icon sobre o accent
+  accentForeground: string;
   border: string;
   radius: string;
   shadow: string;
   headingFont: string;
   bodyFont: string;
   bgPattern?: string;
-  effectClass?: string;
 }
-
-export type SkinCategory =
-  | "Mono"
-  | "Brutalist"
-  | "Editorial"
-  | "3D"
-  | "Carbon"
-  | "Light"
-  | "Outline"
-  | "Blood"
-  | "Chocolate";
 
 export interface Skin {
   id: string;
   name: string;
   description: string;
-  category: SkinCategory;
+  category: string;
   dark: SkinTokens;
   light: SkinTokens;
+  // Smart default: preset de cor sugerido no formulário quando este skin está ativo
+  suggestedColorPreset?: string;
 }
 
 export const SKINS: Skin[] = [
-  // ── 1. Mono Ink ────────────────────────────────────────────────────────
+  // ── 1. Linear Dark — dark mode profissional obrigatório ──────────────────
+  {
+    id: "linear-dark",
+    name: "Linear Dark",
+    description: "Dark mode profissional, SaaS premium",
+    category: "Dark",
+    suggestedColorPreset: "modern-blue",
+    dark: {
+      bg: "#0A0A0B",
+      card: "#18181B",
+      text: "#FAFAFA",
+      muted: "#A1A1AA",
+      accent: "#5E6AD2",
+      accentForeground: "#FFFFFF",
+      border: "#27272A",
+      radius: "8px",
+      shadow: "0 4px 24px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.3)",
+      headingFont: "var(--font-inter), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+    },
+    light: {
+      bg: "#FAFAFA",
+      card: "#FFFFFF",
+      text: "#09090B",
+      muted: "#71717A",
+      accent: "#5E6AD2",
+      accentForeground: "#FFFFFF",
+      border: "#E4E4E7",
+      radius: "8px",
+      shadow: "0 2px 12px rgba(0, 0, 0, 0.06)",
+      headingFont: "var(--font-inter), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+    },
+  },
+
+  // ── 2. Neural — AI-native, perfeito para Inaugura-Base ───────────────────
+  {
+    id: "neural",
+    name: "Neural",
+    description: "AI-native, roxo elétrico + ciano",
+    category: "Dark",
+    suggestedColorPreset: "violet-ai",
+    dark: {
+      bg: "#08080C",
+      card: "#131320",
+      text: "#F4F4F8",
+      muted: "#9494B0",
+      accent: "#8B5CF6",
+      accentForeground: "#FFFFFF",
+      border: "#2A2A3D",
+      radius: "10px",
+      shadow: "0 4px 24px rgba(139, 92, 246, 0.15), 0 1px 4px rgba(0, 0, 0, 0.4)",
+      headingFont: "var(--font-inter), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+      bgPattern: "radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(34, 211, 238, 0.06) 0%, transparent 40%)",
+    },
+    light: {
+      bg: "#F5F3FF",
+      card: "#FFFFFF",
+      text: "#1E1B2E",
+      muted: "#6B6885",
+      accent: "#7C3AED",
+      accentForeground: "#FFFFFF",
+      border: "#DDD6FE",
+      radius: "10px",
+      shadow: "0 2px 12px rgba(124, 58, 237, 0.08)",
+      headingFont: "var(--font-inter), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+    },
+  },
+
+  // ── 3. Cloud — melhor light mode ─────────────────────────────────────────
+  {
+    id: "cloud",
+    name: "Cloud",
+    description: "Light mode limpo, arejado, WCAG-AA",
+    category: "Light",
+    suggestedColorPreset: "neutral-premium",
+    dark: {
+      bg: "#0F172A",
+      card: "#1E293B",
+      text: "#F1F5F9",
+      muted: "#94A3B8",
+      accent: "#4F46E5",
+      accentForeground: "#FFFFFF",
+      border: "#334155",
+      radius: "8px",
+      shadow: "0 4px 24px rgba(0, 0, 0, 0.3)",
+      headingFont: "var(--font-inter), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+    },
+    light: {
+      bg: "#F8FAFC",
+      card: "#FFFFFF",
+      text: "#0F172A",
+      muted: "#64748B",
+      accent: "#4F46E5",
+      accentForeground: "#FFFFFF",
+      border: "#E2E8F0",
+      radius: "8px",
+      shadow: "0 2px 12px rgba(0, 0, 0, 0.05)",
+      headingFont: "var(--font-inter), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+    },
+  },
+
+  // ── 4. Mono Ink — clássico minimalista ───────────────────────────────────
   {
     id: "mono-ink",
     name: "Mono Ink",
     description: "Pure ink on cream, literary calm",
     category: "Mono",
+    suggestedColorPreset: "monochrome",
+    dark: {
+      bg: "#0A0A0A",
+      card: "#141414",
+      text: "#EDEDED",
+      muted: "#808080",
+      accent: "#E0E0E0",
+      accentForeground: "#0A0A0A",
+      border: "#2A2A2A",
+      radius: "4px",
+      shadow: "0 2px 8px rgba(0, 0, 0, 0.6)",
+      headingFont: "var(--font-inter), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+    },
     light: {
       bg: "#FAF7F0",
       card: "#FFFFFF",
       text: "#0A0A0A",
-      muted: "#6B6B6B",
+      muted: "#808080",
       accent: "#0A0A0A",
       accentForeground: "#FAF7F0",
-      border: "#0A0A0A",
-      radius: "0px",
-      shadow: "none",
-      headingFont: "Georgia, 'Times New Roman', serif",
-      bodyFont: "Georgia, 'Times New Roman', serif",
-      bgPattern: "radial-gradient(circle at 30% 20%, rgba(10,10,10,0.02) 0%, transparent 60%)",
-    },
-    dark: {
-      bg: "#0A0A0A",
-      card: "#161616",
-      text: "#FAF7F0",
-      muted: "#8C8C8C",
-      accent: "#FAF7F0",
-      accentForeground: "#0A0A0A",
-      border: "#FAF7F0",
-      radius: "0px",
-      shadow: "none",
-      headingFont: "Georgia, 'Times New Roman', serif",
-      bodyFont: "Georgia, 'Times New Roman', serif",
-      bgPattern: "radial-gradient(circle at 30% 20%, rgba(250,247,240,0.03) 0%, transparent 60%)",
+      border: "#D0CCC0",
+      radius: "4px",
+      shadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+      headingFont: "var(--font-inter), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
     },
   },
 
-  // ── 2. Brutalist Ink — Neo-Brutalist com pastéis + accent neon ────────
-  // LIGHT: pêssego pastel + creme + accent amarelo-lima neon (estilo referência)
-  // DARK: preto profundo + card escuro + accent amarelo-lima neon (legível)
+  // ── 5. Brutalist Ink — bruto e arrojado ──────────────────────────────────
   {
     id: "brutalist-ink",
     name: "Brutalist Ink",
-    description: "Neo-brutalist pastel, hard shadows, neon accent",
+    description: "Bold black borders, hard offset shadows",
     category: "Brutalist",
-    light: {
-      bg: "#F4C2A8",           // pêssego/salmão pastel
-      card: "#F3EFE9",         // off-white creme quente
-      text: "#1A1A1A",         // ink black
-      muted: "#4A4A4A",        // cinza escuro suave
-      accent: "#39FF14",       // verde fluorescente puro (neon green)
-      accentForeground: "#0A0A0A", // preto sobre o accent verde neon
-      border: "#000000",       // bordas pretas sólidas
-      radius: "1.5rem",        // cantos arredondados (squircle)
-      shadow: "6px 6px 0px #1A1A1A", // hard shadow offset, zero blur
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "radial-gradient(circle at 15% 20%, rgba(197, 180, 227, 0.25) 0%, transparent 35%), radial-gradient(circle at 85% 80%, rgba(57, 255, 20, 0.15) 0%, transparent 40%)",
-    },
+    suggestedColorPreset: "high-contrast",
     dark: {
-      // DARK variant — ESCURO (preto profundo + verde fluorescente que brilha)
-      bg: "#0A0A0A",           // preto profundo
-      card: "#1A1A1A",         // card escuro
-      text: "#FFFFFF",         // texto branco legível
-      muted: "#9CA3AF",        // cinza claro para texto secundário
-      accent: "#39FF14",       // verde fluorescente puro (brilha no escuro)
-      accentForeground: "#0A0A0A", // preto sobre o accent verde neon
-      border: "#FFFFFF",       // bordas brancas em dark
-      radius: "1.5rem",
-      shadow: "6px 6px 0px #FFFFFF", // hard shadow branca offset
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "radial-gradient(circle at 15% 20%, rgba(197, 180, 227, 0.15) 0%, transparent 35%), radial-gradient(circle at 85% 80%, rgba(57, 255, 20, 0.12) 0%, transparent 40%)",
+      bg: "#0D0D0D",
+      card: "#1A1A1A",
+      text: "#00FF88",
+      muted: "#666666",
+      accent: "#00FF88",
+      accentForeground: "#0D0D0D",
+      border: "#00FF88",
+      radius: "0px",
+      shadow: "6px 6px 0 #00FF88",
+      headingFont: "var(--font-mono), ui-monospace, monospace",
+      bodyFont: "var(--font-mono), ui-monospace, monospace",
+    },
+    light: {
+      bg: "#FFFFFF",
+      card: "#FFFFFF",
+      text: "#0D0D0D",
+      muted: "#666666",
+      accent: "#0D0D0D",
+      accentForeground: "#FFFFFF",
+      border: "#0D0D0D",
+      radius: "0px",
+      shadow: "6px 6px 0 #0D0D0D",
+      headingFont: "var(--font-mono), ui-monospace, monospace",
+      bodyFont: "var(--font-mono), ui-monospace, monospace",
     },
   },
 
-  // ── 3. Editorial Serif ─────────────────────────────────────────────────
+  // ── 6. Editorial Serif — elegante, tipografia editorial ──────────────────
   {
     id: "editorial-serif",
     name: "Editorial Serif",
-    description: "Magazine luxury, serif authority, paper texture",
+    description: "Serif headings, warm palette, magazine feel",
     category: "Editorial",
-    light: {
-      bg: "#FAF6EF",
-      card: "#FFFFFF",
-      text: "#1A1A1A",
-      muted: "#6B6258",
-      accent: "#8B1A1A",
-      accentForeground: "#FFFFFF",
-      border: "#E0D7C8",
-      radius: "0px",
-      shadow: "0 1px 3px rgba(26, 26, 26, 0.07)",
+    suggestedColorPreset: "warm-coral",
+    dark: {
+      bg: "#12100E",
+      card: "#1C1916",
+      text: "#F5EFE6",
+      muted: "#8A8276",
+      accent: "#C4856A",
+      accentForeground: "#12100E",
+      border: "#2D2925",
+      radius: "2px",
+      shadow: "0 4px 16px rgba(0, 0, 0, 0.5)",
       headingFont: "Georgia, 'Times New Roman', serif",
-      bodyFont: "var(--font-inter), Georgia, serif",
-      bgPattern: "radial-gradient(circle at 20% 30%, rgba(139,26,26,0.03) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(107,98,88,0.04) 0%, transparent 50%)",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
     },
-    dark: {
-      bg: "#1A1714",
-      card: "#25221E",
-      text: "#F2EBDD",
-      muted: "#A89E8E",
-      accent: "#E08070",
-      accentForeground: "#1A1714",
-      border: "#3A352E",
-      radius: "0px",
-      shadow: "0 2px 6px rgba(0, 0, 0, 0.45)",
+    light: {
+      bg: "#F9F6F0",
+      card: "#FFFFFF",
+      text: "#1A1715",
+      muted: "#8A8276",
+      accent: "#9C5D3F",
+      accentForeground: "#FFFFFF",
+      border: "#D9D3CA",
+      radius: "2px",
+      shadow: "0 2px 12px rgba(0, 0, 0, 0.06)",
       headingFont: "Georgia, 'Times New Roman', serif",
-      bodyFont: "var(--font-inter), Georgia, serif",
-      bgPattern: "radial-gradient(circle at 20% 30%, rgba(224,128,112,0.05) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(168,158,142,0.04) 0%, transparent 50%)",
-    },
-  },
-
-  // ── 4. Neo Brutalist 3D ────────────────────────────────────────────────
-  {
-    id: "neo-brutalist-3d",
-    name: "Neo Brutalist 3D",
-    description: "Faux 3D shadows, extreme contrast, layered depth",
-    category: "3D",
-    light: {
-      bg: "#FFFFFF",
-      card: "#FFE600",
-      text: "#000000",
-      muted: "#5C5C5C",
-      accent: "#FF3366",
-      accentForeground: "#FFFFFF",
-      border: "#000000",
-      radius: "1rem",
-      shadow: "6px 6px 0px #000000, 12px 12px 0px #FF3366, 18px 18px 24px rgba(0,0,0,0.2)",
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
       bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "linear-gradient(135deg, #FFFFFF 0%, #FFFAE6 100%)",
-    },
-    dark: {
-      bg: "#050505",
-      card: "#1A1A1A",
-      text: "#FFFFFF",
-      muted: "#888888",
-      accent: "#00FFB2",
-      accentForeground: "#050505",
-      border: "#FFFFFF",
-      radius: "1rem",
-      shadow: "6px 6px 0px #00FFB2, 12px 12px 0px #FF00AA, 18px 18px 32px rgba(0,255,178,0.25)",
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "linear-gradient(135deg, #050505 0%, #0D0D1A 100%)",
-    },
-  },
-
-  // ── 5. Mono Carbon ─────────────────────────────────────────────────────
-  {
-    id: "mono-carbon",
-    name: "Mono Carbon",
-    description: "Carbon fiber pattern, electric lime, tech minimal",
-    category: "Carbon",
-    light: {
-      bg: "#F2F2F2",
-      card: "#FFFFFF",
-      text: "#0A0A0A",
-      muted: "#5C5C5C",
-      accent: "#84CC16",
-      accentForeground: "#0A0A0A",
-      border: "rgba(0, 0, 0, 0.10)",
-      radius: "0.5rem",
-      shadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
-      headingFont: "var(--font-geist-sans), system-ui, sans-serif",
-      bodyFont: "var(--font-geist-sans), system-ui, sans-serif",
-      bgPattern: "repeating-linear-gradient(45deg, #F2F2F2 0px, #F2F2F2 2px, #E8E8E8 2px, #E8E8E8 4px), repeating-linear-gradient(-45deg, transparent 0px, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px)",
-    },
-    dark: {
-      bg: "#0A0A0A",
-      card: "#161616",
-      text: "#F2F2F2",
-      muted: "#7C7C7C",
-      accent: "#A3E635",
-      accentForeground: "#0A0A0A",
-      border: "rgba(163, 230, 53, 0.18)",
-      radius: "0.5rem",
-      shadow: "0 0 12px rgba(163, 230, 53, 0.12)",
-      headingFont: "var(--font-geist-sans), system-ui, sans-serif",
-      bodyFont: "var(--font-geist-sans), system-ui, sans-serif",
-      bgPattern: "repeating-linear-gradient(45deg, #0A0A0A 0px, #0A0A0A 2px, #141414 2px, #141414 4px), repeating-linear-gradient(-45deg, transparent 0px, transparent 2px, rgba(163,230,53,0.03) 2px, rgba(163,230,53,0.03) 4px)",
-    },
-  },
-
-  // ── 6. Pure Light — light style completamente diferente ────────────────
-  {
-    id: "pure-light",
-    name: "Pure Light",
-    description: "Pure white light / deep void dark, cobalt accent",
-    category: "Light",
-    light: {
-      bg: "#FFFFFF",
-      card: "#FAFAFC",
-      text: "#0F172A",
-      muted: "#64748B",
-      accent: "#2563EB",
-      accentForeground: "#FFFFFF",
-      border: "rgba(15, 23, 42, 0.06)",
-      radius: "1.5rem",
-      shadow: "0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06)",
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.04) 0%, transparent 40%), radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.03) 0%, transparent 40%)",
-    },
-    dark: {
-      bg: "#050509",
-      card: "#0D0D14",
-      text: "#FAFAFC",
-      muted: "#6B7280",
-      accent: "#3B82F6",
-      accentForeground: "#FFFFFF",
-      border: "rgba(59, 130, 246, 0.15)",
-      radius: "1.5rem",
-      shadow: "0 0 0 1px rgba(59, 130, 246, 0.08), 0 8px 32px rgba(59, 130, 246, 0.12), 0 0 60px rgba(59, 130, 246, 0.08)",
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.08) 0%, transparent 50%), radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.05) 0%, transparent 50%)",
-    },
-  },
-
-  // ── 7. Pure Outline — preto puro + cinza claro + contornos brancos ────
-  // DARK: preto puro + cinza claro #ADB2C1 + linha contornos brancos
-  // LIGHT: cinza claro + preto + linha de contornos branca
-  {
-    id: "pure-outline",
-    name: "Pure Outline",
-    description: "Black + light gray + white contour lines",
-    category: "Outline",
-    dark: {
-      bg: "#000000",
-      card: "#0A0A0A",
-      text: "#ADB2C1",
-      muted: "#6B7280",
-      accent: "#ADB2C1",
-      accentForeground: "#000000",
-      border: "rgba(255, 255, 255, 0.15)",
-      radius: "0.75rem",
-      shadow: "0 0 0 1px rgba(255, 255, 255, 0.08)",
-      headingFont: "var(--font-geist-sans), system-ui, sans-serif",
-      bodyFont: "var(--font-geist-sans), system-ui, sans-serif",
-      bgPattern: "none",
-    },
-    light: {
-      bg: "#ADB2C1",
-      card: "#C2C7D4",
-      text: "#000000",
-      muted: "#4A4F5C",
-      accent: "#000000",
-      accentForeground: "#FFFFFF",
-      border: "rgba(255, 255, 255, 0.6)",
-      radius: "0.75rem",
-      shadow: "0 0 0 1px rgba(255, 255, 255, 0.5)",
-      headingFont: "var(--font-geist-sans), system-ui, sans-serif",
-      bodyFont: "var(--font-geist-sans), system-ui, sans-serif",
-      bgPattern: "none",
-    },
-  },
-  // ── 8. Blood Mary — vermelho sangue profundo ──────────────────────────
-  // DARK: preto + vermelho sangue + glow vermelho
-  // LIGHT: creme quente + vermelho bordeaux
-  {
-    id: "blood-mary",
-    name: "Blood Mary",
-    description: "Deep blood red on void black, crimson glow",
-    category: "Blood",
-    dark: {
-      bg: "#0A0000",
-      card: "#1A0505",
-      text: "#FFE8E8",
-      muted: "#8A4040",
-      accent: "#DC143C",
-      accentForeground: "#FFFFFF",
-      border: "rgba(220, 20, 60, 0.20)",
-      radius: "0.75rem",
-      shadow: "0 0 20px rgba(220, 20, 60, 0.15), 0 4px 16px rgba(0, 0, 0, 0.8)",
-      headingFont: "var(--font-geist-sans), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "radial-gradient(circle at 50% 0%, rgba(220, 20, 60, 0.08) 0%, transparent 50%), radial-gradient(circle at 0% 100%, rgba(139, 0, 0, 0.06) 0%, transparent 40%)",
-    },
-    light: {
-      bg: "#FAF0EE",
-      card: "#FFFFFF",
-      text: "#1A0000",
-      muted: "#7A5050",
-      accent: "#B91C1C",
-      accentForeground: "#FFFFFF",
-      border: "rgba(185, 28, 28, 0.15)",
-      radius: "0.75rem",
-      shadow: "0 2px 8px rgba(185, 28, 28, 0.08)",
-      headingFont: "var(--font-geist-sans), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "radial-gradient(circle at 50% 0%, rgba(185, 28, 28, 0.04) 0%, transparent 50%)",
-    },
-  },
-
-  // ── 9. Chocolate Caramel — chocolate negro + caramelo dourado ─────────
-  // DARK: chocolate negro profundo + caramelo dourado glow
-  // LIGHT: creme baunilha + chocolate negro + caramelo
-  {
-    id: "chocolate-caramel",
-    name: "Chocolate Caramel",
-    description: "Dark chocolate + golden caramel, Magnum ice cream vibes",
-    category: "Chocolate",
-    dark: {
-      bg: "#0D0704",
-      card: "#1A0E07",
-      text: "#F5E6D3",
-      muted: "#8A6B4A",
-      accent: "#D4A055",
-      accentForeground: "#0D0704",
-      border: "rgba(212, 160, 85, 0.18)",
-      radius: "1rem",
-      shadow: "0 0 24px rgba(212, 160, 85, 0.10), 0 4px 16px rgba(0, 0, 0, 0.7)",
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "radial-gradient(circle at 30% 20%, rgba(212, 160, 85, 0.06) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(101, 67, 33, 0.05) 0%, transparent 40%)",
-    },
-    light: {
-      bg: "#FAF3E8",
-      card: "#FFFFFF",
-      text: "#1A0E07",
-      muted: "#7A6B5A",
-      accent: "#B8860B",
-      accentForeground: "#FFFFFF",
-      border: "rgba(184, 134, 11, 0.18)",
-      radius: "1rem",
-      shadow: "0 2px 12px rgba(184, 134, 11, 0.08)",
-      headingFont: "var(--font-jakarta), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "radial-gradient(circle at 30% 20%, rgba(212, 160, 85, 0.06) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(101, 67, 33, 0.04) 0%, transparent 40%)",
     },
   },
 ];

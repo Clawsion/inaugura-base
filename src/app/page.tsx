@@ -134,6 +134,8 @@ export default function Home() {
     aesthetic: "modern-clean",
     mood: [],
     palette: "auto",
+    colorPreset: "auto",
+    typographyPref: "auto",
     animations: true,
     stackPref: "auto",
     integrations: [],
@@ -375,7 +377,7 @@ export default function Home() {
         <header className="sticky top-0 z-30 border-b border-border bg-card/80 backdrop-blur-xl">
           <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6">
             <div className="flex items-center gap-2.5">
-              <Logo size={36} />
+              <Logo size={36} accentColor={activeSkin ? getSkinById(activeSkin)?.dark.accent : undefined} />
               <div>
                 <h1 className="text-sm font-bold leading-none tracking-tight">
                   Inaugura<span className="text-primary">-Base</span>

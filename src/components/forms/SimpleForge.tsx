@@ -31,6 +31,8 @@ export interface SimpleForgeValues {
   aesthetic: string;
   mood: string[];
   palette: "auto" | "light" | "dark" | "brand";
+  colorPreset: string;
+  typographyPref: "auto" | "modern-sans" | "geometric" | "humanist" | "editorial-serif" | "mono-tech";
   animations: boolean;
   stackPref: "auto" | "modern" | "fullstack" | "python" | "custom";
   integrations: string[];
@@ -73,6 +75,30 @@ const AESTHETICS = [
 ];
 
 const MOODS = ["Profissional", "Criativo", "Luxo", "Techy", "Amigável", "Ousado", "Minimalista"];
+
+// Presets de cor (swatches clicáveis)
+const COLOR_PRESETS = [
+  { id: "auto", label: "Auto", color1: "#5E6AD2", color2: "#8B5CF6" },
+  { id: "modern-blue", label: "Modern Blue", color1: "#2563EB", color2: "#3B82F6" },
+  { id: "violet-ai", label: "Violet AI", color1: "#8B5CF6", color2: "#22D3EE" },
+  { id: "emerald-fresh", label: "Emerald", color1: "#10B981", color2: "#34D399" },
+  { id: "neutral-premium", label: "Neutral Premium", color1: "#18181B", color2: "#71717A" },
+  { id: "warm-coral", label: "Warm Coral", color1: "#F97316", color2: "#FB923C" },
+  { id: "dark-premium", label: "Dark Premium", color1: "#0A0A0B", color2: "#5E6AD2" },
+  { id: "soft-pastel", label: "Soft Pastel", color1: "#FDA4AF", color2: "#A78BFA" },
+  { id: "high-contrast", label: "High Contrast", color1: "#000000", color2: "#00FF88" },
+  { id: "monochrome", label: "Monochrome", color1: "#1A1A1A", color2: "#A1A1AA" },
+];
+
+// Presets de tipografia
+const TYPOGRAPHY_PRESETS = [
+  { id: "auto", label: "Auto (Perfect Combo)", desc: "IA escolhe o combo ideal", sample: "Aa" },
+  { id: "modern-sans", label: "Modern Sans", desc: "Inter / Geist / Plus Jakarta", sample: "Aa" },
+  { id: "geometric", label: "Geometric", desc: "Satoshi / General Sans", sample: "Aa" },
+  { id: "humanist", label: "Humanist", desc: "SWitzer / Instrument Sans", sample: "Aa" },
+  { id: "editorial-serif", label: "Editorial Serif", desc: "Georgia + Sans limpa", sample: "Aa" },
+  { id: "mono-tech", label: "Mono / Tech", desc: "Geist Mono / JetBrains", sample: "Aa" },
+];
 
 const STACKS = [
   { id: "auto", label: "Auto (recomendado)", desc: "IA escolhe a melhor" },
@@ -286,6 +312,79 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
             />
             <span className="text-[11px] font-medium">Animações premium</span>
           </label>
+        </div>
+      </div>
+
+      {/* Cores & Tipografia */}
+      <div className="space-y-3">
+        <Label className="text-xs font-semibold">Cores & Tipografia</Label>
+
+        {/* Modo de cor */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-[11px] text-muted-foreground">Modo:</span>
+          {(["auto", "light", "dark", "brand"] as const).map((p) => (
+            <button
+              key={p}
+              type="button"
+              onClick={() => onChange({ palette: p })}
+              className={cn(
+                "rounded-md px-2 py-0.5 text-[10px] font-medium capitalize transition-all",
+                value.palette === p
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted/50 text-muted-foreground hover:bg-muted"
+              )}
+            >
+              {p === "auto" ? "Auto" : p}
+            </button>
+          ))}
+        </div>
+
+        {/* Presets de cor — swatches clicáveis */}
+        <div className="flex flex-wrap gap-1.5">
+          {COLOR_PRESETS.map((cp) => (
+            <button
+              key={cp.id}
+              type="button"
+              onClick={() => onChange({ colorPreset: cp.id })}
+              className={cn(
+                "group relative overflow-hidden rounded-lg border-2 p-0.5 transition-all",
+                value.colorPreset === cp.id
+                  ? "border-primary ring-1 ring-primary"
+                  : "border-border hover:border-primary/40"
+              )}
+              title={cp.label}
+            >
+              <div
+                className="h-6 w-6 rounded-md"
+                style={{ background: `linear-gradient(135deg, ${cp.color1}, ${cp.color2})` }}
+              />
+            </button>
+          ))}
+        </div>
+
+        {/* Tipografia */}
+        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
+          {TYPOGRAPHY_PRESETS.map((tp) => (
+            <button
+              key={tp.id}
+              type="button"
+              onClick={() => onChange({ typographyPref: tp.id as SimpleForgeValues["typographyPref"] })}
+              className={cn(
+                "flex items-center gap-2 rounded-lg border p-2 text-left transition-all",
+                value.typographyPref === tp.id
+                  ? "border-primary bg-primary/10"
+                  : "border-border bg-card/30 hover:border-primary/40"
+              )}
+            >
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted text-sm font-bold">
+                {tp.sample}
+              </span>
+              <div className="flex-1 min-w-0">
+                <div className="text-[11px] font-semibold leading-tight">{tp.label}</div>
+                <div className="text-[9px] text-muted-foreground truncate">{tp.desc}</div>
+              </div>
+            </button>
+          ))}
         </div>
       </div>
 

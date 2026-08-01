@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Palette, ChevronDown, Check } from "lucide-react";
+import { SwatchBook, ChevronDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getSkinById, SKINS } from "@/lib/skins";
 
@@ -43,7 +43,7 @@ export function SkinsDropdown({ activeSkin, onChange }: SkinsDropdownProps) {
             : "border-border bg-card/50 text-muted-foreground hover:border-primary/40 hover:text-foreground"
         )}
       >
-        <Palette className="h-3.5 w-3.5" />
+        <SwatchBook className="h-3.5 w-3.5" />
         <span>SKINS</span>
         {activeSkinData && (
           <span
