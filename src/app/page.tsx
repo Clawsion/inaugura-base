@@ -133,6 +133,7 @@ export default function Home() {
     references: [],
     projectType: "landing",
     aesthetic: "modern-clean",
+    aestheticLocked: false,
     mood: [],
     palette: "auto",
     colorPreset: "auto",

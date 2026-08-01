@@ -20,6 +20,7 @@ export interface SimpleForgeValues {
   references: string[];
   projectType: string;
   aesthetic: string;
+  aestheticLocked: boolean;
   mood: string[];
   palette: "auto" | "light" | "dark" | "brand";
   colorPreset: string;
@@ -373,15 +374,72 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
         </div>
       </div>
 
-      {/* Estilo Visual */}
+      {/* Estilo Visual — com botão "Neon Auto" que liga recomendação inteligente */}
       <div className="space-y-3">
-        <Label className="text-xs font-semibold">Estilo Visual</Label>
+        <div className="flex items-center justify-between">
+          <Label className="text-xs font-semibold">Estilo Visual</Label>
+          <button type="button"
+            onClick={() => {
+              const newLocked = !value.aestheticLocked;
+              onChange({ aestheticLocked: newLocked });
+              if (newLocked) {
+                // Liga neon auto — recomenda estética com base no briefing/nicho/tipo
+                const text = `${value.briefing} ${value.nicho} ${value.projectType}`.toLowerCase();
+                let recommended = "modern-clean";
+                let reason = "Default SaaS";
+                if (/\bai\b|artificial|intelig|futur|ia\b|machine learning/.test(text)) { recommended = "ai-futuristic"; reason = "AI/Tech"; }
+                else if (/luxo|premium|lux\b|jewel|gold|fine|exclusive/.test(text)) { recommended = "dark-premium"; reason = "Luxo/Premium"; }
+                else if (/brutalist|raw\b|bold\b|underground|punk/.test(text)) { recommended = "brutalist"; reason = "Brutalist"; }
+                else if (/edit|magazine|journal|news|revista/.test(text)) { recommended = "editorial-serif"; reason = "Editorial"; }
+                else if (/minimal|swiss|clean\b|simple\b|minimalist/.test(text)) { recommended = "minimal-swiss"; reason = "Minimal"; }
+                else if (/glass|blur|soft\b|translucent|frosted/.test(text)) { recommended = "glassmorphism"; reason = "Glassmorphism"; }
+                else if (/3d|webgl|immersive|spatial|three\.js/.test(text)) { recommended = "3d-immersive"; reason = "3D/Immersive"; }
+                else if (/playful|fun\b|colorful|kids|game|jogo/.test(text)) { recommended = "playful-colorful"; reason = "Playful"; }
+                else if (/corporate|enterprise|business|b2b|trust|confian/.test(text)) { recommended = "corporate-trust"; reason = "Corporate"; }
+                else if (/saas|dashboard|app\b|software|ferramenta/.test(text)) { recommended = "modern-clean"; reason = "SaaS/App"; }
+                onChange({ aesthetic: recommended });
+                toast.success(`Neon Auto ON — ${reason} → ${AESTHETICS.find(a => a.id === recommended)?.label}`);
+              } else {
+                toast.info("Neon Auto OFF — podes escolher manualmente");
+              }
+            }}
+            className={cn(
+              "flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-bold transition-all",
+              value.aestheticLocked
+                ? "border-cyan-400 bg-cyan-400/10 text-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.4)]"
+                : "border-border bg-card/50 text-muted-foreground hover:border-cyan-400/50"
+            )}
+            title="Liga recomendação automática de estética baseada no briefing/nicho"
+          >
+            <span className={cn("h-1.5 w-1.5 rounded-full transition-all", value.aestheticLocked ? "bg-cyan-400 animate-pulse" : "bg-muted-foreground")} />
+            {value.aestheticLocked ? "NEON AUTO ON" : "Neon Auto"}
+          </button>
+        </div>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
           {AESTHETICS.map((a) => (
-            <button key={a.id} type="button" onClick={() => onChange({ aesthetic: a.id })}
-              className={cn("relative overflow-hidden rounded-xl border p-3 transition-all", value.aesthetic === a.id ? "border-primary ring-1 ring-primary" : "border-border hover:border-primary/40")}>
+            <button key={a.id} type="button" onClick={() => {
+              if (value.aestheticLocked) {
+                toast.info("Neon Auto está ON — desliga para escolher manualmente");
+                return;
+              }
+              onChange({ aesthetic: a.id });
+            }}
+              className={cn(
+                "relative overflow-hidden rounded-xl border p-3 transition-all",
+                value.aesthetic === a.id
+                  ? value.aestheticLocked
+                    ? "border-cyan-400 ring-1 ring-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.3)]"
+                    : "border-primary ring-1 ring-primary"
+                  : "border-border hover:border-primary/40",
+                value.aestheticLocked && "cursor-not-allowed opacity-60"
+              )}>
               <div className={cn("absolute inset-0 bg-gradient-to-br opacity-60", a.color)} />
               <div className="relative text-[10px] font-semibold leading-tight">{a.label}</div>
+              {value.aestheticLocked && value.aesthetic === a.id && (
+                <div className="absolute right-1 top-1 flex h-3 w-3 items-center justify-center rounded-full bg-cyan-400">
+                  <Lock className="h-2 w-2 text-black" />
+                </div>
+              )}
             </button>
           ))}
         </div>
