@@ -12,6 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { CATALOG } from "@/lib/catalog";
+import { adjustColor, generatePalette, COLOR_TRENDS_2026 } from "@/lib/color-engine";
 
 export interface SimpleForgeValues {
   briefing: string;
@@ -21,7 +22,7 @@ export interface SimpleForgeValues {
   mood: string[];
   palette: "auto" | "light" | "dark" | "brand";
   colorPreset: string;
-  colorAdjust: { brightness: number; contrast: number; saturation: number };
+  colorAdjust: { brightness: number; contrast: number; saturation: number; hue: number };
   customColors: { hex: string; role: string }[];
   typographyPref: "auto" | "modern-sans" | "geometric" | "humanist" | "editorial-serif" | "mono-tech";
   fontHeading: string;
@@ -197,14 +198,16 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     return CATALOG.stackCombos.filter((c) => c.category === stackComboFilter);
   }, [stackComboFilter]);
 
-  // Cor ativa para preview
+  // Cor ativa ajustada via HSL (não CSS filter — nunca gera transparência)
   const activeColorPreset = COLOR_PRESETS.find((c) => c.id === value.colorPreset) ?? COLOR_PRESETS[0];
-  const previewBg = value.palette === "light" ? "#F8FAFC" : value.palette === "dark" ? "#0A0A0B" : activeColorPreset.color1;
-  const previewFg = value.palette === "light" ? "#0F172A" : "#FAFAFA";
-  const previewAccent = activeColorPreset.color1;
-
-  // CSS filter para ajustes
-  const previewFilter = `brightness(${1 + value.colorAdjust.brightness / 100}) contrast(${1 + value.colorAdjust.contrast / 100}) saturate(${1 + value.colorAdjust.saturation / 100})`;
+  const adjustedAccent = adjustColor(activeColorPreset.color1, value.colorAdjust);
+  const adjustedSecondary = adjustColor(activeColorPreset.color2, value.colorAdjust);
+  const pal = generatePalette(adjustedAccent, value.palette === "light" ? "light" : "dark");
+  const previewBg = pal.bg;
+  const previewFg = pal.text;
+  const previewAccent = pal.accent;
+  const previewCard = pal.card;
+  const previewMuted = pal.muted;
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">
@@ -306,11 +309,66 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           ))}
         </div>
 
-        {/* Ajustes de cor (brilho, contraste, saturação) */}
-        <div className="flex flex-wrap gap-3 rounded-lg border border-border bg-card/20 p-2">
-          <Slider label="Brilho" value={value.colorAdjust.brightness} onChange={(v) => onChange({ colorAdjust: { ...value.colorAdjust, brightness: v } })} />
-          <Slider label="Contraste" value={value.colorAdjust.contrast} onChange={(v) => onChange({ colorAdjust: { ...value.colorAdjust, contrast: v } })} />
-          <Slider label="Saturação" value={value.colorAdjust.saturation} onChange={(v) => onChange({ colorAdjust: { ...value.colorAdjust, saturation: v } })} />
+        {/* Ajustes de cor — HSL direto na cor (sem transparência, sem cor morta) */}
+        <div className="space-y-2 rounded-lg border border-border bg-card/20 p-2">
+          <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+            <Sliders className="h-3 w-3" /> Ajustar cor (HSL — só afeta o HEX, sem transparência)
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Slider label="Brilho" value={value.colorAdjust.brightness} onChange={(v) => onChange({ colorAdjust: { ...value.colorAdjust, brightness: v } })} />
+            <Slider label="Contraste" value={value.colorAdjust.contrast} onChange={(v) => onChange({ colorAdjust: { ...value.colorAdjust, contrast: v } })} />
+            <Slider label="Saturação" value={value.colorAdjust.saturation} onChange={(v) => onChange({ colorAdjust: { ...value.colorAdjust, saturation: v } })} />
+            <Slider label="Tonalidade" value={value.colorAdjust.hue} onChange={(v) => onChange({ colorAdjust: { ...value.colorAdjust, hue: v } })} />
+          </div>
+          {/* Preview da cor ajustada em tempo real */}
+          {(() => {
+            const adjustedAccent = adjustColor(activeColorPreset.color1, value.colorAdjust);
+            const adjustedSecondary = adjustColor(activeColorPreset.color2, value.colorAdjust);
+            const pal = generatePalette(adjustedAccent, value.palette === "light" ? "light" : "dark");
+            return (
+              <div className="flex items-center gap-2 rounded-md border border-border p-1.5">
+                <span className="text-[9px] text-muted-foreground">Preview:</span>
+                <div className="h-5 w-5 rounded border border-border" style={{ background: pal.bg }} title={`BG ${pal.bg}`} />
+                <div className="h-5 w-5 rounded border border-border" style={{ background: pal.card }} title={`Card ${pal.card}`} />
+                <div className="h-5 w-5 rounded border border-border" style={{ background: pal.accent }} title={`Accent ${pal.accent}`} />
+                <div className="h-5 w-5 rounded border border-border" style={{ background: pal.text }} title={`Text ${pal.text}`} />
+                <div className="h-5 w-5 rounded border border-border" style={{ background: pal.muted }} title={`Muted ${pal.muted}`} />
+                <code className="text-[9px] text-muted-foreground">{pal.accent}</code>
+                <button type="button" onClick={() => onChange({ colorAdjust: { brightness: 0, contrast: 0, saturation: 0, hue: 0 } })} className="ml-auto text-[9px] text-primary hover:underline">Reset</button>
+              </div>
+            );
+          })()}
+        </div>
+
+        {/* Tendências de Cor — Julho 2026 */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-1.5">
+            <Sparkles className="h-3 w-3 text-primary" />
+            <span className="text-[10px] font-semibold text-muted-foreground">Tendências de Cor · Julho 2026</span>
+          </div>
+          <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
+            {COLOR_TRENDS_2026.map((trend) => {
+              const isActive = value.colorPreset === trend.id;
+              return (
+                <button key={trend.id} type="button"
+                  onClick={() => { onChange({ colorPreset: trend.id }); toast.success(`Tendência "${trend.name}" aplicada`); }}
+                  className={cn("flex flex-col gap-1 rounded-lg border p-2 text-left transition-all", isActive ? "border-primary bg-primary/10 ring-1 ring-primary" : "border-border bg-card/30 hover:border-primary/40")}
+                  title={trend.description}>
+                  <div className="flex gap-0.5">
+                    {trend.colors.map((c, i) => (
+                      <div key={i} className="h-4 flex-1 rounded-sm" style={{ background: c }} />
+                    ))}
+                  </div>
+                  <span className="text-[9px] font-semibold leading-tight">{trend.name}</span>
+                  <div className="flex flex-wrap gap-0.5">
+                    {trend.tags.slice(0, 2).map((tag) => (
+                      <span key={tag} className="rounded bg-muted px-1 py-0.5 text-[7px] text-muted-foreground">{tag}</span>
+                    ))}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Cores personalizadas — opção + (máx 4, combos de 3-4) */}
@@ -424,7 +482,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
         <AnimatePresence>
           {showColorPopup && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-              <div className="rounded-xl border-2 border-border p-4" style={{ background: previewBg, color: previewFg, filter: previewFilter }}>
+              <div className="rounded-xl border-2 border-border p-4" style={{ background: previewBg, color: previewFg }}>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-bold" style={{ fontFamily: value.fontHeading || "inherit" }}>Logo / Brand</span>
                   <button type="button" onClick={() => setShowColorPopup(false)} className="rounded p-1 text-xs opacity-60 hover:opacity-100"><X className="h-3 w-3" /></button>
@@ -433,16 +491,16 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                   <h2 className="text-2xl font-extrabold" style={{ fontFamily: value.fontHeading || "inherit" }}>Forja projetos production-ready</h2>
                   <p className="text-sm opacity-80" style={{ fontFamily: value.fontBody || "inherit" }}>Análise de nicho, paleta WCAG-AA, tipografia, design tokens — tudo em segundos.</p>
                   <div className="flex gap-2">
-                    <button className="rounded-lg px-4 py-2 text-xs font-semibold" style={{ background: previewAccent, color: "#fff" }}>Get Started →</button>
-                    <button className="rounded-lg border px-4 py-2 text-xs font-semibold" style={{ borderColor: previewFg, color: previewFg }}>Learn more</button>
+                    <button className="rounded-lg px-4 py-2 text-xs font-semibold" style={{ background: previewAccent, color: pal.bg }}>Get Started →</button>
+                    <button className="rounded-lg border px-4 py-2 text-xs font-semibold" style={{ borderColor: previewMuted, color: previewFg }}>Learn more</button>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     {[
                       { label: "Feature 1", color: previewAccent },
-                      { label: "Feature 2", color: activeColorPreset.color2 },
-                      { label: "Feature 3", color: previewFg },
+                      { label: "Feature 2", color: adjustedSecondary },
+                      { label: "Feature 3", color: previewMuted },
                     ].map((f, i) => (
-                      <div key={i} className="rounded-lg border p-2" style={{ borderColor: previewFg + "33" }}>
+                      <div key={i} className="rounded-lg border p-2" style={{ borderColor: previewMuted + "40", background: previewCard }}>
                         <div className="h-6 w-6 rounded-full" style={{ background: f.color }} />
                         <div className="mt-1 text-[10px] font-semibold">{f.label}</div>
                         <div className="text-[9px] opacity-60">Description text</div>
