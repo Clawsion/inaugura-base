@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "functions": [
+    { "id": "architect", "name": "Architect", "default_model": "glm-5.2", "skills": ["superpowers-using", "react-best-practices"], "mcps": ["context7", "github"] },
+    { "id": "design_system", "name": "Design System", "default_model": "kimi-k3", "skills": ["frontend-design", "ui-ux-pro-max", "web-design-guidelines"], "mcps": ["figma", "shadcn"] },
+    { "id": "frontend", "name": "Frontend", "default_model": "kimi-k3", "skills": ["react-best-practices", "tailwind-4-pro", "shadcn-registry"], "mcps": ["shadcn"] },
+    { "id": "motion", "name": "Motion", "default_model": "kimi-k3", "skills": ["premium-motion-principles", "motion-animations"], "mcps": [] },
+    { "id": "backend", "name": "Backend", "default_model": "deepseek-v4-pro", "skills": ["react-best-practices", "security-basics"], "mcps": ["supabase", "stripe"] },
+    { "id": "qa", "name": "QA", "default_model": "kimi-k2.7", "skills": ["webapp-testing"], "mcps": ["playwright", "chrome-devtools"] },
+    { "id": "security", "name": "Security", "default_model": "glm-5.2", "skills": ["security-basics"], "mcps": [] },
+    { "id": "deploy", "name": "Deploy", "default_model": "deepseek-v4-flash", "skills": ["deploy-vercel"], "mcps": ["vercel"] },
+    { "id": "content", "name": "Content", "default_model": "glm-5.2", "skills": ["writing-seo", "seo-audit"], "mcps": [] },
+    { "id": "reviewer", "name": "Reviewer", "default_model": "claude-fable", "skills": ["web-design-guidelines"], "mcps": [] }
+  ]
+}

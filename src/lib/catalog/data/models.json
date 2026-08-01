@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "models": [
+    { "id": "glm-5.2", "name": "GLM-5.2", "provider": "glm", "role": "architect", "cost": "free_open", "open": true },
+    { "id": "kimi-k3", "name": "Kimi K3", "provider": "kimi", "role": "design_system", "cost": "free_open", "open": true },
+    { "id": "deepseek-v4-pro", "name": "DeepSeek V4 Pro", "provider": "deepseek", "role": "backend", "cost": "free_open", "open": true },
+    { "id": "deepseek-v4-flash", "name": "DeepSeek V4 Flash", "provider": "deepseek", "role": "deploy", "cost": "free_open", "open": true },
+    { "id": "kimi-k2.7", "name": "Kimi K2.7", "provider": "kimi", "role": "qa", "cost": "free_open", "open": true },
+    { "id": "claude-sonnet", "name": "Claude Sonnet", "provider": "anthropic", "role": "qa", "cost": "balanced", "open": false },
+    { "id": "claude-opus", "name": "Claude Opus", "provider": "anthropic", "role": "backend", "cost": "max", "open": false },
+    { "id": "claude-fable", "name": "Claude Fable", "provider": "anthropic", "role": "architect", "cost": "max", "open": false }
+  ]
+}

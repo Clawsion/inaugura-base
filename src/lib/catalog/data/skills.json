@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "skills": [
+    { "id": "superpowers-using", "name": "Superpowers (using)", "category": "core", "install": "npx @superpower/cli init", "best_models": ["glm-5.2", "kimi-k3", "deepseek-v4-pro"] },
+    { "id": "frontend-design", "name": "Frontend Design", "category": "core", "install": "npm i frontend-design", "best_models": ["kimi-k3", "claude-sonnet"] },
+    { "id": "ui-ux-pro-max", "name": "UI/UX Pro Max", "category": "core", "install": "npx ui-ux-pro-max init", "best_models": ["kimi-k3", "claude-sonnet"] },
+    { "id": "premium-motion-principles", "name": "Premium Motion Principles", "category": "core", "install": "npm i motion-principles", "best_models": ["kimi-k3", "claude-sonnet"] },
+    { "id": "react-best-practices", "name": "React Best Practices", "category": "core", "install": "npm i react-best-practices", "best_models": ["glm-5.2", "deepseek-v4-pro"] },
+    { "id": "web-design-guidelines", "name": "Web Design Guidelines", "category": "core", "install": "npm i web-design-guidelines", "best_models": ["kimi-k3", "claude-sonnet"] },
+    { "id": "tailwind-4-pro", "name": "Tailwind 4 Pro", "category": "project", "install": "npm i tailwindcss@4", "best_models": ["kimi-k3", "glm-5.2"] },
+    { "id": "shadcn-registry", "name": "shadcn Registry", "category": "project", "install": "npx shadcn@latest init", "best_models": ["kimi-k3", "claude-sonnet"] },
+    { "id": "motion-animations", "name": "Motion Animations", "category": "project", "install": "npm i motion", "best_models": ["kimi-k3", "claude-sonnet"] },
+    { "id": "lenis-smooth-scroll", "name": "Lenis Smooth Scroll", "category": "project", "install": "npm i lenis", "best_models": ["kimi-k3"] },
+    { "id": "gsap-scrolltrigger", "name": "GSAP ScrollTrigger", "category": "advanced", "install": "npm i gsap", "best_models": ["kimi-k3", "claude-sonnet"] },
+    { "id": "r3f-webgl", "name": "React Three Fiber", "category": "advanced", "install": "npm i @react-three/fiber @react-three/drei", "best_models": ["kimi-k3", "claude-sonnet"] },
+    { "id": "webapp-testing", "name": "Webapp Testing", "category": "core", "install": "npm i vitest playwright", "best_models": ["deepseek-v4-pro", "glm-5.2"] },
+    { "id": "deploy-vercel", "name": "Deploy Vercel", "category": "core", "install": "npm i -g vercel", "best_models": ["deepseek-v4-pro", "glm-5.2"] },
+    { "id": "seo-audit", "name": "SEO Audit", "category": "project", "install": "npm i lighthouse", "best_models": ["glm-5.2", "deepseek-v4-pro"] },
+    { "id": "security-basics", "name": "Security Basics", "category": "core", "install": "npm i helmet", "best_models": ["deepseek-v4-pro", "claude-opus"] },
+    { "id": "figma-implement", "name": "Figma Implement", "category": "project", "install": "npx figma-mcp init", "best_models": ["kimi-k3", "claude-sonnet"] },
+    { "id": "writing-seo", "name": "Writing & SEO", "category": "project", "install": "npm i next-seo", "best_models": ["glm-5.2", "kimi-k3"] }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0",
+  "sections": [
+    { "id": "hero", "name": "Hero", "default_priority": "P0" },
+    { "id": "about", "name": "About", "default_priority": "P1" },
+    { "id": "work", "name": "Work/Projects", "default_priority": "P0" },
+    { "id": "services", "name": "Services", "default_priority": "P1" },
+    { "id": "features", "name": "Features", "default_priority": "P0" },
+    { "id": "pricing", "name": "Pricing", "default_priority": "P1" },
+    { "id": "testimonials", "name": "Testimonials", "default_priority": "P1" },
+    { "id": "faq", "name": "FAQ", "default_priority": "P2" },
+    { "id": "cta", "name": "CTA", "default_priority": "P0" },
+    { "id": "contact", "name": "Contact", "default_priority": "P0" },
+    { "id": "footer", "name": "Footer", "default_priority": "P0" },
+    { "id": "blog", "name": "Blog", "default_priority": "P2" },
+    { "id": "team", "name": "Team", "default_priority": "P2" },
+    { "id": "stats", "name": "Stats", "default_priority": "P1" },
+    { "id": "logos", "name": "Logos", "default_priority": "P2" }
+  ]
+}

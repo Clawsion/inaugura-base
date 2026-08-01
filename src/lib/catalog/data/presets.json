@@ -1,0 +1,70 @@
+{
+  "version": "1.0.0",
+  "presets": [
+    {
+      "id": "awwwards-portfolio",
+      "name": "Awwwards Portfolio",
+      "project_type": "portfolio",
+      "level": "awwwards",
+      "mode": "team",
+      "team_size": 6,
+      "team_functions": ["architect", "design_system", "frontend", "motion", "qa", "deploy"],
+      "sections": ["hero", "work", "about", "contact", "footer"],
+      "effects": ["reveal-scroll", "smooth-scroll", "parallax", "magnetic-buttons", "kinetic-typography"],
+      "skills": ["superpowers-using", "frontend-design", "ui-ux-pro-max", "premium-motion-principles", "react-best-practices", "web-design-guidelines"],
+      "mcps": ["context7", "github", "figma", "playwright"]
+    },
+    {
+      "id": "agency",
+      "name": "Agency Site",
+      "project_type": "agency",
+      "level": "pro",
+      "mode": "team",
+      "team_size": 4,
+      "team_functions": ["architect", "design_system", "frontend", "deploy"],
+      "sections": ["hero", "services", "work", "about", "contact", "footer"],
+      "effects": ["reveal-scroll", "smooth-scroll", "parallax"],
+      "skills": ["superpowers-using", "frontend-design", "ui-ux-pro-max", "premium-motion-principles", "react-best-practices"],
+      "mcps": ["context7", "github", "figma"]
+    },
+    {
+      "id": "saas-landing",
+      "name": "SaaS Landing",
+      "project_type": "saas",
+      "level": "pro",
+      "mode": "team",
+      "team_size": 5,
+      "team_functions": ["architect", "design_system", "frontend", "backend", "deploy"],
+      "sections": ["hero", "features", "pricing", "testimonials", "faq", "cta", "footer"],
+      "effects": ["reveal-scroll", "smooth-scroll", "bento-grid", "mesh-gradient"],
+      "skills": ["superpowers-using", "frontend-design", "react-best-practices", "tailwind-4-pro", "shadcn-registry"],
+      "mcps": ["context7", "github", "shadcn", "vercel"]
+    },
+    {
+      "id": "ecommerce",
+      "name": "E-commerce",
+      "project_type": "ecommerce",
+      "level": "pro",
+      "mode": "team",
+      "team_size": 5,
+      "team_functions": ["architect", "design_system", "frontend", "backend", "qa"],
+      "sections": ["hero", "features", "pricing", "testimonials", "cta", "footer"],
+      "effects": ["reveal-scroll", "smooth-scroll"],
+      "skills": ["superpowers-using", "frontend-design", "react-best-practices", "security-basics"],
+      "mcps": ["context7", "github", "stripe", "supabase"],
+      "integrations": ["stripe", "cloudinary"]
+    },
+    {
+      "id": "local-business",
+      "name": "Local Business",
+      "project_type": "local_business",
+      "level": "lite",
+      "mode": "individual",
+      "sections": ["hero", "services", "about", "contact", "footer"],
+      "effects": ["reveal-scroll", "smooth-scroll"],
+      "skills": ["superpowers-using", "frontend-design", "react-best-practices", "seo-audit"],
+      "mcps": ["context7", "github"],
+      "integrations": ["whatsapp", "calendly"]
+    }
+  ]
+}

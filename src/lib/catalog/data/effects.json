@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "effects": [
+    { "id": "reveal-scroll", "name": "Reveal on Scroll", "perf_cost": "low", "skill": "motion-animations" },
+    { "id": "smooth-scroll", "name": "Smooth Scroll (Lenis)", "perf_cost": "low", "skill": "lenis-smooth-scroll" },
+    { "id": "parallax", "name": "Parallax", "perf_cost": "mid", "skill": "motion-animations" },
+    { "id": "glassmorphism", "name": "Glassmorphism", "perf_cost": "mid", "skill": "tailwind-4-pro" },
+    { "id": "magnetic-buttons", "name": "Magnetic Buttons", "perf_cost": "low", "skill": "motion-animations" },
+    { "id": "kinetic-typography", "name": "Kinetic Typography", "perf_cost": "low", "skill": "motion-animations" },
+    { "id": "gsap-timeline", "name": "GSAP Timeline", "perf_cost": "high", "skill": "gsap-scrolltrigger" },
+    { "id": "horizontal-scroll", "name": "Horizontal Scroll", "perf_cost": "high", "skill": "gsap-scrolltrigger" },
+    { "id": "3d-webgl", "name": "3D WebGL", "perf_cost": "high", "skill": "r3f-webgl" },
+    { "id": "mesh-gradient", "name": "Mesh Gradient", "perf_cost": "low", "skill": "tailwind-4-pro" },
+    { "id": "bento-grid", "name": "Bento Grid", "perf_cost": "low", "skill": "tailwind-4-pro" },
+    { "id": "view-transitions", "name": "View Transitions", "perf_cost": "low", "skill": "motion-animations" }
+  ]
+}

@@ -6,77 +6,14 @@ import { useTheme } from "next-themes";
 import { BriefingForm } from "@/components/forms/BriefingForm";
 import { LoadingSteps } from "@/components/loading-steps";
 import { ResultsPanel } from "@/components/results/ResultsPanel";
+import { InauguraPackResults } from "@/components/results/InauguraPackResults";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SkinSwitcher } from "@/components/skins/SkinSwitcher";
 import { Logo } from "@/components/logo";
 import { ProjectManager } from "@/components/project-manager";
-import { generateProject, type GenerateResult } from "@/app/actions/generate";
 import type { FormValues } from "@/lib/schemas";
-
-/**
- * Chama /api/generate com SSE streaming.
- * Lê eventos "progress", "result", "error" do stream.
- * Keepalive (`:`) mantém conexão ativa através do gateway.
- */
-async function callGenerateStreaming(form: FormValues): Promise<GenerateResult> {
-  const response = await fetch("/api/generate", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(form),
-  });
-
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-  }
-
-  const reader = response.body?.getReader();
-  if (!reader) throw new Error("Stream não disponível.");
-
-  const decoder = new TextDecoder();
-  let buffer = "";
-  let lastResult: GenerateResult | null = null;
-
-  const parseSSE = (chunk: string) => {
-    const events = chunk.split("\n\n");
-    for (const evt of events) {
-      const lines = evt.split("\n");
-      let eventType = "";
-      let dataStr = "";
-      for (const line of lines) {
-        if (line.startsWith("event: ")) eventType = line.slice(7).trim();
-        else if (line.startsWith("data: ")) dataStr += line.slice(6);
-        else if (line.startsWith(":")) continue; // keepalive
-      }
-      if (!dataStr) continue;
-      try {
-        const data = JSON.parse(dataStr);
-        if (eventType === "result" || (data && data.ok !== undefined)) {
-          lastResult = data as GenerateResult;
-        }
-      } catch {
-        // ignore parse errors (keepalive etc)
-      }
-    }
-  };
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    // Processa eventos completos (separados por \n\n)
-    const idx = buffer.lastIndexOf("\n\n");
-    if (idx >= 0) {
-      const complete = buffer.slice(0, idx + 2);
-      buffer = buffer.slice(idx + 2);
-      parseSSE(complete);
-    }
-  }
-  // Processa restante
-  if (buffer.trim()) parseSSE(buffer + "\n\n");
-
-  if (!lastResult) throw new Error("Stream terminou sem resultado.");
-  return lastResult;
-}
+import { useInauguraGenerate, formValuesToGenerateInput } from "@/hooks/use-inaugura-generate";
+import type { InauguraPack, Recommendation } from "@/lib/schema/inaugura-pack";
 import { getSkinById } from "@/lib/skins";
 import { toast } from "sonner";
 import { Github, AlertCircle, RotateCcw } from "lucide-react";
@@ -123,13 +60,14 @@ const FORM_INIT: FormValues = {
 
 export default function Home() {
   const [form, setForm] = useState<FormValues>(FORM_INIT);
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<GenerateResult | null>(null);
   const [showForm, setShowForm] = useState(true);
   // NOVO: skin ativo aplicado a toda a app (null = tema default)
   const [activeSkin, setActiveSkin] = useState<string | null>(null);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+
+  // Hook da nova arquitetura Inaugura Base
+  const { state: genState, generate, reset: resetGenerate } = useInauguraGenerate();
 
   useEffect(() => setMounted(true), []);
 
@@ -231,52 +169,35 @@ export default function Home() {
   }, [activeSkin, theme, mounted]);
 
   const onSubmit = useCallback(async () => {
-    setLoading(true);
-    setResult(null);
     setShowForm(false);
-    try {
-      const r = await callGenerateStreaming(form);
-      setResult(r);
-      if (!r.ok) {
-        toast.error("Falha na geração. Vê os detalhes abaixo.");
-      } else {
-        toast.success(`Especificação gerada em ${r.tentativas ?? 1} tentativa(s).`);
-      }
-    } catch (e: any) {
-      setResult({
-        ok: false,
-        error: `Erro inesperado: ${e?.message ?? String(e)}`,
-      });
-      toast.error("Erro inesperado.");
-    } finally {
-      setLoading(false);
+    const input = formValuesToGenerateInput(form);
+    const r = await generate(input);
+    if (r.ok) {
+      toast.success("InauguraPack gerado com sucesso!");
+    } else {
+      toast.error("Falha na geração. Vê os detalhes abaixo.");
     }
-  }, [form]);
+  }, [form, generate]);
 
   const onReset = useCallback(() => {
-    setResult(null);
+    resetGenerate();
     setShowForm(true);
-  }, []);
+  }, [resetGenerate]);
 
-  // NOVO: regenerar alternativas (mantém o briefing, gera nova variação)
+  // NOVO: regenerar alternativas
   const [regenerating, setRegenerating] = useState(false);
   const onRegenerate = useCallback(async () => {
-    if (!result?.ok) return;
+    if (!genState.pack) return;
     setRegenerating(true);
-    try {
-      const r = await callGenerateStreaming(form);
-      if (r.ok) {
-        setResult(r);
-        toast.success("Novas alternativas geradas!");
-      } else {
-        toast.error("Falha ao regenerar. Mantém o resultado anterior.");
-      }
-    } catch (e: any) {
-      toast.error("Erro inesperado ao regenerar.");
-    } finally {
-      setRegenerating(false);
+    const input = formValuesToGenerateInput(form);
+    const r = await generate(input);
+    if (r.ok) {
+      toast.success("Novas alternativas geradas!");
+    } else {
+      toast.error("Falha ao regenerar.");
     }
-  }, [form, result]);
+    setRegenerating(false);
+  }, [form, genState.pack, generate]);
 
   return (
     <main className="min-h-screen bg-background text-foreground" style={skinStyle}>
@@ -331,7 +252,7 @@ export default function Home() {
                 onLoadProject={(loadedForm) => {
                   setForm(loadedForm);
                   setShowForm(true);
-                  setResult(null);
+                  resetGenerate();
                 }}
               />
               <ThemeToggle />
@@ -393,10 +314,10 @@ export default function Home() {
                   value={form}
                   onChange={onChange}
                   onSubmit={onSubmit}
-                  isLoading={loading}
+                  isLoading={genState.loading}
                 />
               </motion.div>
-            ) : loading ? (
+            ) : genState.loading ? (
               <motion.div
                 key="loading"
                 initial={{ opacity: 0 }}
@@ -404,7 +325,17 @@ export default function Home() {
                 exit={{ opacity: 0 }}
                 className="flex min-h-[60vh] items-center justify-center"
               >
-                <LoadingSteps />
+                <div className="text-center space-y-4">
+                  <div className="inline-flex h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium text-foreground">
+                      {genState.step || "A processar..."}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {genState.message || "A gerar InauguraPack..."}
+                    </p>
+                  </div>
+                </div>
               </motion.div>
             ) : (
               <motion.div
@@ -427,10 +358,10 @@ export default function Home() {
                   </Button>
                 </div>
 
-                {result?.ok && result.data ? (
-                  <ResultsPanel
-                    spec={result.data}
-                    tentativas={result.tentativas}
+                {genState.pack ? (
+                  <InauguraPackResults
+                    pack={genState.pack}
+                    rec={genState.rec}
                     onRegenerate={onRegenerate}
                     regenerating={regenerating}
                   />
@@ -443,7 +374,7 @@ export default function Home() {
                           Falha na geração
                         </h3>
                         <pre className="whitespace-pre-wrap text-xs text-muted-foreground">
-                          {result?.error}
+                          {genState.error}
                         </pre>
                         <Button
                           variant="outline"

@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "integrations": [
+    { "id": "stripe", "name": "Stripe", "category": "payments", "requires_backend": true },
+    { "id": "supabase", "name": "Supabase", "category": "backend", "requires_backend": true },
+    { "id": "whatsapp", "name": "WhatsApp Widget", "category": "communication", "requires_backend": false },
+    { "id": "calendly", "name": "Calendly", "category": "scheduling", "requires_backend": false },
+    { "id": "posthog", "name": "PostHog", "category": "analytics", "requires_backend": false },
+    { "id": "sentry", "name": "Sentry", "category": "monitoring", "requires_backend": false },
+    { "id": "algolia", "name": "Algolia", "category": "search", "requires_backend": true },
+    { "id": "cloudinary", "name": "Cloudinary", "category": "storage", "requires_backend": false },
+    { "id": "resend", "name": "Resend", "category": "email", "requires_backend": true },
+    { "id": "auth-clerk", "name": "Clerk Auth", "category": "auth", "requires_backend": true },
+    { "id": "i18n", "name": "Multi-idioma (i18n)", "category": "content", "requires_backend": false },
+    { "id": "cms-sanity", "name": "Sanity CMS", "category": "cms", "requires_backend": true }
+  ]
+}

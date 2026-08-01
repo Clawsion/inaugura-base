@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "mcps": [
+    { "id": "context7", "name": "Context7", "install": "npx context7-mcp", "phase": ["research", "compile"], "context_cost": "low" },
+    { "id": "github", "name": "GitHub MCP", "install": "npx github-mcp-server", "phase": ["compile", "ship"], "context_cost": "low" },
+    { "id": "figma", "name": "Figma MCP", "install": "npx figma-context-mcp", "phase": ["design", "compile"], "context_cost": "mid" },
+    { "id": "playwright", "name": "Playwright MCP", "install": "npx playwright-mcp", "phase": ["qa"], "context_cost": "mid" },
+    { "id": "vercel", "name": "Vercel MCP", "install": "npx vercel-mcp", "phase": ["ship"], "context_cost": "low" },
+    { "id": "supabase", "name": "Supabase MCP", "install": "npx supabase-mcp", "phase": ["backend"], "context_cost": "mid" },
+    { "id": "stripe", "name": "Stripe MCP", "install": "npx stripe-agent-toolkit", "phase": ["backend"], "context_cost": "mid" },
+    { "id": "chrome-devtools", "name": "Chrome DevTools MCP", "install": "npx chrome-devtools-mcp", "phase": ["qa"], "context_cost": "mid" },
+    { "id": "shadcn", "name": "shadcn MCP", "install": "npx shadcn-mcp", "phase": ["compile"], "context_cost": "low" },
+    { "id": "sequential-thinking", "name": "Sequential Thinking", "install": "npx sequential-thinking-mcp", "phase": ["research"], "context_cost": "low" }
+  ]
+}
