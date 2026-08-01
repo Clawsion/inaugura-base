@@ -135,6 +135,7 @@ export default function Home() {
     mood: [],
     palette: "auto",
     colorPreset: "auto",
+    colorCount: 3,
     colorAdjust: { brightness: 0, contrast: 0, saturation: 0, hue: 0 },
     customColors: [],
     typographyPref: "auto",

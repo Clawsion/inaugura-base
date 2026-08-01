@@ -1,18 +1,18 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import {
   Sparkles, Lightbulb, Plus, Trash2, ChevronDown, Wand2, ArrowRight,
-  Dices, Eye, Sliders, X, Layers, Zap, Lock,
+  Dices, Eye, X, Layers, Zap, Lock, RefreshCw, Palette, Maximize2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { CATALOG } from "@/lib/catalog";
-import { adjustColor, generatePalette, COLOR_TRENDS_2026 } from "@/lib/color-engine";
+import { adjustColor, generatePalette, hexToHsl, hslToHex, COLOR_TRENDS_2026 } from "@/lib/color-engine";
 
 export interface SimpleForgeValues {
   briefing: string;
@@ -22,6 +22,7 @@ export interface SimpleForgeValues {
   mood: string[];
   palette: "auto" | "light" | "dark" | "brand";
   colorPreset: string;
+  colorCount: 2 | 3 | 4;
   colorAdjust: { brightness: number; contrast: number; saturation: number; hue: number };
   customColors: { hex: string; role: string }[];
   typographyPref: "auto" | "modern-sans" | "geometric" | "humanist" | "editorial-serif" | "mono-tech";
@@ -46,7 +47,7 @@ interface SimpleForgeProps {
   onSwitchToAdvanced: () => void;
 }
 
-// Ícones minimalistas (unicode/svg leves em vez de emojis)
+// Ícones minimalistas
 const PROJECT_TYPES = [
   { id: "landing", label: "Landing Page", icon: "◢" },
   { id: "saas", label: "SaaS / Web App", icon: "▣" },
@@ -73,44 +74,36 @@ const AESTHETICS = [
 
 const MOODS = ["Profissional", "Criativo", "Luxo", "Techy", "Amigável", "Ousado", "Minimalista"];
 
-const COLOR_PRESETS = [
-  { id: "auto", label: "Auto", color1: "#5E6AD2", color2: "#8B5CF6" },
-  { id: "modern-blue", label: "Modern Blue", color1: "#2563EB", color2: "#3B82F6" },
-  { id: "violet-ai", label: "Violet AI", color1: "#8B5CF6", color2: "#22D3EE" },
-  { id: "emerald-fresh", label: "Emerald", color1: "#10B981", color2: "#34D399" },
-  { id: "neutral-premium", label: "Neutral Premium", color1: "#18181B", color2: "#71717A" },
-  { id: "warm-coral", label: "Warm Coral", color1: "#F97316", color2: "#FB923C" },
-  { id: "dark-premium", label: "Dark Premium", color1: "#0A0A0B", color2: "#5E6AD2" },
-  { id: "soft-pastel", label: "Soft Pastel", color1: "#FDA4AF", color2: "#A78BFA" },
-  { id: "high-contrast", label: "High Contrast", color1: "#000000", color2: "#00FF88" },
-  { id: "monochrome", label: "Monochrome", color1: "#1A1A1A", color2: "#A1A1AA" },
-];
-
 const TYPOGRAPHY_PRESETS = [
-  { id: "auto", label: "Auto (Perfect Combo)", desc: "IA escolhe o combo ideal" },
-  { id: "modern-sans", label: "Modern Sans", desc: "Inter / Geist / Plus Jakarta" },
-  { id: "geometric", label: "Geometric", desc: "Satoshi / General Sans" },
-  { id: "humanist", label: "Humanist", desc: "SWitzer / Instrument Sans" },
-  { id: "editorial-serif", label: "Editorial Serif", desc: "Georgia + Sans limpa" },
-  { id: "mono-tech", label: "Mono / Tech", desc: "Geist Mono / JetBrains" },
+  { id: "auto", label: "Auto (Perfect Combo)" },
+  { id: "modern-sans", label: "Modern Sans" },
+  { id: "geometric", label: "Geometric" },
+  { id: "humanist", label: "Humanist" },
+  { id: "editorial-serif", label: "Editorial Serif" },
+  { id: "mono-tech", label: "Mono / Tech" },
 ];
 
-// Fonts populares para I'm Lucky
-const FONTS_POOL = [
+// Lista de fonts para seleção manual (ativas nos melhores sites 2026)
+const ALL_FONTS = [
+  "Geist", "Inter", "Plus Jakarta Sans", "Satoshi", "General Sans",
+  "Instrument Sans", "SWitzer", "Cabinet Grotesk", "Clash Display",
+  "Outfit", "Space Grotesk", "Sora", "Syne", "Onest", "Hanken Grotesk",
+  "Unbounded", "Bricolage Grotesque", "Geist Mono", "JetBrains Mono", "Space Mono",
+];
+
+// Combos de fonts predefinidos (Perfect Combos)
+const FONT_COMBOS = [
   { heading: "Geist", body: "Inter", mono: "Geist Mono" },
   { heading: "Plus Jakarta Sans", body: "Inter", mono: "JetBrains Mono" },
   { heading: "Satoshi", body: "General Sans", mono: "Geist Mono" },
   { heading: "Cabinet Grotesk", body: "SWitzer", mono: "Space Mono" },
   { heading: "Clash Display", body: "Inter", mono: "Geist Mono" },
-  { heading: "Instrument Sans", body: "Instrument Sans", mono: "JetBrains Mono" },
-  { heading: "General Sans", body: "Inter", mono: "Space Mono" },
-  { heading: "Bricolage Grotesque", body: "Inter", mono: "Geist Mono" },
   { heading: "Outfit", body: "Inter", mono: "JetBrains Mono" },
   { heading: "Space Grotesk", body: "Inter", mono: "Space Mono" },
   { heading: "Sora", body: "Inter", mono: "Geist Mono" },
-  { heading: "Unbounded", body: "Inter", mono: "JetBrains Mono" },
-  { heading: "Syne", body: "Inter", mono: "Space Mono" },
-  { heading: "Onest", body: "Onest", mono: "Geist Mono" },
+  { heading: "Syne", body: "Inter", mono: "JetBrains Mono" },
+  { heading: "Bricolage Grotesque", body: "Inter", mono: "Geist Mono" },
+  { heading: "Unbounded", body: "Inter", mono: "Space Mono" },
   { heading: "Hanken Grotesk", body: "Hanken Grotesk", mono: "JetBrains Mono" },
 ];
 
@@ -125,7 +118,6 @@ const STACK_PREFS = [
 ];
 
 const STACK_COMBO_CATEGORIES = [
-  { id: "all", label: "Todos" },
   { id: "saas", label: "SaaS" },
   { id: "ai", label: "AI" },
   { id: "indie", label: "Indie" },
@@ -161,12 +153,45 @@ const LEVELS = [
   { id: "enterprise", label: "Enterprise", desc: "Máxima robustez" },
 ];
 
+// Filtros por tipo de website para paletes de cor
+const PALETTE_FILTERS = [
+  { id: "all", label: "Todos" },
+  { id: "saas", label: "SaaS" },
+  { id: "ai", label: "AI/Tech" },
+  { id: "ecommerce", label: "E-commerce" },
+  { id: "luxury", label: "Luxo" },
+  { id: "wellness", label: "Wellness" },
+  { id: "brutalist", label: "Brutalist" },
+  { id: "gaming", label: "Gaming" },
+  { id: "corporate", label: "Corporate" },
+  { id: "creative", label: "Creative" },
+  { id: "minimal", label: "Minimal" },
+];
+
+// Mapear tendências para filtros
+const TREND_FILTERS: Record<string, string[]> = {
+  "electric-lavender": ["ai", "saas"],
+  "terminal-green": ["brutalist", "ai"],
+  "sunset-coral": ["ecommerce", "wellness"],
+  "nordic-ice": ["saas", "corporate"],
+  "obsidian-gold": ["luxury"],
+  "matrix-amber": ["brutalist", "gaming"],
+  "soft-sage": ["wellness"],
+  "cyber-magenta": ["gaming", "creative"],
+  "muted-clay": ["ecommerce", "creative"],
+  "deep-ocean": ["corporate", "saas"],
+  "neon-punk": ["creative", "gaming"],
+  "pure-mono": ["minimal", "corporate"],
+};
+
 export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAdvanced }: SimpleForgeProps) {
   const [showExtras, setShowExtras] = useState(false);
   const [showColorPopup, setShowColorPopup] = useState(false);
   const [showFontPopup, setShowFontPopup] = useState(false);
-  const [stackComboFilter, setStackComboFilter] = useState("all");
+  const [expandedStackGroup, setExpandedStackGroup] = useState<string | null>(null);
   const [showSecretMotion, setShowSecretMotion] = useState(false);
+  const [paletteFilter, setPaletteFilter] = useState("all");
+  const [colorEditIndex, setColorEditIndex] = useState<number | null>(null);
 
   const toggleArray = useCallback((key: "references" | "mood" | "integrations", item: string) => {
     const arr = value[key];
@@ -177,11 +202,9 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     }
   }, [value, onChange]);
 
-  // I'm Lucky — escolhe font aleatória
+  // I'm Lucky — escolhe combo de font aleatório
   const imLuckyFont = useCallback(() => {
-    const pool = FONTS_POOL.filter(
-      (f) => f.heading !== value.fontHeading
-    );
+    const pool = FONT_COMBOS.filter((f) => f.heading !== value.fontHeading);
     const random = pool[Math.floor(Math.random() * pool.length)];
     onChange({
       fontHeading: random.heading,
@@ -192,22 +215,51 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     toast.success(`I'm Lucky! ${random.heading} + ${random.body} + ${random.mono}`);
   }, [value.fontHeading, onChange]);
 
-  // Filtar stack combos
-  const filteredStackCombos = useMemo(() => {
-    if (stackComboFilter === "all") return CATALOG.stackCombos;
-    return CATALOG.stackCombos.filter((c) => c.category === stackComboFilter);
-  }, [stackComboFilter]);
+  // Generate — gera variação infinita de uma palete
+  const generatePaletteVariation = useCallback((trendId?: string) => {
+    const trend = COLOR_TRENDS_2026.find((t) => t.id === trendId) ?? COLOR_TRENDS_2026[0];
+    const baseColor = trend.colors[0];
+    const hsl = hexToHsl(baseColor);
+    // Varia hue aleatoriamente mantendo saturação e lightness
+    const newHue = (hsl.h + Math.random() * 60 - 30 + 360) % 360;
+    const newSat = Math.max(40, Math.min(90, hsl.s + (Math.random() * 20 - 10)));
+    const newLight = Math.max(35, Math.min(65, hsl.l + (Math.random() * 10 - 5)));
+    const newHex = hslToHex(newHue, newSat, newLight);
+    // Gera paleta com colorCount cores
+    const count = value.colorCount;
+    const colors: { hex: string; role: string }[] = [];
+    const roles = ["Background", "Secundária", "Suporte", "Destaque"];
+    for (let i = 0; i < count; i++) {
+      const h = (newHue + i * (360 / count)) % 360;
+      const l = i === 0 ? 8 : i === 1 ? 90 : i === 2 ? 50 : 65;
+      colors.push({ hex: hslToHex(h, newSat, l), role: roles[i] ?? `Cor ${i + 1}` });
+    }
+    onChange({ customColors: colors, colorPreset: trendId ?? value.colorPreset });
+    toast.success(`Palete gerada: ${count} cores · ${hslToHex(newHue, newSat, newLight)}`);
+  }, [value.colorCount, value.colorPreset, onChange]);
 
-  // Cor ativa ajustada via HSL (não CSS filter — nunca gera transparência)
-  const activeColorPreset = COLOR_PRESETS.find((c) => c.id === value.colorPreset) ?? COLOR_PRESETS[0];
-  const adjustedAccent = adjustColor(activeColorPreset.color1, value.colorAdjust);
-  const adjustedSecondary = adjustColor(activeColorPreset.color2, value.colorAdjust);
-  const pal = generatePalette(adjustedAccent, value.palette === "light" ? "light" : "dark");
-  const previewBg = pal.bg;
-  const previewFg = pal.text;
-  const previewAccent = pal.accent;
-  const previewCard = pal.card;
-  const previewMuted = pal.muted;
+  // Paletes filtradas
+  const filteredPalettes = useMemo(() => {
+    if (paletteFilter === "all") return COLOR_TRENDS_2026;
+    return COLOR_TRENDS_2026.filter((t) => (TREND_FILTERS[t.id] ?? []).includes(paletteFilter));
+  }, [paletteFilter]);
+
+  // Cor ativa para preview
+  const activePalette = value.customColors.length > 0
+    ? value.customColors
+    : (() => {
+        const trend = COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
+        return trend.colors.slice(0, value.colorCount).map((hex, i) => ({
+          hex,
+          role: ["Background", "Secundária", "Suporte", "Destaque"][i] ?? `Cor ${i + 1}`,
+        }));
+      })();
+
+  // Preview colors (sempre do tamanho colorCount)
+  const previewColors = activePalette.slice(0, value.colorCount);
+  const previewAccent = previewColors.find((c) => c.role === "Destaque")?.hex ?? previewColors[0]?.hex ?? "#5E6AD2";
+  const previewBg = previewColors.find((c) => c.role === "Background")?.hex ?? "#0A0A0B";
+  const previewText = previewColors.length > 2 ? previewColors[1]?.hex ?? "#FAFAFA" : "#FAFAFA";
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">
@@ -219,13 +271,9 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
             <Lightbulb className="h-3 w-3" /> Auto-detetar a partir do briefing
           </button>
         </div>
-        <Textarea
-          id="simple-briefing"
-          value={value.briefing}
-          onChange={(e) => onChange({ briefing: e.target.value })}
+        <Textarea id="simple-briefing" value={value.briefing} onChange={(e) => onChange({ briefing: e.target.value })}
           placeholder="Ex: Estou a criar uma plataforma SaaS B2B para gestão de equipas remotas. O público-alvo são CTOs e Head of Ops de startups em fase Series A-B..."
-          className="min-h-[140px] resize-y border-border bg-card/50 text-sm leading-relaxed"
-        />
+          className="min-h-[140px] resize-y border-border bg-card/50 text-sm leading-relaxed" />
         <p className="text-xs text-muted-foreground">{value.briefing.length} caracteres · mínimo 20</p>
       </motion.div>
 
@@ -279,210 +327,119 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
         </div>
       </div>
 
-      {/* Cores & Tipografia com Preview + Ajustes + I'm Lucky + Popups */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
+      {/* PALETES DE CORES — 2/3/4 cores + filtro + generate + preview + edit  */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <Label className="text-xs font-semibold">Cores & Tipografia</Label>
-          <button type="button" onClick={() => setShowColorPopup(!showColorPopup)}
-            className="flex items-center gap-1 text-[10px] text-primary hover:underline">
-            <Eye className="h-3 w-3" /> {showColorPopup ? "Fechar preview" : "Ver preview"}
-          </button>
-        </div>
-
-        {/* Modo de cor + swatches */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] text-muted-foreground">Modo:</span>
-          {(["auto", "light", "dark", "brand"] as const).map((p) => (
-            <button key={p} type="button" onClick={() => onChange({ palette: p })}
-              className={cn("rounded-md px-2 py-0.5 text-[10px] font-medium capitalize transition-all", value.palette === p ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground hover:bg-muted")}>
-              {p === "auto" ? "Auto" : p}
-            </button>
-          ))}
-        </div>
-        <div className="flex flex-wrap gap-1.5">
-          {COLOR_PRESETS.map((cp) => (
-            <button key={cp.id} type="button" onClick={() => onChange({ colorPreset: cp.id })}
-              className={cn("group relative overflow-hidden rounded-lg border-2 p-0.5 transition-all", value.colorPreset === cp.id ? "border-primary ring-1 ring-primary" : "border-border hover:border-primary/40")}
-              title={cp.label}>
-              <div className="h-6 w-6 rounded-md" style={{ background: `linear-gradient(135deg, ${cp.color1}, ${cp.color2})` }} />
-            </button>
-          ))}
-        </div>
-
-        {/* Ajustes de cor — HSL direto na cor (sem transparência, sem cor morta) */}
-        <div className="space-y-2 rounded-lg border border-border bg-card/20 p-2">
-          <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
-            <Sliders className="h-3 w-3" /> Ajustar cor (HSL — só afeta o HEX, sem transparência)
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Slider label="Brilho" value={value.colorAdjust.brightness} onChange={(v) => onChange({ colorAdjust: { ...value.colorAdjust, brightness: v } })} />
-            <Slider label="Contraste" value={value.colorAdjust.contrast} onChange={(v) => onChange({ colorAdjust: { ...value.colorAdjust, contrast: v } })} />
-            <Slider label="Saturação" value={value.colorAdjust.saturation} onChange={(v) => onChange({ colorAdjust: { ...value.colorAdjust, saturation: v } })} />
-            <Slider label="Tonalidade" value={value.colorAdjust.hue} onChange={(v) => onChange({ colorAdjust: { ...value.colorAdjust, hue: v } })} />
-          </div>
-          {/* Preview da cor ajustada em tempo real */}
-          {(() => {
-            const adjustedAccent = adjustColor(activeColorPreset.color1, value.colorAdjust);
-            const adjustedSecondary = adjustColor(activeColorPreset.color2, value.colorAdjust);
-            const pal = generatePalette(adjustedAccent, value.palette === "light" ? "light" : "dark");
-            return (
-              <div className="flex items-center gap-2 rounded-md border border-border p-1.5">
-                <span className="text-[9px] text-muted-foreground">Preview:</span>
-                <div className="h-5 w-5 rounded border border-border" style={{ background: pal.bg }} title={`BG ${pal.bg}`} />
-                <div className="h-5 w-5 rounded border border-border" style={{ background: pal.card }} title={`Card ${pal.card}`} />
-                <div className="h-5 w-5 rounded border border-border" style={{ background: pal.accent }} title={`Accent ${pal.accent}`} />
-                <div className="h-5 w-5 rounded border border-border" style={{ background: pal.text }} title={`Text ${pal.text}`} />
-                <div className="h-5 w-5 rounded border border-border" style={{ background: pal.muted }} title={`Muted ${pal.muted}`} />
-                <code className="text-[9px] text-muted-foreground">{pal.accent}</code>
-                <button type="button" onClick={() => onChange({ colorAdjust: { brightness: 0, contrast: 0, saturation: 0, hue: 0 } })} className="ml-auto text-[9px] text-primary hover:underline">Reset</button>
-              </div>
-            );
-          })()}
-        </div>
-
-        {/* Tendências de Cor — Julho 2026 */}
-        <div className="space-y-2">
+          <Label className="text-xs font-semibold">Paletes de Cores</Label>
           <div className="flex items-center gap-1.5">
-            <Sparkles className="h-3 w-3 text-primary" />
-            <span className="text-[10px] font-semibold text-muted-foreground">Tendências de Cor · Julho 2026</span>
+            {/* Seletor de número de cores: 2 / 3 / 4 */}
+            <span className="text-[10px] text-muted-foreground">Cores:</span>
+            {([2, 3, 4] as const).map((n) => (
+              <button key={n} type="button" onClick={() => onChange({ colorCount: n })}
+                className={cn("flex h-6 w-6 items-center justify-center rounded-md text-[10px] font-bold transition-all", value.colorCount === n ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground hover:bg-muted")}>
+                {n}
+              </button>
+            ))}
+            {/* Generate global — gera palete infinita */}
+            <Button type="button" size="sm" variant="outline" onClick={() => generatePaletteVariation()} className="h-6 gap-1 px-2 text-[10px]" title="Gerar palete aleatória infinita">
+              <RefreshCw className="h-3 w-3" /> Generate
+            </Button>
           </div>
-          <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
-            {COLOR_TRENDS_2026.map((trend) => {
-              const isActive = value.colorPreset === trend.id;
-              return (
-                <button key={trend.id} type="button"
-                  onClick={() => { onChange({ colorPreset: trend.id }); toast.success(`Tendência "${trend.name}" aplicada`); }}
-                  className={cn("flex flex-col gap-1 rounded-lg border p-2 text-left transition-all", isActive ? "border-primary bg-primary/10 ring-1 ring-primary" : "border-border bg-card/30 hover:border-primary/40")}
-                  title={trend.description}>
-                  <div className="flex gap-0.5">
-                    {trend.colors.map((c, i) => (
-                      <div key={i} className="h-4 flex-1 rounded-sm" style={{ background: c }} />
-                    ))}
-                  </div>
-                  <span className="text-[9px] font-semibold leading-tight">{trend.name}</span>
-                  <div className="flex flex-wrap gap-0.5">
-                    {trend.tags.slice(0, 2).map((tag) => (
-                      <span key={tag} className="rounded bg-muted px-1 py-0.5 text-[7px] text-muted-foreground">{tag}</span>
-                    ))}
+        </div>
+
+        {/* Filtros por tipo de website */}
+        <div className="flex flex-wrap gap-1">
+          {PALETTE_FILTERS.map((f) => (
+            <button key={f.id} type="button" onClick={() => setPaletteFilter(f.id)}
+              className={cn("rounded-md px-2 py-0.5 text-[10px] font-medium transition-all", paletteFilter === f.id ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground hover:bg-muted")}>
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Grid de paletes — cada uma com swatches + generate individual + botão expandir cor */}
+        <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+          {filteredPalettes.map((trend) => {
+            const isActive = value.colorPreset === trend.id;
+            const colors = trend.colors.slice(0, value.colorCount);
+            return (
+              <div key={trend.id} className={cn("rounded-lg border p-2 transition-all", isActive ? "border-primary bg-primary/10 ring-1 ring-primary" : "border-border bg-card/30 hover:border-primary/40")}>
+                <button type="button" onClick={() => onChange({ colorPreset: trend.id, customColors: [] })}
+                  className="w-full text-left">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-semibold">{trend.name}</span>
+                    <span className="text-[8px] text-muted-foreground">{trend.tags.slice(0, 2).join(" · ")}</span>
                   </div>
                 </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Cores personalizadas — opção + (máx 4, combos de 3-4) */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">Cores personalizadas (máx 4 · ideal 3)</span>
-            {value.customColors.length < 4 && (
-              <button type="button" onClick={() => {
-                const roles = ["Background", "Secundária", "Suporte", "Destaque"];
-                onChange({ customColors: [...value.customColors, { hex: "#5E6AD2", role: roles[value.customColors.length] ?? "Extra" }] });
-              }} className="flex items-center gap-0.5 text-[10px] text-primary hover:underline">
-                <Plus className="h-3 w-3" /> Adicionar cor
-              </button>
-            )}
-          </div>
-          {value.customColors.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {value.customColors.map((cc, i) => (
-                <div key={i} className="flex items-center gap-1.5 rounded-lg border border-border bg-card/30 p-1">
-                  <input type="color" value={cc.hex} onChange={(e) => {
-                    const colors = [...value.customColors]; colors[i] = { ...colors[i], hex: e.target.value };
-                    onChange({ customColors: colors });
-                  }} className="h-6 w-6 cursor-pointer rounded border-0 bg-transparent" />
-                  <span className="text-[9px] text-muted-foreground">{cc.role}</span>
-                  <button type="button" onClick={() => onChange({ customColors: value.customColors.filter((_, idx) => idx !== i) })} className="text-muted-foreground hover:text-destructive">
-                    <X className="h-3 w-3" />
+                {/* Swatches — cada uma com ícone para editar individualmente */}
+                <div className="mt-1.5 flex gap-1">
+                  {colors.map((c, i) => (
+                    <div key={i} className="group relative flex-1">
+                      <div className="h-8 rounded-md" style={{ background: c }} />
+                      {/* Ícone para ampliar cor individualmente */}
+                      <button type="button" onClick={() => setColorEditIndex(colorEditIndex === i ? null : i)}
+                        className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-bl-md rounded-tr-md bg-black/50 opacity-0 transition-opacity group-hover:opacity-100"
+                        title="Editar cor individual">
+                        <Maximize2 className="h-2.5 w-2.5 text-white" />
+                      </button>
+                    </div>
+                  ))}
+                  {/* Generate individual */}
+                  <button type="button" onClick={() => generatePaletteVariation(trend.id)}
+                    className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:border-primary hover:text-primary"
+                    title="Gerar variação desta palete">
+                    <RefreshCw className="h-3 w-3" />
                   </button>
                 </div>
-              ))}
-            </div>
-          )}
-          {value.customColors.length > 0 && (
-            <p className="text-[9px] text-muted-foreground">
-              Distribuição ideal: 60% bg · 20% secundária · 10% suporte · 10% destaque
-            </p>
-          )}
+                {/* Editor de cor individual (popup inline) */}
+                <AnimatePresence>
+                  {colorEditIndex !== null && isActive && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="mt-1.5 overflow-hidden rounded-md border border-border bg-card/50 p-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] text-muted-foreground">Cor {colorEditIndex + 1}:</span>
+                        <input type="color" value={colors[colorEditIndex] ?? "#5E6AD2"}
+                          onChange={(e) => {
+                            const newColors = [...value.customColors];
+                            while (newColors.length <= colorEditIndex) newColors.push({ hex: "#5E6AD2", role: "" });
+                            newColors[colorEditIndex] = { hex: e.target.value, role: ["Background", "Secundária", "Suporte", "Destaque"][colorEditIndex] ?? `Cor ${colorEditIndex + 1}` };
+                            onChange({ customColors: newColors });
+                          }}
+                          className="h-6 w-8 cursor-pointer rounded border-0 bg-transparent" />
+                        <code className="text-[9px] text-muted-foreground">{colors[colorEditIndex] ?? "#5E6AD2"}</code>
+                        {/* Sliders HSL individuais */}
+                        <div className="flex gap-1">
+                          <MiniSlider label="H" onChange={(v) => {
+                            const hsl = hexToHsl(colors[colorEditIndex] ?? "#5E6AD2");
+                            const newHex = hslToHex(v, hsl.s, hsl.l);
+                            const newColors = [...value.customColors];
+                            while (newColors.length <= colorEditIndex) newColors.push({ hex: newHex, role: "" });
+                            newColors[colorEditIndex] = { hex: newHex, role: ["Background", "Secundária", "Suporte", "Destaque"][colorEditIndex] ?? `Cor ${colorEditIndex + 1}` };
+                            onChange({ customColors: newColors });
+                          }} />
+                        </div>
+                        <button type="button" onClick={() => setColorEditIndex(null)} className="ml-auto text-muted-foreground hover:text-foreground"><X className="h-3 w-3" /></button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
         </div>
 
-        {/* Tipografia + I'm Lucky */}
+        {/* Preview expandido (mockup website com a palete) — influenciado por colorCount */}
         <div className="flex items-center gap-2">
-          <span className="text-[11px] text-muted-foreground">Tipografia:</span>
-          <div className="flex flex-1 flex-wrap gap-1">
-            {TYPOGRAPHY_PRESETS.map((tp) => (
-              <button key={tp.id} type="button" onClick={() => onChange({ typographyPref: tp.id as SimpleForgeValues["typographyPref"] })}
-                className={cn("rounded-md px-2 py-0.5 text-[10px] font-medium transition-all", value.typographyPref === tp.id ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground hover:bg-muted")}>
-                {tp.label}
-              </button>
-            ))}
-          </div>
-          <Button type="button" size="sm" variant="outline" onClick={imLuckyFont} className="h-7 gap-1 text-[10px] shrink-0" title="Escolhe font aleatória de bibliotecas online">
-            <Dices className="h-3 w-3" /> I'm Lucky
-          </Button>
-        </div>
-
-        {/* Preview de font escolhida + opção + para fonts personalizadas (máx 3) */}
-        <div className="rounded-lg border border-border bg-card/20 p-3">
-          <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-            <span>Heading: {value.fontHeading || "Auto"}</span>
-            <span>Body: {value.fontBody || "Auto"}</span>
-            <span>Mono: {value.fontMono || "Auto"}</span>
-          </div>
-          <div className="mt-2 space-y-1">
-            <div className="text-xl font-bold" style={{ fontFamily: value.fontHeading || "inherit" }}>The quick brown fox</div>
-            <div className="text-sm" style={{ fontFamily: value.fontBody || "inherit" }}>jumps over the lazy dog — 0123456789</div>
-            <div className="text-xs font-mono" style={{ fontFamily: value.fontMono || "monospace" }}>const hello = "world";</div>
-          </div>
-
-          {/* Fonts personalizadas — opção + (máx 3) */}
-          <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            {value.customFonts.map((font, i) => (
-              <div key={i} className="flex items-center gap-1 rounded-md border border-border bg-card/30 px-1.5 py-0.5">
-                <span className="text-[9px]" style={{ fontFamily: font }}>{font}</span>
-                <button type="button" onClick={() => onChange({ customFonts: value.customFonts.filter((_, idx) => idx !== i) })} className="text-muted-foreground hover:text-destructive">
-                  <X className="h-2.5 w-2.5" />
-                </button>
-              </div>
-            ))}
-            {value.customFonts.length < 3 && (
-              <div className="flex items-center gap-1">
-                <input type="text" placeholder="Nome da font" onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    const val = (e.target as HTMLInputElement).value.trim();
-                    if (val) {
-                      onChange({ customFonts: [...value.customFonts, val] });
-                      (e.target as HTMLInputElement).value = "";
-                    }
-                  }
-                }} className="w-24 rounded-md border border-border bg-card/50 px-1.5 py-0.5 text-[9px]" />
-                <button type="button" onClick={() => {
-                  const input = document.querySelector('input[placeholder="Nome da font"]') as HTMLInputElement;
-                  if (input && input.value.trim()) {
-                    onChange({ customFonts: [...value.customFonts, input.value.trim()] });
-                    input.value = "";
-                  }
-                }} className="flex items-center gap-0.5 text-[10px] text-primary hover:underline">
-                  <Plus className="h-3 w-3" /> Font
-                </button>
-              </div>
-            )}
-            {value.customFonts.length > 0 && (
-              <span className="text-[9px] text-muted-foreground">Máx 3 fonts (1 heading + 1 body + 1 mono)</span>
-            )}
-          </div>
-
-          <button type="button" onClick={() => setShowFontPopup(!showFontPopup)} className="mt-2 flex items-center gap-1 text-[10px] text-primary hover:underline">
-            <Layers className="h-3 w-3" /> {showFontPopup ? "Fechar" : "Expandir"} mockup tipografia
+          <button type="button" onClick={() => setShowColorPopup(!showColorPopup)}
+            className="flex items-center gap-1 text-[10px] text-primary hover:underline">
+            <Eye className="h-3 w-3" /> {showColorPopup ? "Fechar preview" : "Ver preview do website"}
           </button>
         </div>
-
-        {/* Preview expandido de Cores (popup mockup website) */}
         <AnimatePresence>
           {showColorPopup && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-              <div className="rounded-xl border-2 border-border p-4" style={{ background: previewBg, color: previewFg }}>
+              <div className="rounded-xl border-2 border-border p-4" style={{ background: previewBg, color: previewText }}>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-bold" style={{ fontFamily: value.fontHeading || "inherit" }}>Logo / Brand</span>
                   <button type="button" onClick={() => setShowColorPopup(false)} className="rounded p-1 text-xs opacity-60 hover:opacity-100"><X className="h-3 w-3" /></button>
@@ -491,19 +448,16 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                   <h2 className="text-2xl font-extrabold" style={{ fontFamily: value.fontHeading || "inherit" }}>Forja projetos production-ready</h2>
                   <p className="text-sm opacity-80" style={{ fontFamily: value.fontBody || "inherit" }}>Análise de nicho, paleta WCAG-AA, tipografia, design tokens — tudo em segundos.</p>
                   <div className="flex gap-2">
-                    <button className="rounded-lg px-4 py-2 text-xs font-semibold" style={{ background: previewAccent, color: pal.bg }}>Get Started →</button>
-                    <button className="rounded-lg border px-4 py-2 text-xs font-semibold" style={{ borderColor: previewMuted, color: previewFg }}>Learn more</button>
+                    <button className="rounded-lg px-4 py-2 text-xs font-semibold" style={{ background: previewAccent, color: previewBg }}>Get Started →</button>
+                    <button className="rounded-lg border px-4 py-2 text-xs font-semibold" style={{ borderColor: previewText + "60", color: previewText }}>Learn more</button>
                   </div>
-                  <div className="grid grid-cols-3 gap-2">
-                    {[
-                      { label: "Feature 1", color: previewAccent },
-                      { label: "Feature 2", color: adjustedSecondary },
-                      { label: "Feature 3", color: previewMuted },
-                    ].map((f, i) => (
-                      <div key={i} className="rounded-lg border p-2" style={{ borderColor: previewMuted + "40", background: previewCard }}>
-                        <div className="h-6 w-6 rounded-full" style={{ background: f.color }} />
-                        <div className="mt-1 text-[10px] font-semibold">{f.label}</div>
-                        <div className="text-[9px] opacity-60">Description text</div>
+                  {/* Grid de features — número de cards = colorCount */}
+                  <div className={cn("grid gap-2", value.colorCount === 2 ? "grid-cols-2" : value.colorCount === 3 ? "grid-cols-3" : "grid-cols-4")}>
+                    {previewColors.map((c, i) => (
+                      <div key={i} className="rounded-lg border p-2" style={{ borderColor: previewText + "20", background: previewText + "08" }}>
+                        <div className="h-6 w-6 rounded-full" style={{ background: c.hex }} />
+                        <div className="mt-1 text-[10px] font-semibold">{c.role}</div>
+                        <div className="text-[9px] opacity-60">{c.hex}</div>
                       </div>
                     ))}
                   </div>
@@ -512,8 +466,49 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
             </motion.div>
           )}
         </AnimatePresence>
+      </div>
 
-        {/* Preview expandido de Tipografia (popup mockup maior) */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
+      {/* TIPOGRAFIA — seletor manual + I'm Lucky + + (máx 3) + preview        */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <Label className="text-xs font-semibold">Tipografia</Label>
+          <Button type="button" size="sm" variant="outline" onClick={imLuckyFont} className="h-7 gap-1 text-[10px]" title="Escolhe combo aleatório">
+            <Dices className="h-3 w-3" /> I'm Lucky
+          </Button>
+        </div>
+
+        {/* Presets de tipografia */}
+        <div className="flex flex-wrap gap-1">
+          {TYPOGRAPHY_PRESETS.map((tp) => (
+            <button key={tp.id} type="button" onClick={() => onChange({ typographyPref: tp.id as SimpleForgeValues["typographyPref"] })}
+              className={cn("rounded-md px-2 py-0.5 text-[10px] font-medium transition-all", value.typographyPref === tp.id ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground hover:bg-muted")}>
+              {tp.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Seletores de font individuais (Heading / Body / Mono) — escolha manual */}
+        <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-3">
+          <FontSelector label="Heading" value={value.fontHeading} onChange={(v) => onChange({ fontHeading: v })} />
+          <FontSelector label="Body" value={value.fontBody} onChange={(v) => onChange({ fontBody: v })} />
+          <FontSelector label="Mono" value={value.fontMono} onChange={(v) => onChange({ fontMono: v })} />
+        </div>
+
+        {/* Preview de font em tempo real (influenciado pela palete de cores) */}
+        <div className="rounded-lg border p-3" style={{ background: previewBg, color: previewText }}>
+          <div className="space-y-1">
+            <div className="text-xl font-bold" style={{ fontFamily: value.fontHeading || "inherit" }}>The quick brown fox</div>
+            <div className="text-sm" style={{ fontFamily: value.fontBody || "inherit" }}>jumps over the lazy dog — 0123456789</div>
+            <div className="text-xs font-mono" style={{ fontFamily: value.fontMono || "monospace" }}>const hello = "world";</div>
+          </div>
+          <button type="button" onClick={() => setShowFontPopup(!showFontPopup)} className="mt-2 flex items-center gap-1 text-[10px] opacity-70 hover:opacity-100">
+            <Layers className="h-3 w-3" /> {showFontPopup ? "Fechar" : "Expandir"} mockup tipografia
+          </button>
+        </div>
+
+        {/* Mockup tipografia expandido */}
         <AnimatePresence>
           {showFontPopup && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
@@ -528,19 +523,15 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                     <div className="text-4xl font-extrabold" style={{ fontFamily: value.fontHeading || "inherit" }}>The quick brown fox jumps</div>
                   </div>
                   <div>
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Heading (H2)</div>
-                    <div className="text-2xl font-bold" style={{ fontFamily: value.fontHeading || "inherit" }}>Over the lazy dog</div>
-                  </div>
-                  <div>
                     <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Body Text</div>
-                    <div className="text-sm leading-relaxed" style={{ fontFamily: value.fontBody || "inherit" }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</div>
+                    <div className="text-sm leading-relaxed" style={{ fontFamily: value.fontBody || "inherit" }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
                   </div>
                   <div>
                     <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Mono / Code</div>
-                    <div className="text-xs font-mono" style={{ fontFamily: value.fontMono || "monospace" }}>const inaugura = await generate(&#123; brief, stack, palette &#125;);</div>
+                    <div className="text-xs font-mono" style={{ fontFamily: value.fontMono || "monospace" }}>const inaugura = await generate();</div>
                   </div>
                   <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
-                    <Sparkles className="h-3 w-3" /> Combo: {value.fontHeading || "Auto"} + {value.fontBody || "Auto"} + {value.fontMono || "Auto"}
+                    <Sparkles className="h-3 w-3" /> {value.fontHeading || "Auto"} + {value.fontBody || "Auto"} + {value.fontMono || "Auto"}
                   </div>
                 </div>
               </div>
@@ -549,10 +540,11 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
         </AnimatePresence>
       </div>
 
-      {/* Stack & Combos — organizado por categoria com expand/recolher */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
+      {/* STACK & COMBOS — 1 botão por grupo que expande todos                   */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
       <div className="space-y-3">
         <Label className="text-xs font-semibold">Stack & Combos</Label>
-        {/* Preferência de stack */}
         <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
           {STACK_PREFS.map((s) => (
             <button key={s.id} type="button" onClick={() => onChange({ stackPref: s.id as SimpleForgeValues["stackPref"] })}
@@ -562,45 +554,44 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           ))}
         </div>
 
-        {/* Filtros por categoria — clicar expande/recolhe essa categoria */}
-        <div className="space-y-1.5">
-          {STACK_COMBO_CATEGORIES.filter((c) => c.id !== "all").map((cat) => {
-            const combos = CATALOG.stackCombos.filter((c) => c.category === cat.id);
-            if (combos.length === 0) return null;
-            const isExpanded = stackComboFilter === cat.id;
+        {/* 1 botão por grupo — clica e expande todos os combos desse grupo */}
+        <div className="flex flex-wrap gap-1.5">
+          {STACK_COMBO_CATEGORIES.map((cat) => {
+            const count = CATALOG.stackCombos.filter((c) => c.category === cat.id).length;
+            const isExpanded = expandedStackGroup === cat.id;
             return (
-              <div key={cat.id} className="overflow-hidden rounded-lg border border-border bg-card/20">
-                <button type="button" onClick={() => setStackComboFilter(isExpanded ? "all" : cat.id)}
-                  className="flex w-full items-center justify-between p-2 hover:bg-accent/5">
-                  <span className="text-[11px] font-semibold">{cat.label} <span className="text-muted-foreground">({combos.length})</span></span>
-                  <ChevronDown className={cn("h-3.5 w-3.5 text-muted-foreground transition-transform", isExpanded && "rotate-180")} />
-                </button>
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="border-t border-border p-1.5">
-                      <div className="grid grid-cols-1 gap-1.5">
-                        {combos.map((combo) => {
-                          const isActive = value.stackCombo === combo.id;
-                          const badge = combo.badge ? COMBO_BADGES[combo.badge] : null;
-                          return (
-                            <button key={combo.id} type="button" onClick={() => onChange({ stackCombo: isActive ? "" : combo.id })}
-                              className={cn("flex flex-col gap-1 rounded-lg border p-2 text-left transition-all", isActive ? "border-primary bg-primary/10 ring-1 ring-primary" : "border-border bg-card/30 hover:border-primary/40")}>
-                              <div className="flex items-center justify-between">
-                                <span className="text-[11px] font-semibold">{combo.name}</span>
-                                {badge && <span className={cn("rounded px-1 py-0.5 text-[8px] font-bold", badge.color)}>{badge.label}</span>}
-                              </div>
-                              <span className="text-[9px] text-muted-foreground line-clamp-2">{combo.stack}</span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              <button key={cat.id} type="button" onClick={() => setExpandedStackGroup(isExpanded ? null : cat.id)}
+                className={cn("flex items-center gap-1 rounded-lg border px-3 py-1.5 text-[11px] font-medium transition-all", isExpanded ? "border-primary bg-primary/10 text-primary" : "border-border bg-card/30 text-muted-foreground hover:border-primary/40")}>
+                {cat.label} <span className="text-[9px] opacity-60">({count})</span>
+                <ChevronDown className={cn("h-3 w-3 transition-transform", isExpanded && "rotate-180")} />
+              </button>
             );
           })}
         </div>
+
+        {/* Combos do grupo expandido */}
+        <AnimatePresence>
+          {expandedStackGroup && (
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+              <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+                {CATALOG.stackCombos.filter((c) => c.category === expandedStackGroup).map((combo) => {
+                  const isActive = value.stackCombo === combo.id;
+                  const badge = combo.badge ? COMBO_BADGES[combo.badge] : null;
+                  return (
+                    <button key={combo.id} type="button" onClick={() => onChange({ stackCombo: isActive ? "" : combo.id })}
+                      className={cn("flex flex-col gap-1 rounded-lg border p-2 text-left transition-all", isActive ? "border-primary bg-primary/10 ring-1 ring-primary" : "border-border bg-card/30 hover:border-primary/40")}>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-semibold">{combo.name}</span>
+                        {badge && <span className={cn("rounded px-1 py-0.5 text-[8px] font-bold", badge.color)}>{badge.label}</span>}
+                      </div>
+                      <span className="text-[9px] text-muted-foreground line-clamp-2">{combo.stack}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Motion & Awwwards */}
@@ -613,50 +604,50 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           </label>
         </div>
         {value.animations && (
-          <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
-            {CATALOG.motionCombos.map((mc) => {
-              const isActive = value.motionCombo === mc.id;
-              return (
-                <button key={mc.id} type="button" onClick={() => onChange({ motionCombo: isActive ? "" : mc.id })}
-                  className={cn("flex flex-col gap-1 rounded-lg border p-2 text-left transition-all", isActive ? "border-primary bg-primary/10 ring-1 ring-primary" : "border-border bg-card/30 hover:border-primary/40")}>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-semibold">{mc.name}</span>
-                    <span className="text-[8px] text-muted-foreground">{"⭐".repeat(mc.complexity)}</span>
-                  </div>
-                  <span className="text-[9px] text-muted-foreground line-clamp-2">{mc.feeling}</span>
-                </button>
-              );
-            })}
-          </div>
-        )}
-        {value.animations && (
-          <div>
-            <button type="button" onClick={() => setShowSecretMotion(!showSecretMotion)} className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground">
-              <Lock className="h-3 w-3" /> {showSecretMotion ? "Ocultar" : "Mostrar"} Combos Secretos (Elite)
-            </button>
-            <AnimatePresence>
-              {showSecretMotion && (
-                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                  <div className="mt-2 grid grid-cols-1 gap-1.5 sm:grid-cols-2">
-                    {CATALOG.secretMotionCombos.map((mc) => {
-                      const isActive = value.motionCombo === mc.id;
-                      return (
-                        <button key={mc.id} type="button" onClick={() => onChange({ motionCombo: isActive ? "" : mc.id })}
-                          className={cn("flex flex-col gap-1 rounded-lg border border-amber-500/20 bg-amber-500/5 p-2 text-left transition-all", isActive ? "border-amber-500 ring-1 ring-amber-500" : "hover:border-amber-500/40")}>
-                          <div className="flex items-center justify-between">
-                            <span className="text-[11px] font-semibold text-amber-400">{mc.name}</span>
-                            <span className="text-[8px] text-amber-500/60">{"⭐".repeat(mc.complexity)}</span>
-                          </div>
-                          <span className="text-[9px] text-muted-foreground line-clamp-2">{mc.feeling}</span>
-                          {mc.rarity && <span className="text-[8px] italic text-amber-500/50">🔒 {mc.rarity}</span>}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+          <>
+            <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+              {CATALOG.motionCombos.map((mc) => {
+                const isActive = value.motionCombo === mc.id;
+                return (
+                  <button key={mc.id} type="button" onClick={() => onChange({ motionCombo: isActive ? "" : mc.id })}
+                    className={cn("flex flex-col gap-1 rounded-lg border p-2 text-left transition-all", isActive ? "border-primary bg-primary/10 ring-1 ring-primary" : "border-border bg-card/30 hover:border-primary/40")}>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-semibold">{mc.name}</span>
+                      <span className="text-[8px] text-muted-foreground">{"⭐".repeat(mc.complexity)}</span>
+                    </div>
+                    <span className="text-[9px] text-muted-foreground line-clamp-2">{mc.feeling}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <div>
+              <button type="button" onClick={() => setShowSecretMotion(!showSecretMotion)} className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground">
+                <Lock className="h-3 w-3" /> {showSecretMotion ? "Ocultar" : "Mostrar"} Combos Secretos (Elite)
+              </button>
+              <AnimatePresence>
+                {showSecretMotion && (
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                    <div className="mt-2 grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+                      {CATALOG.secretMotionCombos.map((mc) => {
+                        const isActive = value.motionCombo === mc.id;
+                        return (
+                          <button key={mc.id} type="button" onClick={() => onChange({ motionCombo: isActive ? "" : mc.id })}
+                            className={cn("flex flex-col gap-1 rounded-lg border border-amber-500/20 bg-amber-500/5 p-2 text-left transition-all", isActive ? "border-amber-500 ring-1 ring-amber-500" : "hover:border-amber-500/40")}>
+                            <div className="flex items-center justify-between">
+                              <span className="text-[11px] font-semibold text-amber-400">{mc.name}</span>
+                              <span className="text-[8px] text-amber-500/60">{"⭐".repeat(mc.complexity)}</span>
+                            </div>
+                            <span className="text-[9px] text-muted-foreground line-clamp-2">{mc.feeling}</span>
+                            {mc.rarity && <span className="text-[8px] italic text-amber-500/50">🔒 {mc.rarity}</span>}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </>
         )}
       </div>
 
@@ -666,9 +657,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
         <div className="flex flex-wrap gap-1.5">
           {INTEGRATIONS.map((i) => (
             <button key={i.id} type="button" onClick={() => toggleArray("integrations", i.id)}
-              className={cn("rounded-full border px-2.5 py-1 text-[11px] font-medium transition-all", value.integrations.includes(i.id) ? "border-primary bg-primary/10 text-primary" : "border-border bg-card/30 text-muted-foreground hover:border-primary/40")}>
-              {i.label}
-            </button>
+              className={cn("rounded-full border px-2.5 py-1 text-[11px] font-medium transition-all", value.integrations.includes(i.id) ? "border-primary bg-primary/10 text-primary" : "border-border bg-card/30 text-muted-foreground hover:border-primary/40")}>{i.label}</button>
           ))}
         </div>
       </div>
@@ -725,14 +714,32 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
 }
 
 // ============================================================================
-// Slider component para ajustes de cor
+// FontSelector — dropdown de seleção manual de font
 // ============================================================================
-function Slider({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) {
+function FontSelector({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-[10px] text-muted-foreground w-16">{label}</span>
-      <input type="range" min={-50} max={50} value={value} onChange={(e) => onChange(Number(e.target.value))} className="h-1 w-20 cursor-pointer appearance-none rounded-full bg-muted accent-primary" />
-      <span className="text-[9px] text-muted-foreground w-6">{value > 0 ? "+" : ""}{value}</span>
+    <div className="space-y-0.5">
+      <span className="text-[9px] text-muted-foreground">{label}</span>
+      <select value={value} onChange={(e) => onChange(e.target.value)} className="w-full rounded-lg border border-border bg-card/50 px-2 py-1.5 text-[11px] font-medium">
+        <option value="">Auto</option>
+        {ALL_FONTS.map((f) => (
+          <option key={f} value={f} style={{ fontFamily: f }}>{f}</option>
+        ))}
+      </select>
+      <div className="text-[10px] truncate" style={{ fontFamily: value || "inherit" }}>Aa Bb Cc 0123</div>
+    </div>
+  );
+}
+
+// ============================================================================
+// MiniSlider — slider mini para edição HSL individual
+// ============================================================================
+function MiniSlider({ label, onChange }: { label: string; onChange: (v: number) => void }) {
+  return (
+    <div className="flex items-center gap-1">
+      <span className="text-[8px] text-muted-foreground">{label}</span>
+      <input type="range" min={0} max={360} defaultValue={0} onChange={(e) => onChange(Number(e.target.value))}
+        className="h-1 w-12 cursor-pointer appearance-none rounded-full bg-muted accent-primary" />
     </div>
   );
 }
