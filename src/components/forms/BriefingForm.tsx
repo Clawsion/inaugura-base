@@ -55,7 +55,7 @@ import { IntegrationsSection } from "@/components/skills/IntegrationsSection";
 import { FontPlayground, type FontSlotState } from "@/components/fonts/FontPlayground";
 import { PerfectComboPopup } from "@/components/perfect-combo/PerfectComboPopup";
 import type { PerfectCombo } from "@/lib/perfect-combo";
-import { Check, ChevronsUpDown, Wand2, Sparkles, Lightbulb, Languages, Plus, Trash2 } from "lucide-react";
+import { Check, ChevronsUpDown, Wand2, Sparkles, Lightbulb, Languages, Plus, Trash2, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -412,26 +412,12 @@ export function BriefingForm({
             </div>
           </div>
         </div>
-        <div className="flex flex-wrap gap-2">
-          {SecoesInfo.map((s) => {
-            const isActive = value.seccoes.includes(s.id) || value.seccoes.includes(s.pt) || value.seccoes.includes(s.en);
-            return (
-              <button
-                key={s.id}
-                type="button"
-                onClick={() => toggleArrayItem("seccoes", s.id)}
-                className={cn(
-                  "rounded-full border px-3 py-1.5 text-xs font-medium transition-all active:scale-95",
-                  isActive
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border bg-card/50 text-muted-foreground hover:border-primary/40 hover:text-foreground"
-                )}
-              >
-                {seccoesLang === "en" ? s.en : s.pt}
-              </button>
-            );
-          })}
-        </div>
+        {/* Secções agrupadas por prioridade P0/P1/P2 */}
+        <SectionsByPriority
+          value={value}
+          seccoesLang={seccoesLang}
+          toggleArrayItem={toggleArrayItem}
+        />
       </motion.div>
 
       {/* 4. Efeitos / Layout (delegado ao LayoutSelector) */}
@@ -636,5 +622,112 @@ export function BriefingForm({
         )}
       </motion.div>
     </motion.div>
+  );
+}
+
+// ============================================================================
+// SectionsByPriority — agrupa secções por P0/P1/P2 com colapso expansível
+// ============================================================================
+function SectionsByPriority({
+  value,
+  seccoesLang,
+  toggleArrayItem,
+}: {
+  value: FormValues;
+  seccoesLang: "pt" | "en";
+  toggleArrayItem: (key: "seccoes" | "efeitos", item: string) => void;
+}) {
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({
+    P0: true,
+    P1: false,
+    P2: false,
+  });
+
+  // Mapeia secções do catálogo (que têm default_priority) com SecoesInfo (que tem pt/en)
+  const CATALOG_SECTIONS_MAP: Record<string, string> = {
+    hero: "P0", about: "P1", work: "P0", services: "P1", features: "P0",
+    pricing: "P1", testimonials: "P1", faq: "P2", cta: "P0", contact: "P0",
+    footer: "P0", blog: "P2", team: "P2", stats: "P1", logos: "P2",
+  };
+
+  const groups: Record<string, typeof SecoesInfo> = {
+    P0: [],
+    P1: [],
+    P2: [],
+  };
+
+  SecoesInfo.forEach((s) => {
+    const priority = CATALOG_SECTIONS_MAP[s.id] ?? "P1";
+    groups[priority].push(s);
+  });
+
+  const priorityMeta: Record<string, { label: string; color: string; desc: string }> = {
+    P0: { label: "P0 · Essenciais", color: "text-red-400 border-red-500/30 bg-red-500/5", desc: "Hero, Work, CTA — obrigatórias" },
+    P1: { label: "P1 · Opcionais", color: "text-yellow-400 border-yellow-500/30 bg-yellow-500/5", desc: "Services, Pricing, Testimonials" },
+    P2: { label: "P2 · Avançadas", color: "text-blue-400 border-blue-500/30 bg-blue-500/5", desc: "Blog, FAQ, Team — quando faz sentido" },
+  };
+
+  const activeCount = (priority: string) =>
+    groups[priority].filter((s) =>
+      value.seccoes.includes(s.id) || value.seccoes.includes(s.pt) || value.seccoes.includes(s.en)
+    ).length;
+
+  return (
+    <div className="space-y-2">
+      {(["P0", "P1", "P2"] as const).map((priority) => {
+        const items = groups[priority];
+        const meta = priorityMeta[priority];
+        const isExpanded = expanded[priority];
+        const active = activeCount(priority);
+
+        return (
+          <div key={priority} className={cn("rounded-xl border p-2", meta.color)}>
+            <button
+              type="button"
+              onClick={() => setExpanded((e) => ({ ...e, [priority]: !e[priority] }))}
+              className="flex w-full items-center justify-between gap-2 px-1 py-0.5"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold">{meta.label}</span>
+                <span className="text-[10px] text-muted-foreground">
+                  {active}/{items.length} ativas
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="hidden text-[10px] text-muted-foreground sm:inline">{meta.desc}</span>
+                <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", isExpanded && "rotate-180")} />
+              </div>
+            </button>
+
+            {isExpanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                className="mt-2 flex flex-wrap gap-1.5"
+              >
+                {items.map((s) => {
+                  const isActive = value.seccoes.includes(s.id) || value.seccoes.includes(s.pt) || value.seccoes.includes(s.en);
+                  return (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => toggleArrayItem("seccoes", s.id)}
+                      className={cn(
+                        "rounded-full border px-2.5 py-1 text-[11px] font-medium transition-all active:scale-95",
+                        isActive
+                          ? "border-primary bg-primary/15 text-primary"
+                          : "border-border bg-card/50 text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                      )}
+                    >
+                      {seccoesLang === "en" ? s.en : s.pt}
+                    </button>
+                  );
+                })}
+              </motion.div>
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }
