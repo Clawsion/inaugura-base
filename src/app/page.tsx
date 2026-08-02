@@ -140,6 +140,7 @@ export default function Home() {
     colorCount: 3,
     colorAdjust: { brightness: 0, contrast: 0, saturation: 0, hue: 0 },
     customColors: [],
+    trendOverrides: {},
     typographyPref: "auto",
     fontHeading: "",
     fontBody: "",

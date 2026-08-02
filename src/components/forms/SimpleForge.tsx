@@ -27,6 +27,9 @@ export interface SimpleForgeValues {
   colorCount: 2 | 3 | 4;
   colorAdjust: { brightness: number; contrast: number; saturation: number; hue: number };
   customColors: { hex: string; role: string }[];
+  // Overrides por trend — quando o user gera variação individual ou global,
+  // cada trend pode ter as suas próprias cores geradas, independentes do trend ativo
+  trendOverrides: Record<string, { hex: string; role: string }[]>;
   typographyPref: "auto" | "modern-sans" | "geometric" | "humanist" | "editorial-serif" | "mono-tech";
   fontHeading: string;
   fontBody: string;
@@ -260,20 +263,57 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     // Usa a função robusta do color-engine
     const polished = polishPalette(currentColors);
     const effectiveTrendId = value.colorPreset !== "auto" ? value.colorPreset : "electric-lavender";
-    onChange({ customColors: polished, colorPreset: effectiveTrendId });
-    toast.success(`Polimento aplicado — tom premium ${polished.find(c => c.role === "Suporte")?.hex ?? polished[0].hex}`);
-  }, [value.customColors, value.colorCount, value.colorPreset, onChange]);
+    // Atualiza customColors (do trend ativo) E o override desse trend
+    onChange({
+      customColors: polished,
+      colorPreset: effectiveTrendId,
+      trendOverrides: { ...value.trendOverrides, [effectiveTrendId]: polished },
+    });
+    toast.success(`Polimento premium aplicado — tom jewel ${polished.find(c => c.role === "Suporte")?.hex ?? polished[0].hex}`);
+  }, [value.customColors, value.colorCount, value.colorPreset, value.trendOverrides, onChange]);
 
-  // Generate — gera variação infinita robusta (usa engine com teoria das cores)
+  // Generate INDIVIDUAL — gera variação para UMA palete específica
+  // (atualiza apenas o override desse trend; se for o ativo, atualiza customColors também)
   const generatePaletteVariation = useCallback((trendId?: string) => {
     const effectiveTrendId = trendId ?? (value.colorPreset !== "auto" ? value.colorPreset : "electric-lavender");
     const trend = COLOR_TRENDS_2026.find((t) => t.id === effectiveTrendId) ?? COLOR_TRENDS_2026[0];
 
     // Usa a função robusta do color-engine
     const colors = generateRandomPalette(value.colorCount, trend.colors);
-    onChange({ customColors: colors, colorPreset: effectiveTrendId });
-    toast.success(`Palete gerada: ${value.colorCount} cores`);
-  }, [value.colorCount, value.colorPreset, onChange]);
+
+    // Atualiza o override deste trend específico
+    const newOverrides = { ...value.trendOverrides, [effectiveTrendId]: colors };
+
+    // Se for o trend ativo, sincroniza customColors para o preview seguir a mesma cor
+    if (effectiveTrendId === value.colorPreset) {
+      onChange({ customColors: colors, trendOverrides: newOverrides });
+    } else {
+      onChange({ trendOverrides: newOverrides });
+    }
+    toast.success(`Palete "${trend.name}" regenerada: ${value.colorCount} cores com harmonia`);
+  }, [value.colorCount, value.colorPreset, value.trendOverrides, onChange]);
+
+  // Generate GLOBAL — gera variação para TODAS as paletes visíveis no grid
+  // Cada trend recebe a sua própria combinação compatível (override independente)
+  const generateAllPalettes = useCallback(() => {
+    const newOverrides: Record<string, { hex: string; role: string }[]> = { ...value.trendOverrides };
+    const trendsToGenerate = paletteFilter === "all"
+      ? COLOR_TRENDS_2026
+      : COLOR_TRENDS_2026.filter((t) => (TREND_FILTERS[t.id] ?? []).includes(paletteFilter));
+
+    for (const trend of trendsToGenerate) {
+      newOverrides[trend.id] = generateRandomPalette(value.colorCount, trend.colors);
+    }
+
+    // Atualiza customColors também se houver um trend ativo
+    const activeTrendId = value.colorPreset !== "auto" ? value.colorPreset : null;
+    const patch: Partial<SimpleForgeValues> = { trendOverrides: newOverrides };
+    if (activeTrendId && newOverrides[activeTrendId]) {
+      patch.customColors = newOverrides[activeTrendId];
+    }
+    onChange(patch);
+    toast.success(`${trendsToGenerate.length} paletes regeneradas — todas com harmonia compatível`);
+  }, [value.colorCount, value.colorPreset, value.trendOverrides, paletteFilter, onChange]);
 
   // Paletes filtradas
   const filteredPalettes = useMemo(() => {
@@ -471,12 +511,12 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                 {n}
               </button>
             ))}
-            {/* Generate global — gera palete infinita */}
-            <Button type="button" size="sm" variant="outline" onClick={() => generatePaletteVariation()} className="h-6 gap-1 px-2 text-[10px]" title="Gerar palete aleatória infinita">
+            {/* Generate global — gera TODAS as paletes visíveis no grid */}
+            <Button type="button" size="sm" variant="outline" onClick={() => generateAllPalettes()} className="h-6 gap-1 px-2 text-[10px]" title="Gerar todas as paletes visíveis (cada uma com a sua harmonia)">
               <RefreshCw className="h-3 w-3" /> Generate
             </Button>
-            {/* Polimento — dá toque moderno à cor (visto em websites de topo) */}
-            <Button type="button" size="sm" variant="outline" onClick={() => polishColor()} className="h-6 gap-1 px-2 text-[10px]" title="Polimento — tom premium moderno">
+            {/* Polimento — dá toque premium à cor ativa (Linear/Vercel style) */}
+            <Button type="button" size="sm" variant="outline" onClick={() => polishColor()} className="h-6 gap-1 px-2 text-[10px]" title="Polimento — tom jewel premium com hue tint visível">
               <Sparkles className="h-3 w-3" /> Polimento
             </Button>
           </div>
@@ -496,13 +536,27 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
         <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
           {filteredPalettes.map((trend) => {
             const isActive = value.colorPreset === trend.id;
-            // Se esta palete está ativa E tem customColors, mostra as cores personalizadas (não as estáticas)
+            // Ordem de prioridade das cores a mostrar:
+            //   1. Se for o trend ativo E tem customColors → usa customColors (inclui edições finas do user)
+            //   2. Senão, se tiver override gerado → usa o override (gerado pelo Generate individual ou global)
+            //   3. Senão, usa as cores estáticas originais do trend
+            const override = value.trendOverrides[trend.id];
             const displayColors = isActive && value.customColors.length > 0
               ? value.customColors.slice(0, value.colorCount).map(c => c.hex)
-              : trend.colors.slice(0, value.colorCount);
+              : override
+                ? override.slice(0, value.colorCount).map(c => c.hex)
+                : trend.colors.slice(0, value.colorCount);
             return (
               <div key={trend.id} className={cn("rounded-lg border p-2 transition-all", isActive ? "border-primary bg-primary/10 ring-1 ring-primary" : "border-border bg-card/30 hover:border-primary/40")}>
-                <button type="button" onClick={() => onChange({ colorPreset: trend.id, customColors: [] })}
+                <button type="button" onClick={() => {
+                  // Ao selecionar um trend: se tiver override gerado, carrega-o para customColors
+                  // (permite continuar a editar a partir das cores geradas); senão limpa para usar cores estáticas
+                  const existingOverride = value.trendOverrides[trend.id];
+                  onChange({
+                    colorPreset: trend.id,
+                    customColors: existingOverride ? existingOverride : [],
+                  });
+                }}
                   className="w-full text-left">
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-semibold">{trend.name}</span>

@@ -111,7 +111,15 @@ function getHarmonyHues(baseHue: number, harmony: HarmonyType): number[] {
 }
 
 // ============================================================================
-// GERAR PALETA ALEATÓRIA ROBUSTA — infinitas variações de qualidade Awwwards
+// GERAR PALETA ALEATÓRIA ROBUSTA — infinitas variações com COR VISÍVEL
+// ============================================================================
+// Princípio: TODAS as 4 posições devem ter cor visível (hue tint).
+// Background = deep jewel-tone (dark) ou warm cream (light), NUNCA pure black/white.
+// Text      = rich cream (dark) ou deep saturated (light), NUNCA pure white/black.
+// Accent    = vivid jewel tone.
+// Highlight = harmony complement.
+// Inspirado em: Linear (purple-tinted dark), Vercel (blue-tinted dark),
+//               Stripe (cream warm bg), Resend (cream).
 // ============================================================================
 export function generateRandomPalette(
   count: 2 | 3 | 4,
@@ -119,83 +127,118 @@ export function generateRandomPalette(
 ): { hex: string; role: string }[] {
   const roles = ["Background", "Secundária", "Suporte", "Destaque"];
 
-  // 1. Escolher hue base
+  // 1. Escolher hue base — varia SIGNIFICATIVAMENTE a cada click
   let baseHue: number;
   let baseSat: number;
   let baseLight: number;
 
   if (baseTrendColors && baseTrendColors.length > 0) {
-    const baseHsl = hexToHsl(baseTrendColors[0]);
-    // Varia o hue significativamente (±120°) para variações realmente diferentes
-    baseHue = (baseHsl.h + (Math.random() - 0.5) * 240 + 360) % 360;
-    baseSat = Math.max(50, Math.min(90, baseHsl.s + (Math.random() - 0.5) * 30));
-    baseLight = Math.max(38, Math.min(60, baseHsl.l + (Math.random() - 0.5) * 20));
+    // Extrai hue de TODAS as cores da tendência (não só primeira)
+    // para variar realmente a cada click mesmo dentro da mesma tendência
+    const trendHues = baseTrendColors.map(c => hexToHsl(c).h);
+    const avgHue = trendHues.reduce((a, b) => a + b, 0) / trendHues.length;
+    // Offset aleatório grande (±150°) — garante variação visível
+    const offset = (Math.random() - 0.5) * 300;
+    baseHue = (avgHue + offset + 360) % 360;
+
+    // Saturação base — usa a cor mais saturada da tendência como referência
+    const maxSat = Math.max(...baseTrendColors.map(c => hexToHsl(c).s));
+    baseSat = Math.max(50, Math.min(85, maxSat + (Math.random() - 0.5) * 20));
+    baseLight = 44 + Math.random() * 12; // 44-56%
   } else {
     // Cor totalmente aleatória mas com saturação/lightness premium
     baseHue = Math.random() * 360;
-    baseSat = 55 + Math.random() * 30; // 55-85% — vivo mas não neon
-    baseLight = 42 + Math.random() * 16; // 42-58% — nem muito escuro nem claro
+    baseSat = 58 + Math.random() * 25; // 58-83% — vivo mas não neon
+    baseLight = 44 + Math.random() * 12; // 44-56% — jewel tone
   }
 
-  // 2. Escolher harmonia aleatória
-  const harmony = HARMONIES[Math.floor(Math.random() * HARMONIES.length)];
+  // 2. Escolher harmonia aleatória (NUNCA monochromatic — garante variação de cor)
+  const HARMONIES_VARIED: HarmonyType[] = [
+    "complementary", "analogous", "triadic", "split-complementary", "tetradic"
+  ];
+  const harmony = HARMONIES_VARIED[Math.floor(Math.random() * HARMONIES_VARIED.length)];
   const harmonyHues = getHarmonyHues(baseHue, harmony);
 
-  // 3. Decidir se é dark ou light mode (50/50)
-  const isDark = Math.random() > 0.4; // 60% dark, 40% light
+  // 3. Decidir dark/light mode (60% dark para look premium 2026)
+  const isDark = Math.random() > 0.4;
 
-  // 4. Gerar cores com roles semânticos
+  // 4. Gerar cores com roles semânticos — TODAS com hue visível
   const colors: { hex: string; role: string }[] = [];
 
   for (let i = 0; i < count; i++) {
     let h: number, s: number, l: number;
 
     if (i === 0) {
-      // Background
+      // Background — DEEP JEWEL TONE (dark) ou WARM CREAM (light), com hue visível
+      // NUNCA pure black/white — sempre tinted (estilo Linear/Vercel/Stripe)
       h = baseHue;
-      s = Math.max(5, baseSat * (isDark ? 0.12 : 0.08));
-      l = isDark ? 4 + Math.random() * 4 : 95 + Math.random() * 3;
+      if (isDark) {
+        s = 18 + Math.random() * 14;  // 18-32% — tinted rich dark
+        l = 8 + Math.random() * 6;    // 8-14% — deep mas não pure black
+      } else {
+        s = 20 + Math.random() * 16;  // 20-36% — warm tinted cream
+        l = 93 + Math.random() * 4;   // 93-97% — cream mas não pure white
+      }
     } else if (i === 1) {
-      // Secundária/Texto — deve ter contraste com background
+      // Secundária/Texto — RICH CREAM (dark) ou DEEP SATURATED (light)
+      // Tem hue visível para parecer premium, não pure white/black
       h = baseHue;
-      s = Math.max(3, baseSat * 0.06);
-      l = isDark ? 94 + Math.random() * 4 : 8 + Math.random() * 6;
+      if (isDark) {
+        s = 12 + Math.random() * 12;  // 12-24% — warm cream tint
+        l = 90 + Math.random() * 5;   // 90-95% — cream off-white
+      } else {
+        s = 35 + Math.random() * 20;  // 35-55% — rich saturated dark
+        l = 16 + Math.random() * 8;   // 16-24% — deep mas não pure black
+      }
     } else if (i === 2) {
-      // Suporte/Accent — a cor principal
+      // Suporte/Accent — JEWEL TONE principal (a cor "hero" da palete)
       h = harmonyHues[1] ?? baseHue;
       s = baseSat;
       l = baseLight;
     } else {
-      // Destaque — cor complementar do accent
+      // Destaque — COR COMPLEMENTAR polida, harmonia triádica ou split-comp
       h = harmonyHues[2] ?? (baseHue + 180) % 360;
-      s = Math.max(55, baseSat + 5);
-      l = Math.max(45, Math.min(58, baseLight + (Math.random() - 0.5) * 8));
+      s = Math.max(60, baseSat + 3);
+      l = Math.max(48, Math.min(60, baseLight + (Math.random() - 0.5) * 10));
     }
 
     colors.push({ hex: hslToHex(h, s, l), role: roles[i] ?? `Cor ${i + 1}` });
   }
 
-  // 5. Garantir WCAG AA entre texto e background
+  // 5. Garantir WCAG AA entre texto e background (4.5:1)
   if (colors.length >= 2) {
     const bg = colors[0].hex;
     const fg = colors[1].hex;
     const ratio = contrastRatio(fg, bg);
     if (ratio < 4.5) {
+      // Ajusta lightness mantendo hue/sat (não destrói a cor)
       colors[1] = { ...colors[1], hex: ensureContrast(fg, bg) };
     }
   }
 
-  // 6. Garantir contraste entre accent e background
+  // 6. Garantir contraste entre accent e background (≥ 3:1 para AA large)
   if (colors.length >= 3) {
     const bg = colors[0].hex;
     const accent = colors[2].hex;
     const ratio = contrastRatio(accent, bg);
     if (ratio < 3) {
-      // Ajusta lightness do accent para ter contraste
       const hsl = hexToHsl(accent);
       const bgL = hexToHsl(bg).l;
-      const newL = bgL < 20 ? Math.max(50, hsl.l) : Math.min(45, hsl.l);
+      const newL = bgL < 30 ? Math.max(55, hsl.l) : Math.min(45, hsl.l);
       colors[2] = { ...colors[2], hex: hslToHex(hsl.h, hsl.s, newL) };
+    }
+  }
+
+  // 7. Garantir contraste entre Destaque e background
+  if (colors.length >= 4) {
+    const bg = colors[0].hex;
+    const highlight = colors[3].hex;
+    const ratio = contrastRatio(highlight, bg);
+    if (ratio < 3) {
+      const hsl = hexToHsl(highlight);
+      const bgL = hexToHsl(bg).l;
+      const newL = bgL < 30 ? Math.max(55, hsl.l) : Math.min(45, hsl.l);
+      colors[3] = { ...colors[3], hex: hslToHex(hsl.h, hsl.s, newL) };
     }
   }
 
@@ -203,27 +246,34 @@ export function generateRandomPalette(
 }
 
 // ============================================================================
-// POLIMENTO — dá toque premium (visto em Linear, Vercel, Stripe, Resend)
+// POLIMENTO — dá toque PREMIUM rico (Linear, Vercel, Stripe, Resend)
+// ============================================================================
+// Princípio: TODAS as 4 cores ficam com cor visível (hue tint).
+// - Background: deep tinted jewel (dark) ou warm cream (light), NUNCA pure black/white
+// - Text: rich cream tinted (dark) ou deep saturated (light)
+// - Accent: jewel tone perfeito (s=62-72%, l=46-54%)
+// - Highlight: harmony complement com mesma riqueza
+// Resultado: cores premium com identidade cromática, como sites Awwwards.
 // ============================================================================
 export function polishPalette(colors: { hex: string; role: string }[]): {
   hex: string; role: string;
 }[] {
   const roles = ["Background", "Secundária", "Suporte", "Destaque"];
 
-  // Encontra a cor principal (Suporte ou a mais saturada)
+  // 1. Encontra a cor principal (Suporte ou a mais saturada)
   let accentColor = colors.find((c) => c.role === "Suporte");
   if (!accentColor) accentColor = colors.find((c) => c.role === "Destaque") ?? colors[0];
 
-  const hsl = hexToHsl(accentColor.hex);
+  const accentHsl = hexToHsl(accentColor.hex);
 
-  // Polimento premium 2026:
-  // Saturação: 58-72% (vivo mas elegante — nem neon nem desbotado)
-  const polishedSat = Math.max(58, Math.min(72, hsl.s));
-  // Lightness: 44-52% (nem muito escura nem clara — tom "jewel")
-  const polishedLight = Math.max(44, Math.min(52, hsl.l));
-  const polishedHex = hslToHex(hsl.h, polishedSat, polishedLight);
+  // Polimento premium do accent 2026:
+  // Saturação 62-72% (vivo mas elegante — nem neon nem desbotado)
+  const polishedSat = Math.max(62, Math.min(72, accentHsl.s));
+  // Lightness 46-54% (jewel tone perfeito)
+  const polishedLight = Math.max(46, Math.min(54, accentHsl.l));
+  const polishedHex = hslToHex(accentHsl.h, polishedSat, polishedLight);
 
-  // Detecta se é dark ou light mode
+  // 2. Detecta dark/light mode (preserva intenção original)
   const bgL = colors[0] ? hexToHsl(colors[0].hex).l : 6;
   const isDark = bgL < 30;
 
@@ -232,27 +282,45 @@ export function polishPalette(colors: { hex: string; role: string }[]): {
 
   for (let i = 0; i < count; i++) {
     if (i === 0) {
-      // Background — escuro com leve tom da cor (não preto puro)
+      // Background — DEEP TINTED JEWEL (dark) ou WARM CREAM (light)
+      // Estilo Linear/Vercel dark: bg tem hue tint visível (s=22-30%)
+      // Estilo Stripe/Resend light: bg é warm cream (s=24-34%, l=95-97%)
+      const bgS = isDark
+        ? 22 + Math.random() * 8   // 22-30% — rich dark tint
+        : 24 + Math.random() * 10; // 24-34% — warm cream tint
+      const bgL = isDark
+        ? 9 + Math.random() * 4    // 9-13% — deep mas não pure black
+        : 95 + Math.random() * 2;  // 95-97% — cream mas não pure white
       result.push({
-        hex: hslToHex(hsl.h, Math.max(10, polishedSat * 0.12), isDark ? 5 : 97),
+        hex: hslToHex(accentHsl.h, bgS, bgL),
         role: roles[0]
       });
     } else if (i === 1) {
-      // Text — claro/escuro dependendo do bg, com leve tom
-      const textL = isDark ? 96 : 10;
-      const textS = Math.max(3, polishedSat * 0.05);
-      let textHex = hslToHex(hsl.h, textS, textL);
-      // Garante WCAG AA
+      // Text — RICH CREAM TINTED (dark) ou DEEP SATURATED (light)
+      // Mantém hue do accent para coesão cromática
+      const textS = isDark
+        ? 14 + Math.random() * 8   // 14-22% — warm cream tint
+        : 42 + Math.random() * 12; // 42-54% — rich saturated deep
+      const textL = isDark
+        ? 91 + Math.random() * 3   // 91-94% — cream off-white
+        : 17 + Math.random() * 5;  // 17-22% — deep mas não pure black
+      let textHex = hslToHex(accentHsl.h, textS, textL);
+      // Garante WCAG AA contra o bg polido
       textHex = ensureContrast(textHex, result[0].hex, 4.5);
       result.push({ hex: textHex, role: roles[1] });
     } else if (i === 2) {
-      // Accent principal — a cor polida
+      // Accent principal — JEWEL TONE perfeito
       result.push({ hex: polishedHex, role: roles[2] });
     } else {
-      // Destaque — complementar polido (30° offset para harmonia)
-      const compH = (hsl.h + 30) % 360;
-      const compHex = hslToHex(compH, polishedSat, polishedLight + 3);
-      result.push({ hex: compHex, role: roles[3] });
+      // Destaque — complementar polido, com harmonia 30° offset
+      // Mantém mesma saturação/lightness do accent para coesão premium
+      const compH = (accentHsl.h + 30) % 360;
+      const compSat = Math.max(58, Math.min(70, polishedSat - 4));
+      const compLight = Math.max(50, Math.min(60, polishedLight + 6));
+      result.push({
+        hex: hslToHex(compH, compSat, compLight),
+        role: roles[3]
+      });
     }
   }
 
