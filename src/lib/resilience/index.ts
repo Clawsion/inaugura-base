@@ -117,7 +117,7 @@ async function callGLM(opts: LLMCallOptions): Promise<{ ok: boolean; pack?: unkn
   const timeout = setTimeout(() => controller.abort(), opts.timeoutMs ?? 90000);
   try {
     const response = await zai.chat.completions.create({
-      model: "glm-4.6",  // Modelo real ZAI/GLM (anteriormente glm-5.2 não-existente)
+      model: "glm-5.2",  // Modelo real Z.AI (GLM-5.2 lançado Jun 2026, open weight)
       messages: [
         { role: "system", content: opts.systemPrompt },
         { role: "user", content: opts.userPrompt },
@@ -156,8 +156,8 @@ async function callGLM(opts: LLMCallOptions): Promise<{ ok: boolean; pack?: unkn
 async function callDeepSeek(opts: LLMCallOptions): Promise<{ ok: boolean; pack?: unknown; raw?: string; error?: string }> {
   const baseUrl = process.env.SPEC_COMPILER_FALLBACK_BASE_URL;
   const apiKey = process.env.SPEC_COMPILER_FALLBACK_API_KEY;
-  // Modelo real: deepseek-v3 (existente no catálogo v1.1.0)
-  const model = process.env.SPEC_COMPILER_FALLBACK_MODEL ?? "deepseek-v3";
+  // Modelo real: deepseek-v4-flash (lançado Abr 2026, $0.28/M output)
+  const model = process.env.SPEC_COMPILER_FALLBACK_MODEL ?? "deepseek-v4-flash";
   if (!baseUrl || !apiKey) return { ok: false, error: "DeepSeek fallback não configurado (definir SPEC_COMPILER_FALLBACK_BASE_URL e SPEC_COMPILER_FALLBACK_API_KEY no .env)" };
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), opts.timeoutMs ?? 90000);
@@ -207,10 +207,10 @@ async function callDeepSeek(opts: LLMCallOptions): Promise<{ ok: boolean; pack?:
 
 export async function callCompilerWithFallback(opts: LLMCallOptions): Promise<LLMCallResult> {
   const startTime = Date.now();
-  // Modelo real: glm-4-6 (existente no catálogo v1.1.0)
+  // Modelo real: glm-5-2 (Z.AI, lançado Jun 2026)
   const providers = [
-    { name: "glm", model: "glm-4-6", fn: () => callGLM(opts) },
-    { name: "deepseek", model: process.env.SPEC_COMPILER_FALLBACK_MODEL ?? "deepseek-v3", fn: () => callDeepSeek(opts) },
+    { name: "glm", model: "glm-5-2", fn: () => callGLM(opts) },
+    { name: "deepseek", model: process.env.SPEC_COMPILER_FALLBACK_MODEL ?? "deepseek-v4-flash", fn: () => callDeepSeek(opts) },
   ];
   let totalAttempts = 0;
   for (const provider of providers) {

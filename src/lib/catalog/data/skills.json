@@ -1,94 +1,828 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "skills": [
-    { "id": "shadcn-ui", "name": "shadcn/ui", "category": "core", "install": "npx shadcn@latest init", "best_models": ["kimi-k2", "claude-sonnet-4-5"] },
-    { "id": "radix-ui", "name": "Radix UI", "category": "core", "install": "npm i @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-popover", "best_models": ["kimi-k2", "claude-sonnet-4-5"] },
-    { "id": "tailwind-4", "name": "Tailwind CSS 4", "category": "core", "install": "npm i tailwindcss@4 @tailwindcss/postcss", "best_models": ["kimi-k2", "claude-sonnet-4-5"] },
-    { "id": "react-best-practices", "name": "React Best Practices", "category": "core", "install": "", "best_models": ["kimi-k2", "deepseek-v3"] },
-    { "id": "web-design-guidelines", "name": "Web Design Guidelines", "category": "core", "install": "", "best_models": ["kimi-k2", "claude-sonnet-4-5"] },
-    { "id": "frontend-design", "name": "Frontend Design Principles", "category": "core", "install": "", "best_models": ["kimi-k2", "claude-sonnet-4-5"] },
-    { "id": "ui-ux-pro-max", "name": "UI/UX Pro Max", "category": "core", "install": "", "best_models": ["kimi-k2", "claude-sonnet-4-5"] },
-    { "id": "premium-motion-principles", "name": "Premium Motion Principles", "category": "core", "install": "", "best_models": ["kimi-k2", "claude-sonnet-4-5"] },
-    { "id": "next-themes", "name": "next-themes", "category": "project", "install": "npm i next-themes", "best_models": ["kimi-k2"] },
-    { "id": "cmdk", "name": "cmdk (Command Palette)", "category": "project", "install": "npm i cmdk", "best_models": ["kimi-k2"] },
-    { "id": "sonner", "name": "sonner (Toasts)", "category": "project", "install": "npm i sonner", "best_models": ["kimi-k2"] },
-    { "id": "vaul", "name": "vaul (Drawer)", "category": "project", "install": "npm i vaul", "best_models": ["kimi-k2"] },
-    { "id": "input-otp", "name": "input-otp", "category": "project", "install": "npm i input-otp", "best_models": ["kimi-k2"] },
-    { "id": "embla-carousel", "name": "Embla Carousel", "category": "project", "install": "npm i embla-carousel-react", "best_models": ["kimi-k2"] },
-    { "id": "react-hook-form", "name": "React Hook Form", "category": "project", "install": "npm i react-hook-form @hookform/resolvers", "best_models": ["deepseek-v3"] },
-    { "id": "zod", "name": "Zod", "category": "project", "install": "npm i zod", "best_models": ["deepseek-v3"] },
-    { "id": "tanstack-query", "name": "TanStack Query", "category": "project", "install": "npm i @tanstack/react-query", "best_models": ["deepseek-v3"] },
-    { "id": "tanstack-table", "name": "TanStack Table", "category": "project", "install": "npm i @tanstack/react-table", "best_models": ["deepseek-v3"] },
-    { "id": "zustand", "name": "Zustand", "category": "project", "install": "npm i zustand", "best_models": ["deepseek-v3"] },
-    { "id": "nuqs", "name": "nuqs (URL state)", "category": "project", "install": "npm i nuqs", "best_models": ["deepseek-v3"] },
-    { "id": "motion", "name": "Motion (Framer)", "category": "project", "install": "npm i motion", "best_models": ["kimi-k2", "claude-sonnet-4-5"] },
-    { "id": "lenis", "name": "Lenis Smooth Scroll", "category": "project", "install": "npm i lenis", "best_models": ["kimi-k2"] },
-    { "id": "gsap", "name": "GSAP + ScrollTrigger", "category": "advanced", "install": "npm i gsap @gsap/react", "best_models": ["kimi-k2", "claude-sonnet-4-5"] },
-    { "id": "react-three-fiber", "name": "React Three Fiber", "category": "advanced", "install": "npm i @react-three/fiber @react-three/drei", "best_models": ["kimi-k2", "claude-sonnet-4-5"] },
-    { "id": "lottie", "name": "Lottie React", "category": "advanced", "install": "npm i lottie-react", "best_models": ["kimi-k2"] },
-    { "id": "splitting-js", "name": "Splitting.js (text)", "category": "advanced", "install": "npm i splitting", "best_models": ["kimi-k2"] },
-    { "id": "prisma", "name": "Prisma ORM", "category": "project", "install": "npm i @prisma/client && npx prisma init", "best_models": ["deepseek-v3", "claude-sonnet-4-5"] },
-    { "id": "drizzle-orm", "name": "Drizzle ORM", "category": "project", "install": "npm i drizzle-orm", "best_models": ["deepseek-v3"] },
-    { "id": "nextauth", "name": "NextAuth.js", "category": "project", "install": "npm i next-auth@beta", "best_models": ["deepseek-v3"] },
-    { "id": "clerk", "name": "Clerk Auth", "category": "project", "install": "npm i @clerk/nextjs", "best_models": ["deepseek-v3"] },
-    { "id": "stripe-webhooks", "name": "Stripe Webhooks", "category": "project", "install": "npm i stripe", "best_models": ["deepseek-v3", "claude-opus-4-5"] },
-    { "id": "resend-react-email", "name": "Resend + React Email", "category": "project", "install": "npm i resend @react-email/components", "best_models": ["claude-haiku-4-5"] },
-    { "id": "supabase", "name": "Supabase", "category": "project", "install": "npm i @supabase/supabase-js @supabase/ssr", "best_models": ["deepseek-v3"] },
-    { "id": "posthog", "name": "PostHog Analytics", "category": "project", "install": "npm i posthog-js", "best_models": ["claude-haiku-4-5"] },
-    { "id": "sentry", "name": "Sentry", "category": "project", "install": "npm i @sentry/nextjs", "best_models": ["deepseek-v3"] },
-    { "id": "vercel-ai-sdk", "name": "Vercel AI SDK", "category": "project", "install": "npm i ai @ai-sdk/openai @ai-sdk/anthropic", "best_models": ["claude-sonnet-4-5", "deepseek-v3"] },
-    { "id": "openai", "name": "OpenAI SDK", "category": "project", "install": "npm i openai", "best_models": ["claude-sonnet-4-5"] },
-    { "id": "anthropic", "name": "Anthropic SDK", "category": "project", "install": "npm i @anthropic-ai/sdk", "best_models": ["claude-sonnet-4-5"] },
-    { "id": "langchain-js", "name": "LangChain.js", "category": "advanced", "install": "npm i langchain @langchain/openai", "best_models": ["claude-sonnet-4-5"] },
-    { "id": "mastra", "name": "Mastra Framework", "category": "advanced", "install": "npm i @mastra/core", "best_models": ["claude-sonnet-4-5"] },
-    { "id": "figma-implement", "name": "Figma Implementation", "category": "project", "install": "", "best_models": ["kimi-k2", "claude-sonnet-4-5"] },
-    { "id": "writing-seo", "name": "Writing & SEO", "category": "project", "install": "npm i next-seo", "best_models": ["glm-4-6", "kimi-k2"] },
-    { "id": "seo-audit", "name": "SEO Audit (Lighthouse)", "category": "project", "install": "npm i lighthouse", "best_models": ["glm-4-6", "deepseek-v3"] },
-    { "id": "security-basics", "name": "Security Basics", "category": "core", "install": "npm i helmet", "best_models": ["deepseek-v3", "claude-opus-4-5"] },
-    { "id": "webapp-testing", "name": "Webapp Testing (Vitest+Playwright)", "category": "core", "install": "npm i -D vitest playwright @playwright/test", "best_models": ["deepseek-v3", "glm-4-6"] },
-    { "id": "vitest", "name": "Vitest", "category": "project", "install": "npm i -D vitest", "best_models": ["deepseek-v3"] },
-    { "id": "playwright", "name": "Playwright", "category": "project", "install": "npm i -D @playwright/test", "best_models": ["claude-sonnet-4-5"] },
-    { "id": "storybook", "name": "Storybook 8", "category": "advanced", "install": "npx storybook@latest init", "best_models": ["kimi-k2"] },
-    { "id": "deploy-vercel", "name": "Deploy Vercel", "category": "core", "install": "npm i -g vercel", "best_models": ["deepseek-v3", "glm-4-6"] },
-    { "id": "vercel-blob", "name": "Vercel Blob Storage", "category": "project", "install": "npm i @vercel/blob", "best_models": ["deepseek-v3"] },
-    { "id": "vercel-kv", "name": "Vercel KV (Redis)", "category": "project", "install": "npm i @vercel/kv", "best_models": ["deepseek-v3"] },
-    { "id": "vercel-edge-config", "name": "Vercel Edge Config", "category": "project", "install": "npm i @vercel/edge-config", "best_models": ["deepseek-v3"] },
-    { "id": "upstash", "name": "Upstash Redis", "category": "project", "install": "npm i @upstash/redis", "best_models": ["deepseek-v3"] },
-    { "id": "react-email-render", "name": "React Email", "category": "project", "install": "npm i react-email @react-email/components", "best_models": ["claude-haiku-4-5"] },
-    { "id": "loops-email", "name": "Loops Email", "category": "project", "install": "npm i loops", "best_models": ["claude-haiku-4-5"] },
-    { "id": "react-day-picker", "name": "React DayPicker", "category": "project", "install": "npm i react-day-picker", "best_models": ["kimi-k2"] },
-    { "id": "react-resizable-panels", "name": "React Resizable Panels", "category": "project", "install": "npm i react-resizable-panels", "best_models": ["kimi-k2"] },
-    { "id": "recharts", "name": "Recharts", "category": "project", "install": "npm i recharts", "best_models": ["kimi-k2"] },
-    { "id": "dnd-kit", "name": "dnd-kit (Drag & Drop)", "category": "project", "install": "npm i @dnd-kit/core @dnd-kit/sortable", "best_models": ["kimi-k2"] },
-    { "id": "lucide-react", "name": "lucide-react (Icons)", "category": "project", "install": "npm i lucide-react", "best_models": ["kimi-k2"] },
-    { "id": "fontsource", "name": "Fontsource (Local Fonts)", "category": "project", "install": "npm i @fontsource/inter", "best_models": ["kimi-k2"] },
-    { "id": "magic-ui", "name": "Magic UI Components", "category": "advanced", "install": "npx shadcn add https://magicui.design/r/_.json", "best_models": ["kimi-k2", "claude-sonnet-4-5"] },
-    { "id": "aceternity-ui", "name": "Aceternity UI", "category": "advanced", "install": "", "best_models": ["kimi-k2"] },
-    { "id": "tremor", "name": "Tremor (Dashboards)", "category": "project", "install": "npm i @tremor/react", "best_models": ["kimi-k2"] },
-    { "id": "nuqs-2", "name": "nuqs v2", "category": "project", "install": "npm i nuqs", "best_models": ["deepseek-v3"] },
-    { "id": "next-safe-action", "name": "next-safe-action", "category": "project", "install": "npm i next-safe-action", "best_models": ["deepseek-v3"] },
-    { "id": "hono", "name": "Hono (Edge API)", "category": "project", "install": "npm i hono", "best_models": ["deepseek-v3"] },
-    { "id": "trpc", "name": "tRPC", "category": "project", "install": "npm i @trpc/server @trpc/client @trpc/react-query", "best_models": ["deepseek-v3"] },
-    { "id": "trigger-dev", "name": "Trigger.dev (Background Jobs)", "category": "project", "install": "npm i @trigger.dev/sdk", "best_models": ["deepseek-v3"] },
-    { "id": "inngest", "name": "Inngest (Queues)", "category": "project", "install": "npm i inngest", "best_models": ["deepseek-v3"] },
-    { "id": "partykit", "name": "PartyKit (Realtime)", "category": "advanced", "install": "npm i partykit", "best_models": ["deepseek-v3"] },
-    { "id": "bullmq", "name": "BullMQ (Redis Queues)", "category": "project", "install": "npm i bullmq", "best_models": ["deepseek-v3"] },
-    { "id": "neon", "name": "Neon Postgres", "category": "project", "install": "npm i @neondatabase/serverless", "best_models": ["deepseek-v3"] },
-    { "id": "turso", "name": "Turso (SQLite Edge)", "category": "project", "install": "npm i @libsql/client", "best_models": ["deepseek-v3"] },
-    { "id": "convex", "name": "Convex (Realtime DB)", "category": "advanced", "install": "npm i convex", "best_models": ["deepseek-v3"] },
-    { "id": "pgvector", "name": "pgvector (Embeddings)", "category": "advanced", "install": "npm i pg", "best_models": ["deepseek-v3"] },
-    { "id": "pinecone", "name": "Pinecone (Vector DB)", "category": "advanced", "install": "npm i @pinecone-database/pinecone", "best_models": ["deepseek-v3"] },
-    { "id": "chroma-js", "name": "ChromaDB", "category": "advanced", "install": "npm i chromadb", "best_models": ["deepseek-v3"] },
-    { "id": "langfuse", "name": "Langfuse (LLM Ops)", "category": "project", "install": "npm i langfuse", "best_models": ["deepseek-v3"] },
-    { "id": "posthog-2", "name": "PostHog v2", "category": "project", "install": "npm i posthog-js", "best_models": ["claude-haiku-4-5"] },
-    { "id": "highlight-io", "name": "Highlight.io", "category": "project", "install": "npm i @highlight-run/next", "best_models": ["deepseek-v3"] },
-    { "id": "logtail", "name": "Logtail (Logs)", "category": "project", "install": "npm i @logtail/next", "best_models": ["deepseek-v3"] },
-    { "id": "logflare", "name": "Logflare (Logs)", "category": "project", "install": "npm i @logflare/next", "best_models": ["deepseek-v3"] },
-    { "id": "infisical", "name": "Infisical (Secrets)", "category": "project", "install": "npm i infisical", "best_models": ["deepseek-v3"] },
-    { "id": "github-actions", "name": "GitHub Actions CI/CD", "category": "core", "install": "", "best_models": ["deepseek-v3", "glm-4-6"] },
-    { "id": "biome", "name": "Biome (Lint+Format)", "category": "project", "install": "npm i -D @biomejs/biome", "best_models": ["deepseek-v3"] },
-    { "id": "knip", "name": "Knip (Dead Code)", "category": "project", "install": "npm i -D knip", "best_models": ["deepseek-v3"] },
-    { "id": "oxlint", "name": "Oxlint", "category": "project", "install": "npm i -D oxlint", "best_models": ["deepseek-v3"] },
-    { "id": "bundle-analyzer", "name": "Bundle Analyzer", "category": "project", "install": "npm i -D @next/bundle-analyzer", "best_models": ["deepseek-v3"] }
+    {
+      "id": "shadcn-ui",
+      "name": "shadcn/ui",
+      "category": "core",
+      "install": "npx shadcn@latest init",
+      "best_models": [
+        "kimi-k3",
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "radix-ui",
+      "name": "Radix UI",
+      "category": "core",
+      "install": "npm i @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-popover",
+      "best_models": [
+        "kimi-k3",
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "tailwind-4",
+      "name": "Tailwind CSS 4",
+      "category": "core",
+      "install": "npm i tailwindcss@4 @tailwindcss/postcss",
+      "best_models": [
+        "kimi-k3",
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "react-best-practices",
+      "name": "React Best Practices",
+      "category": "core",
+      "install": "",
+      "best_models": [
+        "kimi-k3",
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "web-design-guidelines",
+      "name": "Web Design Guidelines",
+      "category": "core",
+      "install": "",
+      "best_models": [
+        "kimi-k3",
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "frontend-design",
+      "name": "Frontend Design Principles",
+      "category": "core",
+      "install": "",
+      "best_models": [
+        "kimi-k3",
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "ui-ux-pro-max",
+      "name": "UI/UX Pro Max",
+      "category": "core",
+      "install": "",
+      "best_models": [
+        "kimi-k3",
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "premium-motion-principles",
+      "name": "Premium Motion Principles",
+      "category": "core",
+      "install": "",
+      "best_models": [
+        "kimi-k3",
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "next-themes",
+      "name": "next-themes",
+      "category": "project",
+      "install": "npm i next-themes",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "cmdk",
+      "name": "cmdk (Command Palette)",
+      "category": "project",
+      "install": "npm i cmdk",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "sonner",
+      "name": "sonner (Toasts)",
+      "category": "project",
+      "install": "npm i sonner",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "vaul",
+      "name": "vaul (Drawer)",
+      "category": "project",
+      "install": "npm i vaul",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "input-otp",
+      "name": "input-otp",
+      "category": "project",
+      "install": "npm i input-otp",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "embla-carousel",
+      "name": "Embla Carousel",
+      "category": "project",
+      "install": "npm i embla-carousel-react",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "react-hook-form",
+      "name": "React Hook Form",
+      "category": "project",
+      "install": "npm i react-hook-form @hookform/resolvers",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "zod",
+      "name": "Zod",
+      "category": "project",
+      "install": "npm i zod",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "tanstack-query",
+      "name": "TanStack Query",
+      "category": "project",
+      "install": "npm i @tanstack/react-query",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "tanstack-table",
+      "name": "TanStack Table",
+      "category": "project",
+      "install": "npm i @tanstack/react-table",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "zustand",
+      "name": "Zustand",
+      "category": "project",
+      "install": "npm i zustand",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "nuqs",
+      "name": "nuqs (URL state)",
+      "category": "project",
+      "install": "npm i nuqs",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "motion",
+      "name": "Motion (Framer)",
+      "category": "project",
+      "install": "npm i motion",
+      "best_models": [
+        "kimi-k3",
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "lenis",
+      "name": "Lenis Smooth Scroll",
+      "category": "project",
+      "install": "npm i lenis",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "gsap",
+      "name": "GSAP + ScrollTrigger",
+      "category": "advanced",
+      "install": "npm i gsap @gsap/react",
+      "best_models": [
+        "kimi-k3",
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "react-three-fiber",
+      "name": "React Three Fiber",
+      "category": "advanced",
+      "install": "npm i @react-three/fiber @react-three/drei",
+      "best_models": [
+        "kimi-k3",
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "lottie",
+      "name": "Lottie React",
+      "category": "advanced",
+      "install": "npm i lottie-react",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "splitting-js",
+      "name": "Splitting.js (text)",
+      "category": "advanced",
+      "install": "npm i splitting",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "prisma",
+      "name": "Prisma ORM",
+      "category": "project",
+      "install": "npm i @prisma/client && npx prisma init",
+      "best_models": [
+        "deepseek-v4-flash",
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "drizzle-orm",
+      "name": "Drizzle ORM",
+      "category": "project",
+      "install": "npm i drizzle-orm",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "nextauth",
+      "name": "NextAuth.js",
+      "category": "project",
+      "install": "npm i next-auth@beta",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "clerk",
+      "name": "Clerk Auth",
+      "category": "project",
+      "install": "npm i @clerk/nextjs",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "stripe-webhooks",
+      "name": "Stripe Webhooks",
+      "category": "project",
+      "install": "npm i stripe",
+      "best_models": [
+        "deepseek-v4-flash",
+        "claude-opus-5"
+      ]
+    },
+    {
+      "id": "resend-react-email",
+      "name": "Resend + React Email",
+      "category": "project",
+      "install": "npm i resend @react-email/components",
+      "best_models": [
+        "claude-haiku-4-5"
+      ]
+    },
+    {
+      "id": "supabase",
+      "name": "Supabase",
+      "category": "project",
+      "install": "npm i @supabase/supabase-js @supabase/ssr",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "posthog",
+      "name": "PostHog Analytics",
+      "category": "project",
+      "install": "npm i posthog-js",
+      "best_models": [
+        "claude-haiku-4-5"
+      ]
+    },
+    {
+      "id": "sentry",
+      "name": "Sentry",
+      "category": "project",
+      "install": "npm i @sentry/nextjs",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "vercel-ai-sdk",
+      "name": "Vercel AI SDK",
+      "category": "project",
+      "install": "npm i ai @ai-sdk/openai @ai-sdk/anthropic",
+      "best_models": [
+        "claude-sonnet-5",
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI SDK",
+      "category": "project",
+      "install": "npm i openai",
+      "best_models": [
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "anthropic",
+      "name": "Anthropic SDK",
+      "category": "project",
+      "install": "npm i @anthropic-ai/sdk",
+      "best_models": [
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "langchain-js",
+      "name": "LangChain.js",
+      "category": "advanced",
+      "install": "npm i langchain @langchain/openai",
+      "best_models": [
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "mastra",
+      "name": "Mastra Framework",
+      "category": "advanced",
+      "install": "npm i @mastra/core",
+      "best_models": [
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "figma-implement",
+      "name": "Figma Implementation",
+      "category": "project",
+      "install": "",
+      "best_models": [
+        "kimi-k3",
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "writing-seo",
+      "name": "Writing & SEO",
+      "category": "project",
+      "install": "npm i next-seo",
+      "best_models": [
+        "glm-5-2",
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "seo-audit",
+      "name": "SEO Audit (Lighthouse)",
+      "category": "project",
+      "install": "npm i lighthouse",
+      "best_models": [
+        "glm-5-2",
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "security-basics",
+      "name": "Security Basics",
+      "category": "core",
+      "install": "npm i helmet",
+      "best_models": [
+        "deepseek-v4-flash",
+        "claude-opus-5"
+      ]
+    },
+    {
+      "id": "webapp-testing",
+      "name": "Webapp Testing (Vitest+Playwright)",
+      "category": "core",
+      "install": "npm i -D vitest playwright @playwright/test",
+      "best_models": [
+        "deepseek-v4-flash",
+        "glm-5-2"
+      ]
+    },
+    {
+      "id": "vitest",
+      "name": "Vitest",
+      "category": "project",
+      "install": "npm i -D vitest",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "playwright",
+      "name": "Playwright",
+      "category": "project",
+      "install": "npm i -D @playwright/test",
+      "best_models": [
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "storybook",
+      "name": "Storybook 8",
+      "category": "advanced",
+      "install": "npx storybook@latest init",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "deploy-vercel",
+      "name": "Deploy Vercel",
+      "category": "core",
+      "install": "npm i -g vercel",
+      "best_models": [
+        "deepseek-v4-flash",
+        "glm-5-2"
+      ]
+    },
+    {
+      "id": "vercel-blob",
+      "name": "Vercel Blob Storage",
+      "category": "project",
+      "install": "npm i @vercel/blob",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "vercel-kv",
+      "name": "Vercel KV (Redis)",
+      "category": "project",
+      "install": "npm i @vercel/kv",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "vercel-edge-config",
+      "name": "Vercel Edge Config",
+      "category": "project",
+      "install": "npm i @vercel/edge-config",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "upstash",
+      "name": "Upstash Redis",
+      "category": "project",
+      "install": "npm i @upstash/redis",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "react-email-render",
+      "name": "React Email",
+      "category": "project",
+      "install": "npm i react-email @react-email/components",
+      "best_models": [
+        "claude-haiku-4-5"
+      ]
+    },
+    {
+      "id": "loops-email",
+      "name": "Loops Email",
+      "category": "project",
+      "install": "npm i loops",
+      "best_models": [
+        "claude-haiku-4-5"
+      ]
+    },
+    {
+      "id": "react-day-picker",
+      "name": "React DayPicker",
+      "category": "project",
+      "install": "npm i react-day-picker",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "react-resizable-panels",
+      "name": "React Resizable Panels",
+      "category": "project",
+      "install": "npm i react-resizable-panels",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "recharts",
+      "name": "Recharts",
+      "category": "project",
+      "install": "npm i recharts",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "dnd-kit",
+      "name": "dnd-kit (Drag & Drop)",
+      "category": "project",
+      "install": "npm i @dnd-kit/core @dnd-kit/sortable",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "lucide-react",
+      "name": "lucide-react (Icons)",
+      "category": "project",
+      "install": "npm i lucide-react",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "fontsource",
+      "name": "Fontsource (Local Fonts)",
+      "category": "project",
+      "install": "npm i @fontsource/inter",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "magic-ui",
+      "name": "Magic UI Components",
+      "category": "advanced",
+      "install": "npx shadcn add https://magicui.design/r/_.json",
+      "best_models": [
+        "kimi-k3",
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "id": "aceternity-ui",
+      "name": "Aceternity UI",
+      "category": "advanced",
+      "install": "",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "tremor",
+      "name": "Tremor (Dashboards)",
+      "category": "project",
+      "install": "npm i @tremor/react",
+      "best_models": [
+        "kimi-k3"
+      ]
+    },
+    {
+      "id": "nuqs-2",
+      "name": "nuqs v2",
+      "category": "project",
+      "install": "npm i nuqs",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "next-safe-action",
+      "name": "next-safe-action",
+      "category": "project",
+      "install": "npm i next-safe-action",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "hono",
+      "name": "Hono (Edge API)",
+      "category": "project",
+      "install": "npm i hono",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "trpc",
+      "name": "tRPC",
+      "category": "project",
+      "install": "npm i @trpc/server @trpc/client @trpc/react-query",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "trigger-dev",
+      "name": "Trigger.dev (Background Jobs)",
+      "category": "project",
+      "install": "npm i @trigger.dev/sdk",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "inngest",
+      "name": "Inngest (Queues)",
+      "category": "project",
+      "install": "npm i inngest",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "partykit",
+      "name": "PartyKit (Realtime)",
+      "category": "advanced",
+      "install": "npm i partykit",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "bullmq",
+      "name": "BullMQ (Redis Queues)",
+      "category": "project",
+      "install": "npm i bullmq",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "neon",
+      "name": "Neon Postgres",
+      "category": "project",
+      "install": "npm i @neondatabase/serverless",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "turso",
+      "name": "Turso (SQLite Edge)",
+      "category": "project",
+      "install": "npm i @libsql/client",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "convex",
+      "name": "Convex (Realtime DB)",
+      "category": "advanced",
+      "install": "npm i convex",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "pgvector",
+      "name": "pgvector (Embeddings)",
+      "category": "advanced",
+      "install": "npm i pg",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "pinecone",
+      "name": "Pinecone (Vector DB)",
+      "category": "advanced",
+      "install": "npm i @pinecone-database/pinecone",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "chroma-js",
+      "name": "ChromaDB",
+      "category": "advanced",
+      "install": "npm i chromadb",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "langfuse",
+      "name": "Langfuse (LLM Ops)",
+      "category": "project",
+      "install": "npm i langfuse",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "posthog-2",
+      "name": "PostHog v2",
+      "category": "project",
+      "install": "npm i posthog-js",
+      "best_models": [
+        "claude-haiku-4-5"
+      ]
+    },
+    {
+      "id": "highlight-io",
+      "name": "Highlight.io",
+      "category": "project",
+      "install": "npm i @highlight-run/next",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "logtail",
+      "name": "Logtail (Logs)",
+      "category": "project",
+      "install": "npm i @logtail/next",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "logflare",
+      "name": "Logflare (Logs)",
+      "category": "project",
+      "install": "npm i @logflare/next",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "infisical",
+      "name": "Infisical (Secrets)",
+      "category": "project",
+      "install": "npm i infisical",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "github-actions",
+      "name": "GitHub Actions CI/CD",
+      "category": "core",
+      "install": "",
+      "best_models": [
+        "deepseek-v4-flash",
+        "glm-5-2"
+      ]
+    },
+    {
+      "id": "biome",
+      "name": "Biome (Lint+Format)",
+      "category": "project",
+      "install": "npm i -D @biomejs/biome",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "knip",
+      "name": "Knip (Dead Code)",
+      "category": "project",
+      "install": "npm i -D knip",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "oxlint",
+      "name": "Oxlint",
+      "category": "project",
+      "install": "npm i -D oxlint",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "bundle-analyzer",
+      "name": "Bundle Analyzer",
+      "category": "project",
+      "install": "npm i -D @next/bundle-analyzer",
+      "best_models": [
+        "deepseek-v4-flash"
+      ]
+    }
   ]
 }

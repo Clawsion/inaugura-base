@@ -178,10 +178,11 @@ describe("Router R9 — free_open exclui modelos paid", () => {
     }));
     expect(rec.build_routing.length).toBeGreaterThan(0);
     rec.build_routing.forEach((r) => {
-      // Modelo deve ser um dos IDs open/low cost do catálogo
+      // Modelo deve ser um dos IDs open/low cost do catálogo v1.2.0
       const allowedFreeOpen = [
-        "deepseek-v3", "deepseek-r1", "qwen-2-5-coder", "qwen-2-5-max",
-        "glm-4-6", "llama-3-3-70b", "ollama-qwen-coder", "codestral",
+        "glm-5-2", "glm-4-6", "deepseek-v4-flash", "deepseek-v4-pro",
+        "qwen-3-5-coder", "qwen-3-6", "llama-4-maverick",
+        "nemotron-3-ultra", "ollama-qwen-coder", "codestral",
       ];
       expect(allowedFreeOpen).toContain(r.model_id);
     });
@@ -189,14 +190,14 @@ describe("Router R9 — free_open exclui modelos paid", () => {
 });
 
 describe("Router R10 — max usa frontier", () => {
-  it("R10: cost_profile=max → architect usa Claude Opus 4.5", () => {
+  it("R10: cost_profile=max → architect usa Claude Fable 5 ou GPT-5.5", () => {
     const rec = recommend(makeInput({
       level: "awwwards",
       execution: { mode: "auto", cost_profile: "max", host_preference: "opencode" },
     }));
     const architect = rec.build_routing.find((r) => r.function_id === "architect");
     expect(architect).toBeDefined();
-    expect(["claude-opus-4-5", "gpt-5"]).toContain(architect!.model_id);
+    expect(["claude-fable-5", "gpt-5-5", "claude-opus-5", "grok-4-5"]).toContain(architect!.model_id);
   });
 });
 
@@ -320,12 +321,12 @@ describe("validatePack", () => {
     const fakePack = {
       meta: { cost_profile: "free_open" }, overview: {}, spec_md: "", design_md: "",
       agents_md: "", plan_md: "", checklist_md: "", prompts: {}, install: {}, gaps: [],
-      routing: { build_routing: [{ function_id: "architect", model_id: "claude-opus-4-5", host: "opencode", skills: [], mcps: [] }] },
+      routing: { build_routing: [{ function_id: "architect", model_id: "claude-fable-5", host: "opencode", skills: [], mcps: [] }] },
       selection: { skills: [], mcps: [], integrations: [], effects: [] },
     };
     const result = validatePack(fakePack, rec);
     expect(result.ok).toBe(false);
-    expect(result.errors.some((e) => e.includes("R9 violado") && e.includes("claude-opus-4-5"))).toBe(true);
+    expect(result.errors.some((e) => e.includes("R9 violado") && e.includes("claude-fable-5"))).toBe(true);
   });
 
   it("aceita model_id válido em free_open", () => {
@@ -333,7 +334,7 @@ describe("validatePack", () => {
     const fakePack = {
       meta: { cost_profile: "free_open" }, overview: {}, spec_md: "", design_md: "",
       agents_md: "", plan_md: "", checklist_md: "", prompts: {}, install: {}, gaps: [],
-      routing: { build_routing: [{ function_id: "architect", model_id: "deepseek-v3", host: "opencode", skills: [], mcps: [] }] },
+      routing: { build_routing: [{ function_id: "architect", model_id: "deepseek-v4-flash", host: "opencode", skills: [], mcps: [] }] },
       selection: { skills: [], mcps: [], integrations: [], effects: [] },
     };
     const result = validatePack(fakePack, rec);

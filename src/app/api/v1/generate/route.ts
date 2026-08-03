@@ -19,6 +19,7 @@ import {
 } from "@/lib/security";
 import { log, recordGenerationMetric } from "@/lib/observability";
 import { CATALOG } from "@/lib/catalog";
+import { getCurrentUser } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -104,7 +105,8 @@ export async function POST(req: NextRequest) {
         const systemPrompt = buildSystemPrompt(input.locale);
         const userPrompt = buildUserPrompt(input, rec, norm);
 
-        // ── 7. Criar Project + Pack placeholder no DB ──
+        // ── 7. Criar Project + Pack placeholder no DB (associado ao user se logado) ──
+        const currentUser = await getCurrentUser();
         const project = await prisma.project.create({
           data: {
             title: input.brief.slice(0, 60),
@@ -114,6 +116,7 @@ export async function POST(req: NextRequest) {
             mode: rec.mode,
             status: "generating",
             inputJson: JSON.stringify(input),
+            userId: currentUser?.id ?? null,
           },
         });
 

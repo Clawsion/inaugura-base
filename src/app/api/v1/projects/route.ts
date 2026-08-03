@@ -1,10 +1,17 @@
 import { NextResponse } from "next/server";
 import { db as prisma } from "@/lib/db";
+import { getCurrentUser } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
 export async function GET() {
+  const user = await getCurrentUser();
+
+  // Se logado, só mostra seus projetos; se anónimo, todos os anónimos
+  const where = user ? { userId: user.id } : { userId: null };
+
   const projects = await prisma.project.findMany({
+    where,
     orderBy: { updatedAt: "desc" },
     include: {
       packs: {
