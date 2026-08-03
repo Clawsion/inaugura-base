@@ -1,0 +1,68 @@
+# ─── Dependências ───
+node_modules
+.pnp
+.yarn/*
+
+# ─── Build artifacts ───
+.next
+out
+build
+dist
+
+# ─── Dados locais ───
+db/*.db
+db/*.db-journal
+data/
+*.sqlite
+*.sqlite3
+
+# ─── Logs e cache ───
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.cache
+.eslintcache
+
+# ─── Environment (Coolify fornece via UI) ───
+.env
+.env.*
+!.env.example
+
+# ─── Git e CI ───
+.git
+.gitignore
+.github
+.gitlab-ci.yml
+
+# ─── IDE e SO ───
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# ─── Tests e docs ───
+tests
+coverage
+*.md
+!README.md
+docs/
+
+# ─── Sandbox artifacts ───
+download/
+upload/
+tool-results/
+worklog.md
+agent-ctx/
+.zscripts/
+skills/
+
+# ─── Docker propio ───
+Dockerfile
+docker-compose.yml
+.dockerignore
+nixpacks.toml
+
+# ─── Coolify ───
+coolify.json
+.coolify

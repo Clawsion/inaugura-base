@@ -1,0 +1,74 @@
+# ============================================================================
+# docker-compose.yml — Inaugura-Base
+# ============================================================================
+# Pode ser usado para:
+#   1. Teste local: `docker compose up --build`
+#   2. Coolify: importar como docker-compose stack
+#
+# Persistência:
+#   - Volume `inaugura-data` monta em /app/data para SQLite DB
+#
+# Para usar PostgreSQL em vez de SQLite:
+#   1. Descomenta o serviço `postgres` abaixo
+#   2. Define DATABASE_URL=postgresql://inaugura:inaugura@postgres:5432/inaugura
+#   3. Muda `provider` no prisma/schema.prisma de "sqlite" para "postgresql"
+#   4. Rebuild
+# ============================================================================
+
+services:
+  inaugura:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: inaugura-base
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - DATABASE_URL=file:/app/data/inaugura.db
+      # ─── Optionais (definir via Coolify env vars UI) ───
+      - AUTH_SECRET=${AUTH_SECRET:-}
+      - SENTRY_DSN=${SENTRY_DSN:-}
+      - NEXT_PUBLIC_SENTRY_DSN=${NEXT_PUBLIC_SENTRY_DSN:-}
+      - UPSTASH_REDIS_REST_URL=${UPSTASH_REDIS_REST_URL:-}
+      - UPSTASH_REDIS_REST_TOKEN=${UPSTASH_REDIS_REST_TOKEN:-}
+      - SPEC_COMPILER_FALLBACK_BASE_URL=${SPEC_COMPILER_FALLBACK_BASE_URL:-}
+      - SPEC_COMPILER_FALLBACK_API_KEY=${SPEC_COMPILER_FALLBACK_API_KEY:-}
+      - SPEC_COMPILER_FALLBACK_MODEL=${SPEC_COMPILER_FALLBACK_MODEL:-deepseek-v4-flash}
+      - NEXT_PUBLIC_APP_VERSION=${NEXT_PUBLIC_APP_VERSION:-0.3.0}
+    volumes:
+      - inaugura-data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    # ─── Opção: usar PostgreSQL em vez de SQLite ───
+    # depends_on:
+    #   postgres:
+    #     condition: service_healthy
+
+  # ─── PostgreSQL (opcional — descomenta para usar em vez de SQLite) ───
+  # postgres:
+  #   image: postgres:16-alpine
+  #   container_name: inaugura-postgres
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_USER: inaugura
+  #     POSTGRES_PASSWORD: inaugura
+  #     POSTGRES_DB: inaugura
+  #   volumes:
+  #     - postgres-data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U inaugura"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+volumes:
+  inaugura-data:
+  # postgres-data:

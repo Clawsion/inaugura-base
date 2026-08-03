@@ -1,0 +1,38 @@
+# ============================================================================
+# nixpacks.toml — Configuração alternativa ao Dockerfile para Coolify
+# ============================================================================
+# Coolify usa Nixpacks por defeito quando não há Dockerfile.
+# Este ficheiro dá mais controlo sobre o build.
+# Para usar: apagar Dockerfile e Coolify usa este automaticamente.
+# ============================================================================
+
+[phases.setup]
+nixPkgs = ["nodejs_20", "bun", "openssl"]
+
+[phases.install]
+cmds = [
+    "bun install --frozen-lockfile",
+]
+
+[phases.build]
+cmds = [
+    "bunx prisma generate",
+    "bun run build",
+    "cp -r .next/static .next/standalone/.next/",
+    "cp -r public .next/standalone/",
+]
+
+[start]
+cmd = """
+    mkdir -p /app/data && \
+    cd /app && \
+    npx prisma migrate deploy && \
+    node .next/standalone/server.js
+"""
+
+[variables]
+NODE_ENV = "production"
+PORT = "3000"
+HOSTNAME = "0.0.0.0"
+DATABASE_URL = "file:/app/data/inaugura.db"
+NEXT_TELEMETRY_DISABLED = "1"
