@@ -4,9 +4,11 @@
 // global-error.tsx — Error boundary GLOBAL (captura erros fatais do root layout)
 // ============================================================================
 // É o último nível de defesa. Se algo quebra o próprio <html>, é aqui que aparece.
+// Em produção, erros são enviados para Sentry automaticamente.
 // ============================================================================
 
 import { useEffect } from "react";
+import * as Sentry from "@sentry/nextjs";
 
 export default function GlobalError({
   error,
@@ -16,7 +18,8 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Em produção, enviar para Sentry/Logflare quando configurado
+    // Captura no Sentry (em produção)
+    Sentry.captureException(error);
     console.error("[GLOBAL-ERROR]", error);
   }, [error]);
 

@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   // Rate limit
-  const rl = withRateLimit(req);
+  const rl = await withRateLimit(req);
   if (rl) return rl;
 
   const { pack, rec } = await req.json() as { pack: unknown; rec: Recommendation };

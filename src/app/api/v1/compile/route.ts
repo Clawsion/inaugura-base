@@ -10,7 +10,7 @@ export const maxDuration = 300;
 
 export async function POST(req: NextRequest) {
   // Rate limit
-  const rl = withRateLimit(req);
+  const rl = await withRateLimit(req);
   if (rl) return rl;
 
   const raw = await req.json();

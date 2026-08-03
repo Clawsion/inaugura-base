@@ -78,6 +78,10 @@ model Pack {
   latencyMs       Int
   tokenCostEstimate String?
 
+  // Share público (S3.1) — quando isPublic=true, anyone with shareSlug pode ver
+  isPublic        Boolean @default(false)
+  shareSlug       String? @unique
+
   createdAt DateTime @default(now())
 
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)

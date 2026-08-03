@@ -5,9 +5,11 @@
 // ============================================================================
 // Captura erros de Server Components e Client Components abaixo do root layout.
 // Mantém o layout (sidebar, header, etc.) intacto enquanto mostra o erro.
+// Em produção, erros são enviados para Sentry.
 // ============================================================================
 
 import { useEffect } from "react";
+import * as Sentry from "@sentry/nextjs";
 import { AlertCircle, RefreshCw, Home } from "lucide-react";
 
 export default function Error({
@@ -18,6 +20,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
+    Sentry.captureException(error);
     console.error("[PAGE-ERROR]", error);
   }, [error]);
 

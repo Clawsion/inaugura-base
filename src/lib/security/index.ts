@@ -87,10 +87,11 @@ export function getClientIP(req: Request): string {
 // Devolve NextResponse JSON 429 se excedido, ou null se OK
 // ============================================================================
 import { NextResponse } from "next/server";
+import { checkSharedRateLimit } from "@/lib/redis";
 
-export function withRateLimit(req: Request): NextResponse | null {
+export async function withRateLimit(req: Request): Promise<NextResponse | null> {
   const clientIP = getClientIP(req);
-  const rl = checkRateLimit(clientIP);
+  const rl = await checkSharedRateLimit(clientIP);
   if (!rl.ok) {
     return NextResponse.json(
       {

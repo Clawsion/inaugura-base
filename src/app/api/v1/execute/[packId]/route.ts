@@ -8,7 +8,7 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ packId: string }> }
 ) {
-  const rl = withRateLimit(req);
+  const rl = await withRateLimit(req);
   if (rl) return rl;
 
   const { packId } = await params;
@@ -57,7 +57,7 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ packId: string }> }
 ) {
-  const rl = withRateLimit(req);
+  const rl = await withRateLimit(req);
   if (rl) return rl;
 
   const { packId } = await params;

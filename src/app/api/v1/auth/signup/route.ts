@@ -5,7 +5,7 @@ import { withRateLimit } from "@/lib/security";
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
-  const rl = withRateLimit(req);
+  const rl = await withRateLimit(req);
   if (rl) return rl;
 
   try {

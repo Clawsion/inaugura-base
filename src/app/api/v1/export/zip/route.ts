@@ -11,7 +11,7 @@ export const runtime = "nodejs";
  * Aqui devolvemos o JSON com todos os ficheiros para o cliente empacotar.
  */
 export async function POST(req: NextRequest) {
-  const rl = withRateLimit(req);
+  const rl = await withRateLimit(req);
   if (rl) return rl;
 
   const pack = (await req.json()) as InauguraPack;
