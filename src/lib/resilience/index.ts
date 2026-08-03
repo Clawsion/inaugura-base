@@ -117,7 +117,7 @@ async function callGLM(opts: LLMCallOptions): Promise<{ ok: boolean; pack?: unkn
   const timeout = setTimeout(() => controller.abort(), opts.timeoutMs ?? 90000);
   try {
     const response = await zai.chat.completions.create({
-      model: "glm-5.2",
+      model: "glm-4.6",  // Modelo real ZAI/GLM (anteriormente glm-5.2 não-existente)
       messages: [
         { role: "system", content: opts.systemPrompt },
         { role: "user", content: opts.userPrompt },
@@ -156,8 +156,9 @@ async function callGLM(opts: LLMCallOptions): Promise<{ ok: boolean; pack?: unkn
 async function callDeepSeek(opts: LLMCallOptions): Promise<{ ok: boolean; pack?: unknown; raw?: string; error?: string }> {
   const baseUrl = process.env.SPEC_COMPILER_FALLBACK_BASE_URL;
   const apiKey = process.env.SPEC_COMPILER_FALLBACK_API_KEY;
-  const model = process.env.SPEC_COMPILER_FALLBACK_MODEL ?? "deepseek-v4-pro";
-  if (!baseUrl || !apiKey) return { ok: false, error: "DeepSeek fallback não configurado" };
+  // Modelo real: deepseek-v3 (existente no catálogo v1.1.0)
+  const model = process.env.SPEC_COMPILER_FALLBACK_MODEL ?? "deepseek-v3";
+  if (!baseUrl || !apiKey) return { ok: false, error: "DeepSeek fallback não configurado (definir SPEC_COMPILER_FALLBACK_BASE_URL e SPEC_COMPILER_FALLBACK_API_KEY no .env)" };
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), opts.timeoutMs ?? 90000);
   try {
@@ -206,9 +207,10 @@ async function callDeepSeek(opts: LLMCallOptions): Promise<{ ok: boolean; pack?:
 
 export async function callCompilerWithFallback(opts: LLMCallOptions): Promise<LLMCallResult> {
   const startTime = Date.now();
+  // Modelo real: glm-4-6 (existente no catálogo v1.1.0)
   const providers = [
-    { name: "glm", model: "glm-5.2", fn: () => callGLM(opts) },
-    { name: "deepseek", model: process.env.SPEC_COMPILER_FALLBACK_MODEL ?? "deepseek-v4-pro", fn: () => callDeepSeek(opts) },
+    { name: "glm", model: "glm-4-6", fn: () => callGLM(opts) },
+    { name: "deepseek", model: process.env.SPEC_COMPILER_FALLBACK_MODEL ?? "deepseek-v3", fn: () => callDeepSeek(opts) },
   ];
   let totalAttempts = 0;
   for (const provider of providers) {

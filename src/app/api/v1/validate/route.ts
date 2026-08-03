@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { InauguraPackSchema, type Recommendation } from "@/lib/schema/inaugura-pack";
 import { validatePack } from "@/lib/router";
+import { withRateLimit } from "@/lib/security";
 
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
+  // Rate limit
+  const rl = withRateLimit(req);
+  if (rl) return rl;
+
   const { pack, rec } = await req.json() as { pack: unknown; rec: Recommendation };
 
   // Validação estrutural (código)

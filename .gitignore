@@ -50,5 +50,13 @@ test
 prompt
 
 server.log
-# Skills directory
+
+# ─── Agent runtime artifacts (não devem ser commitados) ───
 /skills/
+/download/
+/upload/
+/tool-results/
+/worklog.md
+/agent-ctx/
+/db/*.db
+/db/*.db-journal

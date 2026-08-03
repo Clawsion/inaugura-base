@@ -231,12 +231,16 @@ export function isValidId(id: string, type?: "skill" | "mcp" | "integration" | "
 }
 
 // Skills core (always-on hardcoded conforme spec §5)
+// IMPORTANTE: IDs devem existir em data/skills.json — caso contrário getSkill() retorna undefined
+// e o validatePack rejeita o pack. Mantenha alinhado com o catálogo.
 export const SKILLS_CORE_ALWAYS = [
-  "superpowers-using",
+  "shadcn-ui",
+  "radix-ui",
+  "tailwind-4",
+  "react-best-practices",
   "frontend-design",
   "ui-ux-pro-max",
   "premium-motion-principles",
-  "react-best-practices",
   "web-design-guidelines",
 ];
 

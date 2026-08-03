@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db as prisma } from "@/lib/db";
+import { withRateLimit } from "@/lib/security";
 
 export const runtime = "nodejs";
 
@@ -7,6 +8,9 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ packId: string }> }
 ) {
+  const rl = withRateLimit(req);
+  if (rl) return rl;
+
   const { packId } = await params;
 
   const states = await prisma.promptExecutionState.findMany({
@@ -53,6 +57,9 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ packId: string }> }
 ) {
+  const rl = withRateLimit(req);
+  if (rl) return rl;
+
   const { packId } = await params;
   const body = await req.json();
 

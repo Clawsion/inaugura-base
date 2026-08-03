@@ -147,10 +147,10 @@ export const InauguraPackSchema = z.object({
   meta: z.object({
     slug: z.string(),
     title: z.string(),
-    locale: z.string(),
-    level: z.string(),
+    locale: z.enum(["pt", "en"]),
+    level: z.enum(["lite", "pro", "awwwards"]),
     mode: z.enum(["individual", "team"]),
-    cost_profile: z.string(),
+    cost_profile: z.enum(["free_open", "balanced", "max"]),
     created_at: z.string(),
     compiler_model: z.string(),
     polish_model: z.string().optional(),
@@ -246,7 +246,7 @@ export const InauguraPackSchema = z.object({
     sections: z.array(
       z.object({
         id: z.string(),
-        priority: z.string(),
+        priority: z.enum(["P0", "P1", "P2"]),
       })
     ),
     effects: z.array(z.string()),
@@ -269,10 +269,10 @@ export function inauguraPackToJsonSchema() {
         properties: {
           slug: { type: "string" },
           title: { type: "string" },
-          locale: { type: "string" },
-          level: { type: "string" },
+          locale: { type: "string", enum: ["pt", "en"] },
+          level: { type: "string", enum: ["lite", "pro", "awwwards"] },
           mode: { type: "string", enum: ["individual", "team"] },
-          cost_profile: { type: "string" },
+          cost_profile: { type: "string", enum: ["free_open", "balanced", "max"] },
           created_at: { type: "string" },
           compiler_model: { type: "string" },
         },
@@ -405,7 +405,7 @@ export function inauguraPackToJsonSchema() {
               type: "object",
               properties: {
                 id: { type: "string" },
-                priority: { type: "string" },
+                priority: { type: "string", enum: ["P0", "P1", "P2"] },
               },
               required: ["id", "priority"],
             },

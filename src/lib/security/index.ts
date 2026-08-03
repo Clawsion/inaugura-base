@@ -81,3 +81,28 @@ export function getClientIP(req: Request): string {
     "unknown"
   );
 }
+
+// ============================================================================
+// Helper para aplicar rate limit em qualquer endpoint
+// Devolve NextResponse JSON 429 se excedido, ou null se OK
+// ============================================================================
+import { NextResponse } from "next/server";
+
+export function withRateLimit(req: Request): NextResponse | null {
+  const clientIP = getClientIP(req);
+  const rl = checkRateLimit(clientIP);
+  if (!rl.ok) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: `Rate limit excedido. Tenta novamente em ${Math.ceil((rl.resetAt - Date.now()) / 1000)}s.`,
+        retryAfter: Math.ceil((rl.resetAt - Date.now()) / 1000),
+      },
+      {
+        status: 429,
+        headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) },
+      }
+    );
+  }
+  return null;
+}

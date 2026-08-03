@@ -11,6 +11,9 @@ export async function GET() {
         orderBy: { createdAt: "desc" },
         take: 1,
       },
+      executionStates: {
+        select: { status: true },
+      },
       _count: { select: { executionStates: true } },
     },
   });
@@ -18,9 +21,8 @@ export async function GET() {
   const result = projects.map((p) => {
     const latestPack = p.packs[0];
     const packData = latestPack ? JSON.parse(latestPack.packJson) : null;
-    const doneStates = p._count.executionStates > 0
-      ? Math.floor(Math.random() * p._count.executionStates) // placeholder; em produção contar done
-      : 0;
+    // Conta quantos PromptExecutionState estão done (status="done")
+    const doneStates = p.executionStates.filter((s) => s.status === "done").length;
 
     return {
       id: p.id,
@@ -35,6 +37,7 @@ export async function GET() {
       packMode: packData?.meta?.mode ?? null,
       packTier: packData?.meta?.level ?? null,
       stepCount: p._count.executionStates,
+      doneCount: doneStates,
     };
   });
 

@@ -20,6 +20,7 @@ import {
   type Mcp,
   type Effect,
   type Section,
+  type Model,
 } from "@/lib/catalog";
 import type { GenerateInput, Recommendation } from "@/lib/schema/inaugura-pack";
 import { BuildDefaults, getBuildModel } from "@/lib/router/build-defaults";
@@ -94,9 +95,10 @@ export function recommend(input: GenerateInput): Recommendation {
     reasons.push({ id: "figma", because: "Figma URL detetada → MCP Figma + skill implement" });
   }
 
-  // ── R3: motion high → function motion (team) ──
+  // ── R3: motion high → adiciona função motion ao team ──
   const userEffects = [...input.effects_lock];
   const effectsHighCost = userEffects.filter((id) => getEffect(id)?.perf_cost === "high");
+  const hasMotionHighCost = effectsHighCost.length > 0 || norm.hasMotion;
 
   // ── R4: effects high-cost > 2 → warning ──
   if (effectsHighCost.length > 2) {
@@ -148,8 +150,8 @@ export function recommend(input: GenerateInput): Recommendation {
     }
   }
 
-  // ── R9: cost_profile=free_open → models open only ──
-  // ── R10: cost_profile=max → architect fable, qa sonnet ──
+  // ── R9: cost_profile=free_open → exclui modelos paid (validado depois no routing) ──
+  // ── R10: cost_profile=max → arquitecto e reviewer usam frontier (Claude Opus, GPT-5) ──
   const costProfile = input.execution.cost_profile;
 
   // ── R11: user locks always union into selection ──
@@ -193,6 +195,17 @@ export function recommend(input: GenerateInput): Recommendation {
   if (!hasDataFeatures && mode === "team") {
     teamFunctions = teamFunctions.filter((f) => f !== "backend");
     if (teamFunctions.length < 3) teamFunctions.push("content");
+  }
+
+  // ── R3 (aplicação): se há motion high-cost e mode team sem função motion, adiciona ──
+  if (hasMotionHighCost && mode === "team" && !teamFunctions.includes("motion")) {
+    // só adiciona se houver espaço (< 8)
+    if (teamFunctions.length < 8) {
+      teamFunctions.push("motion");
+      reasons.push({ id: "motion", because: "Effects high-cost detetados → adicionar função motion ao team" });
+    } else {
+      warnings.push("Effects high-cost mas team já tem 8 funções — não foi possível adicionar motion.");
+    }
   }
 
   // ── R15: portfolio default sections P0 ──
@@ -246,10 +259,20 @@ export function recommend(input: GenerateInput): Recommendation {
   }
 
   // ── Build routing (model assignment per function) ──
+  // R9/R10: getBuildModel já respeita cost_profile — free_open só usa open, max usa frontier
   const build_routing = mode === "team" ? teamFunctions : individualSlots.slice(0, 1);
   const routing = build_routing.map((fnId) => {
     const fn = getFunction(fnId);
-    const modelId = getBuildModel(fnId, costProfile);
+    let modelId = getBuildModel(fnId, costProfile);
+    // R9硬约束: free_open NUNCA pode usar modelo paid — valida contra catálogo
+    if (costProfile === "free_open") {
+      const model = getModel(modelId);
+      if (model && model.cost !== "free" && model.cost !== "low") {
+        // substitui por fallback open
+        modelId = "deepseek-v3";
+        warnings.push(`R9: model_id ${modelId} era paid em free_open — substituído por deepseek-v3`);
+      }
+    }
     return {
       function_id: fnId,
       model_id: modelId,
@@ -332,6 +355,44 @@ export function validatePack(pack: unknown, rec: Recommendation): ValidationResu
     checkIds(selection.mcps as unknown[], "selection.mcps");
     checkIds(selection.integrations as unknown[], "selection.integrations");
     checkIds(selection.effects as unknown[], "selection.effects");
+  }
+
+  // Verifica routing.model_id contra catálogo (anti-hallucinação de modelos inexistentes)
+  const routing = p.routing as Record<string, unknown> | undefined;
+  if (routing && Array.isArray(routing.build_routing)) {
+    (routing.build_routing as Record<string, unknown>[]).forEach((r, i) => {
+      const modelId = r.model_id;
+      if (typeof modelId === "string") {
+        const model = getModel(modelId as string);
+        if (!model) {
+          errors.push(`routing.build_routing[${i}].model_id "${modelId}" não existe no catálogo de modelos`);
+        } else {
+          // R9硬约束: free_open NUNCA pode ter modelo paid
+          const costProfile = (p.meta as Record<string, unknown> | undefined)?.cost_profile;
+          if (costProfile === "free_open" && model.cost !== "free" && model.cost !== "low") {
+            errors.push(`R9 violado: model_id "${modelId}" (cost=${model.cost}) em cost_profile=free_open`);
+          }
+        }
+      }
+    });
+  }
+
+  // Verifica install.commands contra catálogo de skills (anti-hallucinação de install commands)
+  const install = p.install as Record<string, unknown> | undefined;
+  if (install && Array.isArray(install.commands)) {
+    const validInstallCommands = new Set<string>();
+    CATALOG.skills.forEach((s) => { if (s.install) validInstallCommands.add(s.install); });
+    CATALOG.mcps.forEach((m) => { if (m.install) validInstallCommands.add(m.install); });
+    (install.commands as Record<string, unknown>[]).forEach((cmd, i) => {
+      const cmdStr = cmd.cmd;
+      if (typeof cmdStr === "string" && cmdStr.trim() !== "") {
+        // aceita se for exatamente igual a um válido OU se começar com um prefixo válido
+        const isPrefixOf = Array.from(validInstallCommands).some(valid => cmdStr.startsWith(valid.split(" ")[0]));
+        if (!isPrefixOf) {
+          warnings.push(`install.commands[${i}].cmd "${cmdStr.slice(0, 60)}..." não corresponde a nenhum pacote conhecido`);
+        }
+      }
+    });
   }
 
   // Verifica prompts: individual = 5, team = 3-8

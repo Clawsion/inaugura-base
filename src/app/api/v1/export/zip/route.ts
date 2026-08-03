@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { InauguraPack } from "@/lib/schema/inaugura-pack";
+import { withRateLimit } from "@/lib/security";
 
 export const runtime = "nodejs";
 
@@ -10,6 +11,9 @@ export const runtime = "nodejs";
  * Aqui devolvemos o JSON com todos os ficheiros para o cliente empacotar.
  */
 export async function POST(req: NextRequest) {
+  const rl = withRateLimit(req);
+  if (rl) return rl;
+
   const pack = (await req.json()) as InauguraPack;
 
   const files: Record<string, string> = {
