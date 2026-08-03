@@ -126,7 +126,14 @@ export type ColorStyle =
   | "nordic-minimal" // Cool blues/grays, ultra clean
   | "sunset-warm"   // Coral/orange energetic
   | "cyber-neon"    // Web3/gaming — neon over deep dark
-  | "organic-earth"; // Natural earth tones, terracotta + sage
+  | "organic-earth" // Natural earth tones, terracotta + sage
+  // ─── Novos estilos (research 2026) ───
+  | "fintech-trust"    // Banking/fintech — navy + emerald + cream (trust palette)
+  | "healthcare-calm"  // Healthcare/wellness — sage green + warm ivory (Pantone Cloud Dancer 2026)
+  | "real-estate-lux"  // Real estate luxury — navy + gold + cream (Luxury Presence)
+  | "restaurant-warm"  // Restaurant/hospitality — cacao + olive + cream (Hospitality Design 2026)
+  | "creative-agency"  // Agency bold — vibrant triadic, energetic (Adobe Design Trends 2026)
+  | "education-friendly"; // EdTech — friendly blue + warm yellow, approachable
 
 export interface ColorStyleDef {
   id: ColorStyle;
@@ -261,6 +268,78 @@ export const COLOR_STYLES: ColorStyleDef[] = [
     preferredHarmonies: ["analogous", "split-complementary"],
     tags: ["Organic", "Warm", "Natural"],
     references: ["Notion", "Allbirds", "Patagonia"],
+  },
+  // ─── Novos estilos (research 2026) ───
+  {
+    id: "fintech-trust",
+    name: "Fintech Trust",
+    description: "Navy + emerald + cream — confiança bancária, estabilidade (research 2026: blue 50%+ market share em fintech)",
+    hueRange: [200, 260],
+    satRange: [50, 75],
+    lightRange: [42, 55],
+    darkModeBias: 0.55,
+    preferredHarmonies: ["complementary", "analogous"],
+    tags: ["Fintech", "Trust", "Enterprise"],
+    references: ["Stripe", "Wise", "Revolut", "Monzo"],
+  },
+  {
+    id: "healthcare-calm",
+    name: "Healthcare Calm",
+    description: "Sage green + warm ivory — calm e sereno (Pantone Cloud Dancer 2026 + wellness research)",
+    hueRange: [80, 160],
+    satRange: [25, 45],
+    lightRange: [55, 72],
+    darkModeBias: 0.15,
+    preferredHarmonies: ["analogous", "monochromatic"],
+    tags: ["Healthcare", "Wellness", "Calm"],
+    references: ["Headspace", "Calm", "One Medical", "Hims"],
+  },
+  {
+    id: "real-estate-lux",
+    name: "Real Estate Lux",
+    description: "Navy + gold + cream — luxury residential (Luxury Presence 2026: navy #1B3A6B + cream #F5F0E8 + sage #7C9A7E)",
+    hueRange: [200, 240],
+    satRange: [40, 65],
+    lightRange: [40, 55],
+    darkModeBias: 0.4,
+    preferredHarmonies: ["complementary", "analogous"],
+    tags: ["Real Estate", "Luxury", "Trust"],
+    references: ["Sotheby's", "Compass", "Zillow Premier"],
+  },
+  {
+    id: "restaurant-warm",
+    name: "Restaurant Warm",
+    description: "Cacao + olive + cream — hospitality 2026 (Hospitality Design: deep cacao browns + edible greens)",
+    hueRange: [20, 100],
+    satRange: [35, 55],
+    lightRange: [38, 55],
+    darkModeBias: 0.3,
+    preferredHarmonies: ["analogous", "split-complementary"],
+    tags: ["Restaurant", "Hospitality", "Warm"],
+    references: ["Sweetgreen", "Chipotle", "Eleven Madison Park"],
+  },
+  {
+    id: "creative-agency",
+    name: "Creative Agency",
+    description: "Vibrant triadic bold — Adobe Design Trends 2026: bright saturated palettes making comeback",
+    satRange: [75, 95],
+    lightRange: [48, 60],
+    darkModeBias: 0.55,
+    preferredHarmonies: ["triadic", "tetradic", "split-complementary"],
+    tags: ["Agency", "Bold", "Creative"],
+    references: ["Bureau Cool", "Active Theory", "Locomotive", "Resn"],
+  },
+  {
+    id: "education-friendly",
+    name: "Education Friendly",
+    description: "Friendly blue + warm yellow — approachable EdTech (research: blue trust + yellow optimism)",
+    hueRange: [180, 280],
+    satRange: [50, 70],
+    lightRange: [50, 65],
+    darkModeBias: 0.25,
+    preferredHarmonies: ["analogous", "complementary"],
+    tags: ["Education", "Friendly", "Approachable"],
+    references: ["Duolingo", "Khan Academy", "Coursera", "Notion"],
   },
 ];
 
@@ -737,4 +816,18 @@ export const COLOR_TRENDS_2026: ColorTrend[] = [
   { id: "deep-ocean", name: "Deep Ocean", description: "Azul profundo + teal — enterprise trust", colors: ["#0EA5E9", "#0369A1", "#0C4A6E", "#E0F2FE"], tags: ["Enterprise", "Trust", "Data"] },
   { id: "neon-punk", name: "Neon Punk", description: "Roxo + verde lima — rebel creative", colors: ["#A855F7", "#A3E635", "#0A0A0A", "#FACC15"], tags: ["Creative", "Rebel", "Agency"] },
   { id: "pure-mono", name: "Pure Mono", description: "Preto + branco + 1 accent — Swiss minimal", colors: ["#000000", "#FFFFFF", "#71717A", "#5E6AD2"], tags: ["Minimal", "Swiss", "Clean"] },
+  // ─── Paletes reais de marcas (research 2026) ───
+  { id: "linear-purple", name: "Linear Purple", description: "Roxo profundo + cream — Linear brand 2026", colors: ["#5E6AD2", "#0D0D0D", "#1C1C1C", "#F4F4F5"], tags: ["SaaS", "Premium", "Dark"] },
+  { id: "vercel-mono", name: "Vercel Mono", description: "Black + white + blue accent — Vercel Geist 2026", colors: ["#000000", "#FFFFFF", "#FAFAFA", "#0070F3"], tags: ["SaaS", "Minimal", "Tech"] },
+  { id: "stripe-editorial", name: "Stripe Editorial", description: "Cream warm + iris purple — Stripe 2026", colors: ["#6355FF", "#FFFAF0", "#F5F0E8", "#0A2540"], tags: ["Editorial", "Fintech", "Cream"] },
+  { id: "notion-warm", name: "Notion Warm", description: "Off-white + warm gray + accent — Notion 2026", colors: ["#FFFFFF", "#F7F6F3", "#37352F", "#2EAADC"], tags: ["SaaS", "Warm", "Editorial"] },
+  { id: "resend-cream", name: "Resend Cream", description: "Cream + dark text + amber — Resend 2026", colors: ["#09090B", "#FAFAF9", "#F5F5F4", "#FBBF24"], tags: ["Editorial", "Cream", "Dev"] },
+  { id: "fintech-navy", name: "Fintech Navy", description: "Navy + emerald + cream — Wise/Revolut style", colors: ["#00376E", "#00A35C", "#F5F0E8", "#1B3A6B"], tags: ["Fintech", "Trust", "Enterprise"] },
+  { id: "healthcare-sage", name: "Healthcare Sage", description: "Sage + ivory + soft blue — wellness 2026", colors: ["#929C92", "#C9D3CA", "#F5F0E8", "#A39384"], tags: ["Healthcare", "Calm", "Wellness"] },
+  { id: "luxury-gold", name: "Luxury Gold", description: "Black + gold + cream — Sotheby's style", colors: ["#0A0A0A", "#C9A961", "#F5E6CA", "#2D2D2D"], tags: ["Luxury", "Premium", "Editorial"] },
+  { id: "restaurant-cacao", name: "Restaurant Cacao", description: "Deep cacao + olive + cream — hospitality 2026", colors: ["#3D2817", "#6B7A3F", "#F5F0E8", "#8B6F47"], tags: ["Restaurant", "Warm", "Hospitality"] },
+  { id: "agency-bold", name: "Agency Bold", description: "Vibrant triadic — Bureau Cool style", colors: ["#FF3366", "#33FF66", "#3366FF", "#0A0A0A"], tags: ["Agency", "Bold", "Creative"] },
+  { id: "edu-friendly", name: "Edu Friendly", description: "Blue + yellow + cream — Duolingo style", colors: ["#1CB0F6", "#FFC800", "#FFFFFF", "#3C3C3C"], tags: ["Education", "Friendly", "Approachable"] },
+  { id: "pantone-cloud", name: "Pantone Cloud Dancer", description: "Pantone 2026 — soft whites + calming influence", colors: ["#F5F2EB", "#E8E4DC", "#FFFFFF", "#A8A095"], tags: ["Pantone", "2026", "Calm"] },
+  { id: "mocha-mousse", name: "Mocha Mousse", description: "Pantone 2025 — warm brown cacao tones", colors: ["#A47864", "#5D4037", "#F5F0E8", "#8B6F47"], tags: ["Pantone", "Warm", "Earth"] },
 ];

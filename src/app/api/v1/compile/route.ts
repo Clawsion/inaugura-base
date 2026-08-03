@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { buildSystemPrompt, buildUserPrompt } from "@/lib/prompt-engine";
 import { callCompilerWithFallback } from "@/lib/resilience";
 import { GenerateInputSchema } from "@/lib/schema/inaugura-pack";
+import { inauguraPackToJsonSchema } from "@/lib/schema/inaugura-pack";
 import { normalizeBrief, recommend } from "@/lib/router";
 import { withRateLimit } from "@/lib/security";
 
@@ -27,7 +28,14 @@ export async function POST(req: NextRequest) {
   const userPrompt = buildUserPrompt(input, rec, norm);
 
   // Usa o resilience layer (GLM→DeepSeek fallback, retry, circuit breaker)
-  const compileResult = await callCompilerWithFallback(systemPrompt, userPrompt);
+  const compileResult = await callCompilerWithFallback({
+    systemPrompt,
+    userPrompt,
+    toolName: "emitInauguraPack",
+    toolSchema: inauguraPackToJsonSchema(),
+    temperature: 0.2,
+    maxTokens: 12000,
+  });
   if (!compileResult.ok) {
     return NextResponse.json({ ok: false, error: compileResult.error }, { status: 502 });
   }

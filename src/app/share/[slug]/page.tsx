@@ -155,7 +155,7 @@ export default async function SharePage({ params }: SharePageProps) {
                   <div className="font-medium mb-1">Skills ({packData.selection.skills.length})</div>
                   <div className="space-y-0.5 text-muted-foreground">
                     {packData.selection.skills.slice(0, 5).map((s) => (
-                      <div key={s.id}>{s.name ?? s.id}</div>
+                      <div key={s}>{s}</div>
                     ))}
                   </div>
                 </div>
@@ -165,7 +165,7 @@ export default async function SharePage({ params }: SharePageProps) {
                   <div className="font-medium mb-1">MCPs ({packData.selection.mcps.length})</div>
                   <div className="space-y-0.5 text-muted-foreground">
                     {packData.selection.mcps.slice(0, 5).map((m) => (
-                      <div key={m.id}>{m.name ?? m.id}</div>
+                      <div key={m}>{m}</div>
                     ))}
                   </div>
                 </div>
@@ -175,7 +175,7 @@ export default async function SharePage({ params }: SharePageProps) {
                   <div className="font-medium mb-1">Integrations ({packData.selection.integrations.length})</div>
                   <div className="space-y-0.5 text-muted-foreground">
                     {packData.selection.integrations.map((i) => (
-                      <div key={i.id ?? (typeof i === "string" ? i : "")}>{typeof i === "string" ? i : i.id}</div>
+                      <div key={i}>{i}</div>
                     ))}
                   </div>
                 </div>
@@ -185,7 +185,7 @@ export default async function SharePage({ params }: SharePageProps) {
                   <div className="font-medium mb-1">Effects ({packData.selection.effects.length})</div>
                   <div className="space-y-0.5 text-muted-foreground">
                     {packData.selection.effects.slice(0, 5).map((e) => (
-                      <div key={typeof e === "string" ? e : e.id}>{typeof e === "string" ? e : e.id}</div>
+                      <div key={e}>{e}</div>
                     ))}
                   </div>
                 </div>

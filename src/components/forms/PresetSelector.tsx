@@ -235,7 +235,7 @@ export function PresetSelector({ activePreset, onApply }: PresetSelectorProps) {
                   className="flex w-full items-center justify-between gap-2 p-2.5 hover:bg-accent/5"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-base">{cat.icon}</span>
+                    <cat.icon className="h-4 w-4 text-muted-foreground" strokeWidth={1.75} />
                     <span className="text-sm font-semibold">{cat.label}</span>
                     <span className="text-[10px] text-muted-foreground">
                       {items.length} presets

@@ -195,6 +195,14 @@ const PALETTE_FILTERS = [
   { id: "corporate", label: "Corporate" },
   { id: "creative", label: "Creative" },
   { id: "minimal", label: "Minimal" },
+  // ─── Novos filtros por nicho (research 2026) ───
+  { id: "fintech", label: "Fintech" },
+  { id: "healthcare", label: "Healthcare" },
+  { id: "realestate", label: "Real Estate" },
+  { id: "restaurant", label: "Restaurant" },
+  { id: "agency", label: "Agency" },
+  { id: "education", label: "Education" },
+  { id: "editorial", label: "Editorial" },
 ];
 
 // Mapear tendências para filtros
@@ -203,14 +211,28 @@ const TREND_FILTERS: Record<string, string[]> = {
   "terminal-green": ["brutalist", "ai"],
   "sunset-coral": ["ecommerce", "wellness"],
   "nordic-ice": ["saas", "corporate"],
-  "obsidian-gold": ["luxury"],
+  "obsidian-gold": ["luxury", "realestate"],
   "matrix-amber": ["brutalist", "gaming"],
-  "soft-sage": ["wellness"],
+  "soft-sage": ["wellness", "healthcare"],
   "cyber-magenta": ["gaming", "creative"],
-  "muted-clay": ["ecommerce", "creative"],
-  "deep-ocean": ["corporate", "saas"],
-  "neon-punk": ["creative", "gaming"],
+  "muted-clay": ["ecommerce", "creative", "restaurant"],
+  "deep-ocean": ["corporate", "saas", "fintech"],
+  "neon-punk": ["creative", "gaming", "agency"],
   "pure-mono": ["minimal", "corporate"],
+  // ─── Novas paletes de marcas reais ───
+  "linear-purple": ["saas", "ai"],
+  "vercel-mono": ["saas", "minimal", "ai"],
+  "stripe-editorial": ["editorial", "fintech", "saas"],
+  "notion-warm": ["saas", "editorial", "education"],
+  "resend-cream": ["editorial", "minimal", "saas"],
+  "fintech-navy": ["fintech", "corporate"],
+  "healthcare-sage": ["healthcare", "wellness"],
+  "luxury-gold": ["luxury", "realestate", "editorial"],
+  "restaurant-cacao": ["restaurant", "ecommerce"],
+  "agency-bold": ["agency", "creative"],
+  "edu-friendly": ["education", "creative"],
+  "pantone-cloud": ["minimal", "wellness", "editorial"],
+  "mocha-mousse": ["restaurant", "luxury", "ecommerce"],
 };
 
 export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAdvanced }: SimpleForgeProps) {
