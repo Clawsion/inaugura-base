@@ -58,9 +58,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN groupadd --system --gid 1001 nodejs && \
     useradd --system --uid 1001 --gid nodejs nextjs
 
-# Cria diretório de dados persistente (para SQLite)
-RUN mkdir -p /app/data && chown nextjs:nodejs /app/data
-
 # Copia standalone build (já inclui node_modules produtivos)
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
@@ -86,13 +83,9 @@ EXPOSE 3000
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
-# SQLite path dentro do volume persistente
-ENV DATABASE_URL=file:/app/data/inaugura.db
+# DATABASE_URL deve ser definido via env var (Supabase Postgres connection string)
 
-# Volume persistente para SQLite DB
-VOLUME ["/app/data"]
-
-# Healthcheck para Coolify saber quando a app está pronta
+# Healthcheck para Coolify/Render saber quando a app está pronta
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
     CMD curl -f http://localhost:3000/api/health || exit 1
 

@@ -1,10 +1,8 @@
 # ============================================================================
 # entrypoint.sh — corre Prisma migrations e arranca o servidor
 # ============================================================================
-# Executa como user nextjs (não-root).
-# 1. Garante que /app/data existe e tem permissões
-# 2. Corre `prisma migrate deploy` (aplica migrations pendentes)
-# 3. Arranca o Next.js standalone server
+# Funciona com PostgreSQL externo (Supabase, Neon, etc.)
+# DATABASE_URL deve ser definida via env var (postgresql://...)
 # ============================================================================
 
 #!/bin/sh
@@ -14,13 +12,15 @@ echo "┌───────────────────────�
 echo "│  Inaugura-Base — Container startup                          │"
 echo "└─────────────────────────────────────────────────────────────┘"
 
-# ── 1. Verifica DB path (SQLite) ──
-if echo "$DATABASE_URL" | grep -q "^file:"; then
-    DB_PATH=$(echo "$DATABASE_URL" | sed 's/^file://')
-    DB_DIR=$(dirname "$DB_PATH")
-    echo "[startup] SQLite mode — ensuring directory exists: $DB_DIR"
-    mkdir -p "$DB_DIR" 2>/dev/null || true
+# ── 1. Verifica DATABASE_URL ──
+if [ -z "$DATABASE_URL" ]; then
+    echo "[startup] ERROR: DATABASE_URL not set"
+    echo "[startup] Set it to your PostgreSQL connection string (e.g. from Supabase)"
+    exit 1
 fi
+
+DB_SCHEME=$(echo "$DATABASE_URL" | sed 's/:.*//')
+echo "[startup] Database provider: $DB_SCHEME"
 
 # ── 2. Aplica migrations ──
 echo "[startup] Running Prisma migrations..."
