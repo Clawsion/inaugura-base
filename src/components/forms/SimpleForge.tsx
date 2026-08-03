@@ -12,7 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { CATALOG } from "@/lib/catalog";
-import { adjustColor, generatePalette, generateRandomPalette, polishPalette, hexToHsl, hslToHex, COLOR_TRENDS_2026 } from "@/lib/color-engine";
+import { adjustColor, generatePalette, generateRandomPalette, polishPalette, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
 
 export interface SimpleForgeValues {
   briefing: string;
@@ -30,6 +30,10 @@ export interface SimpleForgeValues {
   // Overrides por trend — quando o user gera variação individual ou global,
   // cada trend pode ter as suas próprias cores geradas, independentes do trend ativo
   trendOverrides: Record<string, { hex: string; role: string }[]>;
+  // Estilo de geração (Awwwards, Premium SaaS, Editorial, etc.) — afeta como Generate cria paletes
+  colorStyle: ColorStyle | "auto";
+  // Tipo de polimento (Jewel, Cream, Vivid, Dark Premium, etc.) — afeta o tom final
+  polishType: PolishType;
   typographyPref: "auto" | "modern-sans" | "geometric" | "humanist" | "editorial-serif" | "mono-tech";
   fontHeading: string;
   fontBody: string;
@@ -217,6 +221,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
   const [showSecretMotion, setShowSecretMotion] = useState(false);
   const [paletteFilter, setPaletteFilter] = useState("all");
   const [colorEditIndex, setColorEditIndex] = useState<number | null>(null);
+  const [showStylePicker, setShowStylePicker] = useState(false);
 
   const toggleArray = useCallback((key: "references" | "mood" | "integrations", item: string) => {
     const arr = value[key];
@@ -260,8 +265,8 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           return trend.colors.slice(0, value.colorCount).map((hex, i) => ({ hex, role: roles[i] ?? `Cor ${i + 1}` }));
         })();
 
-    // Usa a função robusta do color-engine
-    const polished = polishPalette(currentColors);
+    // Usa a função robusta do color-engine com o polishType selecionado
+    const polished = polishPalette(currentColors, value.polishType);
     const effectiveTrendId = value.colorPreset !== "auto" ? value.colorPreset : "electric-lavender";
     // Atualiza customColors (do trend ativo) E o override desse trend
     onChange({
@@ -269,8 +274,9 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       colorPreset: effectiveTrendId,
       trendOverrides: { ...value.trendOverrides, [effectiveTrendId]: polished },
     });
-    toast.success(`Polimento premium aplicado — tom jewel ${polished.find(c => c.role === "Suporte")?.hex ?? polished[0].hex}`);
-  }, [value.customColors, value.colorCount, value.colorPreset, value.trendOverrides, onChange]);
+    const polishName = POLISH_TYPES.find(p => p.id === value.polishType)?.name ?? "Jewel";
+    toast.success(`Polimento ${polishName} aplicado — tom ${polished.find(c => c.role === "Suporte")?.hex ?? polished[0].hex}`);
+  }, [value.customColors, value.colorCount, value.colorPreset, value.trendOverrides, value.polishType, onChange]);
 
   // Generate INDIVIDUAL — gera variação para UMA palete específica
   // (atualiza apenas o override desse trend; se for o ativo, atualiza customColors também)
@@ -278,8 +284,9 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     const effectiveTrendId = trendId ?? (value.colorPreset !== "auto" ? value.colorPreset : "electric-lavender");
     const trend = COLOR_TRENDS_2026.find((t) => t.id === effectiveTrendId) ?? COLOR_TRENDS_2026[0];
 
-    // Usa a função robusta do color-engine
-    const colors = generateRandomPalette(value.colorCount, trend.colors);
+    // Usa a função robusta do color-engine com o style selecionado
+    const styleForGen = value.colorStyle === "auto" ? undefined : value.colorStyle;
+    const colors = generateRandomPalette(value.colorCount, trend.colors, styleForGen);
 
     // Atualiza o override deste trend específico
     const newOverrides = { ...value.trendOverrides, [effectiveTrendId]: colors };
@@ -290,8 +297,9 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     } else {
       onChange({ trendOverrides: newOverrides });
     }
-    toast.success(`Palete "${trend.name}" regenerada: ${value.colorCount} cores com harmonia`);
-  }, [value.colorCount, value.colorPreset, value.trendOverrides, onChange]);
+    const styleName = value.colorStyle === "auto" ? "Auto" : (COLOR_STYLES.find(s => s.id === value.colorStyle)?.name ?? "Auto");
+    toast.success(`"${trend.name}" regenerada — estilo ${styleName}`);
+  }, [value.colorCount, value.colorPreset, value.trendOverrides, value.colorStyle, onChange]);
 
   // Generate GLOBAL — gera variação para TODAS as paletes visíveis no grid
   // Cada trend recebe a sua própria combinação compatível (override independente)
@@ -301,8 +309,9 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       ? COLOR_TRENDS_2026
       : COLOR_TRENDS_2026.filter((t) => (TREND_FILTERS[t.id] ?? []).includes(paletteFilter));
 
+    const styleForGen = value.colorStyle === "auto" ? undefined : value.colorStyle;
     for (const trend of trendsToGenerate) {
-      newOverrides[trend.id] = generateRandomPalette(value.colorCount, trend.colors);
+      newOverrides[trend.id] = generateRandomPalette(value.colorCount, trend.colors, styleForGen);
     }
 
     // Atualiza customColors também se houver um trend ativo
@@ -312,8 +321,9 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       patch.customColors = newOverrides[activeTrendId];
     }
     onChange(patch);
-    toast.success(`${trendsToGenerate.length} paletes regeneradas — todas com harmonia compatível`);
-  }, [value.colorCount, value.colorPreset, value.trendOverrides, paletteFilter, onChange]);
+    const styleName = value.colorStyle === "auto" ? "Auto" : (COLOR_STYLES.find(s => s.id === value.colorStyle)?.name ?? "Auto");
+    toast.success(`${trendsToGenerate.length} paletes regeneradas — estilo ${styleName}`);
+  }, [value.colorCount, value.colorPreset, value.trendOverrides, value.colorStyle, paletteFilter, onChange]);
 
   // Paletes filtradas
   const filteredPalettes = useMemo(() => {
@@ -519,6 +529,79 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
             <Button type="button" size="sm" variant="outline" onClick={() => polishColor()} className="h-6 gap-1 px-2 text-[10px]" title="Polimento — tom jewel premium com hue tint visível">
               <Sparkles className="h-3 w-3" /> Polimento
             </Button>
+          </div>
+        </div>
+
+        {/* Estilos de Geração — botões para escolher "cara do site" (Awwwards, Premium, Editorial, etc.) */}
+        <div className="space-y-1">
+          <div className="flex items-center justify-between">
+            <span className="text-[9px] text-muted-foreground uppercase tracking-wide">Estilo de Geração</span>
+            <button
+              type="button"
+              onClick={() => setShowStylePicker(!showStylePicker)}
+              className="text-[10px] text-primary hover:underline"
+            >
+              {showStylePicker ? "Fechar" : "Ver todos"}
+            </button>
+          </div>
+          <div className={cn("flex flex-wrap gap-1", !showStylePicker && "max-h-[60px] overflow-hidden")}>
+            <button
+              type="button"
+              onClick={() => onChange({ colorStyle: "auto" })}
+              className={cn(
+                "rounded-md px-2 py-1 text-[9px] font-medium transition-all",
+                value.colorStyle === "auto"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted/50 text-muted-foreground hover:bg-muted"
+              )}
+              title="Geração sem restrições de estilo"
+            >
+              ⚡ Auto
+            </button>
+            {COLOR_STYLES.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => onChange({ colorStyle: s.id })}
+                className={cn(
+                  "rounded-md px-2 py-1 text-[9px] font-medium transition-all",
+                  value.colorStyle === s.id
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                )}
+                title={`${s.description}\nRefs: ${s.references.join(", ")}`}
+              >
+                {s.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Tipo de Polimento — botões para escolher o tom/qualidade (Jewel, Cream, Vivid, etc.) */}
+        <div className="space-y-1">
+          <div className="flex items-center justify-between">
+            <span className="text-[9px] text-muted-foreground uppercase tracking-wide">Tipo de Polimento</span>
+            <span className="text-[9px] text-muted-foreground">
+              {POLISH_TYPES.find(p => p.id === value.polishType)?.description}
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-1">
+            {POLISH_TYPES.map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => onChange({ polishType: p.id })}
+                className={cn(
+                  "rounded-md px-2 py-1 text-[9px] font-medium transition-all",
+                  value.polishType === p.id
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                )}
+                title={p.description}
+              >
+                {p.name}
+              </button>
+            ))}
           </div>
         </div>
 

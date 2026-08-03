@@ -141,6 +141,8 @@ export default function Home() {
     colorAdjust: { brightness: 0, contrast: 0, saturation: 0, hue: 0 },
     customColors: [],
     trendOverrides: {},
+    colorStyle: "auto",
+    polishType: "jewel",
     typographyPref: "auto",
     fontHeading: "",
     fontBody: "",

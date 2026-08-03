@@ -111,6 +111,321 @@ function getHarmonyHues(baseHue: number, harmony: HarmonyType): number[] {
 }
 
 // ============================================================================
+// COLOR STYLES — estilos de geração (cada um dá "cara" diferente ao site)
+// ============================================================================
+// Cada estilo define ranges de hue/sat/light + harmonias preferidas.
+// Inspirado em sites Awwwards, Linear, Vercel, Stripe, Resend, etc.
+// ============================================================================
+export type ColorStyle =
+  | "awwwards"      // Bold vibrant, harmonias triádicas/tetradic, contraste alto
+  | "premium-saas"  // Linear/Vercel style — jewel tones, dark mode preferred
+  | "editorial"     // Magazine/Stripe — cream warm bg, refined accent
+  | "brutalist"     // High contrast, bold accents, mono accents
+  | "soft-pastel"   // Calm wellness — desaturated warm tones
+  | "dark-luxury"   // Obsidian + gold/jewel — premium dark
+  | "nordic-minimal" // Cool blues/grays, ultra clean
+  | "sunset-warm"   // Coral/orange energetic
+  | "cyber-neon"    // Web3/gaming — neon over deep dark
+  | "organic-earth"; // Natural earth tones, terracotta + sage
+
+export interface ColorStyleDef {
+  id: ColorStyle;
+  name: string;
+  description: string;
+  // Hue preferences (degrees) — when undefined, qualquer hue
+  hueRange?: [number, number];
+  // Saturação base (vividness)
+  satRange: [number, number];
+  // Lightness base do accent
+  lightRange: [number, number];
+  // Dark mode preference (0-1, probabilidade de gerar dark mode)
+  darkModeBias: number;
+  // Harmonias preferidas (peso maior que as outras)
+  preferredHarmonies: HarmonyType[];
+  // Tags para categorizar
+  tags: string[];
+  // Exemplos de sites de referência
+  references: string[];
+}
+
+export const COLOR_STYLES: ColorStyleDef[] = [
+  {
+    id: "awwwards",
+    name: "Awwwards",
+    description: "Bold vibrant, harmonias ousadas — top-tier design awards",
+    satRange: [70, 90],
+    lightRange: [45, 58],
+    darkModeBias: 0.6,
+    preferredHarmonies: ["triadic", "tetradic", "split-complementary"],
+    tags: ["Bold", "Vibrant", "Award"],
+    references: ["Awwwards SOTD", "Bureau Cool", "Active Theory"],
+  },
+  {
+    id: "premium-saas",
+    name: "Premium SaaS",
+    description: "Jewel tones sofisticados — Linear/Vercel/Cursor style",
+    satRange: [60, 78],
+    lightRange: [48, 56],
+    darkModeBias: 0.75,
+    preferredHarmonies: ["analogous", "complementary"],
+    tags: ["SaaS", "Premium", "Tech"],
+    references: ["Linear", "Vercel", "Cursor", "Resend"],
+  },
+  {
+    id: "editorial",
+    name: "Editorial",
+    description: "Cream warm bg, accent refinado — Stripe/Resend style",
+    satRange: [55, 72],
+    lightRange: [44, 54],
+    darkModeBias: 0.25,
+    preferredHarmonies: ["analogous", "complementary"],
+    tags: ["Editorial", "Refined", "Magazine"],
+    references: ["Stripe", "Resend", "Pitch", "Linear blog"],
+  },
+  {
+    id: "brutalist",
+    name: "Brutalist",
+    description: "Alto contraste, 1 accent bold — Swiss/Neo-brutalist",
+    satRange: [80, 100],
+    lightRange: [50, 60],
+    darkModeBias: 0.4,
+    preferredHarmonies: ["complementary", "monochromatic"],
+    tags: ["Bold", "Contrast", "Raw"],
+    references: ["Gumroad", "Bruno Simon", "Webflow"],
+  },
+  {
+    id: "soft-pastel",
+    name: "Soft Pastel",
+    description: "Tons quentes dessaturados — wellness/calm",
+    satRange: [35, 55],
+    lightRange: [55, 70],
+    darkModeBias: 0.15,
+    preferredHarmonies: ["analogous", "triadic"],
+    tags: ["Soft", "Calm", "Wellness"],
+    references: ["Calm", "Headspace", "Notion"],
+  },
+  {
+    id: "dark-luxury",
+    name: "Dark Luxury",
+    description: "Obsidian deep + jewel/gold — luxury/premium",
+    satRange: [55, 75],
+    lightRange: [45, 55],
+    darkModeBias: 0.95,
+    preferredHarmonies: ["complementary", "analogous"],
+    tags: ["Luxury", "Dark", "Premium"],
+    references: ["Obsidian", "Lamborghini", "Rolex"],
+  },
+  {
+    id: "nordic-minimal",
+    name: "Nordic Minimal",
+    description: "Azuis gelados, neutros limpos — Scandinavian clean",
+    hueRange: [180, 260],
+    satRange: [25, 50],
+    lightRange: [40, 60],
+    darkModeBias: 0.5,
+    preferredHarmonies: ["analogous", "monochromatic"],
+    tags: ["Clean", "Cool", "Minimal"],
+    references: ["Linear", "Vercel docs", "Figma"],
+  },
+  {
+    id: "sunset-warm",
+    name: "Sunset Warm",
+    description: "Coral/laranja quente + magenta — energetic lifestyle",
+    hueRange: [0, 60],
+    satRange: [70, 90],
+    lightRange: [50, 62],
+    darkModeBias: 0.35,
+    preferredHarmonies: ["analogous", "split-complementary"],
+    tags: ["Warm", "Energetic", "Lifestyle"],
+    references: ["Pitch", "Framer", "Sunrise"],
+  },
+  {
+    id: "cyber-neon",
+    name: "Cyber Neon",
+    description: "Neon sobre deep dark — Web3/gaming/creative",
+    satRange: [85, 100],
+    lightRange: [50, 62],
+    darkModeBias: 0.9,
+    preferredHarmonies: ["complementary", "tetradic"],
+    tags: ["Neon", "Web3", "Gaming"],
+    references: ["Cyberpunk 2077", "Vercel edge", "Bureau"],
+  },
+  {
+    id: "organic-earth",
+    name: "Organic Earth",
+    description: "Terracota/sage/cream — artesanal/natural",
+    hueRange: [20, 130],
+    satRange: [40, 60],
+    lightRange: [40, 60],
+    darkModeBias: 0.3,
+    preferredHarmonies: ["analogous", "split-complementary"],
+    tags: ["Organic", "Warm", "Natural"],
+    references: ["Notion", "Allbirds", "Patagonia"],
+  },
+];
+
+export function getColorStyle(id: string): ColorStyleDef | undefined {
+  return COLOR_STYLES.find((s) => s.id === id);
+}
+
+// ============================================================================
+// POLISH TYPES — tipos de polimento (cada um dá tom/qualidade diferente)
+// ============================================================================
+export type PolishType =
+  | "jewel"            // Default — rich saturated jewel tones (Linear/Vercel)
+  | "cream"            // Warm cream tints (Stripe/Resend)
+  | "vivid"            // High saturation bold (Awwwards)
+  | "soft-muted"       // Desaturated sophisticated (editorial)
+  | "dark-premium"     // Deep jewel-tinted dark (Linear dark)
+  | "glass"            // Translucent feel with low sat bg (Glassmorphism)
+  | "mono-accent"      // Swiss minimal — 1 accent + neutral
+  | "neon-glow";       // Cyberpunk — neon on deep dark
+
+export interface PolishTypeDef {
+  id: PolishType;
+  name: string;
+  description: string;
+  // Parâmetros de polimento
+  bgSatRange: [number, number];      // saturação do background
+  bgLightRange: [number, number];    // lightness do background (dark mode)
+  bgLightLightRange: [number, number]; // lightness do bg em light mode
+  textSatRange: [number, number];    // saturação do texto
+  accentSatRange: [number, number];  // saturação do accent
+  accentLightRange: [number, number]; // lightness do accent
+  highlightOffsetHue: number;        // offset de hue do highlight (vs accent)
+  highlightSatDelta: number;         // delta de saturação do highlight
+  highlightLightDelta: number;       // delta de lightness do highlight
+  tags: string[];
+}
+
+export const POLISH_TYPES: PolishTypeDef[] = [
+  {
+    id: "jewel",
+    name: "Jewel",
+    description: "Rich saturated jewel tones — Linear/Vercel style",
+    bgSatRange: [22, 30],
+    bgLightRange: [9, 13],
+    bgLightLightRange: [95, 97],
+    textSatRange: [14, 22],
+    accentSatRange: [62, 72],
+    accentLightRange: [46, 54],
+    highlightOffsetHue: 30,
+    highlightSatDelta: -4,
+    highlightLightDelta: 6,
+    tags: ["Premium", "Rich", "Default"],
+  },
+  {
+    id: "cream",
+    name: "Cream",
+    description: "Warm cream tints — Stripe/Resend editorial",
+    bgSatRange: [24, 34],
+    bgLightRange: [11, 15],
+    bgLightLightRange: [95, 98],
+    textSatRange: [16, 26],
+    accentSatRange: [58, 68],
+    accentLightRange: [44, 52],
+    highlightOffsetHue: 25,
+    highlightSatDelta: -8,
+    highlightLightDelta: 8,
+    tags: ["Warm", "Editorial", "Cream"],
+  },
+  {
+    id: "vivid",
+    name: "Vivid",
+    description: "High saturation bold — Awwwards energetic",
+    bgSatRange: [28, 40],
+    bgLightRange: [8, 12],
+    bgLightLightRange: [94, 97],
+    textSatRange: [20, 30],
+    accentSatRange: [75, 88],
+    accentLightRange: [48, 56],
+    highlightOffsetHue: 35,
+    highlightSatDelta: -2,
+    highlightLightDelta: 4,
+    tags: ["Bold", "Vivid", "Awwwards"],
+  },
+  {
+    id: "soft-muted",
+    name: "Soft Muted",
+    description: "Desaturated sophisticated — calm editorial",
+    bgSatRange: [16, 24],
+    bgLightRange: [10, 14],
+    bgLightLightRange: [96, 98],
+    textSatRange: [10, 18],
+    accentSatRange: [45, 58],
+    accentLightRange: [44, 54],
+    highlightOffsetHue: 20,
+    highlightSatDelta: -10,
+    highlightLightDelta: 10,
+    tags: ["Soft", "Muted", "Sophisticated"],
+  },
+  {
+    id: "dark-premium",
+    name: "Dark Premium",
+    description: "Deep jewel-tinted dark — Linear dark mode",
+    bgSatRange: [25, 35],
+    bgLightRange: [6, 10],
+    bgLightLightRange: [96, 98],
+    textSatRange: [18, 26],
+    accentSatRange: [60, 72],
+    accentLightRange: [54, 62],
+    highlightOffsetHue: 30,
+    highlightSatDelta: -6,
+    highlightLightDelta: 5,
+    tags: ["Dark", "Premium", "Deep"],
+  },
+  {
+    id: "glass",
+    name: "Glass",
+    description: "Translucent feel — Glassmorphism frosted",
+    bgSatRange: [12, 22],
+    bgLightRange: [14, 20],
+    bgLightLightRange: [92, 96],
+    textSatRange: [8, 16],
+    accentSatRange: [55, 68],
+    accentLightRange: [50, 60],
+    highlightOffsetHue: 40,
+    highlightSatDelta: -12,
+    highlightLightDelta: 12,
+    tags: ["Glass", "Frosted", "Translucent"],
+  },
+  {
+    id: "mono-accent",
+    name: "Mono Accent",
+    description: "Swiss minimal — 1 accent + neutral grays",
+    bgSatRange: [4, 10],
+    bgLightRange: [8, 12],
+    bgLightLightRange: [96, 99],
+    textSatRange: [2, 6],
+    accentSatRange: [65, 80],
+    accentLightRange: [46, 56],
+    highlightOffsetHue: 0,
+    highlightSatDelta: -20,
+    highlightLightDelta: 15,
+    tags: ["Swiss", "Minimal", "Mono"],
+  },
+  {
+    id: "neon-glow",
+    name: "Neon Glow",
+    description: "Cyberpunk — neon over deep dark",
+    bgSatRange: [30, 45],
+    bgLightRange: [4, 8],
+    bgLightLightRange: [88, 94],
+    textSatRange: [25, 40],
+    accentSatRange: [85, 100],
+    accentLightRange: [55, 65],
+    highlightOffsetHue: 60,
+    highlightSatDelta: 5,
+    highlightLightDelta: 2,
+    tags: ["Neon", "Cyberpunk", "Glow"],
+  },
+];
+
+export function getPolishType(id: string): PolishTypeDef | undefined {
+  return POLISH_TYPES.find((p) => p.id === id);
+}
+
+// ============================================================================
 // GERAR PALETA ALEATÓRIA ROBUSTA — infinitas variações com COR VISÍVEL
 // ============================================================================
 // Princípio: TODAS as 4 posições devem ter cor visível (hue tint).
@@ -123,9 +438,11 @@ function getHarmonyHues(baseHue: number, harmony: HarmonyType): number[] {
 // ============================================================================
 export function generateRandomPalette(
   count: 2 | 3 | 4,
-  baseTrendColors?: string[]
+  baseTrendColors?: string[],
+  style?: ColorStyle
 ): { hex: string; role: string }[] {
   const roles = ["Background", "Secundária", "Suporte", "Destaque"];
+  const styleDef = style ? getColorStyle(style) : undefined;
 
   // 1. Escolher hue base — varia SIGNIFICATIVAMENTE a cada click
   let baseHue: number;
@@ -152,15 +469,42 @@ export function generateRandomPalette(
     baseLight = 44 + Math.random() * 12; // 44-56% — jewel tone
   }
 
-  // 2. Escolher harmonia aleatória (NUNCA monochromatic — garante variação de cor)
+  // Aplica restrições do style (se houver)
+  if (styleDef) {
+    // Clamp hue ao range preferido do style (mantém variação dentro do range)
+    if (styleDef.hueRange) {
+      const [minH, maxH] = styleDef.hueRange;
+      const range = maxH - minH;
+      // mapeia baseHue para o range do style
+      baseHue = minH + (Math.random() * range);
+    }
+    // Saturação dentro do range do style
+    const [sMin, sMax] = styleDef.satRange;
+    baseSat = sMin + Math.random() * (sMax - sMin);
+    // Lightness dentro do range do style
+    const [lMin, lMax] = styleDef.lightRange;
+    baseLight = lMin + Math.random() * (lMax - lMin);
+  }
+
+  // 2. Escolher harmonia — preferida do style, senão qualquer uma
   const HARMONIES_VARIED: HarmonyType[] = [
     "complementary", "analogous", "triadic", "split-complementary", "tetradic"
   ];
-  const harmony = HARMONIES_VARIED[Math.floor(Math.random() * HARMONIES_VARIED.length)];
+  let harmony: HarmonyType;
+  if (styleDef && styleDef.preferredHarmonies.length > 0) {
+    // 70% preferidas, 30% outras (para manter variedade)
+    if (Math.random() < 0.7) {
+      harmony = styleDef.preferredHarmonies[Math.floor(Math.random() * styleDef.preferredHarmonies.length)];
+    } else {
+      harmony = HARMONIES_VARIED[Math.floor(Math.random() * HARMONIES_VARIED.length)];
+    }
+  } else {
+    harmony = HARMONIES_VARIED[Math.floor(Math.random() * HARMONIES_VARIED.length)];
+  }
   const harmonyHues = getHarmonyHues(baseHue, harmony);
 
-  // 3. Decidir dark/light mode (60% dark para look premium 2026)
-  const isDark = Math.random() > 0.4;
+  // 3. Decidir dark/light mode com bias do style
+  const isDark = Math.random() < (styleDef?.darkModeBias ?? 0.6);
 
   // 4. Gerar cores com roles semânticos — TODAS com hue visível
   const colors: { hex: string; role: string }[] = [];
@@ -255,10 +599,12 @@ export function generateRandomPalette(
 // - Highlight: harmony complement com mesma riqueza
 // Resultado: cores premium com identidade cromática, como sites Awwwards.
 // ============================================================================
-export function polishPalette(colors: { hex: string; role: string }[]): {
-  hex: string; role: string;
-}[] {
+export function polishPalette(
+  colors: { hex: string; role: string }[],
+  polishType: PolishType = "jewel"
+): { hex: string; role: string; }[] {
   const roles = ["Background", "Secundária", "Suporte", "Destaque"];
+  const pt = getPolishType(polishType) ?? POLISH_TYPES[0];
 
   // 1. Encontra a cor principal (Suporte ou a mais saturada)
   let accentColor = colors.find((c) => c.role === "Suporte");
@@ -266,11 +612,11 @@ export function polishPalette(colors: { hex: string; role: string }[]): {
 
   const accentHsl = hexToHsl(accentColor.hex);
 
-  // Polimento premium do accent 2026:
-  // Saturação 62-72% (vivo mas elegante — nem neon nem desbotado)
-  const polishedSat = Math.max(62, Math.min(72, accentHsl.s));
-  // Lightness 46-54% (jewel tone perfeito)
-  const polishedLight = Math.max(46, Math.min(54, accentHsl.l));
+  // Polimento premium do accent conforme polishType
+  const [aSatMin, aSatMax] = pt.accentSatRange;
+  const [aLightMin, aLightMax] = pt.accentLightRange;
+  const polishedSat = Math.max(aSatMin, Math.min(aSatMax, accentHsl.s));
+  const polishedLight = Math.max(aLightMin, Math.min(aLightMax, accentHsl.l));
   const polishedHex = hslToHex(accentHsl.h, polishedSat, polishedLight);
 
   // 2. Detecta dark/light mode (preserva intenção original)
@@ -280,27 +626,21 @@ export function polishPalette(colors: { hex: string; role: string }[]): {
   const count = colors.length;
   const result: { hex: string; role: string }[] = [];
 
+  // Helper para gerar random dentro de range
+  const rand = (range: [number, number]) => range[0] + Math.random() * (range[1] - range[0]);
+
   for (let i = 0; i < count; i++) {
     if (i === 0) {
-      // Background — DEEP TINTED JEWEL (dark) ou WARM CREAM (light)
-      // Estilo Linear/Vercel dark: bg tem hue tint visível (s=22-30%)
-      // Estilo Stripe/Resend light: bg é warm cream (s=24-34%, l=95-97%)
-      const bgS = isDark
-        ? 22 + Math.random() * 8   // 22-30% — rich dark tint
-        : 24 + Math.random() * 10; // 24-34% — warm cream tint
-      const bgL = isDark
-        ? 9 + Math.random() * 4    // 9-13% — deep mas não pure black
-        : 95 + Math.random() * 2;  // 95-97% — cream mas não pure white
+      // Background — parâmetros do polishType
+      const bgS = rand(pt.bgSatRange);
+      const bgL = isDark ? rand(pt.bgLightRange) : rand(pt.bgLightLightRange);
       result.push({
         hex: hslToHex(accentHsl.h, bgS, bgL),
         role: roles[0]
       });
     } else if (i === 1) {
-      // Text — RICH CREAM TINTED (dark) ou DEEP SATURATED (light)
-      // Mantém hue do accent para coesão cromática
-      const textS = isDark
-        ? 14 + Math.random() * 8   // 14-22% — warm cream tint
-        : 42 + Math.random() * 12; // 42-54% — rich saturated deep
+      // Text — saturação do polishType
+      const textS = rand(pt.textSatRange);
       const textL = isDark
         ? 91 + Math.random() * 3   // 91-94% — cream off-white
         : 17 + Math.random() * 5;  // 17-22% — deep mas não pure black
@@ -309,14 +649,13 @@ export function polishPalette(colors: { hex: string; role: string }[]): {
       textHex = ensureContrast(textHex, result[0].hex, 4.5);
       result.push({ hex: textHex, role: roles[1] });
     } else if (i === 2) {
-      // Accent principal — JEWEL TONE perfeito
+      // Accent principal — JEWEL TONE perfeito conforme polishType
       result.push({ hex: polishedHex, role: roles[2] });
     } else {
-      // Destaque — complementar polido, com harmonia 30° offset
-      // Mantém mesma saturação/lightness do accent para coesão premium
-      const compH = (accentHsl.h + 30) % 360;
-      const compSat = Math.max(58, Math.min(70, polishedSat - 4));
-      const compLight = Math.max(50, Math.min(60, polishedLight + 6));
+      // Destaque — complementar com offsets do polishType
+      const compH = (accentHsl.h + pt.highlightOffsetHue) % 360;
+      const compSat = Math.max(40, Math.min(95, polishedSat + pt.highlightSatDelta));
+      const compLight = Math.max(40, Math.min(70, polishedLight + pt.highlightLightDelta));
       result.push({
         hex: hslToHex(compH, compSat, compLight),
         role: roles[3]
