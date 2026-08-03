@@ -3,7 +3,12 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CATALOG, type Preset } from "@/lib/catalog";
-import { LayoutTemplate, Check, ChevronDown, Expand, Minimize } from "lucide-react";
+import {
+  LayoutTemplate, Check, ChevronDown, Expand, Minimize,
+  Layers, Briefcase, Building2, MonitorSmartphone, ShoppingBag,
+  Newspaper, MapPin, Rocket, Trophy,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 interface PresetSelectorProps {
   activePreset: string | null;
@@ -11,24 +16,37 @@ interface PresetSelectorProps {
 }
 
 // Categorias organizadas por "estilo/tipo" (não alfabético — por afinidade de uso)
-const CATEGORY_GROUPS = [
-  { id: "all", label: "Todos", icon: "🗂️" },
-  { id: "portfolio", label: "Portfolio", icon: "📁" },
-  { id: "agency", label: "Agency", icon: "🏢" },
-  { id: "saas", label: "SaaS", icon: "💻" },
-  { id: "commerce", label: "Commerce", icon: "🛒" },
-  { id: "content", label: "Content", icon: "📰" },
-  { id: "local", label: "Local", icon: "📍" },
-  { id: "product", label: "Product", icon: "🚀" },
-  { id: "experimental", label: "Flagship", icon: "🏆" },
-] as const;
+// Ícones lucide-react minimalistas — mais modernos e técnicos que emojis
+const CATEGORY_GROUPS: { id: string; label: string; icon: LucideIcon }[] = [
+  { id: "all", label: "Todos", icon: Layers },
+  { id: "portfolio", label: "Portfolio", icon: Briefcase },
+  { id: "agency", label: "Agency", icon: Building2 },
+  { id: "saas", label: "SaaS", icon: MonitorSmartphone },
+  { id: "commerce", label: "Commerce", icon: ShoppingBag },
+  { id: "content", label: "Content", icon: Newspaper },
+  { id: "local", label: "Local", icon: MapPin },
+  { id: "product", label: "Product", icon: Rocket },
+  { id: "experimental", label: "Flagship", icon: Trophy },
+];
 
+// Tiers → dot colorido minimalista (substitui emojis 🥉🥈🥇💎🏆⚙️)
+// Cores subtis, elegantes — não chamativas
+const TIER_DOTS: Record<string, string> = {
+  bronze:    "bg-amber-700/60",    // 🥉 → amber deep
+  prata:     "bg-slate-400/70",    // 🥈 → slate
+  ouro:      "bg-yellow-600/70",   // 🥇 → yellow deep (não neon)
+  diamante:  "bg-cyan-500/60",    // 💎 → cyan subtílico
+  titanio:   "bg-zinc-200/70",    // 🏆 → zinc claro (premium)
+  custom:    "bg-muted-foreground/40", // ⚙️ → gray neutro
+};
+
+// Badges minimalistas — border + text subtil, sem background vibrante
 const BADGE_COLORS: Record<string, string> = {
-  awwwards: "bg-purple-500/20 text-purple-400 border-purple-500/30",
-  conversion: "bg-green-500/20 text-green-400 border-green-500/30",
-  speed: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-  enterprise: "bg-amber-500/20 text-amber-400 border-amber-500/30",
-  flagship: "bg-pink-500/20 text-pink-400 border-pink-500/30",
+  awwwards:   "border-purple-500/30 text-purple-400/90 bg-purple-500/5",
+  conversion: "border-emerald-500/30 text-emerald-400/90 bg-emerald-500/5",
+  speed:      "border-blue-500/30 text-blue-400/90 bg-blue-500/5",
+  enterprise: "border-amber-500/30 text-amber-400/90 bg-amber-500/5",
+  flagship:   "border-pink-500/30 text-pink-400/90 bg-pink-500/5",
 };
 
 export function PresetSelector({ activePreset, onApply }: PresetSelectorProps) {
@@ -109,13 +127,14 @@ export function PresetSelector({ activePreset, onApply }: PresetSelectorProps) {
         {/* Badge + Tier */}
         <div className="mb-1.5 flex items-center gap-1.5">
           {preset.badge && (
-            <span className={`rounded border px-1.5 py-0.5 text-[9px] font-bold uppercase ${BADGE_COLORS[preset.badge] ?? ""}`}>
+            <span className={`rounded border px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide ${BADGE_COLORS[preset.badge] ?? "border-border text-muted-foreground bg-muted/30"}`}>
               {preset.badge}
             </span>
           )}
           {tier && (
-            <span className="text-[10px] text-muted-foreground">
-              {tier.icon} {tier.name} · {tier.team_size}fn
+            <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground">
+              <span className={`h-1.5 w-1.5 rounded-full ${TIER_DOTS[tier.id] ?? "bg-muted-foreground/40"}`} />
+              {tier.name} · {tier.team_size}fn
             </span>
           )}
         </div>
@@ -159,20 +178,24 @@ export function PresetSelector({ activePreset, onApply }: PresetSelectorProps) {
 
       {/* Filtros + expand/collapse controls */}
       <div className="flex flex-wrap items-center gap-1">
-        {CATEGORY_GROUPS.map((cat) => (
-          <button
-            key={cat.id}
-            type="button"
-            onClick={() => setFilterAndExpand(cat.id)}
-            className={`rounded-md px-2 py-1 text-xs font-medium transition-all ${
-              filter === cat.id
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted/50 text-muted-foreground hover:bg-muted"
-            }`}
-          >
-            {cat.icon} {cat.label}
-          </button>
-        ))}
+        {CATEGORY_GROUPS.map((cat) => {
+          const Icon = cat.icon;
+          return (
+            <button
+              key={cat.id}
+              type="button"
+              onClick={() => setFilterAndExpand(cat.id)}
+              className={`inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all ${
+                filter === cat.id
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              <Icon className="h-3.5 w-3.5" strokeWidth={1.75} />
+              {cat.label}
+            </button>
+          );
+        })}
 
         {/* Expand/Collapse all */}
         <div className="ml-auto flex gap-1">
