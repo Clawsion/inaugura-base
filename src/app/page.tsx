@@ -156,6 +156,8 @@ export default function Home() {
     integrations: [],
     level: "production",
     idioma: "pt",
+    layoutStyle: "auto",
+    effectsStyle: [],
   });
   const [showForm, setShowForm] = useState(true);
   const [activePreset, setActivePreset] = useState<string | null>(null);

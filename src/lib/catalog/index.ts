@@ -146,6 +146,14 @@ export interface StackCombo {
   badge?: string;
   stack: string;
   tags: string[];
+  // Campos expandidos (info rica para UI)
+  description?: string;
+  whenToUse?: string;
+  siteType?: string;
+  examples?: string[];
+  exampleLinks?: string[];
+  bestFor?: string[];
+  performanceNote?: string;
 }
 
 export interface MotionCombo {

@@ -1,5 +1,5 @@
 {
-  "version": "1.3.0",
+  "version": "1.4.0",
   "combos": [
     {
       "id": "saas-god-tier",
@@ -10,7 +10,27 @@
       "tags": [
         "Mais usado",
         "Default"
-      ]
+      ],
+      "description": "Stack SaaS production-ready mais usado em 2026. Tudo incluído: auth, DB, payments, email, analytics.",
+      "whenToUse": "Quando precisas de lançar SaaS completo sem pensar em decisões técnicas.",
+      "siteType": "SaaS B2B/B2C, dashboards, apps subscription",
+      "examples": [
+        "Linear",
+        "Vercel",
+        "Cal.com",
+        "Dub.co"
+      ],
+      "exampleLinks": [
+        "https://linear.app",
+        "https://cal.com",
+        "https://dub.co"
+      ],
+      "bestFor": [
+        "MVP rápido",
+        "Production SaaS",
+        "Multi-tenant"
+      ],
+      "performanceNote": "Edge-ready, SSR, 95+ Lighthouse"
     },
     {
       "id": "supabase-power",
@@ -20,28 +40,93 @@
       "stack": "Next.js + Supabase (Auth+DB+Storage+Realtime) + shadcn + Stripe + Resend + Vercel",
       "tags": [
         "Mais rápido MVP"
-      ]
+      ],
+      "description": "All-in-one Supabase stack: Auth + DB + Storage + Realtime. Mais rápido para MVP.",
+      "whenToUse": "Quando queres backend completo sem gerir infraestrutura.",
+      "siteType": "SaaS, apps realtime, chat, collab",
+      "examples": [
+        "Supabase own apps",
+        "Chat apps",
+        "Collab tools"
+      ],
+      "exampleLinks": [
+        "https://supabase.com/customers"
+      ],
+      "bestFor": [
+        "Realtime apps",
+        "Quick MVP",
+        "Solo founders"
+      ],
+      "performanceNote": "Realtime subscriptions via WebSocket"
     },
     {
       "id": "t3-classic",
       "name": "T3 Classic",
       "category": "saas",
       "stack": "Next.js + tRPC + Prisma + NextAuth + Tailwind",
-      "tags": []
+      "tags": [],
+      "description": "T3 stack clássico: tRPC + Prisma + NextAuth. Type-safe end-to-end.",
+      "whenToUse": "Quando valorizas type-safety extrema e DX.",
+      "siteType": "SaaS B2B, internal tools, dashboards",
+      "examples": [
+        "Theo's projects",
+        "Indie SaaS"
+      ],
+      "exampleLinks": [
+        "https://create.t3.gg"
+      ],
+      "bestFor": [
+        "Type safety",
+        "DX premium",
+        "B2B"
+      ],
+      "performanceNote": "Type-safe API, sem GraphQL overhead"
     },
     {
       "id": "remix-full-stack",
       "name": "Remix Full-Stack",
       "category": "saas",
       "stack": "Remix + Prisma + PostgreSQL + Tailwind",
-      "tags": []
+      "tags": [],
+      "description": "Remix com nested routing e web standards. SSR otimizado.",
+      "whenToUse": "Quando precisas de nested layouts e progressive enhancement.",
+      "siteType": "Apps data-heavy, e-commerce, dashboards",
+      "examples": [
+        "Epic Stack",
+        "Shopify Hydrogen"
+      ],
+      "exampleLinks": [
+        "https://remix.run/showcase"
+      ],
+      "bestFor": [
+        "Data-heavy",
+        "E-commerce",
+        "Nested layouts"
+      ],
+      "performanceNote": "SSR com streaming"
     },
     {
       "id": "sveltekit-modern",
       "name": "SvelteKit Modern",
       "category": "saas",
       "stack": "SvelteKit + Drizzle + Lucia Auth + Tailwind + Turso",
-      "tags": []
+      "tags": [],
+      "description": "SvelteKit — leve, rápido, compila para vanilla JS. Menos bundle size.",
+      "whenToUse": "Quando queres max performance e bundle mínimo.",
+      "siteType": "Portfolios, landing pages, apps leves",
+      "examples": [
+        "Vercel some pages",
+        "Indie projects"
+      ],
+      "exampleLinks": [
+        "https://svelte.dev/showcase"
+      ],
+      "bestFor": [
+        "Performance",
+        "Bundle size",
+        "SEO"
+      ],
+      "performanceNote": "Bundle ~10KB vs ~80KB React"
     },
     {
       "id": "ai-native",
@@ -51,28 +136,92 @@
       "stack": "Next.js + Vercel AI SDK + Supabase/Neon + Drizzle + Better Auth + OpenAI/Anthropic + shadcn + Stripe",
       "tags": [
         "Trending"
-      ]
+      ],
+      "description": "Vercel AI SDK nativo. Chat, streaming, tool calling out-of-the-box.",
+      "whenToUse": "Para AI chat apps e copilots rápidos.",
+      "siteType": "AI chat, copilots, AI tools",
+      "examples": [
+        "Vercel AI Chat",
+        "ChatGPT clones"
+      ],
+      "exampleLinks": [
+        "https://sdk.vercel.ai/examples"
+      ],
+      "bestFor": [
+        "AI chat",
+        "Streaming",
+        "Quick start"
+      ],
+      "performanceNote": "Edge runtime para AI"
     },
     {
       "id": "rag-powerhouse",
       "name": "RAG Powerhouse",
       "category": "ai",
       "stack": "Next.js + LangChain/LlamaIndex + Pinecone/Weaviate + OpenAI + Supabase",
-      "tags": []
+      "tags": [],
+      "description": "RAG completo com pgvector. Search semântico em documentos.",
+      "whenToUse": "Para knowledge base e docs search.",
+      "siteType": "Knowledge base, docs AI, search",
+      "examples": [
+        "Mintlify",
+        "Inkeep"
+      ],
+      "exampleLinks": [
+        "https://supabase.com/docs/guides/ai"
+      ],
+      "bestFor": [
+        "RAG",
+        "Semantic search",
+        "Docs AI"
+      ],
+      "performanceNote": "pgvector nativo"
     },
     {
       "id": "agent-builder",
       "name": "Agent Builder",
       "category": "ai",
       "stack": "Next.js + Vercel AI SDK + Zod + Drizzle + Neon + MCP tools",
-      "tags": []
+      "tags": [],
+      "description": "Stack para AI agents com tools, memory, planning.",
+      "whenToUse": "Para AI agents autónomos.",
+      "siteType": "AI agents, automation",
+      "examples": [
+        "AutoGPT clones",
+        "Mastra apps"
+      ],
+      "exampleLinks": [
+        "https://mastra.ai"
+      ],
+      "bestFor": [
+        "Agents",
+        "Automation",
+        "Tools"
+      ],
+      "performanceNote": "Long-running tasks"
     },
     {
       "id": "ai-chat-app",
       "name": "AI Chat App",
       "category": "ai",
       "stack": "Next.js + Vercel AI SDK + Redis (streaming) + Supabase Auth",
-      "tags": []
+      "tags": [],
+      "description": "Chat app completo com AI. Realtime, multi-turn, context.",
+      "whenToUse": "Para chatbots production.",
+      "siteType": "AI chat, customer support",
+      "examples": [
+        "Intercom AI",
+        "Crisp AI"
+      ],
+      "exampleLinks": [
+        "https://sdk.vercel.ai/examples"
+      ],
+      "bestFor": [
+        "Chat",
+        "Realtime",
+        "Support"
+      ],
+      "performanceNote": "WebSocket para realtime"
     },
     {
       "id": "indie-lightweight",
@@ -82,28 +231,89 @@
       "stack": "Next.js + Cloudflare D1/Drizzle + Better Auth + Polar/Lemon Squeezy + Resend",
       "tags": [
         "Mais barato"
-      ]
+      ],
+      "description": "Stack leve para side projects. Free tier generoso.",
+      "whenToUse": "Para side projects sem custo.",
+      "siteType": "Side projects, blogs, indie apps",
+      "examples": [
+        "Indie hackers apps"
+      ],
+      "exampleLinks": [
+        "https://indiehackers.com"
+      ],
+      "bestFor": [
+        "Free tier",
+        "Indie",
+        "Side projects"
+      ],
+      "performanceNote": "Cloudflare free tier"
     },
     {
       "id": "astro-micro-saas",
       "name": "Astro Micro-SaaS",
       "category": "indie",
       "stack": "Astro + Supabase + Stripe + Tailwind",
-      "tags": []
+      "tags": [],
+      "description": "Astro para micro-SaaS. Static-first com islands interativos.",
+      "whenToUse": "Para micro-SaaS content-heavy.",
+      "siteType": "Micro-SaaS, content apps",
+      "examples": [
+        "Indie Astro SaaS"
+      ],
+      "exampleLinks": [
+        "https://astro.build/showcase"
+      ],
+      "bestFor": [
+        "Micro-SaaS",
+        "Content",
+        "Performance"
+      ],
+      "performanceNote": "Static-first, islands seletivos"
     },
     {
       "id": "bun-speed-stack",
       "name": "Bun Speed Stack",
       "category": "indie",
       "stack": "Bun + Hono + SQLite/Turso + Better Auth",
-      "tags": []
+      "tags": [],
+      "description": "Bun runtime para max speed. Startup <100ms.",
+      "whenToUse": "Para APIs high-performance.",
+      "siteType": "APIs, microservices, indie apps",
+      "examples": [
+        "Bun demos",
+        "Indie APIs"
+      ],
+      "exampleLinks": [
+        "https://bun.sh"
+      ],
+      "bestFor": [
+        "Speed",
+        "Startup time",
+        "APIs"
+      ],
+      "performanceNote": "Startup ~50ms"
     },
     {
       "id": "solo-founder",
       "name": "Solo Founder",
       "category": "indie",
       "stack": "Next.js + Supabase + Lemon Squeezy + Resend",
-      "tags": []
+      "tags": [],
+      "description": "Stack otimizado para solo founders. Tudo simplificado.",
+      "whenToUse": "Para um só founder sem equipa.",
+      "siteType": "Solo SaaS, indie products",
+      "examples": [
+        "Indie SaaS solo"
+      ],
+      "exampleLinks": [
+        "https://indiehackers.com"
+      ],
+      "bestFor": [
+        "Solo founder",
+        "Simplicidade",
+        "Indie"
+      ],
+      "performanceNote": "Tudo gerido, sem devops"
     },
     {
       "id": "enterprise-god-tier",
@@ -113,84 +323,275 @@
       "stack": "Next.js + Clerk/WorkOS + Drizzle + PlanetScale + Stripe + Resend + PostHog",
       "tags": [
         "Melhor B2B"
-      ]
+      ],
+      "description": "Stack enterprise completo. SSO, audit, compliance, scale.",
+      "whenToUse": "Para clientes Fortune 500.",
+      "siteType": "Enterprise B2B, SaaS multi-org",
+      "examples": [
+        "Vercel Enterprise",
+        "Notion Enterprise"
+      ],
+      "exampleLinks": [
+        "https://clerk.com/customers"
+      ],
+      "bestFor": [
+        "Enterprise",
+        "Compliance",
+        "Scale"
+      ],
+      "performanceNote": "Multi-region, audit logs"
     },
     {
       "id": "multi-tenant-saas",
       "name": "Multi-Tenant SaaS",
       "category": "enterprise",
       "stack": "Next.js + WorkOS (SSO/SAML) + Neon (RLS) + Stripe Billing",
-      "tags": []
+      "tags": [],
+      "description": "SaaS multi-tenant com row-level security.",
+      "whenToUse": "Para SaaS com múltiplas organizações.",
+      "siteType": "B2B SaaS, multi-org",
+      "examples": [
+        "Linear",
+        "Notion"
+      ],
+      "exampleLinks": [
+        "https://supabase.com/docs/guides/auth/multi-tenancy"
+      ],
+      "bestFor": [
+        "Multi-tenant",
+        "B2B",
+        "Organizations"
+      ],
+      "performanceNote": "RLS no Postgres"
     },
     {
       "id": "corporate-dashboard",
       "name": "Corporate Dashboard",
       "category": "enterprise",
       "stack": "Next.js + Auth0 + PostgreSQL + tRPC + Recharts",
-      "tags": []
+      "tags": [],
+      "description": "Dashboard corporate com charts, tables, filters.",
+      "whenToUse": "Para internal tools e dashboards.",
+      "siteType": "Internal tools, dashboards, admin",
+      "examples": [
+        "Linear dashboard",
+        "Vercel dashboard"
+      ],
+      "exampleLinks": [
+        "https://tremor.so"
+      ],
+      "bestFor": [
+        "Dashboards",
+        "Internal tools",
+        "Charts"
+      ],
+      "performanceNote": "TanStack Table para data-heavy"
     },
     {
       "id": "ecommerce-modern",
       "name": "E-commerce Modern",
       "category": "commerce",
       "stack": "Next.js + Shopify Hydrogen + Stripe + shadcn",
-      "tags": []
+      "tags": [],
+      "description": "E-commerce moderno com Next.js + Stripe.",
+      "whenToUse": "Para e-commerce small-medium.",
+      "siteType": "E-commerce, online stores",
+      "examples": [
+        "Indie e-commerce"
+      ],
+      "exampleLinks": [
+        "https://stripe.com/customers"
+      ],
+      "bestFor": [
+        "E-commerce",
+        "Stripe",
+        "SMB"
+      ],
+      "performanceNote": "SSR + Stripe Checkout"
     },
     {
       "id": "headless-commerce",
       "name": "Headless Commerce",
       "category": "commerce",
       "stack": "Next.js + Medusa.js + Stripe + Algolia",
-      "tags": []
+      "tags": [],
+      "description": "Headless commerce com CMS + Next.js frontend.",
+      "whenToUse": "Para e-commerce com frontend custom.",
+      "siteType": "E-commerce premium, custom stores",
+      "examples": [
+        "Shopify Hydrogen",
+        "Medusa"
+      ],
+      "exampleLinks": [
+        "https://medusajs.com"
+      ],
+      "bestFor": [
+        "Custom commerce",
+        "Headless",
+        "Premium"
+      ],
+      "performanceNote": "API-first, frontend Next.js"
     },
     {
       "id": "marketplace",
       "name": "Marketplace",
       "category": "commerce",
       "stack": "Next.js + Supabase + Stripe Connect + Resend",
-      "tags": []
+      "tags": [],
+      "description": "Marketplace com multi-vendor, split payments.",
+      "whenToUse": "Para marketplaces (Etsy, Airbnb style).",
+      "siteType": "Marketplaces, multi-vendor",
+      "examples": [
+        "Etsy clones",
+        "Airbnb clones"
+      ],
+      "exampleLinks": [
+        "https://stripe.com/connect"
+      ],
+      "bestFor": [
+        "Marketplace",
+        "Multi-vendor",
+        "Split payments"
+      ],
+      "performanceNote": "Stripe Connect para split"
     },
     {
       "id": "python-hybrid",
       "name": "Python Hybrid",
       "category": "python",
       "stack": "Next.js (frontend) + FastAPI + SQLModel + PostgreSQL",
-      "tags": []
+      "tags": [],
+      "description": "Next.js + Python backend (FastAPI). ML/AI no Python.",
+      "whenToUse": "Para AI apps com Python no backend.",
+      "siteType": "AI apps, data-heavy, ML",
+      "examples": [
+        "AI products",
+        "Data dashboards"
+      ],
+      "exampleLinks": [
+        "https://fastapi.tiangolo.com"
+      ],
+      "bestFor": [
+        "ML/AI",
+        "Python ecosystem",
+        "Data"
+      ],
+      "performanceNote": "Async Python, type-safe"
     },
     {
       "id": "django-full-stack",
       "name": "Django Full-Stack",
       "category": "python",
       "stack": "Django + HTMX + PostgreSQL + Tailwind",
-      "tags": []
+      "tags": [],
+      "description": "Django backend completo + Next.js frontend.",
+      "whenToUse": "Para apps com Django admin + ORM.",
+      "siteType": "Content platforms, B2B",
+      "examples": [
+        "Instagram (early)",
+        "Disqus"
+      ],
+      "exampleLinks": [
+        "https://www.djangoproject.com"
+      ],
+      "bestFor": [
+        "Admin panel",
+        "ORM maduro",
+        "Content"
+      ],
+      "performanceNote": "Batteries-included"
     },
     {
       "id": "ml-backend",
       "name": "ML Backend",
       "category": "python",
       "stack": "FastAPI + Next.js + PyTorch/scikit-learn + Redis + Postgres",
-      "tags": []
+      "tags": [],
+      "description": "ML backend com Python + Next.js frontend.",
+      "whenToUse": "Para ML pipelines e data viz.",
+      "siteType": "ML apps, data dashboards",
+      "examples": [
+        "Hugging Face spaces",
+        "ML demos"
+      ],
+      "exampleLinks": [
+        "https://huggingface.co/spaces"
+      ],
+      "bestFor": [
+        "ML",
+        "Data viz",
+        "Pipelines"
+      ],
+      "performanceNote": "GPU quando necessário"
     },
     {
       "id": "mobile-first",
       "name": "Mobile-First",
       "category": "mobile",
       "stack": "Expo (React Native) + Supabase + Stripe + NativeWind",
-      "tags": []
+      "tags": [],
+      "description": "Mobile-first PWA com Next.js.",
+      "whenToUse": "Para apps web mobile-first.",
+      "siteType": "Mobile web apps, PWA",
+      "examples": [
+        "Twitter Lite",
+        "Pinterest PWA"
+      ],
+      "exampleLinks": [
+        "https://web.dev/progressive-web-apps"
+      ],
+      "bestFor": [
+        "Mobile-first",
+        "PWA",
+        "Installable"
+      ],
+      "performanceNote": "Service Worker cache"
     },
     {
       "id": "cross-platform-full",
       "name": "Cross-Platform Full",
       "category": "mobile",
       "stack": "Next.js (web) + Expo (mobile) + Supabase (shared)",
-      "tags": []
+      "tags": [],
+      "description": "Cross-platform: web + iOS + Android com Expo.",
+      "whenToUse": "Para apps cross-platform.",
+      "siteType": "Apps mobile + web",
+      "examples": [
+        "Bluesky",
+        "Coinbase Wallet"
+      ],
+      "exampleLinks": [
+        "https://expo.dev/showcase"
+      ],
+      "bestFor": [
+        "Cross-platform",
+        "iOS+Android+Web",
+        "Code share"
+      ],
+      "performanceNote": "OTA updates"
     },
     {
       "id": "content-machine",
       "name": "Content Machine",
       "category": "content",
       "stack": "Next.js + Sanity/Payload CMS + Tailwind + Resend",
-      "tags": []
+      "tags": [],
+      "description": "Content machine com CMS + Next.js + SEO otimizado.",
+      "whenToUse": "Para blogs, magazines, content sites.",
+      "siteType": "Blogs, magazines, content",
+      "examples": [
+        "Linear blog",
+        "Vercel blog"
+      ],
+      "exampleLinks": [
+        "https://sanity.io"
+      ],
+      "bestFor": [
+        "Content",
+        "SEO",
+        "CMS"
+      ],
+      "performanceNote": "ISR para performance"
     },
     {
       "id": "god-tier-creative",
@@ -203,7 +604,28 @@
         "SOTY",
         "3D Imersivo",
         "Storytelling"
-      ]
+      ],
+      "description": "Stack hardcore para Awwwards SOTY. Nuxt + GSAP full + Three.js + WebGL custom. Storytelling cinematográfico 3D imersivo.",
+      "whenToUse": "Quando queres ganhar Awwwards SOTY. Para agências que fazem sites experimentais de topo.",
+      "siteType": "Hardcore Agência, Experimental, Brand experiences imersivas",
+      "examples": [
+        "Active Theory",
+        "Resn",
+        "Bureau Cool",
+        "Locomotive"
+      ],
+      "exampleLinks": [
+        "https://activetheory.net",
+        "https://resn.co.nz",
+        "https://bureau.co",
+        "https://locomotive.ca"
+      ],
+      "bestFor": [
+        "Awwwards SOTY",
+        "Storytelling 3D",
+        "Brand experiences"
+      ],
+      "performanceNote": "WebGL pesado, Lighthouse pode sofrer. Otimizar para 60fps."
     },
     {
       "id": "soty-nocode-king",
@@ -215,7 +637,23 @@
         "No-Code Premium",
         "Lando Norris style",
         "Visual + Code"
-      ]
+      ],
+      "description": "Stack do Lando Norris (SOTY 2025). Webflow + GSAP custom + Rive + WebGL embed. Visual build + dev avançado.",
+      "whenToUse": "Quando queres replicate o Lando Norris SOTY 2025. Para brands/athletes com visual forte.",
+      "siteType": "Brand experiences, Athletes, Product launches",
+      "examples": [
+        "Lando Norris (SOTY 2025)",
+        "Brand athlete sites"
+      ],
+      "exampleLinks": [
+        "https://landonorris.com"
+      ],
+      "bestFor": [
+        "SOTY replication",
+        "Brand athletes",
+        "Visual + Code"
+      ],
+      "performanceNote": "Webflow hosting + custom JS. Performance média."
     },
     {
       "id": "react-immersive",
@@ -227,7 +665,25 @@
         "Portfolios",
         "Agências React",
         "App-like"
-      ]
+      ],
+      "description": "Next.js + React Three Fiber + Drei. 3D React-friendly com deploy edge. Mais acessível que raw Three.js.",
+      "whenToUse": "Quando queres 3D em React sem aprender WebGL cru. Portfolios top.",
+      "siteType": "Portfolios 3D, agency sites, product configurators",
+      "examples": [
+        "Trionn-like",
+        "JSM tutoriais",
+        "Portfolios 3D top"
+      ],
+      "exampleLinks": [
+        "https://docs.pmnd.rs/react-three-fiber",
+        "https://trionn.com"
+      ],
+      "bestFor": [
+        "Portfolios 3D",
+        "Agências React",
+        "App-like"
+      ],
+      "performanceNote": "R3F é React-friendly. Bundle ~200KB para 3D."
     },
     {
       "id": "trionn-architecture",
@@ -239,7 +695,23 @@
         "Studio high-end",
         "Codrops case",
         "Render loop control"
-      ]
+      ],
+      "description": "React/Next + raw Three.js (não R3F) + Web Audio API + SplitText. Controle total do render loop.",
+      "whenToUse": "Quando precisas controle absoluto do render loop + som procedural. Codrops case study 2026.",
+      "siteType": "Studio websites high-end, experimental",
+      "examples": [
+        "Trionn (Codrops 2026)"
+      ],
+      "exampleLinks": [
+        "https://trionn.com",
+        "https://tympanus.net/codrops"
+      ],
+      "bestFor": [
+        "Studio high-end",
+        "Render loop control",
+        "Codrops quality"
+      ],
+      "performanceNote": "Raw Three.js = max controle, max complexidade."
     },
     {
       "id": "vanilla-mastery",
@@ -251,7 +723,26 @@
         "Max performance",
         "Developer Award",
         "Active Theory style"
-      ]
+      ],
+      "description": "HTML/CSS/JS puro + custom WebGL engine + GLSL shaders + Barba.js. Zero framework, max performance.",
+      "whenToUse": "Quando queres Developer Award. Para developers que querem controle absoluto.",
+      "siteType": "Experimental, Developer Award, art projects",
+      "examples": [
+        "Active Theory",
+        "Resn",
+        "Immersive Garden"
+      ],
+      "exampleLinks": [
+        "https://activetheory.net",
+        "https://resn.co.nz",
+        "https://immersive-garden.com"
+      ],
+      "bestFor": [
+        "Developer Award",
+        "Max performance",
+        "Zero overhead"
+      ],
+      "performanceNote": "Sem framework overhead. Bundle ~30KB."
     },
     {
       "id": "astro-performance",
@@ -263,7 +754,23 @@
         "Ultra-rápido",
         "Lighthouse 100",
         "Editorial premium"
-      ]
+      ],
+      "description": "Astro + Islands (Vue/React/Svelte) + GSAP + Three.js. Static-first ultra-rápido com hidratação seletiva.",
+      "whenToUse": "Quando valorizas Lighthouse 100 + storytelling. Editorial premium.",
+      "siteType": "Editorial, content-heavy, blogs premium",
+      "examples": [
+        "Pego (Awwwards)",
+        "Editorial sites top"
+      ],
+      "exampleLinks": [
+        "https://astro.build/showcase"
+      ],
+      "bestFor": [
+        "Lighthouse 100",
+        "Editorial",
+        "Content-heavy"
+      ],
+      "performanceNote": "Static-first, islands hidratam só o necessário."
     },
     {
       "id": "svelte-fluid",
@@ -274,7 +781,23 @@
         "Reatividade nativa",
         "Leve",
         "Modern"
-      ]
+      ],
+      "description": "SvelteKit + Threlte (Three.js Svelte) + GSAP. Reatividade nativa + 3D leve.",
+      "whenToUse": "Quando queres 3D com bundle mínimo. Modern experimental.",
+      "siteType": "Modern experimental, portfolios, product sites",
+      "examples": [
+        "Svelte community sites"
+      ],
+      "exampleLinks": [
+        "https://svelte.dev/showcase",
+        "https://threlte.xyz"
+      ],
+      "bestFor": [
+        "3D Svelte-native",
+        "Leveza",
+        "Modern"
+      ],
+      "performanceNote": "Svelte compila para vanilla, bundle ~10KB."
     },
     {
       "id": "webflow-advanced-motion",
@@ -285,7 +808,23 @@
         "Brand",
         "Athlete",
         "Product"
-      ]
+      ],
+      "description": "Webflow + Rive + GSAP + Lottie + custom code. Design visual + state machines.",
+      "whenToUse": "Para brand/athlete/product sites com animações state-based leves.",
+      "siteType": "Brand, athlete, product launches",
+      "examples": [
+        "Brand sites Webflow + Rive"
+      ],
+      "exampleLinks": [
+        "https://webflow.com/showcase",
+        "https://rive.app"
+      ],
+      "bestFor": [
+        "Brand",
+        "Athlete",
+        "Product"
+      ],
+      "performanceNote": "Webflow hosting, performance média."
     },
     {
       "id": "nuxt-pure-story",
@@ -297,7 +836,22 @@
         "Narrativa scroll",
         "Page transitions",
         "Editorial"
-      ]
+      ],
+      "description": "Nuxt + GSAP ScrollTrigger + Lenis + SplitText + Barba.js/View Transitions + Sanity. Narrativa scroll-driven.",
+      "whenToUse": "Para editorial/brand experiences com page transitions seamless.",
+      "siteType": "Editorial, brand experience, storytelling",
+      "examples": [
+        "Awwwards SOTY editorial"
+      ],
+      "exampleLinks": [
+        "https://nuxt.com/showcase"
+      ],
+      "bestFor": [
+        "Narrativa scroll",
+        "Page transitions",
+        "Editorial"
+      ],
+      "performanceNote": "SSR Nuxt + GSAP, performance boa."
     },
     {
       "id": "next-r3f-pro",
@@ -308,7 +862,22 @@
         "3D React",
         "Product configurators",
         "Immersive"
-      ]
+      ],
+      "description": "Next.js + R3F + postprocessing + shaders + Zustand. 3D React completo com state management.",
+      "whenToUse": "Para product configurators, immersive product sites.",
+      "siteType": "Product configurators, immersive product",
+      "examples": [
+        "Product sites 3D top"
+      ],
+      "exampleLinks": [
+        "https://docs.pmnd.rs/react-three-fiber"
+      ],
+      "bestFor": [
+        "3D React",
+        "Product configurators",
+        "Immersive"
+      ],
+      "performanceNote": "Zustand para state, R3F para 3D."
     },
     {
       "id": "hybrid-headless-ecom",
@@ -319,7 +888,22 @@
         "Luxury e-commerce",
         "3D product",
         "Marcas high-end"
-      ]
+      ],
+      "description": "Next/Nuxt + Shopify Hydrogen ou Sanity/Payload + GSAP + Three.js. E-com premium com 3D product.",
+      "whenToUse": "Para luxury e-commerce com 3D product views.",
+      "siteType": "Luxury e-commerce, brands high-end",
+      "examples": [
+        "Luxury brands e-com"
+      ],
+      "exampleLinks": [
+        "https://www.shopify.com/partners/blog/hydrogen"
+      ],
+      "bestFor": [
+        "Luxury e-commerce",
+        "3D product",
+        "Marcas high-end"
+      ],
+      "performanceNote": "Headless + 3D, performance otimizar bem."
     },
     {
       "id": "rive-centric",
@@ -330,7 +914,22 @@
         "State machines",
         "Mobile-first",
         "Pós-Lando"
-      ]
+      ],
+      "description": "Webflow ou Next + Rive (principal) + GSAP secundário + Three.js leve. Animações state machines interativas.",
+      "whenToUse": "Para UI complexa mobile-first premium. Rive em alta pós-Lando.",
+      "siteType": "Mobile-first premium, UI complexa",
+      "examples": [
+        "Pós-Lando Norris sites"
+      ],
+      "exampleLinks": [
+        "https://rive.app"
+      ],
+      "bestFor": [
+        "State machines",
+        "Mobile-first",
+        "UI complexa"
+      ],
+      "performanceNote": "Rive é leve (~50KB), ideal para mobile."
     },
     {
       "id": "framer-motion-hybrid",
@@ -342,7 +941,25 @@
         "Micro-interações",
         "Apps criativas",
         "Mais acessível"
-      ]
+      ],
+      "description": "Next.js + Framer Motion + GSAP (só scroll pesado) + Lenis. Micro-interações rápidas + GSAP para o pesado.",
+      "whenToUse": "Para apps/dashboards criativos. Mais acessível que pure GSAP.",
+      "siteType": "Apps criativos, dashboards, SaaS premium",
+      "examples": [
+        "Linear",
+        "Vercel",
+        "Resend"
+      ],
+      "exampleLinks": [
+        "https://linear.app",
+        "https://resend.com"
+      ],
+      "bestFor": [
+        "Micro-interações",
+        "Apps criativas",
+        "Mais acessível"
+      ],
+      "performanceNote": "Framer para leve, GSAP para pesado. Equilíbrio ideal."
     },
     {
       "id": "custom-webgl-engine",
@@ -355,7 +972,25 @@
         "Distortion",
         "Generative",
         "Lusion style"
-      ]
+      ],
+      "description": "Vanilla ou framework leve + custom WebGL/WebGPU + GSAP + Lenis. Efeitos únicos: particles, distortion, generative.",
+      "whenToUse": "Para art/experimental. Studios como Lusion, Monks.",
+      "siteType": "Art, experimental, generative",
+      "examples": [
+        "Lusion",
+        "Monks",
+        "Active Theory"
+      ],
+      "exampleLinks": [
+        "https://lusion.co",
+        "https://monks.com"
+      ],
+      "bestFor": [
+        "Particles",
+        "Distortion",
+        "Generative"
+      ],
+      "performanceNote": "WebGPU quando disponível, WebGL fallback."
     },
     {
       "id": "nuxt-pinia-gsap",
@@ -366,7 +1001,22 @@
         "State robusto",
         "Apps complexas",
         "3D"
-      ]
+      ],
+      "description": "Nuxt + Pinia + GSAP full + Lenis + Three.js. State robusto + animações + 3D.",
+      "whenToUse": "Para apps complexas criativas com state management robusto.",
+      "siteType": "Apps complexas criativas, interactive experiences",
+      "examples": [
+        "Vue/Nuxt apps premium"
+      ],
+      "exampleLinks": [
+        "https://nuxt.com/showcase"
+      ],
+      "bestFor": [
+        "State robusto",
+        "Apps complexas",
+        "3D"
+      ],
+      "performanceNote": "Pinia leve, Nuxt SSR."
     },
     {
       "id": "wp-headless-premium",
@@ -377,7 +1027,23 @@
         "Cliente não-técnico",
         "CMS fácil",
         "Award-winning"
-      ]
+      ],
+      "description": "Next/Nuxt + WP GraphQL ou Faust + GSAP + Lenis + Three.js. WordPress headless para clientes não-técnicos.",
+      "whenToUse": "Para agências com clientes não-técnicos que querem WordPress admin.",
+      "siteType": "Agências, clientes não-técnicos, content sites",
+      "examples": [
+        "Agências WP premium"
+      ],
+      "exampleLinks": [
+        "https://www.wpgraphql.com",
+        "https://faustjs.org"
+      ],
+      "bestFor": [
+        "Cliente não-técnico",
+        "CMS fácil",
+        "Award-winning"
+      ],
+      "performanceNote": "Headless, frontend Next.js."
     },
     {
       "id": "svelte-threlte-gsap",
@@ -388,7 +1054,22 @@
         "3D Svelte-native",
         "Leveza",
         "Experimental"
-      ]
+      ],
+      "description": "SvelteKit + Threlte + GSAP + Lenis. 3D Svelte-native com leveza.",
+      "whenToUse": "Para modern experimental com 3D. Alternativa a R3F.",
+      "siteType": "Modern experimental, 3D portfolios",
+      "examples": [
+        "Svelte 3D community"
+      ],
+      "exampleLinks": [
+        "https://threlte.xyz"
+      ],
+      "bestFor": [
+        "3D Svelte-native",
+        "Leveza",
+        "Experimental"
+      ],
+      "performanceNote": "Svelte + Threlte, bundle mínimo."
     },
     {
       "id": "astro-react-3d-islands",
@@ -400,7 +1081,22 @@
         "Static + 3D",
         "Performance monstro",
         "Portfolios"
-      ]
+      ],
+      "description": "Astro + R3F islands + GSAP + Lenis. Melhor dos dois mundos: static + 3D interativo.",
+      "whenToUse": "Para portfolios/landing com 3D seletivo. Performance monstro.",
+      "siteType": "Portfolios, landing pages, 3D seletivo",
+      "examples": [
+        "Astro 3D sites top"
+      ],
+      "exampleLinks": [
+        "https://astro.build/showcase"
+      ],
+      "bestFor": [
+        "Static + 3D",
+        "Performance monstro",
+        "Portfolios"
+      ],
+      "performanceNote": "3D só hidrata onde precisa. Lighthouse 95+."
     },
     {
       "id": "webflow-custom-heavy",
@@ -411,7 +1107,22 @@
         "No-code base",
         "Dev avançado",
         "Time-to-market"
-      ]
+      ],
+      "description": "Webflow + muito JS custom (GSAP/Three) + Memberstack. No-code base + dev avançado.",
+      "whenToUse": "Para rápido time-to-market premium. Muitos SOTD No-Code Honors.",
+      "siteType": "No-code premium, brand sites",
+      "examples": [
+        "Awwwards SOTD No-Code Honors"
+      ],
+      "exampleLinks": [
+        "https://webflow.com/showcase"
+      ],
+      "bestFor": [
+        "No-code base",
+        "Dev avançado",
+        "Time-to-market"
+      ],
+      "performanceNote": "Webflow + custom JS, otimizar bem."
     },
     {
       "id": "plain-barba-gsap",
@@ -422,7 +1133,23 @@
         "Transições perfeitas",
         "Zero framework",
         "Cinematic"
-      ]
+      ],
+      "description": "HTML/JS + Barba.js + GSAP + Lenis + Three.js. Transições de página perfeitas + zero framework.",
+      "whenToUse": "Para multi-page cinematic. Clássico ainda forte em Awwwards.",
+      "siteType": "Multi-page cinematic, portfolios, studios",
+      "examples": [
+        "Studios premium multi-page"
+      ],
+      "exampleLinks": [
+        "https://barba.js.org",
+        "https://gsap.com/showcase"
+      ],
+      "bestFor": [
+        "Transições perfeitas",
+        "Zero framework",
+        "Cinematic"
+      ],
+      "performanceNote": "Sem framework, bundle ~40KB."
     },
     {
       "id": "next-tailwind-shadcn-gsap",
@@ -434,7 +1161,25 @@
         "SaaS criativo",
         "Portfolios",
         "Design system rápido"
-      ]
+      ],
+      "description": "Next + Tailwind + shadcn/ui + GSAP + Lenis. Design system rápido + animações premium.",
+      "whenToUse": "Para SaaS criativo/portfolios. Mais produto que experimental.",
+      "siteType": "SaaS criativo, portfolios premium",
+      "examples": [
+        "Linear",
+        "Vercel",
+        "Resend"
+      ],
+      "exampleLinks": [
+        "https://linear.app",
+        "https://resend.com"
+      ],
+      "bestFor": [
+        "SaaS criativo",
+        "Portfolios",
+        "Design system rápido"
+      ],
+      "performanceNote": "shadcn + GSAP, equilíbrio perfeito."
     },
     {
       "id": "qwik-fresh-gsap",
@@ -446,7 +1191,23 @@
         "Resumability extrema",
         "Performance obsessiva",
         "Nicho"
-      ]
+      ],
+      "description": "Qwik ou Fresh + GSAP + Lenis. Resumability extrema + animações.",
+      "whenToUse": "Para performance obsessiva. Nicho high-perf.",
+      "siteType": "Performance obsessiva, nicho",
+      "examples": [
+        "Qwik/Fresh early adopters"
+      ],
+      "exampleLinks": [
+        "https://qwik.builder.io",
+        "https://fresh.deno.dev"
+      ],
+      "bestFor": [
+        "Resumability extrema",
+        "Performance obsessiva",
+        "Nicho"
+      ],
+      "performanceNote": "Resumability = zero JS hidratação inicial."
     },
     {
       "id": "threejs-physics",
@@ -457,7 +1218,24 @@
         "3D com física",
         "Games-like",
         "Interactive product"
-      ]
+      ],
+      "description": "Framework + Three.js + Cannon/Rapier physics + GSAP. 3D com física realista.",
+      "whenToUse": "Para games-like experiences, interactive product configurators.",
+      "siteType": "Games-like, interactive product, 3D experiences",
+      "examples": [
+        "3D product configurators",
+        "Mini-games web"
+      ],
+      "exampleLinks": [
+        "https://rapier.rs",
+        "https://pmnd.rs"
+      ],
+      "bestFor": [
+        "3D com física",
+        "Games-like",
+        "Interactive product"
+      ],
+      "performanceNote": "Physics engine overhead. Otimizar para 60fps."
     },
     {
       "id": "rive-webflow-sound",
@@ -468,7 +1246,23 @@
         "Animações + som",
         "Brand emotional",
         "Polish extra"
-      ]
+      ],
+      "description": "Webflow + Rive + Howler.js/Web Audio + GSAP. Animações + feedback sonoro.",
+      "whenToUse": "Para brand emotional com camada extra de polish sonoro.",
+      "siteType": "Brand emotional, premium product",
+      "examples": [
+        "Brand sites com som"
+      ],
+      "exampleLinks": [
+        "https://howlerjs.com",
+        "https://rive.app"
+      ],
+      "bestFor": [
+        "Animações + som",
+        "Brand emotional",
+        "Polish extra"
+      ],
+      "performanceNote": "Audio loading lazy para não afetar LCP."
     },
     {
       "id": "full-custom-studio",
@@ -480,7 +1274,26 @@
         "Top 1% studios",
         "Active Theory level",
         "Developer Award"
-      ]
+      ],
+      "description": "Custom engine (WebGL/WebGPU) + GSAP + own scroll + shaders + audio procedural + CI/CD avançado. Tudo in-house.",
+      "whenToUse": "Para top 1% studios (Active Theory level). Onde se ganha Developer Award consistentemente.",
+      "siteType": "Top 1% studios, award-winning experimental",
+      "examples": [
+        "Active Theory",
+        "Resn",
+        "Lusion"
+      ],
+      "exampleLinks": [
+        "https://activetheory.net",
+        "https://resn.co.nz",
+        "https://lusion.co"
+      ],
+      "bestFor": [
+        "Top 1% studios",
+        "Active Theory level",
+        "Developer Award"
+      ],
+      "performanceNote": "Tudo custom. Equipe dev dedicada. Max performance."
     }
   ]
 }
