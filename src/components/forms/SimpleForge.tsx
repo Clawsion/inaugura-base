@@ -9,7 +9,10 @@ import { LayoutSelector } from "@/components/forms/LayoutSelector";
 import {
   Sparkles, Lightbulb, Plus, Trash2, ChevronDown, Wand2, ArrowRight,
   Dices, Eye, X, Layers, Zap, Lock, RefreshCw, Palette, Maximize2, Check, Info, BookOpen, Cpu,
+  Rocket, AppWindow, ShoppingBag, Briefcase, LayoutDashboard, FileText, Store,
+  UtensilsCrossed, GraduationCap, Home, Wand2 as WandIcon, MoreHorizontal,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { CATALOG } from "@/lib/catalog";
@@ -66,19 +69,19 @@ interface SimpleForgeProps {
 }
 
 // Ícones minimalistas
-const PROJECT_TYPES = [
-  { id: "landing", label: "Landing Page", icon: "◢" },
-  { id: "saas", label: "SaaS / Web App", icon: "▣" },
-  { id: "ecommerce", label: "E-commerce", icon: "⬡" },
-  { id: "portfolio", label: "Portfolio / Agência", icon: "◐" },
-  { id: "dashboard", label: "Dashboard / Admin", icon: "▦" },
-  { id: "blog", label: "Blog / Conteúdo", icon: "☰" },
-  { id: "marketplace", label: "Marketplace", icon: "◈" },
-  { id: "restaurant", label: "Restaurante / Food", icon: "🍴" },
-  { id: "education", label: "Educação / EdTech", icon: "🎓" },
-  { id: "realestate", label: "Imobiliário", icon: "🏠" },
-  { id: "agency", label: "Agência Criativa", icon: "✦" },
-  { id: "other", label: "Outro", icon: "✦" },
+const PROJECT_TYPES: { id: string; label: string; icon: LucideIcon }[] = [
+  { id: "landing", label: "Landing Page", icon: Rocket },
+  { id: "saas", label: "SaaS / Web App", icon: AppWindow },
+  { id: "ecommerce", label: "E-commerce", icon: ShoppingBag },
+  { id: "portfolio", label: "Portfolio / Agência", icon: Briefcase },
+  { id: "dashboard", label: "Dashboard / Admin", icon: LayoutDashboard },
+  { id: "blog", label: "Blog / Conteúdo", icon: FileText },
+  { id: "marketplace", label: "Marketplace", icon: Store },
+  { id: "restaurant", label: "Restaurante / Food", icon: UtensilsCrossed },
+  { id: "education", label: "Educação / EdTech", icon: GraduationCap },
+  { id: "realestate", label: "Imobiliário", icon: Home },
+  { id: "agency", label: "Agência Criativa", icon: WandIcon },
+  { id: "other", label: "Outro", icon: MoreHorizontal },
 ];
 
 const AESTHETICS = [
@@ -545,13 +548,16 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       <div className="space-y-2">
         <Label className="text-xs font-semibold">Tipo de Projeto</Label>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-          {PROJECT_TYPES.map((pt) => (
+          {PROJECT_TYPES.map((pt) => {
+            const Icon = pt.icon;
+            return (
             <button key={pt.id} type="button" onClick={() => onChange({ projectType: pt.id })}
               className={cn("flex flex-col items-center gap-1 rounded-xl border p-3 transition-all", value.projectType === pt.id ? "border-primary bg-primary/10 ring-1 ring-primary" : "border-border bg-card/30 hover:border-primary/40")}>
-              <span className="text-lg font-light text-primary">{pt.icon}</span>
+              <Icon className="h-4 w-4 text-primary" strokeWidth={1.75} />
               <span className="text-[11px] font-medium leading-tight text-center">{pt.label}</span>
             </button>
-          ))}
+            );
+          })}
         </div>
       </div>
 
