@@ -838,26 +838,27 @@ export function transformToAwwwards(
 
   // ─── TRANSFORMAR cada cor para Awwwards level ────────────────────────────
   // RICH BLACK bg — tinted com o hue do accent, NUNCA pure #000
+  // Forçar valores Awwwards IDEAL (não preservar L atual) para transformação visível
   const bgSat = isDark
-    ? Math.max(20, Math.min(35, baseSat * 0.3))     // dark: 20-35% sat
-    : Math.max(15, Math.min(28, baseSat * 0.2));    // light: 15-28% sat
+    ? 28 + Math.random() * 7      // dark: 28-35% sat (rich tinted black)
+    : 20 + Math.random() * 8;     // light: 20-28% sat (warm cream)
   const bgLight = isDark
-    ? Math.max(6, Math.min(12, bgHsl.l))             // dark: 6-12% (rich black)
-    : Math.max(94, Math.min(98, bgHsl.l));           // light: 94-98% (cream)
+    ? 7 + Math.random() * 4       // dark: 7-11% (rich black, NUNCA pure #000)
+    : 96 + Math.random() * 2;     // light: 96-98% (warm cream)
   const bg = hslToHex(hue, bgSat, bgLight);
 
-  // Card — elevação subtil (ΔL 3-5%)
-  const cardSat = bgSat + 3;
-  const cardLight = isDark ? bgLight + 4 : bgLight - 3;
+  // Card — elevação subtil (ΔL 4-6%)
+  const cardSat = bgSat + 4;
+  const cardLight = isDark ? bgLight + 5 : bgLight - 4;
   const card = hslToHex(hue, cardSat, cardLight);
 
   // Text — rich cream (dark) ou deep saturated (light), com contrast máximo
   const textSat = isDark
-    ? Math.max(12, Math.min(22, baseSat * 0.18))
-    : Math.max(38, Math.min(52, baseSat * 0.4));
+    ? 15 + Math.random() * 7      // dark: 15-22% sat
+    : 42 + Math.random() * 8;     // light: 42-50% sat
   const textLight = isDark
-    ? Math.max(90, Math.min(96, textHsl?.l ?? 93))   // 90-96% cream
-    : Math.max(14, Math.min(22, textHsl?.l ?? 18));   // 14-22% deep
+    ? 92 + Math.random() * 3      // dark: 92-95% cream (bright)
+    : 16 + Math.random() * 4;     // light: 16-20% deep
   let text = hslToHex(hue, textSat, textLight);
   text = ensureContrast(text, bg, 7);  // AAA contrast
 

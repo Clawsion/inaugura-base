@@ -436,11 +436,13 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
 
     // Transformar a palete ativa
     const palette = transformToAwwwards(activeColors);
+    // Mapeamento inteligente: com 3 cores, o accent (Destaque) deve estar incluído
+    // Ordem: bg, text, accent, card — assim slice(0, colorCount) inclui sempre o accent
     const newColors = [
       { hex: palette.bg, role: "Background" },
       { hex: palette.text, role: "Secundária" },
-      { hex: palette.accent, role: "Suporte" },
-      { hex: palette.highlight, role: "Destaque" },
+      { hex: palette.accent, role: "Destaque" },   // accent antes de card!
+      { hex: palette.card, role: "Suporte" },
     ];
 
     // Para CADA trend visível no grid: deteta as cores atuais dessa trend e transforma
@@ -457,8 +459,8 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       newOverrides[trend.id] = [
         { hex: p.bg, role: "Background" },
         { hex: p.text, role: "Secundária" },
-        { hex: p.accent, role: "Suporte" },
-        { hex: p.highlight, role: "Destaque" },
+        { hex: p.accent, role: "Destaque" },
+        { hex: p.card, role: "Suporte" },
       ];
     });
 
@@ -488,11 +490,12 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
 
     // Transforma essas cores para Awwwards level
     const palette = transformToAwwwards(currentColors);
+    // Mapeamento inteligente: accent antes de card para incluir sempre o accent
     const newColors = [
       { hex: palette.bg, role: "Background" },
       { hex: palette.text, role: "Secundária" },
-      { hex: palette.accent, role: "Suporte" },
-      { hex: palette.highlight, role: "Destaque" },
+      { hex: palette.accent, role: "Destaque" },
+      { hex: palette.card, role: "Suporte" },
     ];
     const overrides = { ...value.trendOverrides, [trendId]: newColors };
     if (trendId === value.colorPreset) {
@@ -761,14 +764,30 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       <QuickPresets
         activeId={value._quickPresetId}
         onApply={(preset: QuickPreset) => {
-          // Aplica o patch do preset ao state + marca qual está ativo
-          onChange({
-            ...preset.patch,
-            _quickPresetId: preset.id,
-          } as any);
-          toast.success(`Preset "${preset.name}" aplicado!`, {
-            description: `${preset.patch.effectsStyle?.length ?? 0} efeitos · ${preset.patch.mood?.length ?? 0} moods`,
-          });
+          // Toggle: se o preset já está ativo, desativa (limpa seleção + valores aplicados)
+          if (value._quickPresetId === preset.id) {
+            onChange({
+              aesthetic: "modern-clean",
+              mood: [],
+              effectsStyle: [],
+              colorStyle: "auto",
+              colorPreset: value.colorPreset, // mantém a palete de cores atual
+              projectType: value.projectType, // mantém o tipo de projeto atual
+              _quickPresetId: "",
+            } as any);
+            toast.info(`Preset "${preset.name}" desativado`, {
+              description: "Valores limpos — podes escolher outro preset ou definir manualmente",
+            });
+          } else {
+            // Aplica o patch do preset ao state + marca qual está ativo
+            onChange({
+              ...preset.patch,
+              _quickPresetId: preset.id,
+            } as any);
+            toast.success(`Preset "${preset.name}" aplicado!`, {
+              description: `${preset.patch.effectsStyle?.length ?? 0} efeitos · ${preset.patch.mood?.length ?? 0} moods`,
+            });
+          }
         }}
       />
 
@@ -825,9 +844,11 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                 }
                 try {
                   const saved = JSON.parse(localStorage.getItem("inaugura:savedPalettes") || "[]");
+                  // DEEP COPY das cores — garante snapshot independente
+                  // (se o user editar customColors depois, a palete guardada NÃO deve mudar)
                   const newPalette = {
                     id: `palette_${Date.now()}`,
-                    colors: value.customColors,
+                    colors: value.customColors.map(c => ({ hex: c.hex, role: c.role })),
                     colorCount: value.colorCount,
                     colorPreset: value.colorPreset,
                     colorStyle: value.colorStyle,
@@ -849,20 +870,26 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
             {/* Biblioteca — abre popup com todas as paletes guardadas para carregar */}
             <SavedPalettesLibrary
               onLoad={(p: SavedPalette) => {
-                // Aplica a palete guardada ao state atual + ao trendOverrides
-                // (garante que a palete fica visível no grid e persiste ao mudar de trend)
+                // DEEP COPY das cores — garante que não há partilha de referências
+                // entre a palete guardada e o state atual (evita bugs de mutação)
+                const loadedColors = p.colors.map(c => ({ hex: c.hex, role: c.role }));
                 const effectiveTrendId = p.colorPreset !== "auto" ? p.colorPreset : "electric-lavender";
+
+                // Aplica a palete CLICADA (p) ao state — SEMPRE obedece à seleção do user
+                // O user clicou nesta palete específica, por isso ela deve ser carregada
+                // independentemente do que estava selecionado no grid antes
                 onChange({
-                  customColors: p.colors,
+                  customColors: loadedColors,
                   colorCount: p.colorCount,
                   colorPreset: p.colorPreset,
                   colorStyle: p.colorStyle as any,
                   polishType: p.polishType as any,
                   trendOverrides: {
                     ...value.trendOverrides,
-                    [effectiveTrendId]: p.colors,
+                    [effectiveTrendId]: loadedColors,
                   },
                 });
+
                 // Scroll suave para a secção de paletes para o user ver o resultado
                 setTimeout(() => {
                   const el = document.getElementById("paletes-de-cores");
@@ -985,37 +1012,45 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                 ? override.slice(0, value.colorCount).map(c => c.hex)
                 : trend.colors.slice(0, value.colorCount);
             return (
-              <div key={trend.id} className={cn("rounded-lg border p-2 transition-all", isActive ? "border-primary bg-primary/10 ring-1 ring-primary" : "border-border bg-card/30 hover:border-primary/40")}>
-                <button type="button" onClick={() => {
-                  // Ao selecionar um trend: se tiver override gerado, carrega-o para customColors
-                  // (permite continuar a editar a partir das cores geradas); senão limpa para usar cores estáticas
+              <div
+                key={trend.id}
+                className={cn(
+                  "rounded-lg border p-2 transition-all cursor-pointer",
+                  isActive
+                    ? "border-primary bg-primary/10 ring-1 ring-primary"
+                    : "border-border bg-card/30 hover:border-primary/40"
+                )}
+                onClick={() => {
+                  // Card inteiro clicável — seleciona a palete ao clicar em qualquer zona
+                  // (nome, swatches, tags). Os botões de ação usam stopPropagation.
                   const existingOverride = value.trendOverrides[trend.id];
                   onChange({
                     colorPreset: trend.id,
-                    customColors: existingOverride ? existingOverride : [],
+                    customColors: existingOverride ? existingOverride.map(c => ({ ...c })) : [],
                   });
                 }}
-                  className="w-full text-left">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-semibold">{trend.name}</span>
-                    <span className="text-[8px] text-muted-foreground">{trend.tags.slice(0, 2).join(" · ")}</span>
-                  </div>
-                </button>
+              >
+                {/* Header: nome + tags */}
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-semibold">{trend.name}</span>
+                  <span className="text-[8px] text-muted-foreground">{trend.tags.slice(0, 2).join(" · ")}</span>
+                </div>
                 {/* Swatches — cada uma com ícone para editar individualmente */}
                 <div className="mt-1.5 flex gap-1">
                   {displayColors.map((c, i) => (
                     <div key={i} className="group relative flex-1">
                       <div className="h-8 rounded-md transition-colors duration-200" style={{ background: c }} />
                       {/* Ícone para ampliar cor individualmente */}
-                      <button type="button" onClick={() => {
+                      <button type="button" onClick={(e) => {
+                        e.stopPropagation(); // Não seleciona a palete ao editar cor
                         // Ao abrir o editor, garantir que customColors tem as cores atuais
                         if (value.customColors.length === 0) {
-                          const trend = COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
+                          const trendDef = COLOR_TRENDS_2026.find((t) => t.id === trend.id) ?? COLOR_TRENDS_2026[0];
                           const roles = ["Background", "Secundária", "Suporte", "Destaque"];
-                          const newCustom = trend.colors.slice(0, value.colorCount).map((hex, idx) => ({
+                          const newCustom = trendDef.colors.slice(0, value.colorCount).map((hex, idx) => ({
                             hex, role: roles[idx] ?? `Cor ${idx + 1}`,
                           }));
-                          onChange({ customColors: newCustom });
+                          onChange({ customColors: newCustom, colorPreset: trend.id });
                         }
                         setColorEditIndex(colorEditIndex === i ? null : i);
                       }}
@@ -1026,7 +1061,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                     </div>
                   ))}
                   {/* Generate individual */}
-                  <button type="button" onClick={() => generatePaletteVariation(trend.id)}
+                  <button type="button" onClick={(e) => { e.stopPropagation(); generatePaletteVariation(trend.id); }}
                     className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:border-primary hover:text-primary"
                     title="Gerar variação desta palete">
                     <RefreshCw className="h-3 w-3" />
@@ -1034,7 +1069,8 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                   {/* Polimento individual — polir cada cor */}
                   {isActive && value.customColors.length > 0 && (
                     <button type="button"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         // Polir cada cor individualmente
                         const newColors = value.customColors.map((c, idx) => ({
                           ...c,
@@ -1053,10 +1089,10 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                   )}
                   {/* Special individual — Awwwards palette para esta trend */}
                   <button type="button"
-                    onClick={() => generateSpecialForTrend(trend.id)}
+                    onClick={(e) => { e.stopPropagation(); generateSpecialForTrend(trend.id); }}
                     className="flex h-8 w-8 items-center justify-center rounded-md border text-muted-foreground hover:text-white transition-all"
                     style={{ borderColor: "#A78BFA40" }}
-                    title="Special — gerar paleta Awwwards-level (CSS + Tailwind) para esta palete"
+                    title="Special — elevar esta palete ao nível Awwwards"
                   >
                     <span style={{ fontSize: "10px" }}>🎨</span>
                   </button>
@@ -1064,7 +1100,13 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                 {/* Editor de cor individual (popup inline) — com botão OK para confirmar */}
                 <AnimatePresence>
                   {colorEditIndex !== null && isActive && (
-                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="mt-1.5 overflow-hidden rounded-md border border-border bg-card/50 p-2">
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="mt-1.5 overflow-hidden rounded-md border border-border bg-card/50 p-2"
+                      onClick={(e) => e.stopPropagation()} // Não fechar/selecionar ao clicar no editor
+                    >
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
                           <span className="text-[9px] text-muted-foreground">Cor {colorEditIndex + 1}:</span>
@@ -1078,8 +1120,8 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                             }}
                             className="h-6 w-8 cursor-pointer rounded border-0 bg-transparent" />
                           <code className="text-[9px] text-muted-foreground">{previewColors[colorEditIndex]?.hex ?? "#5E6AD2"}</code>
-                          <Button type="button" size="sm" onClick={() => { setColorEditIndex(null); toast.success("Cor aplicada ao mockup"); }} className="h-5 gap-1 px-2 text-[9px]">OK</Button>
-                          <button type="button" onClick={() => setColorEditIndex(null)} className="ml-auto text-muted-foreground hover:text-foreground"><X className="h-3 w-3" /></button>
+                          <Button type="button" size="sm" onClick={(e) => { e.stopPropagation(); setColorEditIndex(null); toast.success("Cor aplicada ao mockup"); }} className="h-5 gap-1 px-2 text-[9px]">OK</Button>
+                          <button type="button" onClick={(e) => { e.stopPropagation(); setColorEditIndex(null); }} className="ml-auto text-muted-foreground hover:text-foreground"><X className="h-3 w-3" /></button>
                         </div>
                         {/* Sliders HSL individuais */}
                         <div className="flex flex-wrap gap-2">
