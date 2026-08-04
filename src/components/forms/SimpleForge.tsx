@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { CATALOG } from "@/lib/catalog";
 import { FONT_CATALOG, getFontsByCategory, type FontDef } from "@/lib/font-catalog";
 import { adjustColor, generatePalette, generateRandomPalette, polishPalette, optimizePalette, polishSingleColor, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
+import { useFontLoader, getCssFontName } from "@/lib/use-font-loader";
 
 export interface SimpleForgeValues {
   briefing: string;
@@ -327,6 +328,9 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
   const [manualComboId, setManualComboId] = useState<string | null>(null);
   const [mockupStyle, setMockupStyle] = useState<"saas" | "ecommerce" | "portfolio" | "editorial" | "brutalist" | "vintage" | "tech">("saas");
   const [expandedMockup, setExpandedMockup] = useState(false);
+
+  // 🔥 CARREGA FONTS EM TEMPO REAL — quando mudas uma font, ela carrega do CDN
+  useFontLoader([value.fontHeading, value.fontBody, value.fontMono]);
 
   const toggleArray = useCallback((key: "references" | "mood" | "integrations", item: string) => {
     const arr = value[key];
@@ -1103,9 +1107,9 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
         {/* Preview de font em tempo real (influenciado pela palete de cores) */}
         <div className="rounded-lg border p-3" style={{ background: previewBg, color: previewText }}>
           <div className="space-y-1">
-            <div className="text-xl font-bold" style={{ fontFamily: value.fontHeading || "inherit" }}>The quick brown fox</div>
-            <div className="text-sm" style={{ fontFamily: value.fontBody || "inherit" }}>jumps over the lazy dog — 0123456789</div>
-            <div className="text-xs font-mono" style={{ fontFamily: value.fontMono || "monospace" }}>const hello = "world";</div>
+            <div className="text-xl font-bold" style={{ fontFamily: getCssFontName(value.fontHeading) }}>The quick brown fox</div>
+            <div className="text-sm" style={{ fontFamily: getCssFontName(value.fontBody) }}>jumps over the lazy dog — 0123456789</div>
+            <div className="text-xs font-mono" style={{ fontFamily: getCssFontName(value.fontMono) }}>const hello = "world";</div>
           </div>
           <button type="button" onClick={() => setShowFontPopup(!showFontPopup)} className="mt-2 flex items-center gap-1 text-[10px] opacity-70 hover:opacity-100">
             <Layers className="h-3 w-3" /> {showFontPopup ? "Fechar" : "Expandir"} mockup tipografia
@@ -1124,9 +1128,9 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                     <button type="button" onClick={() => setShowFontPopup(false)} className="rounded p-1 opacity-60 hover:opacity-100"><X className="h-3 w-3" /></button>
                   </div>
                   <div className="mt-3 space-y-3">
-                    <div className="text-3xl font-extrabold" style={{ fontFamily: value.fontHeading || "inherit" }}>The quick brown fox jumps</div>
-                    <div className="text-sm leading-relaxed opacity-80" style={{ fontFamily: value.fontBody || "inherit" }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
-                    <div className="text-xs font-mono opacity-60" style={{ fontFamily: value.fontMono || "monospace" }}>const inaugura = await generate();</div>
+                    <div className="text-3xl font-extrabold" style={{ fontFamily: getCssFontName(value.fontHeading) }}>The quick brown fox jumps</div>
+                    <div className="text-sm leading-relaxed opacity-80" style={{ fontFamily: getCssFontName(value.fontBody) }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                    <div className="text-xs font-mono opacity-60" style={{ fontFamily: getCssFontName(value.fontMono) }}>const inaugura = await generate();</div>
                   </div>
                 </div>
 
@@ -1134,9 +1138,9 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                 <div className="rounded-xl border-2 border-border bg-white p-4 text-zinc-900">
                   <span className="text-[10px] font-semibold text-zinc-400">Vista 2 · Light Mode (branco)</span>
                   <div className="mt-3 space-y-3">
-                    <div className="text-3xl font-extrabold" style={{ fontFamily: value.fontHeading || "inherit" }}>The quick brown fox jumps</div>
-                    <div className="text-sm leading-relaxed text-zinc-600" style={{ fontFamily: value.fontBody || "inherit" }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.</div>
-                    <div className="text-xs font-mono text-zinc-500" style={{ fontFamily: value.fontMono || "monospace" }}>const inaugura = await generate();</div>
+                    <div className="text-3xl font-extrabold" style={{ fontFamily: getCssFontName(value.fontHeading) }}>The quick brown fox jumps</div>
+                    <div className="text-sm leading-relaxed text-zinc-600" style={{ fontFamily: getCssFontName(value.fontBody) }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.</div>
+                    <div className="text-xs font-mono text-zinc-500" style={{ fontFamily: getCssFontName(value.fontMono) }}>const inaugura = await generate();</div>
                   </div>
                 </div>
 
@@ -1145,11 +1149,11 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                   <span className="text-[10px] font-semibold text-zinc-400">Vista 3 · Component / UI</span>
                   <div className="mt-3 space-y-2">
                     <div className="rounded-lg bg-white p-3 shadow-sm">
-                      <div className="text-lg font-bold" style={{ fontFamily: value.fontHeading || "inherit" }}>Card Title</div>
-                      <div className="text-xs text-zinc-500" style={{ fontFamily: value.fontBody || "inherit" }}>Card description with body font for readability.</div>
+                      <div className="text-lg font-bold" style={{ fontFamily: getCssFontName(value.fontHeading) }}>Card Title</div>
+                      <div className="text-xs text-zinc-500" style={{ fontFamily: getCssFontName(value.fontBody) }}>Card description with body font for readability.</div>
                     </div>
-                    <button className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white" style={{ fontFamily: value.fontHeading || "inherit" }}>Button Action</button>
-                    <code className="block rounded-md bg-zinc-900 p-2 text-[10px] text-green-400" style={{ fontFamily: value.fontMono || "monospace" }}>npm install @inaugura/core</code>
+                    <button className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white" style={{ fontFamily: getCssFontName(value.fontHeading) }}>Button Action</button>
+                    <code className="block rounded-md bg-zinc-900 p-2 text-[10px] text-green-400" style={{ fontFamily: getCssFontName(value.fontMono) }}>npm install @inaugura/core</code>
                   </div>
                 </div>
 
@@ -1737,9 +1741,9 @@ function MockupPreview({
   fontHeading: string; fontBody: string; fontMono: string;
   fontCount: 2 | 3; colorCount: 2 | 3 | 4; expanded?: boolean;
 }) {
-  const hf = fontHeading || "inherit";
-  const bf = fontBody || "inherit";
-  const mf = fontCount === 3 ? (fontMono || "monospace") : bf;
+  const hf = getCssFontName(fontHeading);
+  const bf = getCssFontName(fontBody);
+  const mf = fontCount === 3 ? getCssFontName(fontMono) : bf;
   const sz = expanded ? "text-sm" : "text-[9px]";
   const hsz = expanded ? "text-4xl" : "text-base";
   const pd = expanded ? "p-6" : "p-2.5";
