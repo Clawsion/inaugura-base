@@ -322,6 +322,8 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
   const [colorEditIndex, setColorEditIndex] = useState<number | null>(null);
   const [showStylePicker, setShowStylePicker] = useState(false);
   const [manualComboId, setManualComboId] = useState<string | null>(null);
+  const [mockupStyle, setMockupStyle] = useState<"saas" | "ecommerce" | "portfolio" | "editorial">("saas");
+  const [expandedMockup, setExpandedMockup] = useState(false);
 
   const toggleArray = useCallback((key: "references" | "mood" | "integrations", item: string) => {
     const arr = value[key];
@@ -908,40 +910,104 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           })}
         </div>
 
-        {/* Preview expandido (mockup website com a palete) — influenciado por colorCount */}
-        <div className="flex items-center gap-2">
+        {/* Preview expandido — 4 estilos de mockup com botões de troca */}
+        <div className="flex items-center gap-2 flex-wrap">
           <button type="button" onClick={() => setShowColorPopup(!showColorPopup)}
             className="flex items-center gap-1 text-[10px] text-primary hover:underline">
             <Eye className="h-3 w-3" /> {showColorPopup ? "Fechar preview" : "Ver preview do website"}
           </button>
+          {showColorPopup && (
+            <>
+              <span className="text-[10px] text-muted-foreground ml-1">Estilo:</span>
+              {([
+                { id: "saas", label: "SaaS" },
+                { id: "ecommerce", label: "E-commerce" },
+                { id: "portfolio", label: "Portfolio" },
+                { id: "editorial", label: "Editorial" },
+              ] as const).map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  onClick={() => setMockupStyle(m.id)}
+                  className={cn(
+                    "rounded-md px-2 py-0.5 text-[9px] font-medium transition-all",
+                    mockupStyle === m.id ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                  )}
+                >
+                  {m.label}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={() => setExpandedMockup(true)}
+                className="ml-auto flex items-center gap-1 rounded-md border border-border px-2 py-0.5 text-[9px] text-muted-foreground hover:border-primary hover:text-primary"
+                title="Ampliar mockup"
+              >
+                <Maximize2 className="h-3 w-3" /> Ampliar
+              </button>
+            </>
+          )}
         </div>
         <AnimatePresence>
           {showColorPopup && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-              <div className="rounded-xl border-2 border-border p-4" style={{ background: previewBg, color: previewText }}>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-bold" style={{ fontFamily: value.fontHeading || "inherit" }}>Logo / Brand</span>
-                  <button type="button" onClick={() => setShowColorPopup(false)} className="rounded p-1 text-xs opacity-60 hover:opacity-100"><X className="h-3 w-3" /></button>
-                </div>
-                <div className="mt-4 space-y-3">
-                  <h2 className="text-2xl font-extrabold" style={{ fontFamily: value.fontHeading || "inherit" }}>Forja projetos production-ready</h2>
-                  <p className="text-sm opacity-80" style={{ fontFamily: value.fontBody || "inherit" }}>Análise de nicho, paleta WCAG-AA, tipografia, design tokens — tudo em segundos.</p>
-                  <div className="flex gap-2">
-                    <button className="rounded-lg px-4 py-2 text-xs font-semibold" style={{ background: previewAccent, color: previewBg }}>Get Started →</button>
-                    <button className="rounded-lg border px-4 py-2 text-xs font-semibold" style={{ borderColor: previewText + "60", color: previewText }}>Learn more</button>
-                  </div>
-                  {/* Grid de features — número de cards = colorCount */}
-                  <div className={cn("grid gap-2", value.colorCount === 2 ? "grid-cols-2" : value.colorCount === 3 ? "grid-cols-3" : "grid-cols-4")}>
-                    {previewColors.map((c, i) => (
-                      <div key={i} className="rounded-lg border p-2" style={{ borderColor: previewText + "20", background: previewText + "08" }}>
-                        <div className="h-6 w-6 rounded-full" style={{ background: c.hex }} />
-                        <div className="mt-1 text-[10px] font-semibold">{c.role}</div>
-                        <div className="text-[9px] opacity-60">{c.hex}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              {/* ═══ MOCKUP INLINE (compacto) ═══ */}
+              <MockupPreview
+                style={mockupStyle}
+                bg={previewBg}
+                text={previewText}
+                accent={previewAccent}
+                card={previewCard}
+                colors={previewColors}
+                fontHeading={value.fontHeading}
+                fontBody={value.fontBody}
+                fontMono={value.fontMono}
+                fontCount={value.fontCount}
+                colorCount={value.colorCount}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ═══ POPUP EXPANDIDO (fullscreen, click fora fecha) ═══ */}
+        <AnimatePresence>
+          {expandedMockup && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+              onClick={() => setExpandedMockup(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-2xl border-2 border-border shadow-2xl"
+              >
+                <button
+                  type="button"
+                  onClick={() => setExpandedMockup(false)}
+                  className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+                <MockupPreview
+                  style={mockupStyle}
+                  bg={previewBg}
+                  text={previewText}
+                  accent={previewAccent}
+                  card={previewCard}
+                  colors={previewColors}
+                  fontHeading={value.fontHeading}
+                  fontBody={value.fontBody}
+                  fontMono={value.fontMono}
+                  fontCount={value.fontCount}
+                  colorCount={value.colorCount}
+                  expanded
+                />
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -1548,6 +1614,219 @@ function MiniSlider({ label, defaultValue = 0, onChange }: { label: string; defa
       <span className="text-[8px] text-muted-foreground w-3">{label}</span>
       <input type="range" min={0} max={label === "H" ? 360 : 100} defaultValue={defaultValue} onChange={(e) => onChange(Number(e.target.value))}
         className="h-1 w-16 cursor-pointer appearance-none rounded-full bg-muted accent-primary" />
+    </div>
+  );
+}
+
+// ============================================================================
+// MockupPreview — 4 estilos de mockup que respeitam cores + fonts selecionadas
+// ============================================================================
+function MockupPreview({
+  style, bg, text, accent, card, colors, fontHeading, fontBody, fontMono, fontCount, colorCount, expanded,
+}: {
+  style: "saas" | "ecommerce" | "portfolio" | "editorial";
+  bg: string; text: string; accent: string; card: string;
+  colors: { hex: string; role: string }[];
+  fontHeading: string; fontBody: string; fontMono: string;
+  fontCount: 2 | 3; colorCount: 2 | 3 | 4; expanded?: boolean;
+}) {
+  const headingFont = fontHeading || "inherit";
+  const bodyFont = fontBody || "inherit";
+  const monoFont = fontCount === 3 ? (fontMono || "monospace") : bodyFont;
+  const size = expanded ? "text-base" : "text-xs";
+  const headingSize = expanded ? "text-4xl" : "text-xl";
+  const padding = expanded ? "p-8" : "p-4";
+
+  const baseStyle = {
+    background: bg,
+    color: text,
+    fontFamily: bodyFont,
+    fontFeatureSettings: '"kern" 1, "liga" 1, "calt" 1',
+    textRendering: "optimizeLegibility" as const,
+    letterSpacing: "0.01em",
+  };
+  const headingStyle = {
+    fontFamily: headingFont,
+    letterSpacing: "-0.025em",
+    fontFeatureSettings: '"kern" 1, "liga" 1, "calt" 1, "ss01" 1',
+    textRendering: "optimizeLegibility" as const,
+  };
+  const monoStyle = {
+    fontFamily: monoFont,
+    fontFeatureSettings: '"kern" 1, "liga" 1, "zero" 1',
+  };
+
+  // ═══ ESTILO 1: SaaS Landing (Linear/Vercel style) ═══
+  if (style === "saas") {
+    return (
+      <div className={cn("rounded-xl border-2 border-border", padding)} style={baseStyle}>
+        {/* Nav */}
+        <div className="flex items-center justify-between mb-6">
+          <span className="text-sm font-bold" style={headingStyle}>◆ Brand</span>
+          <div className="flex items-center gap-3">
+            {["Features", "Pricing", "Docs"].map((l) => (
+              <span key={l} className={cn("opacity-70 hover:opacity-100 cursor-pointer", size)}>{l}</span>
+            ))}
+            <button className={cn("rounded-lg px-3 py-1 font-semibold", size)} style={{ background: accent, color: bg }}>Sign In</button>
+          </div>
+        </div>
+        {/* Hero */}
+        <div className="text-center space-y-3 mb-6">
+          <h1 className={cn("font-extrabold", headingSize)} style={headingStyle}>
+            Build faster with AI
+          </h1>
+          <p className={cn("opacity-80 max-w-md mx-auto", size)} style={bodyFont ? { fontFamily: bodyFont } : {}}>
+            Ship production-ready projects in minutes, not weeks. Spec-driven development powered by AI.
+          </p>
+          <div className="flex justify-center gap-2">
+            <button className={cn("rounded-lg px-4 py-2 font-semibold", size)} style={{ background: accent, color: bg }}>Get Started →</button>
+            <button className={cn("rounded-lg border px-4 py-2 font-semibold", size)} style={{ borderColor: text + "40", color: text }}>Live Demo</button>
+          </div>
+        </div>
+        {/* Feature cards — respeita colorCount */}
+        <div className={cn("grid gap-2", colorCount === 2 ? "grid-cols-2" : colorCount === 3 ? "grid-cols-3" : "grid-cols-4")}>
+          {colors.map((c, i) => (
+            <div key={i} className="rounded-lg border p-2" style={{ borderColor: text + "15", background: text + "05" }}>
+              <div className={cn("rounded-md mb-1.5", expanded ? "h-10 w-10" : "h-6 w-6")} style={{ background: c.hex }} />
+              <div className={cn("font-semibold", expanded ? "text-xs" : "text-[10px]")} style={headingStyle}>{c.role}</div>
+              <div className={cn("opacity-50", expanded ? "text-[10px]" : "text-[8px]")} style={monoStyle}>{c.hex}</div>
+            </div>
+          ))}
+        </div>
+        {/* Code snippet se fontCount=3 */}
+        {fontCount === 3 && (
+          <div className="mt-3 rounded-lg p-2" style={{ background: text + "08" }}>
+            <code className={cn(expanded ? "text-[10px]" : "text-[8px]")} style={monoStyle}>npm install @inaugura/core</code>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ═══ ESTILO 2: E-commerce (Shopify/product showcase) ═══
+  if (style === "ecommerce") {
+    return (
+      <div className={cn("rounded-xl border-2 border-border", padding)} style={baseStyle}>
+        {/* Nav */}
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-sm font-bold" style={headingStyle}>✦ Boutique</span>
+          <div className="flex items-center gap-2">
+            <span className={cn("opacity-60", size)}>Search</span>
+            <span className={cn("opacity-60", size)}>Cart (2)</span>
+          </div>
+        </div>
+        {/* Hero: product split */}
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <div className="space-y-2">
+            <h1 className={cn("font-bold", expanded ? "text-3xl" : "text-lg")} style={headingStyle}>Autumn Collection</h1>
+            <p className={cn("opacity-70", size)}>Handcrafted pieces for the modern lifestyle.</p>
+            <button className={cn("rounded-lg px-3 py-1.5 font-semibold", size)} style={{ background: accent, color: bg }}>Shop Now →</button>
+          </div>
+          <div className="rounded-lg" style={{ background: accent + "30", minHeight: expanded ? 120 : 60 }}>
+            <div className="flex h-full items-center justify-center">
+              <span className={cn("opacity-50", size)}>Product Image</span>
+            </div>
+          </div>
+        </div>
+        {/* Product grid — respeita colorCount */}
+        <div className={cn("grid gap-2", colorCount === 2 ? "grid-cols-2" : colorCount === 3 ? "grid-cols-3" : "grid-cols-4")}>
+          {colors.map((c, i) => (
+            <div key={i} className="rounded-lg overflow-hidden border" style={{ borderColor: text + "15" }}>
+              <div className={cn(expanded ? "h-20" : "h-10")} style={{ background: c.hex }} />
+              <div className="p-1.5">
+                <div className={cn("font-semibold", expanded ? "text-xs" : "text-[9px]")} style={headingStyle}>Product {i + 1}</div>
+                <div className={cn("font-bold", expanded ? "text-xs" : "text-[9px]")} style={{ color: accent }}>€{(i + 1) * 49}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // ═══ ESTILO 3: Portfolio (fullscreen hero, agency) ═══
+  if (style === "portfolio") {
+    return (
+      <div className={cn("rounded-xl border-2 border-border", padding)} style={baseStyle}>
+        {/* Minimal nav */}
+        <div className="flex items-center justify-between mb-8">
+          <span className={cn("font-bold tracking-tight", expanded ? "text-lg" : "text-sm")} style={headingStyle}>Studio</span>
+          <div className="flex items-center gap-3">
+            {["Work", "About", "Contact"].map((l) => (
+              <span key={l} className={cn("opacity-60 hover:opacity-100", size)}>{l}</span>
+            ))}
+          </div>
+        </div>
+        {/* Fullscreen hero — centered */}
+        <div className="text-center py-8">
+          <h1 className={cn("font-extrabold leading-none", expanded ? "text-6xl" : "text-3xl")} style={headingStyle}>
+            We craft<br/>digital experiences
+          </h1>
+          <p className={cn("opacity-60 mt-3 max-w-sm mx-auto", size)}>
+            Award-winning design studio building the future of the web.
+          </p>
+          <div className="mt-4 flex justify-center gap-2">
+            <button className={cn("rounded-full px-4 py-1.5 font-semibold", size)} style={{ background: accent, color: bg }}>View Work</button>
+          </div>
+        </div>
+        {/* Project showcase — respeita colorCount */}
+        <div className={cn("grid gap-2", colorCount === 2 ? "grid-cols-2" : colorCount === 3 ? "grid-cols-3" : "grid-cols-2")}>
+          {colors.slice(0, colorCount).map((c, i) => (
+            <div key={i} className={cn("rounded-lg flex items-end overflow-hidden", expanded ? "h-32" : "h-16")} style={{ background: c.hex }}>
+              <div className="p-2 w-full" style={{ background: bg + "80" }}>
+                <div className={cn("font-semibold", expanded ? "text-xs" : "text-[9px]")} style={headingStyle}>Project {i + 1}</div>
+                <div className={cn("opacity-60", expanded ? "text-[10px]" : "text-[8px]")} style={monoStyle}>{c.role}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // ═══ ESTILO 4: Editorial (Stripe/Resend magazine) ═══
+  return (
+    <div className={cn("rounded-xl border-2 border-border", padding)} style={baseStyle}>
+      {/* Top bar */}
+      <div className="flex items-center justify-between mb-4 border-b pb-2" style={{ borderColor: text + "20" }}>
+        <span className={cn("font-bold", expanded ? "text-base" : "text-xs")} style={headingStyle}>The Journal</span>
+        <span className={cn("opacity-50", size)} style={monoStyle}>Vol. 24 · 2026</span>
+      </div>
+      {/* Editorial hero — split */}
+      <div className="grid grid-cols-3 gap-3 mb-4">
+        <div className="col-span-2 space-y-2">
+          <span className={cn("font-semibold uppercase tracking-wider", expanded ? "text-[10px]" : "text-[8px]")} style={{ color: accent }}>Featured</span>
+          <h1 className={cn("font-bold leading-tight", expanded ? "text-3xl" : "text-lg")} style={headingStyle}>
+            The future of spec-driven development is here
+          </h1>
+          <p className={cn("opacity-70 leading-relaxed", size)} style={bodyFont ? { fontFamily: bodyFont } : {}}>
+            How AI is transforming the way we build websites — from idea to production in minutes.
+          </p>
+          <div className="flex items-center gap-2">
+            <span className={cn("opacity-50", size)}>By Author</span>
+            <span className={cn("opacity-30", size)}>·</span>
+            <span className={cn("opacity-50", size)} style={monoStyle}>5 min read</span>
+          </div>
+        </div>
+        <div className="rounded-lg" style={{ background: accent + "20", minHeight: expanded ? 140 : 70 }}>
+          <div className="flex h-full items-center justify-center">
+            <span className={cn("opacity-30", size)}>Cover</span>
+          </div>
+        </div>
+      </div>
+      {/* Article list — respeita colorCount */}
+      <div className="space-y-1.5">
+        {colors.map((c, i) => (
+          <div key={i} className="flex items-center gap-2 rounded-md p-1.5" style={{ background: text + "05" }}>
+            <div className={cn("rounded shrink-0", expanded ? "h-12 w-12" : "h-6 w-6")} style={{ background: c.hex }} />
+            <div className="flex-1 min-w-0">
+              <div className={cn("font-semibold truncate", expanded ? "text-sm" : "text-[10px]")} style={headingStyle}>Article {i + 1}: {c.role}</div>
+              <div className={cn("opacity-50 truncate", expanded ? "text-xs" : "text-[8px]")}>A deep dive into {c.role.toLowerCase()} and its impact on design.</div>
+            </div>
+            <span className={cn("opacity-40 shrink-0", size)} style={monoStyle}>{i + 1}m</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
