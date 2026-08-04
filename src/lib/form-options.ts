@@ -381,6 +381,62 @@ export const EfeitosInfo: EfeitoInfo[] = [
       "FAQ sections, product specs, pricing details, filter sidebars.",
     exemplo: "Stripe FAQ, Vercel pricing, Linear changelog.",
   },
+  // ─── 5 NOVOS EFEITOS VISUAIS (botões coloridos premium) ───
+  {
+    nome: "Aurora Boreal",
+    icon: "Sparkles",
+    descricao:
+      "Gradiente animado multi-color que se move suavemente como aurora boreal. Cria atmosfera premium e etérea.",
+    quandoAplicar:
+      "Quando queres um fundo vivo mas elegante — SaaS premium, AI products, brand experiences.",
+    ondeAplicar:
+      "Hero sections, headers de landing, backgrounds de cards featured, sections CTA.",
+    exemplo: "Linear gradient hero, Vercel edge animations, Resend backgrounds.",
+  },
+  {
+    nome: "Spotlight Follow",
+    icon: "MousePointerClick",
+    descricao:
+      "Spotlight radial que segue o cursor — ilumina elementos à medida que o rato passa. Efeito premium interativo.",
+    quandoAplicar:
+      "Para highlight de features ou CTAs — guia visualmente o utilizador para onde queres.",
+    ondeAplicar:
+      "Card grids, feature highlights, hover states em CTAs, product showcases.",
+    exemplo: "Stripe product cards, Linear feature hover, Cursor landing.",
+  },
+  {
+    nome: "Liquid Morph",
+    icon: "Wine",
+    descricao:
+      "Formas orgânicas que se deformam e morpham suavemente — SVG morphing com GSAP. Efeito fluido e orgânico.",
+    quandoAplicar:
+      "Para brand identities fluidas, wellness apps, creative agencies que querem destacar-se.",
+    ondeAplicar:
+      "Logos animados, dividers entre secções, backgrounds orgânicos, hero shapes.",
+    exemplo: "Calm app, Headspace animations, Bureau Creative agencies.",
+  },
+  {
+    nome: "Neon Glow Pulse",
+    icon: "Box",
+    descricao:
+      "Efeito neon que pulsa em volta de elementos — box-shadow animado com cores vibrantes. Cyberpunk/Web3 vibe.",
+    quandoAplicar:
+      "Para Web3, gaming, crypto, AI products que querem parecer futuristic.",
+    ondeAplicar:
+      "Buttons CTA, cards featured, borders de input focus, badges de novidade.",
+    exemplo: "Vercel edge demos, Cyberpunk 2077 site, Web3 gaming sites.",
+  },
+  {
+    nome: "Confetti Burst",
+    icon: "Sparkles",
+    descricao:
+      "Explosão de confete/partículas coloridas em eventos — submit de form, click em CTA, milestone reached.",
+    quandoAplicar:
+      "Para celebrar ações do utilizador — signup, purchase, achievement unlock.",
+    ondeAplicar:
+      "Submit buttons, success states, gamification moments, onboarding completion.",
+    exemplo: "Linear signup, Stripe payment success, Duolingo achievements.",
+  },
 ];
 
 // Manter retro-compatibilidade

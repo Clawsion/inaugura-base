@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { LayoutSelector } from "@/components/forms/LayoutSelector";
 import {
   Sparkles, Lightbulb, Plus, Trash2, ChevronDown, Wand2, ArrowRight,
-  Dices, Eye, X, Layers, Zap, Lock, RefreshCw, Palette, Maximize2, Check,
+  Dices, Eye, X, Layers, Zap, Lock, RefreshCw, Palette, Maximize2, Check, Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -244,130 +245,6 @@ const STACK_PREFS = [
   { id: "python", label: "Python / FastAPI", desc: "Backend Python" },
   { id: "custom", label: "Custom", desc: "Especificar no briefing" },
 ];
-
-// ============================================================================
-// LAYOUT_STYLES — estilos de layout (hero type, grid, composition)
-// ============================================================================
-const LAYOUT_STYLES = [
-  {
-    id: "auto",
-    name: "Auto",
-    description: "IA escolhe conforme project type",
-    icon: "✨",
-    heroType: "Dinâmico",
-    bestFor: ["Todos"],
-  },
-  {
-    id: "hero-centered",
-    name: "Hero Centered",
-    description: "Hero centrado com CTA grande — clássico SaaS (Linear, Vercel)",
-    icon: "🎯",
-    heroType: "Centered headline + CTA",
-    bestFor: ["SaaS", "Landing", "Product"],
-  },
-  {
-    id: "hero-split",
-    name: "Hero Split",
-    description: "Hero 2 colunas: texto + visual — e-commerce, product showcases",
-    icon: "↔️",
-    heroType: "Split (texto | visual)",
-    bestFor: ["E-commerce", "Product", "App"],
-  },
-  {
-    id: "hero-fullscreen",
-    name: "Hero Fullscreen",
-    description: "Hero fullscreen imersivo — portfolios, agencies, Awwwards",
-    icon: "🖥️",
-    heroType: "Full viewport 100vh",
-    bestFor: ["Portfolio", "Agency", "Awwwards"],
-  },
-  {
-    id: "hero-video",
-    name: "Hero Video BG",
-    description: "Hero com vídeo de fundo — brand experiences, premium",
-    icon: "🎬",
-    heroType: "Video background + overlay",
-    bestFor: ["Brand", "Premium", "Cinematic"],
-  },
-  {
-    id: "hero-3d",
-    name: "Hero 3D",
-    description: "Hero com 3D (Three.js/R3F) — experimental, Awwwards top",
-    icon: "🎮",
-    heroType: "3D canvas + overlay",
-    bestFor: ["Awwwards", "Experimental", "Studio"],
-  },
-  {
-    id: "bento-grid",
-    name: "Bento Grid",
-    description: "Grid bento (Apple style) — features, product showcases",
-    icon: "🔲",
-    heroType: "Bento grid de features",
-    bestFor: ["Product", "Features", "Apple style"],
-  },
-  {
-    id: "magazine",
-    name: "Magazine Editorial",
-    description: "Layout magazine com columns — editorial, blogs premium",
-    icon: "📰",
-    heroType: "Multi-column editorial",
-    bestFor: ["Editorial", "Blog", "Magazine"],
-  },
-  {
-    id: "asymmetric",
-    name: "Asymmetric",
-    description: "Layout assimétrico ousado — creative agencies, Awwwards",
-    icon: "📐",
-    heroType: "Asymmetric grid",
-    bestFor: ["Agency", "Creative", "Bold"],
-  },
-  {
-    id: "minimal-swiss",
-    name: "Minimal Swiss",
-    description: "Grid suíço minimalista — portfolios, brands minimal",
-    icon: "⬜",
-    heroType: "Swiss grid 12-col",
-    bestFor: ["Minimal", "Portfolio", "Swiss"],
-  },
-  {
-    id: "brutalist",
-    name: "Brutalist",
-    description: "Brutalist raw — bold, high contrast, sem decoration",
-    icon: "🟥",
-    heroType: "Brutalist blocks",
-    bestFor: ["Brutalist", "Bold", "Experimental"],
-  },
-  {
-    id: "card-grid",
-    name: "Card Grid",
-    description: "Grid de cards (Pinterest style) — e-commerce, galleries",
-    icon: "🃏",
-    heroType: "Masonry/card grid",
-    bestFor: ["E-commerce", "Gallery", "Portfolio"],
-  },
-];
-
-// ============================================================================
-// EFFECTS_STYLES — estilos de efeitos (scroll, hover, transitions)
-// ============================================================================
-const EFFECTS_STYLES = [
-  { id: "reveal-scroll", name: "Reveal on Scroll", description: "Elementos aparecem ao scroll", perf: "low", icon: "👁️", bestFor: ["Todos", "Premium"] },
-  { id: "smooth-scroll", name: "Smooth Scroll (Lenis)", description: "Scroll suave buttery", perf: "low", icon: "🪄", bestFor: ["Premium", "Awwwards"] },
-  { id: "parallax", name: "Parallax", description: "Camadas movem-se a velocidades diferentes", perf: "mid", icon: "🌀", bestFor: ["Cinematic", "Storytelling"] },
-  { id: "magnetic-buttons", name: "Magnetic Buttons", description: "Botões atraem cursor", perf: "low", icon: "🧲", bestFor: ["Premium", "Playful"] },
-  { id: "kinetic-typography", name: "Kinetic Typography", description: "Texto anima-se ao scroll/hover", perf: "low", icon: "✍️", bestFor: ["Bold", "Editorial"] },
-  { id: "gsap-timeline", name: "GSAP Timeline", description: "Sequências animadas complexas", perf: "high", icon: "⏱️", bestFor: ["Awwwards", "Cinematic"] },
-  { id: "horizontal-scroll", name: "Horizontal Scroll", description: "Scroll horizontal pinned", perf: "high", icon: "↔️", bestFor: ["Storytelling", "Awwwards"] },
-  { id: "3d-webgl", name: "3D WebGL", description: "Canvas 3D imersivo (Three.js/R3F)", perf: "high", icon: "🎮", bestFor: ["Experimental", "Awwwards"] },
-  { id: "glassmorphism", name: "Glassmorphism", description: "Efeito vidro frosted", perf: "mid", icon: "🥃", bestFor: ["Premium", "Modern"] },
-  { id: "mesh-gradient", name: "Mesh Gradient", description: "Gradientes animados de fundo", perf: "low", icon: "🌈", bestFor: ["Modern", "Vibrant"] },
-  { id: "bento-grid", name: "Bento Grid Animado", description: "Cards bento com animações", perf: "low", icon: "🔲", bestFor: ["Product", "Apple style"] },
-  { id: "view-transitions", name: "View Transitions", description: "Transições de página nativas", perf: "low", icon: "🔀", bestFor: ["Multi-page", "Cinematic"] },
-  { id: "text-blur-reveal", name: "Text Blur Reveal", description: "Texto aparece com blur→sharp", perf: "low", icon: "🌫️", bestFor: ["Editorial", "Premium"] },
-  { id: "cursor-custom", name: "Custom Cursor", description: "Cursor custom com hover states", perf: "low", icon: "🖱️", bestFor: ["Awwwards", "Creative"] },
-  { id: "page-transition", name: "Page Transitions", description: "Transições entre páginas (Barba/View Transitions)", perf: "mid", icon: "🎬", bestFor: ["Cinematic", "Multi-page"] },
-];
-
 const STACK_COMBO_CATEGORIES = [
   { id: "awwwards", label: "🏆 Awwwards" },
   { id: "saas", label: "SaaS" },
@@ -1115,76 +992,17 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════ */}
-      {/* LAYOUTS — estilo de layout (hero type, grid)                            */}
+      {/* ESTILO DE LAYOUT & EFEITOS — MESMO componente do AdvancedForge         */}
       {/* ═══════════════════════════════════════════════════════════════════ */}
-      <div className="space-y-3">
-        <Label className="text-xs font-semibold">Layouts & Composição</Label>
-        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:grid-cols-4">
-          {LAYOUT_STYLES.map((l) => {
-            const isActive = value.layoutStyle === l.id;
-            return (
-              <button
-                key={l.id}
-                type="button"
-                onClick={() => onChange({ layoutStyle: isActive ? "auto" : l.id })}
-                title={`${l.description}\nHero: ${l.heroType}\nBest for: ${l.bestFor.join(", ")}`}
-                className={cn(
-                  "flex flex-col gap-1 rounded-lg border p-2 text-left transition-all",
-                  isActive ? "border-primary bg-primary/10 ring-1 ring-primary" : "border-border bg-card/30 hover:border-primary/40"
-                )}
-              >
-                <div className="flex items-center gap-1.5">
-                  <span className="text-base">{l.icon}</span>
-                  <span className="text-[10px] font-semibold leading-tight">{l.name}</span>
-                </div>
-                <span className="text-[8px] text-muted-foreground line-clamp-2">{l.description}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ═══════════════════════════════════════════════════════════════════ */}
-      {/* EFEITOS — scroll, hover, transitions (multi-select)                     */}
-      {/* ═══════════════════════════════════════════════════════════════════ */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <Label className="text-xs font-semibold">Efeitos & Interações</Label>
-          <span className="text-[10px] text-muted-foreground">
-            {value.effectsStyle.length > 0 ? `${value.effectsStyle.length} selecionados` : "Nenhum (auto)"}
-          </span>
-        </div>
-        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:grid-cols-4">
-          {EFFECTS_STYLES.map((e) => {
-            const isActive = value.effectsStyle.includes(e.id);
-            const perfColor = e.perf === "high" ? "text-red-400" : e.perf === "mid" ? "text-yellow-400" : "text-green-400";
-            return (
-              <button
-                key={e.id}
-                type="button"
-                onClick={() => {
-                  const newEffects = isActive
-                    ? value.effectsStyle.filter((id) => id !== e.id)
-                    : [...value.effectsStyle, e.id];
-                  onChange({ effectsStyle: newEffects });
-                }}
-                title={`${e.description}\nPerf: ${e.perf}\nBest for: ${e.bestFor.join(", ")}`}
-                className={cn(
-                  "flex flex-col gap-1 rounded-lg border p-2 text-left transition-all",
-                  isActive ? "border-primary bg-primary/10 ring-1 ring-primary" : "border-border bg-card/30 hover:border-primary/40"
-                )}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-base">{e.icon}</span>
-                  <span className={cn("text-[8px] font-mono", perfColor)}>{e.perf}</span>
-                </div>
-                <span className="text-[10px] font-semibold leading-tight">{e.name}</span>
-                <span className="text-[8px] text-muted-foreground line-clamp-1">{e.description}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      <LayoutSelector
+        efeitos={value.effectsStyle}
+        onToggle={(e) => {
+          const newEffects = value.effectsStyle.includes(e)
+            ? value.effectsStyle.filter((id) => id !== e)
+            : [...value.effectsStyle, e];
+          onChange({ effectsStyle: newEffects });
+        }}
+      />
 
       {/* ═══════════════════════════════════════════════════════════════════ */}
       {/* STACK & COMBOS — 1 botão por grupo que expande todos                   */}
@@ -1194,8 +1012,10 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
         <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
           {STACK_PREFS.map((s) => (
             <button key={s.id} type="button" onClick={() => onChange({ stackPref: s.id as SimpleForgeValues["stackPref"] })}
+              title={`${s.label}\n\n${s.desc}`}
               className={cn("flex items-center gap-2 rounded-lg border p-2 text-left transition-all", value.stackPref === s.id ? "border-primary bg-primary/10" : "border-border bg-card/30 hover:border-primary/40")}>
               <div className="flex-1"><div className="text-[11px] font-semibold">{s.label}</div><div className="text-[10px] text-muted-foreground">{s.desc}</div></div>
+              <Info className="h-3 w-3 text-muted-foreground/40 shrink-0" />
             </button>
           ))}
         </div>
@@ -1215,88 +1035,65 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           })}
         </div>
 
-        {/* Combos do grupo expandido — com info rica */}
+        {/* Combos do grupo expandido — com info rica + tooltip on hover */}
         <AnimatePresence>
           {expandedStackGroup && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
                 {CATALOG.stackCombos.filter((c) => c.category === expandedStackGroup).map((combo) => {
                   const isActive = value.stackCombo === combo.id;
                   const badge = combo.badge ? COMBO_BADGES[combo.badge] : null;
+                  // Tooltip completo (mostra tudo quando passa o rato)
+                  const tooltipParts: string[] = [combo.name];
+                  if (combo.description) tooltipParts.push("", combo.description);
+                  if (combo.whenToUse) tooltipParts.push("", ` Quando usar: ${combo.whenToUse}`);
+                  if (combo.siteType) tooltipParts.push(` Tipo de site: ${combo.siteType}`);
+                  if (combo.bestFor && combo.bestFor.length > 0) tooltipParts.push(` Best for: ${combo.bestFor.join(", ")}`);
+                  if (combo.examples && combo.examples.length > 0) tooltipParts.push(` Exemplos: ${combo.examples.join(", ")}`);
+                  if (combo.performanceNote) tooltipParts.push("", ` ⚡ ${combo.performanceNote}`);
+                  const tooltip = tooltipParts.join("\n");
+
                   return (
                     <button
                       key={combo.id}
                       type="button"
                       onClick={() => onChange({ stackCombo: isActive ? "" : combo.id })}
-                      title={combo.whenToUse}
+                      title={tooltip}
                       className={cn(
-                        "flex flex-col gap-1.5 rounded-lg border p-3 text-left transition-all",
+                        "relative flex flex-col gap-1 rounded-lg border p-2 text-left transition-all",
                         isActive ? "border-primary bg-primary/10 ring-1 ring-primary" : "border-border bg-card/30 hover:border-primary/40"
                       )}
                     >
                       {/* Header: nome + badge */}
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs font-bold leading-tight">{combo.name}</span>
-                        {badge && <span className={cn("shrink-0 rounded px-1.5 py-0.5 text-[8px] font-bold", badge.color)}>{badge.label}</span>}
-                      </div>
-
-                      {/* Descrição */}
-                      {combo.description && (
-                        <p className="text-[10px] text-muted-foreground line-clamp-2 leading-snug">{combo.description}</p>
-                      )}
-
-                      {/* Stack */}
-                      <div className="rounded bg-muted/40 px-1.5 py-1">
-                        <code className="text-[9px] text-foreground/80 line-clamp-2 leading-snug">{combo.stack}</code>
-                      </div>
-
-                      {/* When to use */}
-                      {combo.whenToUse && (
-                        <div className="flex items-start gap-1">
-                          <span className="text-[8px] font-semibold text-primary/70 uppercase mt-0.5">When:</span>
-                          <span className="text-[9px] text-muted-foreground line-clamp-1">{combo.whenToUse}</span>
+                        <span className="text-[11px] font-semibold leading-tight">{combo.name}</span>
+                        <div className="flex items-center gap-1">
+                          {badge && <span className={cn("shrink-0 rounded px-1 py-0.5 text-[8px] font-bold", badge.color)}>{badge.label}</span>}
+                          {/* Info icon — indica que há mais info no hover */}
+                          <Info className="h-2.5 w-2.5 text-muted-foreground/50" />
                         </div>
+                      </div>
+
+                      {/* Descrição (1 linha) */}
+                      {combo.description && (
+                        <p className="text-[9px] text-muted-foreground line-clamp-1 leading-snug">{combo.description}</p>
                       )}
 
-                      {/* Site type + best for */}
-                      <div className="flex flex-wrap gap-1">
-                        {combo.siteType && (
-                          <span className="rounded bg-blue-500/10 px-1.5 py-0.5 text-[8px] text-blue-400">
-                            🌐 {combo.siteType.length > 30 ? combo.siteType.slice(0, 30) + "..." : combo.siteType}
-                          </span>
-                        )}
+                      {/* Stack (compacto) */}
+                      <code className="text-[9px] text-foreground/60 line-clamp-1 leading-snug">{combo.stack}</code>
+
+                      {/* Tags: siteType + bestFor */}
+                      <div className="flex flex-wrap gap-0.5">
                         {combo.bestFor && combo.bestFor.slice(0, 2).map((b) => (
-                          <span key={b} className="rounded bg-muted px-1.5 py-0.5 text-[8px] text-muted-foreground">
+                          <span key={b} className="rounded bg-muted px-1 py-0.5 text-[8px] text-muted-foreground">
                             {b}
                           </span>
                         ))}
                       </div>
 
-                      {/* Examples */}
-                      {combo.examples && combo.examples.length > 0 && (
-                        <div className="flex items-start gap-1 border-t border-border pt-1.5">
-                          <span className="text-[8px] font-semibold text-muted-foreground/70 uppercase mt-0.5">Ex:</span>
-                          <div className="flex flex-wrap gap-1">
-                            {combo.examples.slice(0, 3).map((ex, i) => (
-                              <span key={i} className="text-[9px] text-foreground/70">
-                                {ex}{i < Math.min(combo.examples!.length, 3) - 1 ? "," : ""}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Performance note */}
-                      {combo.performanceNote && (
-                        <div className="flex items-center gap-1 text-[8px] text-muted-foreground/60 italic">
-                          <span className="text-[8px]">⚡</span>
-                          <span className="line-clamp-1">{combo.performanceNote}</span>
-                        </div>
-                      )}
-
                       {/* Active indicator */}
                       {isActive && (
-                        <div className="absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                        <div className="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
                           <Check className="h-2.5 w-2.5" />
                         </div>
                       )}
