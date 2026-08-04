@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { CATALOG } from "@/lib/catalog";
 import { FONT_CATALOG, getFontsByCategory, type FontDef } from "@/lib/font-catalog";
-import { adjustColor, generatePalette, generateRandomPalette, polishPalette, optimizePalette, polishSingleColor, generateAwwwardsPalette, type AwwwardsPalette, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
+import { adjustColor, generatePalette, generateRandomPalette, polishPalette, optimizePalette, polishSingleColor, generateAwwwardsPalette, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
 import { useFontLoader, getCssFontName } from "@/lib/use-font-loader";
 
 export interface SimpleForgeValues {
@@ -332,8 +332,11 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
   const [manualComboId, setManualComboId] = useState<string | null>(null);
   const [mockupStyle, setMockupStyle] = useState<"saas" | "ecommerce" | "portfolio" | "editorial" | "brutalist" | "vintage" | "tech">("saas");
   const [expandedMockup, setExpandedMockup] = useState(false);
-  const [specialPalette, setSpecialPalette] = useState<AwwwardsPalette | null>(null);
-  const [showSpecialPopup, setShowSpecialPopup] = useState(false);
+  // Popup global "AI's por função" — mesma info para todos os stacks (não varia)
+  const [showAiByFunction, setShowAiByFunction] = useState(false);
+  // Nota: Special agora aplica direto sem popup (rigor máximo, sem preview)
+  // O user pediu: "na parte do special individual e global nao precisa de preview
+  // automaticamente ele faz o ajuste com o rigor preciso"
 
   // 🔥 CARREGA FONTS EM TEMPO REAL — quando mudas uma font, ela carrega do CDN
   useFontLoader([value.fontHeading, value.fontBody, value.fontMono]);
@@ -416,30 +419,48 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
   }, [value.customColors, value.colorCount, value.colorPreset, value.trendOverrides, onChange]);
 
   // POLIMENTO INDIVIDUAL — polir uma cor específica
-  // SPECIAL (global) — gera paleta Awwwards-level completa com CSS + Tailwind
+  // SPECIAL (global) — gera paleta Awwwards-level e APLICA DIRETO (sem popup)
+  // O user pediu: "na parte do special individual e global nao precisa de preview
+  // automaticamente ele faz o ajuste com o rigor preciso"
+  // Special global afeta TODAS as paletes visíveis no grid + a ativa
   const generateSpecialGlobal = useCallback(() => {
     const palette = generateAwwwardsPalette();
-    setSpecialPalette(palette);
-    setShowSpecialPopup(true);
-    // Também aplica as cores ao customColors
+    // Aplica ao customColors (palete ativa)
     const newColors = [
       { hex: palette.bg, role: "Background" },
       { hex: palette.text, role: "Secundária" },
       { hex: palette.accent, role: "Suporte" },
       { hex: palette.highlight, role: "Destaque" },
     ];
+
+    // Aplica também a TODAS as trends visíveis no grid (rigor máximo global)
+    const newOverrides: Record<string, { hex: string; role: string }[]> = {};
+    COLOR_TRENDS_2026.forEach((trend) => {
+      // Para cada trend, gera uma paleta Awwwards nova (rigor máximo)
+      const p = generateAwwwardsPalette();
+      newOverrides[trend.id] = [
+        { hex: p.bg, role: "Background" },
+        { hex: p.text, role: "Secundária" },
+        { hex: p.accent, role: "Suporte" },
+        { hex: p.highlight, role: "Destaque" },
+      ];
+    });
+
     onChange({
       customColors: newColors.slice(0, value.colorCount),
-      colorPreset: "electric-lavender",
+      colorPreset: value.colorPreset !== "auto" ? value.colorPreset : "electric-lavender",
+      trendOverrides: newOverrides,
+      polishType: "jewel", // Awwwards = jewel polish
     });
-    toast.success(`🎨 Special: ${palette.name} — CSS + Tailwind prontos!`);
-  }, [value.colorCount, onChange]);
+    toast.success(`🎨 Special aplicado a TODAS as paletes — ${palette.name}`, {
+      description: "Cores otimizadas ao nível Awwwards (ramps, semantic tokens, glow)",
+      duration: 3500,
+    });
+  }, [value.colorCount, value.colorPreset, onChange]);
 
-  // SPECIAL (individual) — gera para uma trend específica
+  // SPECIAL (individual) — gera para UMA trend específica e aplica direto
   const generateSpecialForTrend = useCallback((trendId: string) => {
     const palette = generateAwwwardsPalette();
-    setSpecialPalette(palette);
-    setShowSpecialPopup(true);
     const newColors = [
       { hex: palette.bg, role: "Background" },
       { hex: palette.text, role: "Secundária" },
@@ -448,11 +469,18 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     ];
     const overrides = { ...value.trendOverrides, [trendId]: newColors };
     if (trendId === value.colorPreset) {
-      onChange({ customColors: newColors.slice(0, value.colorCount), trendOverrides: overrides });
+      onChange({
+        customColors: newColors.slice(0, value.colorCount),
+        trendOverrides: overrides,
+        polishType: "jewel",
+      });
     } else {
-      onChange({ trendOverrides: overrides });
+      onChange({ trendOverrides: overrides, polishType: "jewel" });
     }
-    toast.success(`🎨 Special: ${palette.name} para esta palete!`);
+    toast.success(`🎨 Special: ${palette.name} aplicada a esta palete`, {
+      description: "Rigor Awwwards — sem preview, aplicado direto",
+      duration: 3000,
+    });
   }, [value.colorCount, value.colorPreset, value.trendOverrides, onChange]);
 
   const polishSingleColorHandler = useCallback((index: number) => {
@@ -720,7 +748,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       {/* ═══════════════════════════════════════════════════════════════════ */}
       {/* PALETES DE CORES — 2/3/4 cores + filtro + generate + preview + edit  */}
       {/* ═══════════════════════════════════════════════════════════════════ */}
-      <div className="space-y-3">
+      <div id="paletes-de-cores" className="space-y-3 scroll-mt-20">
         <div className="flex items-center justify-between">
           <Label className="text-xs font-semibold">Paletes de Cores</Label>
           <div className="flex items-center gap-1.5">
@@ -794,14 +822,27 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
             {/* Biblioteca — abre popup com todas as paletes guardadas para carregar */}
             <SavedPalettesLibrary
               onLoad={(p: SavedPalette) => {
-                // Aplica a palete guardada ao state atual
+                // Aplica a palete guardada ao state atual + ao trendOverrides
+                // (garante que a palete fica visível no grid e persiste ao mudar de trend)
+                const effectiveTrendId = p.colorPreset !== "auto" ? p.colorPreset : "electric-lavender";
                 onChange({
                   customColors: p.colors,
                   colorCount: p.colorCount,
                   colorPreset: p.colorPreset,
                   colorStyle: p.colorStyle as any,
                   polishType: p.polishType as any,
+                  trendOverrides: {
+                    ...value.trendOverrides,
+                    [effectiveTrendId]: p.colors,
+                  },
                 });
+                // Scroll suave para a secção de paletes para o user ver o resultado
+                setTimeout(() => {
+                  const el = document.getElementById("paletes-de-cores");
+                  if (el) {
+                    el.scrollIntoView({ behavior: "smooth", block: "center" });
+                  }
+                }, 100);
               }}
             />
             {/* Special — gera paleta Awwwards-level completa com CSS + Tailwind */}
@@ -1299,7 +1340,19 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       {/* STACK & COMBOS — 1 botão por grupo que expande todos                   */}
       {/* ═══════════════════════════════════════════════════════════════════ */}
       <div className="space-y-3">
-        <Label className="text-xs font-semibold">Stack & Combos</Label>
+        <div className="flex items-center justify-between gap-2">
+          <Label className="text-xs font-semibold">Stack & Combos</Label>
+          {/* Botão global "AI's por função" — mesma info para todos os combos (não varia por stack) */}
+          <button
+            type="button"
+            onClick={() => setShowAiByFunction(true)}
+            className="flex items-center gap-1 rounded-md border border-border bg-card/40 px-2 py-1 text-[10px] font-medium text-muted-foreground transition-all hover:border-primary/50 hover:text-primary"
+            title="Ver AI's recomendados por função (Ouro/Prata/Bronze/Open Source) — mesma recomendação para todos os stacks"
+          >
+            <Cpu className="h-3 w-3" />
+            AI's por função
+          </button>
+        </div>
         <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
           {STACK_PREFS.map((s) => (
             <button key={s.id} type="button" onClick={() => onChange({ stackPref: s.id as SimpleForgeValues["stackPref"] })}
@@ -1437,111 +1490,6 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════ */}
-      {/* POPUP SPECIAL — Awwwards palette com CSS + Tailwind pronto            */}
-      {/* ═══════════════════════════════════════════════════════════════════ */}
-      <AnimatePresence>
-        {showSpecialPopup && specialPalette && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4"
-            onClick={() => setShowSpecialPopup(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl border-2 border-border bg-card p-6 shadow-2xl"
-            >
-              {/* Header */}
-              <div className="mb-4 flex items-start justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-primary" />
-                    <h2 className="text-lg font-bold">{specialPalette.name}</h2>
-                    <span className="rounded-full px-2 py-0.5 text-[9px] font-bold" style={{ background: specialPalette.accent + "20", color: specialPalette.accent }}>{specialPalette.mood}</span>
-                    <span className="rounded-full bg-muted px-2 py-0.5 text-[9px] font-bold">{specialPalette.isDark ? "DARK" : "LIGHT"}</span>
-                  </div>
-                  <p className="mt-1 text-sm text-muted-foreground">Premium Color System — Awwwards Jury Level (Lando Norris / Trionn)</p>
-                </div>
-                <button onClick={() => setShowSpecialPopup(false)} className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"><X className="h-5 w-5" /></button>
-              </div>
-
-              {/* Core colors preview */}
-              <div className="mb-4 grid grid-cols-4 gap-2">
-                {[{ l: "BG", v: specialPalette.bg }, { l: "Text", v: specialPalette.text }, { l: "Accent", v: specialPalette.accent }, { l: "Highlight", v: specialPalette.highlight }].map((c) => (
-                  <div key={c.l} className="rounded-lg overflow-hidden border border-border">
-                    <div className="h-12" style={{ background: c.v }} />
-                    <div className="p-1.5"><div className="text-[9px] font-semibold">{c.l}</div><code className="text-[8px] text-muted-foreground">{c.v}</code></div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Accent Ramp 50-950 */}
-              <div className="mb-4">
-                <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Accent Ramp (50-950)</h3>
-                <div className="flex gap-0.5 rounded-lg overflow-hidden">
-                  {Object.entries(specialPalette.accentRamp).map(([k, v]) => (
-                    <div key={k} className="flex-1 text-center" style={{ background: v }}>
-                      <div className="py-3" />
-                      <div className="text-[7px] font-bold pb-1" style={{ color: parseInt(k) > 500 ? "#FFF" : "#000", opacity: 0.6 }}>{k}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Glow preview */}
-              <div className="mb-4 rounded-lg p-3" style={{ background: specialPalette.bg }}>
-                <div className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5" style={{ background: specialPalette.accent, color: specialPalette.accentForeground, boxShadow: specialPalette.accentGlow }}>
-                  <span className="text-xs font-bold">Glow Button Preview</span>
-                </div>
-              </div>
-
-              {/* CSS Code */}
-              <div className="mb-4">
-                <div className="mb-1.5 flex items-center justify-between">
-                  <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">CSS Variables</h3>
-                  <button onClick={() => { navigator.clipboard.writeText(specialPalette.cssCode); toast.success("CSS copiado!"); }} className="rounded px-2 py-0.5 text-[9px] text-primary hover:bg-primary/10">Copiar CSS</button>
-                </div>
-                <pre className="max-h-40 overflow-y-auto rounded-lg bg-zinc-900 p-3 text-[10px] text-green-400">{specialPalette.cssCode}</pre>
-              </div>
-
-              {/* Tailwind Code */}
-              <div className="mb-4">
-                <div className="mb-1.5 flex items-center justify-between">
-                  <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Tailwind Config</h3>
-                  <button onClick={() => { navigator.clipboard.writeText(specialPalette.tailwindCode); toast.success("Tailwind copiado!"); }} className="rounded px-2 py-0.5 text-[9px] text-primary hover:bg-primary/10">Copiar Tailwind</button>
-                </div>
-                <pre className="max-h-40 overflow-y-auto rounded-lg bg-zinc-900 p-3 text-[10px] text-blue-400">{specialPalette.tailwindCode}</pre>
-              </div>
-
-              {/* Semantic tokens */}
-              <div className="mb-4">
-                <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Semantic Tokens</h3>
-                <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
-                  {Object.entries(specialPalette.semantic).slice(0, 12).map(([k, v]) => (
-                    <div key={k} className="flex items-center gap-1.5 rounded-md border border-border p-1.5">
-                      <div className="h-4 w-4 shrink-0 rounded" style={{ background: v }} />
-                      <div className="min-w-0"><div className="truncate text-[9px] font-medium">{k}</div><code className="text-[7px] text-muted-foreground">{v}</code></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Actions */}
-              <div className="flex gap-2">
-                <Button type="button" size="sm" onClick={() => { navigator.clipboard.writeText(specialPalette.cssCode); toast.success("CSS copiado!"); }} className="gap-1"><span>Copiar CSS</span></Button>
-                <Button type="button" size="sm" variant="outline" onClick={() => { navigator.clipboard.writeText(specialPalette.tailwindCode); toast.success("Tailwind copiado!"); }} className="gap-1"><span>Copiar Tailwind</span></Button>
-                <Button type="button" size="sm" variant="outline" onClick={() => generateSpecialGlobal()} className="ml-auto gap-1"><RefreshCw className="h-3 w-3" /> Gerar outra</Button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ═══════════════════════════════════════════════════════════════════ */}
       {/* POPUP MANUAL — guia de implementação passo-a-passo                    */}
       {/* ═══════════════════════════════════════════════════════════════════ */}
       <AnimatePresence>
@@ -1669,69 +1617,8 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                   </div>
                 </div>
 
-                {/* AI's Recomendados por função — Ouro/Prata/Bronze + Open Source */}
-                <div className="border-t border-border pt-3">
-                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground flex items-center gap-1">
-                    <Cpu className="h-3 w-3" /> AI's Recomendados por função
-                  </h3>
-                  <p className="mb-3 text-[10px] text-muted-foreground/70 italic">
-                    Melhores modelos para cada função do stack. Ouro = melhor qualidade. Prata = bom equilíbrio. Bronze = custo baixo. Open Source = grátis/self-host.
-                  </p>
-                  <div className="space-y-1.5">
-                    {[
-                      { fn: "Architect (spec/riscos)", gold: "Claude Opus 5", goldNote: "Max reasoning", silver: "GPT-5.5", silverNote: "Agentic", bronze: "GLM-5.2", bronzeNote: "Free", open: "DeepSeek R1", openNote: "Open weight reasoning" },
-                      { fn: "Design System", gold: "Claude Fable 5", goldNote: "Topo design", silver: "Kimi K3", silverNote: "1M context", bronze: "Qwen 3.5 Coder", bronzeNote: "Free", open: "GLM-5.2", openNote: "Coding top" },
-                      { fn: "Frontend / UI", gold: "Kimi K3", goldNote: "Excelente UI", silver: "Claude Sonnet 5", silverNote: "Workhorse", bronze: "Qwen 3.5 Coder", bronzeNote: "Free", open: "GLM-5.2", openNote: "Open weight" },
-                      { fn: "Backend / Logic", gold: "GPT-5.3 Codex", goldNote: "Agentic coding", silver: "DeepSeek V4 Pro", silverNote: "Open weight", bronze: "Claude Sonnet 5", bronzeNote: "Reliable", open: "DeepSeek V4 Flash", openNote: "$0.28/M" },
-                      { fn: "Motion / 3D", gold: "Kimi K3", goldNote: "1M context", silver: "Claude Sonnet 5", silverNote: "Bom gosto", bronze: "Gemini 3.1 Flash", bronzeNote: "Barato", open: "GLM-5.2", openNote: "Coding" },
-                      { fn: "Security", gold: "Claude Opus 5", goldNote: "Deep reasoning", silver: "GPT-5.5", silverNote: "Audit", bronze: "DeepSeek V4 Pro", bronzeNote: "Open", open: "GLM-5.2", openNote: "Free" },
-                      { fn: "QA / Testing", gold: "Claude Sonnet 5", goldNote: "Reliable", silver: "Gemini 3.1 Flash", silverNote: "Rápido", bronze: "Claude Haiku 4.5", bronzeNote: "Barato", open: "GLM-5.2", openNote: "Free" },
-                      { fn: "Deploy / Ship", gold: "Claude Sonnet 5", goldNote: "Handover", silver: "GPT-5.5", silverNote: "Agentic", bronze: "Gemini 3.1 Flash", bronzeNote: "Low cost", open: "DeepSeek V4 Flash", openNote: "Cheap" },
-                    ].map((rec) => (
-                      <div key={rec.fn} className="rounded-lg border border-border p-2">
-                        <div className="mb-1.5 text-[11px] font-semibold">{rec.fn}</div>
-                        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
-                          {/* Ouro */}
-                          <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-1.5">
-                            <div className="flex items-center gap-1">
-                              <span className="text-[10px]">🥇</span>
-                              <span className="text-[9px] font-bold text-amber-400">Ouro</span>
-                            </div>
-                            <div className="mt-0.5 text-[10px] font-semibold">{rec.gold}</div>
-                            <div className="text-[8px] text-muted-foreground">{rec.goldNote}</div>
-                          </div>
-                          {/* Prata */}
-                          <div className="rounded-md border border-slate-400/30 bg-slate-400/5 p-1.5">
-                            <div className="flex items-center gap-1">
-                              <span className="text-[10px]">🥈</span>
-                              <span className="text-[9px] font-bold text-slate-300">Prata</span>
-                            </div>
-                            <div className="mt-0.5 text-[10px] font-semibold">{rec.silver}</div>
-                            <div className="text-[8px] text-muted-foreground">{rec.silverNote}</div>
-                          </div>
-                          {/* Bronze */}
-                          <div className="rounded-md border border-orange-700/30 bg-orange-700/5 p-1.5">
-                            <div className="flex items-center gap-1">
-                              <span className="text-[10px]">🥉</span>
-                              <span className="text-[9px] font-bold text-orange-600">Bronze</span>
-                            </div>
-                            <div className="mt-0.5 text-[10px] font-semibold">{rec.bronze}</div>
-                            <div className="text-[8px] text-muted-foreground">{rec.bronzeNote}</div>
-                          </div>
-                          {/* Open Source */}
-                          <div className="rounded-md border border-green-500/30 bg-green-500/5 p-1.5">
-                            <div className="flex items-center gap-1">
-                              <span className="text-[10px]">🔧</span>
-                              <span className="text-[9px] font-bold text-green-400">Open Source</span>
-                            </div>
-                            <div className="mt-0.5 text-[10px] font-semibold">{rec.open}</div>
-                            <div className="text-[8px] text-muted-foreground">{rec.openNote}</div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                {/* AI's por função — REMOVIDO do popup individual (era sempre igual em todos os stacks)
+                    Agora existe como botão global "AI's por função" no header da secção Stack & Combos */}
 
                 {/* Links de exemplos */}
                 {combo.exampleLinks && combo.exampleLinks.length > 0 && (
@@ -1757,6 +1644,118 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
             </motion.div>
           );
         })()}
+      </AnimatePresence>
+
+      {/* ═══════════════════════════════════════════════════════════════════ */}
+      {/* POPUP GLOBAL "AI's por função" — mesma info para todos os stacks        */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
+      <AnimatePresence>
+        {showAiByFunction && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+            onClick={() => setShowAiByFunction(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-h-[88vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-border bg-card p-6 shadow-2xl"
+            >
+              {/* Header */}
+              <div className="mb-4 flex items-start justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <Cpu className="h-5 w-5 text-primary" />
+                    <h2 className="text-lg font-bold">AI's Recomendados por Função</h2>
+                  </div>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Melhores modelos para cada função do stack — <strong>aplica-se a todos os stacks</strong>
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowAiByFunction(false)}
+                  className="shrink-0 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              {/* Info banner */}
+              <div className="mb-4 rounded-lg border border-primary/30 bg-primary/5 p-3 text-xs">
+                <strong className="text-primary">Como usar:</strong> Para cada função do teu projeto, escolhe 1 modelo por tier conforme o orçamento.
+                <div className="mt-1.5 flex flex-wrap gap-2 text-[10px] text-muted-foreground">
+                  <span className="flex items-center gap-1"><span>🥇</span> <strong className="text-amber-400">Ouro</strong> = melhor qualidade</span>
+                  <span className="flex items-center gap-1"><span>🥈</span> <strong className="text-slate-300">Prata</strong> = bom equilíbrio</span>
+                  <span className="flex items-center gap-1"><span>🥉</span> <strong className="text-orange-600">Bronze</strong> = custo baixo</span>
+                  <span className="flex items-center gap-1"><span>🔧</span> <strong className="text-green-400">Open Source</strong> = grátis/self-host</span>
+                </div>
+              </div>
+
+              {/* Grid de recomendações por função */}
+              <div className="space-y-2">
+                {[
+                  { fn: "Architect (spec/riscos)", gold: "Claude Opus 5", goldNote: "Max reasoning", silver: "GPT-5.5", silverNote: "Agentic", bronze: "GLM-5.2", bronzeNote: "Free", open: "DeepSeek R1", openNote: "Open weight reasoning" },
+                  { fn: "Design System", gold: "Claude Fable 5", goldNote: "Topo design", silver: "Kimi K3", silverNote: "1M context", bronze: "Qwen 3.5 Coder", bronzeNote: "Free", open: "GLM-5.2", openNote: "Coding top" },
+                  { fn: "Frontend / UI", gold: "Kimi K3", goldNote: "Excelente UI", silver: "Claude Sonnet 5", silverNote: "Workhorse", bronze: "Qwen 3.5 Coder", bronzeNote: "Free", open: "GLM-5.2", openNote: "Open weight" },
+                  { fn: "Backend / Logic", gold: "GPT-5.3 Codex", goldNote: "Agentic coding", silver: "DeepSeek V4 Pro", silverNote: "Open weight", bronze: "Claude Sonnet 5", bronzeNote: "Reliable", open: "DeepSeek V4 Flash", openNote: "$0.28/M" },
+                  { fn: "Motion / 3D", gold: "Kimi K3", goldNote: "1M context", silver: "Claude Sonnet 5", silverNote: "Bom gosto", bronze: "Gemini 3.1 Flash", bronzeNote: "Barato", open: "GLM-5.2", openNote: "Coding" },
+                  { fn: "Security", gold: "Claude Opus 5", goldNote: "Deep reasoning", silver: "GPT-5.5", silverNote: "Audit", bronze: "DeepSeek V4 Pro", bronzeNote: "Open", open: "GLM-5.2", openNote: "Free" },
+                  { fn: "QA / Testing", gold: "Claude Sonnet 5", goldNote: "Reliable", silver: "Gemini 3.1 Flash", silverNote: "Rápido", bronze: "Claude Haiku 4.5", bronzeNote: "Barato", open: "GLM-5.2", openNote: "Free" },
+                  { fn: "Deploy / Ship", gold: "Claude Sonnet 5", goldNote: "Handover", silver: "GPT-5.5", silverNote: "Agentic", bronze: "Gemini 3.1 Flash", bronzeNote: "Low cost", open: "DeepSeek V4 Flash", openNote: "Cheap" },
+                ].map((rec) => (
+                  <div key={rec.fn} className="rounded-lg border border-border p-2.5">
+                    <div className="mb-2 text-xs font-bold">{rec.fn}</div>
+                    <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
+                      <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-1.5">
+                        <div className="flex items-center gap-1">
+                          <span className="text-[10px]">🥇</span>
+                          <span className="text-[9px] font-bold text-amber-400">Ouro</span>
+                        </div>
+                        <div className="mt-0.5 text-[11px] font-semibold">{rec.gold}</div>
+                        <div className="text-[9px] text-muted-foreground">{rec.goldNote}</div>
+                      </div>
+                      <div className="rounded-md border border-slate-400/30 bg-slate-400/5 p-1.5">
+                        <div className="flex items-center gap-1">
+                          <span className="text-[10px]">🥈</span>
+                          <span className="text-[9px] font-bold text-slate-300">Prata</span>
+                        </div>
+                        <div className="mt-0.5 text-[11px] font-semibold">{rec.silver}</div>
+                        <div className="text-[9px] text-muted-foreground">{rec.silverNote}</div>
+                      </div>
+                      <div className="rounded-md border border-orange-700/30 bg-orange-700/5 p-1.5">
+                        <div className="flex items-center gap-1">
+                          <span className="text-[10px]">🥉</span>
+                          <span className="text-[9px] font-bold text-orange-600">Bronze</span>
+                        </div>
+                        <div className="mt-0.5 text-[11px] font-semibold">{rec.bronze}</div>
+                        <div className="text-[9px] text-muted-foreground">{rec.bronzeNote}</div>
+                      </div>
+                      <div className="rounded-md border border-green-500/30 bg-green-500/5 p-1.5">
+                        <div className="flex items-center gap-1">
+                          <span className="text-[10px]">🔧</span>
+                          <span className="text-[9px] font-bold text-green-400">Open Source</span>
+                        </div>
+                        <div className="mt-0.5 text-[11px] font-semibold">{rec.open}</div>
+                        <div className="text-[9px] text-muted-foreground">{rec.openNote}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Footer com notas */}
+              <div className="mt-4 border-t border-border pt-3 text-[10px] text-muted-foreground/80 italic">
+                💡 Esta recomendação é independente do stack — funciona para Next.js, Remix, T3, Supabase, etc.
+                Para projetos small-budget, começa com Open Source + Bronze e sobe para Prata/Ouro nas funções críticas (Architect, Security).
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>
 
       {/* Motion & Awwwards */}

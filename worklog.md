@@ -110,3 +110,77 @@ Screenshots de prova em `/home/z/my-project/download/`:
 - `saved-palettes-library-2.png` (2 paletes guardadas)
 - `saved-palettes-empty.png` (empty state)
 
+
+---
+Task ID: 6
+Agent: Super Z (main)
+Task: 3 melhorias — Special sem popup, AI's por função global, load da palete gravada com feedback claro
+
+Work Log:
+
+1. **Special (individual e global) — sem popup automático**
+   - User disse: "na parte do special individual e global nao precisa de preview automaticamente ele faz o ajuste com o rigor preciso"
+   - Removido o popup Special completo (105 linhas) do SimpleForge
+   - Special global agora aplica direto: customColors + trendOverrides (TODAS as trends) + polishType="jewel"
+   - Special individual agora aplica direto: customColors (se ativa) + trendOverrides[trendId]
+   - Toast de confirmação com descrição útil (sem necessidade de preview visual)
+   - Removidos estados `specialPalette` e `showSpecialPopup` (não usados)
+   - Removido import `AwwwardsPalette` type (não usado)
+
+2. **AI's Recomendados por função — botão global em vez de repetido em cada combo**
+   - User disse: "se o ai recomendado por função for sempre igual em todos podes meter so um botão em cima e abrir o popup com essa info"
+   - Confirmado: a array de AI's era hardcoded idêntica em todos os 50 stack combos
+   - Removida a secção "AI's Recomendados por função" do popup Manual individual (64 linhas)
+   - Adicionado botão global "AI's por função" no header da secção Stack & Combos (com icon Cpu)
+   - Criado popup global dedicado com:
+     - Info banner explicativo (Ouro/Prata/Bronze/Open Source)
+     - 8 funções: Architect, Design System, Frontend/UI, Backend, Motion/3D, Security, QA, Deploy
+     - Footer com nota "independente do stack"
+   - Estado `showAiByFunction` adicionado
+
+3. **Load da palete gravada — aplicar tudo + feedback visual claro**
+   - User disse: "so consigo gravar mas nao consigo depois individualmente meter o preset que gravei"
+   - Problema identificado: ao carregar, `customColors` era atualizado mas `trendOverrides[colorPreset]` não — perdiam-se cores ao mudar de trend
+   - Melhorado o `onLoad` da Biblioteca para:
+     - Aplicar `customColors` + `colorCount` + `colorPreset` + `colorStyle` + `polishType`
+     - Aplicar também `trendOverrides[effectiveTrendId]` (persiste ao mudar de trend)
+     - Scroll suave para a secção de paletes (id="paletes-de-cores" com scroll-mt-20)
+   - Toast melhorado: "Palete 'Nome' carregada! 3 cores aplicadas ao editor — vê abaixo ↓"
+   - Adicionado `id="paletes-de-cores"` à secção + classe `scroll-mt-20` para offset do header
+
+Build & Testes:
+- TypeScript: ✓ sem erros
+- Build: ✓ sucesso
+- Testes unitários: 42/42 a passar
+- Testes E2E (agent-browser):
+  1. Botão "AI's por função" aparece no header de Stack & Combos ✓
+  2. Clicar → abre popup global com 8 funções + info banner ✓
+  3. Special global (botão Special): aplica sem popup, toast "🎨 Special aplicado a TODAS as paletes — Dark Violet AI" ✓
+  4. Special individual (botão 🎨 em cada palete): aplica sem popup, toast "🎨 Special: Dark Coral Warm aplicada a esta palete" ✓
+  5. Save palete → toast "Palete guardada! (1 paletes guardadas)" ✓
+  6. Abrir Biblioteca → mostra palete com preview visual ✓
+  7. Clicar "Carregar esta palete" → toast "Palete 'Palete #1' carregada! 3 cores aplicadas ao editor — vê abaixo ↓" ✓
+  8. Scroll automático para a secção de paletes ✓
+  9. Cores aparecem no editor (5 botões "Editar cor individual") ✓
+  10. ZERO erros de console ✓
+
+Stage Summary:
+- ✅ Special sem popup — aplica direto com toast (rigor máximo)
+- ✅ AI's por função — botão global em vez de repetido em cada combo
+- ✅ Load da palete gravada — aplica tudo + scroll + toast claro
+- ✅ 42/42 testes a passar, sem erros TypeScript, sem erros console
+
+Arquivos modificados:
+- `/home/z/my-project/src/components/forms/SimpleForge.tsx`:
+  - Removido popup Special (105 linhas)
+  - Removida secção AI's do popup Manual (64 linhas)
+  - Adicionado botão global "AI's por função" + popup dedicado
+  - Melhorado onLoad da Biblioteca (trendOverrides + scroll)
+  - Adicionado id="paletes-de-cores"
+- `/home/z/my-project/src/components/palette/SavedPalettesLibrary.tsx`:
+  - Toast de load melhorado com descrição
+
+Screenshots em `/home/z/my-project/download/`:
+- `ais-por-funcao-global.png` (popup global AI's)
+- `special-aplicado-sem-popup.png` (Special aplicado direto)
+- `palete-carregada-grid.png` (palete carregada + scroll para grid)

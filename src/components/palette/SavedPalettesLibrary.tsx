@@ -140,7 +140,12 @@ export function SavedPalettesLibrary({ onLoad }: SavedPalettesLibraryProps) {
   const handleLoad = (p: SavedPalette) => {
     onLoad(p);
     setOpen(false);
-    toast.success(`Palete "${defaultName(p, palettes.findIndex((x) => x.id === p.id))}" carregada!`);
+    const name = defaultName(p, palettes.findIndex((x) => x.id === p.id));
+    const colorCount = p.colors?.length ?? 0;
+    toast.success(`Palete "${name}" carregada!`, {
+      description: `${colorCount} cores aplicadas ao editor — vê abaixo ↓`,
+      duration: 4000,
+    });
   };
 
   // Limpar tudo (com confirmação)
