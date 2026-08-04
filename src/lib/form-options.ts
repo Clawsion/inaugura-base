@@ -437,6 +437,40 @@ export const EfeitosInfo: EfeitoInfo[] = [
       "Submit buttons, success states, gamification moments, onboarding completion.",
     exemplo: "Linear signup, Stripe payment success, Duolingo achievements.",
   },
+  // ─── 3 NOVOS ESTILOS DE LAYOUT ───
+  {
+    nome: "Scroll Storytelling",
+    icon: "Film",
+    descricao:
+      "Narrativa guiada por scroll — cada secção revela uma parte da história com transições cinematográficas. Pinned sections com GSAP ScrollTrigger.",
+    quandoAplicar:
+      "Para brand experiences, product launches, storytelling imersivo onde cada scroll conta uma parte da narrativa.",
+    ondeAplicar:
+      "Hero, product tours, brand stories, case studies, about pages.",
+    exemplo: "Apple product pages, Stripe features, Linear marketing, Awwwards SOTD.",
+  },
+  {
+    nome: "Split Reveal",
+    icon: "SplitSquareHorizontal",
+    descricao:
+      "Ecrã dividido em 2 painéis que se separam/revelam conteúdo ao scroll ou hover. Cria tensão visual e surpresa.",
+    quandoAplicar:
+      "Para product comparisons, before/after, dual-content showcases, portfolio cases.",
+    ondeAplicar:
+      "Hero sections, product comparisons, portfolio reveals, feature duos.",
+    exemplo: "Apple iPhone compare, Vercel feature split, Awwwards agency sites.",
+  },
+  {
+    nome: "Grid Masonry Pro",
+    icon: "LayoutGrid",
+    descricao:
+      "Grid masonry assimétrico com cards de tamanhos variados que criam ritmo visual dinâmico. Pinterest-style mas premium.",
+    quandoAplicar:
+      "Para portfolios, galleries, blogs, e-commerce com muito conteúdo visual.",
+    ondeAplicar:
+      "Portfolio grids, blog feeds, product galleries, case study lists.",
+    exemplo: "Pinterest premium, Awwwards portfolios, Linear blog, Vercel customers.",
+  },
 ];
 
 // Manter retro-compatibilidade

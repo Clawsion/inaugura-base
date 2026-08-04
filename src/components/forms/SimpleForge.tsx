@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { LayoutSelector } from "@/components/forms/LayoutSelector";
 import {
   Sparkles, Lightbulb, Plus, Trash2, ChevronDown, Wand2, ArrowRight,
-  Dices, Eye, X, Layers, Zap, Lock, RefreshCw, Palette, Maximize2, Check, Info,
+  Dices, Eye, X, Layers, Zap, Lock, RefreshCw, Palette, Maximize2, Check, Info, BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -74,6 +74,10 @@ const PROJECT_TYPES = [
   { id: "dashboard", label: "Dashboard / Admin", icon: "▦" },
   { id: "blog", label: "Blog / Conteúdo", icon: "☰" },
   { id: "marketplace", label: "Marketplace", icon: "◈" },
+  { id: "restaurant", label: "Restaurante / Food", icon: "🍴" },
+  { id: "education", label: "Educação / EdTech", icon: "🎓" },
+  { id: "realestate", label: "Imobiliário", icon: "🏠" },
+  { id: "agency", label: "Agência Criativa", icon: "✦" },
   { id: "other", label: "Outro", icon: "✦" },
 ];
 
@@ -317,6 +321,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
   const [paletteFilter, setPaletteFilter] = useState("all");
   const [colorEditIndex, setColorEditIndex] = useState<number | null>(null);
   const [showStylePicker, setShowStylePicker] = useState(false);
+  const [manualComboId, setManualComboId] = useState<string | null>(null);
 
   const toggleArray = useCallback((key: "references" | "mood" | "integrations", item: string) => {
     const arr = value[key];
@@ -1165,6 +1170,19 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                         )}
                       </button>
 
+                      {/* Botão Manual — abre popup com guia de implementação */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setManualComboId(combo.id);
+                        }}
+                        className="absolute bottom-2 right-2 flex h-5 w-5 items-center justify-center rounded-md border border-border bg-card/80 text-muted-foreground hover:border-primary hover:text-primary transition-all"
+                        title="Ver manual de implementação"
+                      >
+                        <BookOpen className="h-3 w-3" />
+                      </button>
+
                       {/* Active indicator */}
                       {isActive && (
                         <div className="absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
@@ -1179,6 +1197,160 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           )}
         </AnimatePresence>
       </div>
+
+      {/* ═══════════════════════════════════════════════════════════════════ */}
+      {/* POPUP MANUAL — guia de implementação passo-a-passo                    */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
+      <AnimatePresence>
+        {manualComboId && (() => {
+          const combo = CATALOG.stackCombos.find((c) => c.id === manualComboId);
+          if (!combo) return null;
+          const badge = combo.badge ? COMBO_BADGES[combo.badge] : null;
+          // Gerar passos de implementação a partir do stack
+          const stackParts = combo.stack.split("+").map((s) => s.trim()).filter(Boolean);
+          const steps = [
+            { title: "1. Inicialização do projeto", desc: `Cria o projeto com: ${stackParts.slice(0, 3).join(" + ")}`, cmd: stackParts[0]?.includes("Next") ? "npx create-next-app@latest --typescript --tailwind --app" : "Ver documentação do framework" },
+            { title: "2. Instalar dependências core", desc: `Instala as bibliotecas base: ${stackParts.slice(1, 4).join(", ")}`, cmd: `npm install ${stackParts.slice(1, 4).map(s => s.toLowerCase().replace(/\s/g, "")).join(" ")}` },
+            { title: "3. Configurar design system", desc: "Define tokens de cor, tipografia, espaçamento e component library (shadcn/ui ou similar).", cmd: "npx shadcn@latest init" },
+            { title: "4. Setup de animações", desc: stackParts.some(s => s.includes("GSAP")) ? "Instala GSAP + Lenis para smooth scroll e animações." : "Configura Framer Motion ou CSS animations.", cmd: stackParts.some(s => s.includes("GSAP")) ? "npm install gsap @gsap/react lenis" : "npm install motion" },
+            { title: "5. Configurar 3D (se aplicável)", desc: stackParts.some(s => s.includes("Three") || s.includes("R3F")) ? "Instala Three.js ou React Three Fiber para 3D." : "Skip — este stack não usa 3D.", cmd: stackParts.some(s => s.includes("R3F")) ? "npm install three @react-three/fiber @react-three/drei" : "# Skip" },
+            { title: "6. Setup de CMS (se aplicável)", desc: stackParts.some(s => s.includes("Sanity") || s.includes("Payload") || s.includes("CMS")) ? "Configura o CMS headless." : "Skip — sem CMS neste stack.", cmd: stackParts.some(s => s.includes("Sanity")) ? "npm install @sanity/client next-sanity" : "# Skip" },
+            { title: "7. Configurar deploy", desc: "Configura build de produção e deploy (Vercel, Netlify, ou self-hosted).", cmd: "vercel deploy --prod" },
+            { title: "8. Otimizar performance", desc: combo.performanceNote ?? "Verifica Lighthouse, Core Web Vitals, e otimiza imagens/fonts.", cmd: "npx lighthouse http://localhost:3000 --view" },
+          ];
+
+          return (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+              onClick={() => setManualComboId(null)}
+            >
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-card p-6 shadow-2xl"
+              >
+                {/* Header */}
+                <div className="mb-4 flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <BookOpen className="h-5 w-5 text-primary" />
+                      <h2 className="text-lg font-bold">{combo.name}</h2>
+                      {badge && <span className={cn("rounded px-1.5 py-0.5 text-[9px] font-bold", badge.color)}>{badge.label}</span>}
+                    </div>
+                    {combo.description && (
+                      <p className="mt-1 text-sm text-muted-foreground">{combo.description}</p>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setManualComboId(null)}
+                    className="shrink-0 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+
+                {/* Info rápida */}
+                <div className="mb-4 grid grid-cols-2 gap-3 rounded-lg border border-border bg-muted/20 p-3 text-xs">
+                  {combo.siteType && (
+                    <div>
+                      <span className="font-semibold text-muted-foreground">Tipo de site:</span>
+                      <p className="mt-0.5">{combo.siteType}</p>
+                    </div>
+                  )}
+                  {combo.bestFor && combo.bestFor.length > 0 && (
+                    <div>
+                      <span className="font-semibold text-muted-foreground">Ideal para:</span>
+                      <p className="mt-0.5">{combo.bestFor.join(", ")}</p>
+                    </div>
+                  )}
+                  {combo.whenToUse && (
+                    <div className="col-span-2">
+                      <span className="font-semibold text-muted-foreground">Quando usar:</span>
+                      <p className="mt-0.5">{combo.whenToUse}</p>
+                    </div>
+                  )}
+                  {combo.examples && combo.examples.length > 0 && (
+                    <div className="col-span-2">
+                      <span className="font-semibold text-muted-foreground">Exemplos reais:</span>
+                      <p className="mt-0.5">{combo.examples.join(" · ")}</p>
+                    </div>
+                  )}
+                  {combo.performanceNote && (
+                    <div className="col-span-2">
+                      <span className="font-semibold text-muted-foreground">⚡ Performance:</span>
+                      <p className="mt-0.5 italic">{combo.performanceNote}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Stack completo */}
+                <div className="mb-4">
+                  <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Stack completo</h3>
+                  <code className="block rounded-lg bg-muted/40 p-3 text-xs leading-relaxed">{combo.stack}</code>
+                </div>
+
+                {/* Guia passo-a-passo */}
+                <div className="mb-4">
+                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Guia de implementação</h3>
+                  <div className="space-y-2">
+                    {steps.map((step, i) => (
+                      <div key={i} className="rounded-lg border border-border p-3">
+                        <div className="flex items-center gap-2">
+                          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold text-primary">{i + 1}</span>
+                          <span className="text-sm font-semibold">{step.title.replace(/^\d+\.\s*/, "")}</span>
+                        </div>
+                        <p className="mt-1 pl-7 text-xs text-muted-foreground">{step.desc}</p>
+                        {step.cmd && step.cmd !== "# Skip" && (
+                          <div className="mt-1.5 flex items-center gap-2 pl-7">
+                            <code className="flex-1 rounded bg-zinc-900 px-2 py-1 text-[10px] text-green-400 overflow-x-auto">{step.cmd}</code>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard.writeText(step.cmd);
+                                toast.success("Comando copiado!");
+                              }}
+                              className="shrink-0 rounded px-1.5 py-0.5 text-[9px] text-muted-foreground hover:bg-muted hover:text-foreground"
+                            >
+                              Copiar
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Links de exemplos */}
+                {combo.exampleLinks && combo.exampleLinks.length > 0 && (
+                  <div className="border-t border-border pt-3">
+                    <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Links de referência</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {combo.exampleLinks.map((link, i) => (
+                        <a
+                          key={i}
+                          href={link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[10px] text-primary hover:bg-primary/10"
+                        >
+                          <ArrowRight className="h-3 w-3" />
+                          {link.replace(/^https?:\/\//, "").replace(/\/$/, "").slice(0, 30)}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            </motion.div>
+          );
+        })()}
+      </AnimatePresence>
 
       {/* Motion & Awwwards */}
       <div className="space-y-3">
