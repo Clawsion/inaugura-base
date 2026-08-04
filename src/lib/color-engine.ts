@@ -358,7 +358,8 @@ export type PolishType =
   | "dark-premium"     // Deep jewel-tinted dark (Linear dark)
   | "glass"            // Translucent feel with low sat bg (Glassmorphism)
   | "mono-accent"      // Swiss minimal — 1 accent + neutral
-  | "neon-glow";       // Cyberpunk — neon on deep dark
+  | "neon-glow"        // Cyberpunk — neon on deep dark
+  | "gradient-pro";    // Gradientes premium — Linear/Vercel/Stripe mesh style
 
 export interface PolishTypeDef {
   id: PolishType;
@@ -497,6 +498,21 @@ export const POLISH_TYPES: PolishTypeDef[] = [
     highlightSatDelta: 5,
     highlightLightDelta: 2,
     tags: ["Neon", "Cyberpunk", "Glow"],
+  },
+  {
+    id: "gradient-pro",
+    name: "Gradient Pro",
+    description: "Gradientes premium — Linear/Vercel/Stripe style com mesh + glow",
+    bgSatRange: [22, 38],
+    bgLightRange: [6, 12],
+    bgLightLightRange: [95, 98],
+    textSatRange: [12, 22],
+    accentSatRange: [65, 82],
+    accentLightRange: [48, 58],
+    highlightOffsetHue: 35,
+    highlightSatDelta: -8,
+    highlightLightDelta: 8,
+    tags: ["Gradient", "Mesh", "Premium", "Aurora", "Glow"],
   },
 ];
 

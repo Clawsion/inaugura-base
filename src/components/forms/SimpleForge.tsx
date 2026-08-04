@@ -21,6 +21,8 @@ import { CATALOG } from "@/lib/catalog";
 import { FONT_CATALOG, getFontsByCategory, type FontDef } from "@/lib/font-catalog";
 import { adjustColor, generatePalette, generateRandomPalette, polishPalette, optimizePalette, polishSingleColor, generateAwwwardsPalette, transformToAwwwards, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
 import { useFontLoader, getCssFontName } from "@/lib/use-font-loader";
+import { GradientPalettesLibrary } from "@/components/palette/GradientPalettesLibrary";
+import type { GradientPalette } from "@/lib/gradient-palettes";
 
 export interface SimpleForgeValues {
   briefing: string;
@@ -911,6 +913,20 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
             >
               <Sparkles className="h-3 w-3" /> Special
             </Button>
+            {/* Gradientes — 8 paletas gradient premium prontas (Linear/Vercel/Stripe style) com CSS copy-paste */}
+            <GradientPalettesLibrary
+              onApply={(palette: GradientPalette) => {
+                // Aplica as 4 cores principais da paleta gradient ao state
+                const newColors = palette.colors.map(c => ({ hex: c.hex, role: c.role }));
+                // Forçar colorCount a 4 para mostrar todas as cores da paleta gradient
+                onChange({
+                  customColors: newColors,
+                  colorCount: 4,
+                  polishType: "gradient-pro", // ativa o polimento Gradient Pro
+                  colorStyle: "premium-saas", // estilo compatível com gradientes premium
+                });
+              }}
+            />
           </div>
         </div>
 
