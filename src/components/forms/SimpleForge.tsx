@@ -147,6 +147,7 @@ const STACK_PREFS = [
 ];
 
 const STACK_COMBO_CATEGORIES = [
+  { id: "awwwards", label: "🏆 Awwwards" },
   { id: "saas", label: "SaaS" },
   { id: "ai", label: "AI" },
   { id: "indie", label: "Indie" },
@@ -163,6 +164,8 @@ const COMBO_BADGES: Record<string, { label: string; color: string }> = {
   speed: { label: "⚡ Mais rápido", color: "bg-blue-500/20 text-blue-400" },
   budget: { label: "💸 Mais barato", color: "bg-green-500/20 text-green-400" },
   enterprise: { label: "🏢 Melhor B2B", color: "bg-amber-500/20 text-amber-400" },
+  awwwards: { label: "🏆 Awwwards", color: "bg-pink-500/20 text-pink-400" },
+  developer: { label: "💻 Dev Award", color: "bg-cyan-500/20 text-cyan-400" },
 };
 
 const INTEGRATIONS = [

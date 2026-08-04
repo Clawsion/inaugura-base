@@ -1,30 +1,486 @@
 {
-  "version": "1.0.0",
+  "version": "1.3.0",
   "combos": [
-    { "id": "saas-god-tier", "name": "SaaS God Tier", "category": "saas", "badge": "recommended", "stack": "Next.js 16 + React 19 + Tailwind v4 + shadcn + Better Auth + Drizzle + Neon + Stripe + Resend + Vercel + PostHog", "tags": ["Mais usado", "Default"] },
-    { "id": "supabase-power", "name": "Supabase Power", "category": "saas", "badge": "speed", "stack": "Next.js + Supabase (Auth+DB+Storage+Realtime) + shadcn + Stripe + Resend + Vercel", "tags": ["Mais rápido MVP"] },
-    { "id": "t3-classic", "name": "T3 Classic", "category": "saas", "stack": "Next.js + tRPC + Prisma + NextAuth + Tailwind", "tags": [] },
-    { "id": "remix-full-stack", "name": "Remix Full-Stack", "category": "saas", "stack": "Remix + Prisma + PostgreSQL + Tailwind", "tags": [] },
-    { "id": "sveltekit-modern", "name": "SvelteKit Modern", "category": "saas", "stack": "SvelteKit + Drizzle + Lucia Auth + Tailwind + Turso", "tags": [] },
-    { "id": "ai-native", "name": "AI-Native", "category": "ai", "badge": "trending", "stack": "Next.js + Vercel AI SDK + Supabase/Neon + Drizzle + Better Auth + OpenAI/Anthropic + shadcn + Stripe", "tags": ["Trending"] },
-    { "id": "rag-powerhouse", "name": "RAG Powerhouse", "category": "ai", "stack": "Next.js + LangChain/LlamaIndex + Pinecone/Weaviate + OpenAI + Supabase", "tags": [] },
-    { "id": "agent-builder", "name": "Agent Builder", "category": "ai", "stack": "Next.js + Vercel AI SDK + Zod + Drizzle + Neon + MCP tools", "tags": [] },
-    { "id": "ai-chat-app", "name": "AI Chat App", "category": "ai", "stack": "Next.js + Vercel AI SDK + Redis (streaming) + Supabase Auth", "tags": [] },
-    { "id": "indie-lightweight", "name": "Indie Lightweight", "category": "indie", "badge": "budget", "stack": "Next.js + Cloudflare D1/Drizzle + Better Auth + Polar/Lemon Squeezy + Resend", "tags": ["Mais barato"] },
-    { "id": "astro-micro-saas", "name": "Astro Micro-SaaS", "category": "indie", "stack": "Astro + Supabase + Stripe + Tailwind", "tags": [] },
-    { "id": "bun-speed-stack", "name": "Bun Speed Stack", "category": "indie", "stack": "Bun + Hono + SQLite/Turso + Better Auth", "tags": [] },
-    { "id": "solo-founder", "name": "Solo Founder", "category": "indie", "stack": "Next.js + Supabase + Lemon Squeezy + Resend", "tags": [] },
-    { "id": "enterprise-god-tier", "name": "Enterprise God Tier", "category": "enterprise", "badge": "enterprise", "stack": "Next.js + Clerk/WorkOS + Drizzle + PlanetScale + Stripe + Resend + PostHog", "tags": ["Melhor B2B"] },
-    { "id": "multi-tenant-saas", "name": "Multi-Tenant SaaS", "category": "enterprise", "stack": "Next.js + WorkOS (SSO/SAML) + Neon (RLS) + Stripe Billing", "tags": [] },
-    { "id": "corporate-dashboard", "name": "Corporate Dashboard", "category": "enterprise", "stack": "Next.js + Auth0 + PostgreSQL + tRPC + Recharts", "tags": [] },
-    { "id": "ecommerce-modern", "name": "E-commerce Modern", "category": "commerce", "stack": "Next.js + Shopify Hydrogen + Stripe + shadcn", "tags": [] },
-    { "id": "headless-commerce", "name": "Headless Commerce", "category": "commerce", "stack": "Next.js + Medusa.js + Stripe + Algolia", "tags": [] },
-    { "id": "marketplace", "name": "Marketplace", "category": "commerce", "stack": "Next.js + Supabase + Stripe Connect + Resend", "tags": [] },
-    { "id": "python-hybrid", "name": "Python Hybrid", "category": "python", "stack": "Next.js (frontend) + FastAPI + SQLModel + PostgreSQL", "tags": [] },
-    { "id": "django-full-stack", "name": "Django Full-Stack", "category": "python", "stack": "Django + HTMX + PostgreSQL + Tailwind", "tags": [] },
-    { "id": "ml-backend", "name": "ML Backend", "category": "python", "stack": "FastAPI + Next.js + PyTorch/scikit-learn + Redis + Postgres", "tags": [] },
-    { "id": "mobile-first", "name": "Mobile-First", "category": "mobile", "stack": "Expo (React Native) + Supabase + Stripe + NativeWind", "tags": [] },
-    { "id": "cross-platform-full", "name": "Cross-Platform Full", "category": "mobile", "stack": "Next.js (web) + Expo (mobile) + Supabase (shared)", "tags": [] },
-    { "id": "content-machine", "name": "Content Machine", "category": "content", "stack": "Next.js + Sanity/Payload CMS + Tailwind + Resend", "tags": [] }
+    {
+      "id": "saas-god-tier",
+      "name": "SaaS God Tier",
+      "category": "saas",
+      "badge": "recommended",
+      "stack": "Next.js 16 + React 19 + Tailwind v4 + shadcn + Better Auth + Drizzle + Neon + Stripe + Resend + Vercel + PostHog",
+      "tags": [
+        "Mais usado",
+        "Default"
+      ]
+    },
+    {
+      "id": "supabase-power",
+      "name": "Supabase Power",
+      "category": "saas",
+      "badge": "speed",
+      "stack": "Next.js + Supabase (Auth+DB+Storage+Realtime) + shadcn + Stripe + Resend + Vercel",
+      "tags": [
+        "Mais rápido MVP"
+      ]
+    },
+    {
+      "id": "t3-classic",
+      "name": "T3 Classic",
+      "category": "saas",
+      "stack": "Next.js + tRPC + Prisma + NextAuth + Tailwind",
+      "tags": []
+    },
+    {
+      "id": "remix-full-stack",
+      "name": "Remix Full-Stack",
+      "category": "saas",
+      "stack": "Remix + Prisma + PostgreSQL + Tailwind",
+      "tags": []
+    },
+    {
+      "id": "sveltekit-modern",
+      "name": "SvelteKit Modern",
+      "category": "saas",
+      "stack": "SvelteKit + Drizzle + Lucia Auth + Tailwind + Turso",
+      "tags": []
+    },
+    {
+      "id": "ai-native",
+      "name": "AI-Native",
+      "category": "ai",
+      "badge": "trending",
+      "stack": "Next.js + Vercel AI SDK + Supabase/Neon + Drizzle + Better Auth + OpenAI/Anthropic + shadcn + Stripe",
+      "tags": [
+        "Trending"
+      ]
+    },
+    {
+      "id": "rag-powerhouse",
+      "name": "RAG Powerhouse",
+      "category": "ai",
+      "stack": "Next.js + LangChain/LlamaIndex + Pinecone/Weaviate + OpenAI + Supabase",
+      "tags": []
+    },
+    {
+      "id": "agent-builder",
+      "name": "Agent Builder",
+      "category": "ai",
+      "stack": "Next.js + Vercel AI SDK + Zod + Drizzle + Neon + MCP tools",
+      "tags": []
+    },
+    {
+      "id": "ai-chat-app",
+      "name": "AI Chat App",
+      "category": "ai",
+      "stack": "Next.js + Vercel AI SDK + Redis (streaming) + Supabase Auth",
+      "tags": []
+    },
+    {
+      "id": "indie-lightweight",
+      "name": "Indie Lightweight",
+      "category": "indie",
+      "badge": "budget",
+      "stack": "Next.js + Cloudflare D1/Drizzle + Better Auth + Polar/Lemon Squeezy + Resend",
+      "tags": [
+        "Mais barato"
+      ]
+    },
+    {
+      "id": "astro-micro-saas",
+      "name": "Astro Micro-SaaS",
+      "category": "indie",
+      "stack": "Astro + Supabase + Stripe + Tailwind",
+      "tags": []
+    },
+    {
+      "id": "bun-speed-stack",
+      "name": "Bun Speed Stack",
+      "category": "indie",
+      "stack": "Bun + Hono + SQLite/Turso + Better Auth",
+      "tags": []
+    },
+    {
+      "id": "solo-founder",
+      "name": "Solo Founder",
+      "category": "indie",
+      "stack": "Next.js + Supabase + Lemon Squeezy + Resend",
+      "tags": []
+    },
+    {
+      "id": "enterprise-god-tier",
+      "name": "Enterprise God Tier",
+      "category": "enterprise",
+      "badge": "enterprise",
+      "stack": "Next.js + Clerk/WorkOS + Drizzle + PlanetScale + Stripe + Resend + PostHog",
+      "tags": [
+        "Melhor B2B"
+      ]
+    },
+    {
+      "id": "multi-tenant-saas",
+      "name": "Multi-Tenant SaaS",
+      "category": "enterprise",
+      "stack": "Next.js + WorkOS (SSO/SAML) + Neon (RLS) + Stripe Billing",
+      "tags": []
+    },
+    {
+      "id": "corporate-dashboard",
+      "name": "Corporate Dashboard",
+      "category": "enterprise",
+      "stack": "Next.js + Auth0 + PostgreSQL + tRPC + Recharts",
+      "tags": []
+    },
+    {
+      "id": "ecommerce-modern",
+      "name": "E-commerce Modern",
+      "category": "commerce",
+      "stack": "Next.js + Shopify Hydrogen + Stripe + shadcn",
+      "tags": []
+    },
+    {
+      "id": "headless-commerce",
+      "name": "Headless Commerce",
+      "category": "commerce",
+      "stack": "Next.js + Medusa.js + Stripe + Algolia",
+      "tags": []
+    },
+    {
+      "id": "marketplace",
+      "name": "Marketplace",
+      "category": "commerce",
+      "stack": "Next.js + Supabase + Stripe Connect + Resend",
+      "tags": []
+    },
+    {
+      "id": "python-hybrid",
+      "name": "Python Hybrid",
+      "category": "python",
+      "stack": "Next.js (frontend) + FastAPI + SQLModel + PostgreSQL",
+      "tags": []
+    },
+    {
+      "id": "django-full-stack",
+      "name": "Django Full-Stack",
+      "category": "python",
+      "stack": "Django + HTMX + PostgreSQL + Tailwind",
+      "tags": []
+    },
+    {
+      "id": "ml-backend",
+      "name": "ML Backend",
+      "category": "python",
+      "stack": "FastAPI + Next.js + PyTorch/scikit-learn + Redis + Postgres",
+      "tags": []
+    },
+    {
+      "id": "mobile-first",
+      "name": "Mobile-First",
+      "category": "mobile",
+      "stack": "Expo (React Native) + Supabase + Stripe + NativeWind",
+      "tags": []
+    },
+    {
+      "id": "cross-platform-full",
+      "name": "Cross-Platform Full",
+      "category": "mobile",
+      "stack": "Next.js (web) + Expo (mobile) + Supabase (shared)",
+      "tags": []
+    },
+    {
+      "id": "content-machine",
+      "name": "Content Machine",
+      "category": "content",
+      "stack": "Next.js + Sanity/Payload CMS + Tailwind + Resend",
+      "tags": []
+    },
+    {
+      "id": "god-tier-creative",
+      "name": "God Tier Creative",
+      "category": "awwwards",
+      "badge": "awwwards",
+      "stack": "Nuxt 3/4 + GSAP full (ScrollTrigger, SplitText, Flip, Observer) + Lenis + Three.js/custom WebGL + Tailwind + Sanity",
+      "tags": [
+        "Hardcore Agência",
+        "SOTY",
+        "3D Imersivo",
+        "Storytelling"
+      ]
+    },
+    {
+      "id": "soty-nocode-king",
+      "name": "SOTY No-Code King",
+      "category": "awwwards",
+      "badge": "awwwards",
+      "stack": "Webflow Enterprise + GSAP custom + Rive + WebGL/Three.js embed + Figma",
+      "tags": [
+        "No-Code Premium",
+        "Lando Norris style",
+        "Visual + Code"
+      ]
+    },
+    {
+      "id": "react-immersive",
+      "name": "React Immersive",
+      "category": "awwwards",
+      "badge": "recommended",
+      "stack": "Next.js + GSAP + Lenis + React Three Fiber (R3F) + Drei + Tailwind + Vercel",
+      "tags": [
+        "Portfolios",
+        "Agências React",
+        "App-like"
+      ]
+    },
+    {
+      "id": "trionn-architecture",
+      "name": "Trionn Architecture",
+      "category": "awwwards",
+      "badge": "awwwards",
+      "stack": "React/Next + GSAP full + Three.js (raw) + Lenis + Web Audio API + Tailwind + SplitText",
+      "tags": [
+        "Studio high-end",
+        "Codrops case",
+        "Render loop control"
+      ]
+    },
+    {
+      "id": "vanilla-mastery",
+      "name": "Vanilla Mastery",
+      "category": "awwwards",
+      "badge": "developer",
+      "stack": "HTML/CSS/JS puro + GSAP + custom WebGL engine + Lenis + shaders GLSL + Barba.js",
+      "tags": [
+        "Max performance",
+        "Developer Award",
+        "Active Theory style"
+      ]
+    },
+    {
+      "id": "astro-performance",
+      "name": "Astro Performance",
+      "category": "awwwards",
+      "badge": "speed",
+      "stack": "Astro + Islands (Vue/React/Svelte) + GSAP + Lenis + Three.js + Tailwind",
+      "tags": [
+        "Ultra-rápido",
+        "Lighthouse 100",
+        "Editorial premium"
+      ]
+    },
+    {
+      "id": "svelte-fluid",
+      "name": "Svelte Fluid",
+      "category": "awwwards",
+      "stack": "SvelteKit + GSAP + Lenis + Threlte (Three.js) + Tailwind",
+      "tags": [
+        "Reatividade nativa",
+        "Leve",
+        "Modern"
+      ]
+    },
+    {
+      "id": "webflow-advanced-motion",
+      "name": "Webflow + Advanced Motion",
+      "category": "awwwards",
+      "stack": "Webflow + Rive + GSAP + Lottie + custom code",
+      "tags": [
+        "Brand",
+        "Athlete",
+        "Product"
+      ]
+    },
+    {
+      "id": "nuxt-pure-story",
+      "name": "Nuxt Pure Story",
+      "category": "awwwards",
+      "badge": "awwwards",
+      "stack": "Nuxt + GSAP ScrollTrigger + Lenis + SplitText + Barba.js / View Transitions + Sanity",
+      "tags": [
+        "Narrativa scroll",
+        "Page transitions",
+        "Editorial"
+      ]
+    },
+    {
+      "id": "next-r3f-pro",
+      "name": "Next + R3F Pro",
+      "category": "awwwards",
+      "stack": "Next.js + R3F + GSAP + Lenis + postprocessing + shaders + Zustand",
+      "tags": [
+        "3D React",
+        "Product configurators",
+        "Immersive"
+      ]
+    },
+    {
+      "id": "hybrid-headless-ecom",
+      "name": "Hybrid Headless E-commerce",
+      "category": "awwwards",
+      "stack": "Next/Nuxt + Shopify Hydrogen ou Sanity/Payload + GSAP + Three.js + Tailwind",
+      "tags": [
+        "Luxury e-commerce",
+        "3D product",
+        "Marcas high-end"
+      ]
+    },
+    {
+      "id": "rive-centric",
+      "name": "Rive-Centric",
+      "category": "awwwards",
+      "stack": "Webflow ou Next + Rive (principal) + GSAP secundário + Three.js leve",
+      "tags": [
+        "State machines",
+        "Mobile-first",
+        "Pós-Lando"
+      ]
+    },
+    {
+      "id": "framer-motion-hybrid",
+      "name": "Framer Motion Hybrid",
+      "category": "awwwards",
+      "badge": "recommended",
+      "stack": "Next.js + Framer Motion + GSAP (scroll pesado) + Lenis + Tailwind",
+      "tags": [
+        "Micro-interações",
+        "Apps criativas",
+        "Mais acessível"
+      ]
+    },
+    {
+      "id": "custom-webgl-engine",
+      "name": "Custom WebGL Engine",
+      "category": "awwwards",
+      "badge": "developer",
+      "stack": "Vanilla ou framework leve + custom WebGL/WebGPU + GSAP + Lenis",
+      "tags": [
+        "Particles",
+        "Distortion",
+        "Generative",
+        "Lusion style"
+      ]
+    },
+    {
+      "id": "nuxt-pinia-gsap",
+      "name": "Vue/Nuxt + Pinia + GSAP",
+      "category": "awwwards",
+      "stack": "Nuxt + Pinia + GSAP full + Lenis + Three.js",
+      "tags": [
+        "State robusto",
+        "Apps complexas",
+        "3D"
+      ]
+    },
+    {
+      "id": "wp-headless-premium",
+      "name": "WordPress Headless Premium",
+      "category": "awwwards",
+      "stack": "Next/Nuxt + WP GraphQL ou Faust + GSAP + Lenis + Three.js",
+      "tags": [
+        "Cliente não-técnico",
+        "CMS fácil",
+        "Award-winning"
+      ]
+    },
+    {
+      "id": "svelte-threlte-gsap",
+      "name": "Svelte + Threlte + GSAP",
+      "category": "awwwards",
+      "stack": "SvelteKit + Threlte + GSAP + Lenis",
+      "tags": [
+        "3D Svelte-native",
+        "Leveza",
+        "Experimental"
+      ]
+    },
+    {
+      "id": "astro-react-3d-islands",
+      "name": "Astro + React Islands 3D",
+      "category": "awwwards",
+      "badge": "speed",
+      "stack": "Astro + R3F islands + GSAP + Lenis",
+      "tags": [
+        "Static + 3D",
+        "Performance monstro",
+        "Portfolios"
+      ]
+    },
+    {
+      "id": "webflow-custom-heavy",
+      "name": "Webflow + Custom Code Heavy",
+      "category": "awwwards",
+      "stack": "Webflow + muito JS custom (GSAP/Three) + Memberstack ou similar",
+      "tags": [
+        "No-code base",
+        "Dev avançado",
+        "Time-to-market"
+      ]
+    },
+    {
+      "id": "plain-barba-gsap",
+      "name": "Plain + Barba + GSAP",
+      "category": "awwwards",
+      "stack": "HTML/JS + Barba.js + GSAP + Lenis + Three.js",
+      "tags": [
+        "Transições perfeitas",
+        "Zero framework",
+        "Cinematic"
+      ]
+    },
+    {
+      "id": "next-tailwind-shadcn-gsap",
+      "name": "Next + Tailwind + shadcn + GSAP",
+      "category": "awwwards",
+      "badge": "recommended",
+      "stack": "Next + Tailwind + shadcn/ui + GSAP + Lenis",
+      "tags": [
+        "SaaS criativo",
+        "Portfolios",
+        "Design system rápido"
+      ]
+    },
+    {
+      "id": "qwik-fresh-gsap",
+      "name": "Qwik ou Fresh + GSAP",
+      "category": "awwwards",
+      "badge": "speed",
+      "stack": "Qwik/Fresh + GSAP + Lenis",
+      "tags": [
+        "Resumability extrema",
+        "Performance obsessiva",
+        "Nicho"
+      ]
+    },
+    {
+      "id": "threejs-physics",
+      "name": "Three.js + Physics (Cannon/Rapier)",
+      "category": "awwwards",
+      "stack": "Framework + Three.js + Cannon/Rapier physics + GSAP",
+      "tags": [
+        "3D com física",
+        "Games-like",
+        "Interactive product"
+      ]
+    },
+    {
+      "id": "rive-webflow-sound",
+      "name": "Rive + Webflow + Sound",
+      "category": "awwwards",
+      "stack": "Webflow + Rive + Howler.js / Web Audio + GSAP",
+      "tags": [
+        "Animações + som",
+        "Brand emotional",
+        "Polish extra"
+      ]
+    },
+    {
+      "id": "full-custom-studio",
+      "name": "Full Custom Studio Stack",
+      "category": "awwwards",
+      "badge": "developer",
+      "stack": "Custom engine (WebGL/WebGPU) + GSAP + own scroll + shaders + audio procedural + CI/CD avançado",
+      "tags": [
+        "Top 1% studios",
+        "Active Theory level",
+        "Developer Award"
+      ]
+    }
   ]
 }
