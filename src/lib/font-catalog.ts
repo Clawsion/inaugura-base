@@ -1,18 +1,11 @@
 // ============================================================================
-// font-catalog.ts — Catálogo de fonts REAIS verificadas (100+ fonts)
+// font-catalog.ts — Catálogo CURADO de fonts VISUALMENTE DISTINTAS
 // ============================================================================
-// Sources verificadas:
-// - Fontshare API (https://api.fontshare.com/v2/fonts) — 100 families
-// - Google Fonts (fonts.google.com) — mais populares 2026
-// - Awwwards SOTD — fonts confirmadas em sites premiados
-// - Sites reais: Vercel, Linear, Stripe, Resend, Cursor, Raycast, Notion
+// PRINCÍPIO: cada font aqui tem PERSONALIDADE ÚNICA — proibido repetir vibes.
+// Se duas fonts parecem iguais, só fica a melhor.
+// Nível mínimo: 9/10 Awwwards. Sem amadorismo.
 // ============================================================================
-// Cada font tem:
-// - name: nome da font (igual ao CSS font-family)
-// - source: sites reais onde é usada ou foundry
-// - category: sans | display | serif | mono
-// - foundry: Google Fonts, Fontshare, Klim, Pangram, etc.
-// - siteType: para que tipo de site é mais adequada
+// Sources: Fontshare API, Google Fonts, Awwwards SOTD, typ.io, dembrandt.com
 // ============================================================================
 
 export interface FontDef {
@@ -21,160 +14,85 @@ export interface FontDef {
   category: "sans" | "display" | "serif" | "mono";
   foundry: string;
   siteType: string[];
-  // Alternativa gratuita (para fonts pagas) — free alternative com vibe similar
   freeAlternative?: string;
-  // Se é paid ou free
   license?: "free" | "paid" | "freemium";
+  // O que faz esta font ÚNICA vs outras da mesma categoria
+  personality: string;
 }
 
 export const FONT_CATALOG: FontDef[] = [
   // ═══════════════════════════════════════════════════════════════
-  // SANS-SERIF (UI/Body) — para SaaS, tech, dashboards, apps
+  // SANS-SERIF — apenas as visualmente DISTINTAS entre si
   // ═══════════════════════════════════════════════════════════════
-  { name: "Geist", source: "Vercel, Alephic", category: "sans", foundry: "Vercel (Google)", siteType: ["SaaS", "Tech", "Dev"] },
-  { name: "Inter", source: "Linear, Raycast, Notion UI", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Tech", "UI"] },
-  { name: "Satoshi", source: "Stripe, Resend, Awwwards", category: "sans", foundry: "Fontshare", siteType: ["SaaS", "Editorial", "Premium"] },
-  { name: "General Sans", source: "Fontshare, editorial SaaS", category: "sans", foundry: "Fontshare", siteType: ["SaaS", "Editorial"] },
-  { name: "Switzer", source: "SWIX, Awwwards sites", category: "sans", foundry: "Fontshare", siteType: ["SaaS", "Minimal"] },
-  { name: "Plus Jakarta Sans", source: "Tokopedia, SaaS", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Friendly"] },
-  { name: "DM Sans", source: "Google Fonts, SaaS", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Clean"] },
-  { name: "Manrope", source: "Google Fonts, SaaS", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Modern"] },
-  { name: "Figtree", source: "Google Fonts showcase", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Clean"] },
-  { name: "Hanken Grotesk", source: "Hanken, Awwwards", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Editorial"] },
-  { name: "Albert Sans", source: "Google Fonts", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Clean"] },
-  { name: "Lexend", source: "Google Fonts (acessível)", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Accessible"] },
-  { name: "Schibsted Grotesk", source: "Schibsted, Awwwards", category: "sans", foundry: "Google Fonts", siteType: ["Editorial", "Nordic"] },
-  { name: "Onest", source: "Google Fonts, Awwwards", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Modern"] },
-  { name: "Mona Sans", source: "GitHub, Figma brand", category: "sans", foundry: "GitHub (Google)", siteType: ["Dev", "SaaS"] },
-  { name: "Hubot Sans", source: "GitHub", category: "sans", foundry: "GitHub (Google)", siteType: ["Dev", "SaaS"] },
-  { name: "PP Neue Montreal", source: "Awwwards SOTD 2026 (demandespeciale)", category: "sans", foundry: "Pangram Pangram", siteType: ["Awwwards", "Premium", "Editorial"], license: "freemium", freeAlternative: "Inter (Google) — mesma中性grotesk vibe, free" },
-  { name: "Aeonik", source: "CoType, premium SaaS", category: "sans", foundry: "CoType", siteType: ["SaaS", "Premium"], license: "paid", freeAlternative: "Geist (Vercel/Google) — geometric clean, free" },
-  { name: "Söhne", source: "Stripe (confirmed typ.io)", category: "sans", foundry: "Klim Type Foundry", siteType: ["SaaS", "Premium", "Fintech"], license: "paid", freeAlternative: "Inter (Google) — a #1 free alternative ao Söhne, quase idêntica" },
-  { name: "Poppins", source: "Google Fonts, popular", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Friendly", "E-commerce"] },
-  { name: "Work Sans", source: "Google Fonts", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Clean"] },
-  { name: "Nunito", source: "Google Fonts, friendly", category: "sans", foundry: "Google Fonts", siteType: ["Education", "Friendly"] },
-  { name: "Public Sans", source: "Google Fonts, gov", category: "sans", foundry: "Google Fonts", siteType: ["Enterprise", "Gov"] },
-  { name: "Fira Sans", source: "Google Fonts, Mozilla", category: "sans", foundry: "Google Fonts", siteType: ["Tech", "Dev"] },
-  { name: "Asap", source: "Google Fonts", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Clean"] },
-  { name: "Spline Sans", source: "Google Fonts", category: "sans", foundry: "Google Fonts", siteType: ["Tech", "Dev"] },
-  { name: "Red Hat Display", source: "Red Hat, Google", category: "sans", foundry: "Google Fonts", siteType: ["Enterprise", "Tech"] },
-  { name: "Merriweather Sans", source: "Google Fonts", category: "sans", foundry: "Google Fonts", siteType: ["Editorial", "Blog"] },
-  { name: "Be Vietnam Pro", source: "Google Fonts, multilingual", category: "sans", foundry: "Google Fonts", siteType: ["Multilingual", "SaaS"] },
-  { name: "Epilogue", source: "Google Fonts", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Modern"] },
-  { name: "Quicksand", source: "Google Fonts", category: "sans", foundry: "Google Fonts", siteType: ["Friendly", "Wellness"] },
-  { name: "Bespoke Sans", source: "Fontshare, Awwwards", category: "sans", foundry: "Fontshare", siteType: ["Awwwards", "Premium"] },
-  { name: "Bevellier", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["SaaS", "Modern"] },
-  { name: "Alpino", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["SaaS", "Editorial"] },
-  { name: "Amulya", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["SaaS", "Clean"] },
-  { name: "Author", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Editorial", "Premium"] },
-  { name: "Gambetta", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Editorial", "Magazine"] },
-  { name: "Ranade", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["SaaS", "Clean"] },
-  { name: "Nippo", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Minimal", "Swiss"] },
-  { name: "Supreme", source: "Fontshare, streetwear", category: "sans", foundry: "Fontshare", siteType: ["Creative", "Bold"] },
-  { name: "Plein", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Creative", "Bold"] },
-  { name: "Stardom", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Creative", "Display"] },
-  { name: "Chillax", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Creative", "Friendly"] },
-  { name: "Zina", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Editorial", "Modern"] },
-  { name: "Synonym", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["SaaS", "Modern"] },
-  { name: "Quilon", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Editorial", "Clean"] },
-  { name: "Telma", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Creative", "Bold"] },
-  { name: "Segment", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Tech", "Modern"] },
-  { name: "Hoover", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Creative", "Display"] },
-  { name: "Pencerio", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Creative", "Premium"] },
-  { name: "Roundo", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Friendly", "Wellness"] },
-  { name: "Pally", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Friendly", "Playful"] },
-  { name: "Kola", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Creative", "Bold"] },
-  { name: "Neco", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Creative", "Display"] },
-  { name: "Pramukh Rounded", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Friendly", "Wellness"] },
-  { name: "Hind", source: "Google Fonts, multilingual", category: "sans", foundry: "Google Fonts", siteType: ["Multilingual"] },
-  { name: "Rajdhani", source: "Google Fonts, tech", category: "sans", foundry: "Google Fonts", siteType: ["Tech", "Gaming"] },
-  { name: "Khand", source: "Google Fonts", category: "sans", foundry: "Google Fonts", siteType: ["Tech", "Dev"] },
-  { name: "Crimson Pro", source: "Google Fonts", category: "sans", foundry: "Google Fonts", siteType: ["Editorial", "Blog"] },
-  { name: "Literata", source: "Google Fonts, editorial", category: "sans", foundry: "Google Fonts", siteType: ["Editorial", "Blog"] },
+  { name: "Geist", source: "Vercel", category: "sans", foundry: "Vercel (Google)", siteType: ["SaaS", "Tech"], license: "free", personality: "Geométrica moderna, rounded terminals, tech-forward" },
+  { name: "Inter", source: "Linear, Raycast, Notion UI", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "UI"], license: "free", personality: "Neutral grotesk, tall x-height, max legibilidade — o standard" },
+  { name: "Satoshi", source: "Stripe, Resend, Awwwards", category: "sans", foundry: "Fontshare", siteType: ["SaaS", "Editorial", "Premium"], license: "free", personality: "Grotesk com personalidade geométrica — mais quente que Inter" },
+  { name: "PP Neue Montreal", source: "Awwwards SOTD 2026", category: "sans", foundry: "Pangram Pangram", siteType: ["Awwwards", "Editorial"], license: "freemium", freeAlternative: "Inter (Google)", personality: "Neutral mas com alma — a grotesk mais usada em SOTD 2026" },
+  { name: "Söhne", source: "Stripe (typ.io)", category: "sans", foundry: "Klim Type Foundry", siteType: ["SaaS", "Fintech"], license: "paid", freeAlternative: "Inter (Google)", personality: "Helvetica reimaginada — authoritativa, premium, cara" },
+  { name: "Aeonik", source: "CoType, premium SaaS", category: "sans", foundry: "CoType", siteType: ["SaaS", "Premium"], license: "paid", freeAlternative: "Geist (Vercel)", personality: "Grotesk técnica super-limpa — sem nenhum ornamento" },
+  { name: "Plus Jakarta Sans", source: "Tokopedia, SaaS", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Friendly"], license: "free", personality: "Geométrica FRIENDLY — mais redonda e quente que Inter" },
+  { name: "DM Sans", source: "Google Fonts", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Clean"], license: "free", personality: "Grotesk neutra com letterforms únicas (g, a) — distinta de Inter" },
+  { name: "Hanken Grotesk", source: "Hanken, Awwwards", category: "sans", foundry: "Google Fonts", siteType: ["Editorial", "Nordic"], license: "free", personality: "Grotesk escandinava — mais estreita e elegante que Inter" },
+  { name: "Manrope", source: "Google Fonts", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Modern"], license: "free", personality: "Semi-geométrica com curves suaves — distinta de Inter/DM Sans" },
+  { name: "Schibsted Grotesk", source: "Schibsted, Awwwards", category: "sans", foundry: "Google Fonts", siteType: ["Editorial", "Nordic"], license: "free", personality: "Grotesk editorial nórdica — personality forte, não neutral" },
+  { name: "Mona Sans", source: "GitHub/Figma", category: "sans", foundry: "GitHub (Google)", siteType: ["Dev", "SaaS"], license: "free", personality: "Variable super-wide — GitHub brand, tech mas humana" },
+  { name: "General Sans", source: "Fontshare, editorial", category: "sans", foundry: "Fontshare", siteType: ["Editorial", "Premium"], license: "free", personality: "Grotesk editorial quente — distinta de Satoshi (mais neutra)" },
+  { name: "Switzer", source: "SWIX, Awwwards", category: "sans", foundry: "Fontshare", siteType: ["SaaS", "Minimal"], license: "free", personality: "Grotesk minimalista — sem personalidade = ideal para body limpo" },
+  { name: "Lexend", source: "Google Fonts (acessível)", category: "sans", foundry: "Google Fonts", siteType: ["Education", "Accessible"], license: "free", personality: "Otimizada para leitura — letter-spacing dinâmico por tamanho" },
+  { name: "Poppins", source: "Google Fonts", category: "sans", foundry: "Google Fonts", siteType: ["Friendly", "E-commerce"], license: "free", personality: "Geométrica PURA baseada em círculos — Bauhaus style, muito distinta" },
+  { name: "Gambetta", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Editorial", "Magazine"], license: "free", personality: "Grotesk editorial com personality — serifs internos subtis" },
+  { name: "Nippo", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Minimal", "Swiss"], license: "free", personality: "Swiss/japonês — ultra-minimal, quase Neue Haas" },
+  { name: "Supreme", source: "Fontshare, streetwear", category: "sans", foundry: "Fontshare", siteType: ["Creative", "Bold"], license: "free", personality: "Streetwear/condensed — BOLD, urbana, nada neutral" },
 
   // ═══════════════════════════════════════════════════════════════
-  // DISPLAY/GROTESK (Headings) — para Awwwards, creative, bold
+  // DISPLAY/GROTESK — para HEADLINES com PERSONALIDADE FORTE
   // ═══════════════════════════════════════════════════════════════
-  { name: "Cabinet Grotesk", source: "Fontshare, Awwwards", category: "display", foundry: "Fontshare", siteType: ["Awwwards", "Agency", "Premium"] },
-  { name: "Clash Display", source: "Awwwards SOTD, Fontshare", category: "display", foundry: "Fontshare", siteType: ["Awwwards", "Bold", "Agency"] },
-  { name: "Clash Grotesk", source: "Bureau Cool, Awwwards", category: "display", foundry: "Fontshare", siteType: ["Awwwards", "Agency"] },
-  { name: "Outfit", source: "Google Fonts, SaaS", category: "display", foundry: "Google Fonts", siteType: ["SaaS", "Modern"] },
-  { name: "Space Grotesk", source: "Google Fonts, tech", category: "display", foundry: "Google Fonts", siteType: ["Tech", "Dev", "Gaming"] },
-  { name: "Sora", source: "Google Fonts, Awwwards", category: "display", foundry: "Google Fonts", siteType: ["Tech", "Modern"] },
-  { name: "Syne", source: "Synesthésie MC, Google", category: "display", foundry: "Google Fonts", siteType: ["Awwwards", "Experimental", "Bold"] },
-  { name: "Unbounded", source: "Google Fonts, Awwwards bold", category: "display", foundry: "Google Fonts", siteType: ["Awwwards", "Bold", "Display"] },
-  { name: "Bricolage Grotesque", source: "Awwwards, Google", category: "display", foundry: "Google Fonts", siteType: ["Awwwards", "Trending", "Editorial"] },
-  { name: "Archivo", source: "Google Fonts, Awwwards", category: "display", foundry: "Google Fonts", siteType: ["Editorial", "Display"] },
-  { name: "Big Shoulders Display", source: "Google Fonts, bold", category: "display", foundry: "Google Fonts", siteType: ["Bold", "Display", "Poster"] },
-  { name: "Anybody", source: "Google Fonts, Awwwards", category: "display", foundry: "Google Fonts", siteType: ["Creative", "Display"] },
-  { name: "Anton", source: "Google Fonts, bold", category: "display", foundry: "Google Fonts", siteType: ["Bold", "Poster", "Headline"] },
-  { name: "Bebas Neue", source: "Google Fonts, bold", category: "display", foundry: "Google Fonts", siteType: ["Bold", "Poster", "Headline"] },
-  { name: "Oswald", source: "Google Fonts, condensed", category: "display", foundry: "Google Fonts", siteType: ["Bold", "Condensed", "Headline"] },
-  { name: "Teko", source: "Google Fonts, condensed", category: "display", foundry: "Google Fonts", siteType: ["Tech", "Condensed"] },
-  { name: "Boska", source: "Fontshare, Awwwards", category: "display", foundry: "Fontshare", siteType: ["Awwwards", "Display"] },
-  { name: "Technor", source: "Fontshare, tech", category: "display", foundry: "Fontshare", siteType: ["Tech", "Display"] },
-  { name: "Melodrama", source: "Fontshare, editorial", category: "display", foundry: "Fontshare", siteType: ["Editorial", "Display"] },
-  { name: "Aktura", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Creative", "Display"] },
-  { name: "RX100", source: "Fontshare, tech", category: "display", foundry: "Fontshare", siteType: ["Tech", "Gaming"] },
-  { name: "Zodiak", source: "Fontshare, editorial", category: "display", foundry: "Fontshare", siteType: ["Editorial", "Display"] },
-  { name: "Stardom", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Creative", "Display"] },
-  { name: "Tanker", source: "Fontshare, bold", category: "display", foundry: "Fontshare", siteType: ["Bold", "Display"] },
-  { name: "Expose", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Creative", "Display"] },
-  { name: "Sharpie", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Creative", "Handwritten"] },
-  { name: "New Title", source: "Fontshare, editorial", category: "display", foundry: "Fontshare", siteType: ["Editorial", "Display"] },
-  { name: "Gambarino", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Creative", "Display"] },
-  { name: "Striper", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Creative", "Display"] },
-  { name: "Boxing", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Creative", "Bold"] },
-  { name: "Kihim", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Creative", "Display"] },
-  { name: "Rowan", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Editorial", "Display"] },
-  { name: "Sentient", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Awwwards", "Display"] },
-  { name: "Paquito", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Creative", "Bold"] },
-  { name: "Rosaline", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Creative", "Display"] },
-  { name: "Styro", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Creative", "Display"] },
-  { name: "Pilcrow Rounded", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Friendly", "Display"] },
-  { name: "Kohinoor Zerone", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Tech", "Display"] },
-  { name: "Chubbo", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Friendly", "Display"] },
-  { name: "Comico", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Creative", "Playful"] },
-  { name: "Tabular", source: "Fontshare, tech", category: "display", foundry: "Fontshare", siteType: ["Tech", "Dev"] },
-  { name: "Panchang", source: "Fontshare, multilingual", category: "display", foundry: "Fontshare", siteType: ["Multilingual", "Display"] },
-  { name: "Trench Slab", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Editorial", "Display"] },
-  { name: "Array", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Tech", "Display"] },
-  { name: "Britney", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Creative", "Bold"] },
-  { name: "Bonny", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Creative", "Display"] },
+  { name: "Clash Display", source: "Awwwards SOTD, Fontshare", category: "display", foundry: "Fontshare", siteType: ["Awwwards", "Bold", "Agency"], license: "free", personality: "Display BOLD com letterforms únicas (g, a) — #1 Awwwards 2026" },
+  { name: "Cabinet Grotesk", source: "Fontshare, Awwwards", category: "display", foundry: "Fontshare", siteType: ["Awwwards", "Premium"], license: "free", personality: "Grotesk display elegante — mais refinada que Clash, editorial" },
+  { name: "Clash Grotesk", source: "Bureau Cool, Awwwards", category: "display", foundry: "Fontshare", siteType: ["Awwwards", "Agency"], license: "free", personality: "Versão grotesk do Clash — menos display, mais body-friendly" },
+  { name: "Space Grotesk", source: "Google Fonts, tech", category: "display", foundry: "Google Fonts", siteType: ["Tech", "Dev", "Gaming"], license: "free", personality: "Tech/mono-flavor — letterforms únicas (a, g, 0) sem ser mono" },
+  { name: "Sora", source: "Google Fonts, Awwwards", category: "display", foundry: "Google Fonts", siteType: ["Tech", "Modern"], license: "free", personality: "Geométrica limpa para headings — mais tech que Outfit" },
+  { name: "Syne", source: "Synesthésie MC, Google", category: "display", foundry: "Google Fonts", siteType: ["Awwwards", "Experimental"], license: "free", personality: "EXPERIMENTAL — letterforms distorcidas, art-school vibe" },
+  { name: "Unbounded", source: "Google Fonts, Awwwards", category: "display", foundry: "Google Fonts", siteType: ["Awwwards", "Bold"], license: "free", personality: "ULTRA-BOLD display — rounded, chunky, impossível ignorar" },
+  { name: "Bricolage Grotesque", source: "Awwwards, Google", category: "display", foundry: "Google Fonts", siteType: ["Awwwards", "Trending"], license: "free", personality: "Collage de styles — mistura grotesk + serif + unique, trending 2026" },
+  { name: "Archivo", source: "Google Fonts, Awwwards", category: "display", foundry: "Google Fonts", siteType: ["Editorial", "Display"], license: "free", personality: "Grotesk condensada — editorial/jornal, narrow headlines" },
+  { name: "Big Shoulders Display", source: "Google Fonts", category: "display", foundry: "Google Fonts", siteType: ["Bold", "Poster"], license: "free", personality: "ULTRA-CONDENSED — poster/headline impactante, Chicago style" },
+  { name: "Anton", source: "Google Fonts", category: "display", foundry: "Google Fonts", siteType: ["Bold", "Poster"], license: "free", personality: "Black condensed — máxima impacto, só para hero gigante" },
+  { name: "Bebas Neue", source: "Google Fonts", category: "display", foundry: "Google Fonts", siteType: ["Bold", "Poster"], license: "free", personality: "All-caps condensed — cinema/poster clássico" },
+  { name: "Oswald", source: "Google Fonts", category: "display", foundry: "Google Fonts", siteType: ["Condensed", "Headline"], license: "free", personality: "Condensed — narrower que Archivo, mais técnica" },
+  { name: "Boska", source: "Fontshare, Awwwards", category: "display", foundry: "Fontshare", siteType: ["Awwwards", "Display"], license: "free", personality: "Wedge-serif display — não é sans nem serif, é híbrida" },
+  { name: "Technor", source: "Fontshare, tech", category: "display", foundry: "Fontshare", siteType: ["Tech", "Display"], license: "free", personality: "Tech display com personality — angular, futurista" },
+  { name: "Melodrama", source: "Fontshare, editorial", category: "display", foundry: "Fontshare", siteType: ["Editorial", "Display"], license: "free", personality: "Serif display DRAMÁTICA — editorial luxury com flair" },
+  { name: "RX100", source: "Fontshare, tech", category: "display", foundry: "Fontshare", siteType: ["Tech", "Gaming"], license: "free", personality: "Tech/gaming display — angular, agressiva, cyberpunk" },
+  { name: "Zodiak", source: "Fontshare, editorial", category: "display", foundry: "Fontshare", siteType: ["Editorial", "Display"], license: "free", personality: "Serif display geométrica — zodiac/celestial vibe" },
+  { name: "Tanker", source: "Fontshare, bold", category: "display", foundry: "Fontshare", siteType: ["Bold", "Display"], license: "free", personality: "ULTRA-BOLD square — brutalist display, sem rounded" },
+  { name: "Sentient", source: "Fontshare, Awwwards", category: "display", foundry: "Fontshare", siteType: ["Awwwards", "Display"], license: "free", personality: "Serif display moderna — organic curves, AI-era vibe" },
 
   // ═══════════════════════════════════════════════════════════════
-  // SERIF (Editorial/Premium) — para magazines, luxury, editorial
+  // SERIF — EDITORIAL/LUXURY — cada uma com personalidade única
   // ═══════════════════════════════════════════════════════════════
-  { name: "Fraunces", source: "Google Fonts, Awwwards", category: "serif", foundry: "Google Fonts", siteType: ["Editorial", "Magazine", "Premium"] },
-  { name: "Newsreader", source: "Google Fonts, editorial", category: "serif", foundry: "Google Fonts", siteType: ["Editorial", "Blog"] },
-  { name: "Instrument Serif", source: "Instrument, Awwwards", category: "serif", foundry: "Instrument (Google)", siteType: ["Editorial", "Premium", "Stripe"] },
-  { name: "Lyon", source: "Notion marketing (confirmed)", category: "serif", foundry: "Commercial Type", siteType: ["Editorial", "Luxury", "Premium"], license: "paid", freeAlternative: "Playfair Display (Google) — serif elegante luxury, free" },
-  { name: "GT Sectra", source: "Awwwards editorial, Klim", category: "serif", foundry: "Grilli Type", siteType: ["Editorial", "Luxury"], license: "paid", freeAlternative: "Fraunces (Google) — serif variable premium, free" },
-  { name: "Tiempos Text", source: "Awwwards editorial, Klim", category: "serif", foundry: "Klim Type Foundry", siteType: ["Editorial", "Magazine"], license: "paid", freeAlternative: "Newsreader (Google) — editorial serif clean, free" },
-  { name: "Lora", source: "Google Fonts, editorial", category: "serif", foundry: "Google Fonts", siteType: ["Editorial", "Blog"] },
-  { name: "Playfair Display", source: "Google Fonts, luxury", category: "serif", foundry: "Google Fonts", siteType: ["Luxury", "Editorial", "Fashion"] },
-  { name: "Merriweather", source: "Google Fonts, editorial", category: "serif", foundry: "Google Fonts", siteType: ["Editorial", "Blog"] },
-  { name: "Cormorant Garamond", source: "Google Fonts, luxury", category: "serif", foundry: "Google Fonts", siteType: ["Luxury", "Fashion", "Editorial"] },
-  { name: "Bespoke Serif", source: "Fontshare, Awwwards", category: "serif", foundry: "Fontshare", siteType: ["Awwwards", "Premium"] },
-  { name: "Erode", source: "Fontshare, editorial", category: "serif", foundry: "Fontshare", siteType: ["Editorial", "Premium"] },
-  { name: "Recia", source: "Fontshare", category: "serif", foundry: "Fontshare", siteType: ["Editorial", "Display"] },
-  { name: "Bespoke Slab", source: "Fontshare", category: "serif", foundry: "Fontshare", siteType: ["Editorial", "Display"] },
-  { name: "Bespoke Stencil", source: "Fontshare", category: "serif", foundry: "Fontshare", siteType: ["Creative", "Display"] },
-  { name: "Karma", source: "Google Fonts, editorial", category: "serif", foundry: "Google Fonts", siteType: ["Editorial", "Blog"] },
-  { name: "Dancing Script", source: "Google Fonts, script", category: "serif", foundry: "Google Fonts", siteType: ["Creative", "Handwritten"] },
-  { name: "Kalam", source: "Google Fonts, handwritten", category: "serif", foundry: "Google Fonts", siteType: ["Creative", "Handwritten"] },
+  { name: "Fraunces", source: "Google Fonts, Awwwards", category: "serif", foundry: "Google Fonts", siteType: ["Editorial", "Magazine"], license: "free", personality: "Variable serif COMPLEXA — wonky/soft, máxima personality" },
+  { name: "Instrument Serif", source: "Instrument, Awwwards", category: "serif", foundry: "Instrument (Google)", siteType: ["Editorial", "Premium"], license: "free", personality: "Serif elegante FINA — thin strokes, Stripe editorial style" },
+  { name: "Newsreader", source: "Google Fonts, editorial", category: "serif", foundry: "Google Fonts", siteType: ["Editorial", "Blog"], license: "free", personality: "Serif newspaper clássica — readability máxima, body-friendly" },
+  { name: "Playfair Display", source: "Google Fonts, luxury", category: "serif", foundry: "Google Fonts", siteType: ["Luxury", "Fashion"], license: "free", personality: "Serif ALTO-CONTRASTE — luxury/fashion, drama máximo" },
+  { name: "Cormorant Garamond", source: "Google Fonts, luxury", category: "serif", foundry: "Google Fonts", siteType: ["Luxury", "Fashion"], license: "free", personality: "Serif ultra-fina elegante — mais delicada que Playfair" },
+  { name: "Lyon", source: "Notion marketing (confirmed)", category: "serif", foundry: "Commercial Type", siteType: ["Editorial", "Luxury"], license: "paid", freeAlternative: "Playfair Display (Google)", personality: "Serif premium CARA — Notion brand, authoritative" },
+  { name: "GT Sectra", source: "Awwwards editorial, Klim", category: "serif", foundry: "Grilli Type", siteType: ["Editorial", "Luxury"], license: "paid", freeAlternative: "Fraunces (Google)", personality: "Serif com contrast EXTREMO — caligráfica, artística" },
+  { name: "Tiempos Text", source: "Awwwards editorial, Klim", category: "serif", foundry: "Klim Type Foundry", siteType: ["Editorial", "Magazine"], license: "paid", freeAlternative: "Newsreader (Google)", personality: "Serif editorial workhorse — Klim, magazine-grade" },
+  { name: "Bespoke Serif", source: "Fontshare, Awwwards", category: "serif", foundry: "Fontshare", siteType: ["Awwwards", "Premium"], license: "free", personality: "Serif custom-feel — letterforms únicas, não standard" },
+  { name: "Erode", source: "Fontshare, editorial", category: "serif", foundry: "Fontshare", siteType: ["Editorial", "Premium"], license: "free", personality: "Serif com erosion effect — desgastada, vintage premium" },
+  { name: "Lora", source: "Google Fonts, editorial", category: "serif", foundry: "Google Fonts", siteType: ["Editorial", "Blog"], license: "free", personality: "Serif caligráfica brushed — mais quente/humana que Newsreader" },
 
   // ═══════════════════════════════════════════════════════════════
-  // MONO (Developer/Terminal) — para dev tools, code, terminal
+  // MONO — apenas as DISTINTAS entre si
   // ═══════════════════════════════════════════════════════════════
-  { name: "Geist Mono", source: "Vercel, Awwwards dev", category: "mono", foundry: "Vercel (Google)", siteType: ["Dev", "Tech", "SaaS"] },
-  { name: "JetBrains Mono", source: "JetBrains, Cursor", category: "mono", foundry: "JetBrains (Google)", siteType: ["Dev", "Tech", "Code"] },
-  { name: "Space Mono", source: "Google Fonts, Awwwards", category: "mono", foundry: "Google Fonts", siteType: ["Tech", "Awwwards"] },
-  { name: "Fira Code", source: "Google Fonts, dev", category: "mono", foundry: "Google Fonts", siteType: ["Dev", "Code"] },
-  { name: "IBM Plex Mono", source: "IBM, Awwwards", category: "mono", foundry: "IBM (Google)", siteType: ["Enterprise", "Tech"] },
-  { name: "Berkeley Mono", source: "Terminal.dev, premium", category: "mono", foundry: "Berkeley Graphics", siteType: ["Dev", "Premium", "Terminal"], license: "paid", freeAlternative: "JetBrains Mono (Google) — mono premium free, top choice" },
-  { name: "Commit Mono", source: "Awwwards dev, free", category: "mono", foundry: "Commit (free)", siteType: ["Dev", "Terminal"], license: "free" },
-  { name: "Azeret Mono", source: "Google Fonts", category: "mono", foundry: "Google Fonts", siteType: ["Tech", "Dev"] },
+  { name: "Geist Mono", source: "Vercel, Awwwards dev", category: "mono", foundry: "Vercel (Google)", siteType: ["Dev", "Tech"], license: "free", personality: "Mono geométrica — Vercel brand, rounded, moderna" },
+  { name: "JetBrains Mono", source: "JetBrains, Cursor", category: "mono", foundry: "JetBrains (Google)", siteType: ["Dev", "Code"], license: "free", personality: "Mono code-optimized — ligatures, code-focused, max readability" },
+  { name: "Space Mono", source: "Google Fonts, Awwwards", category: "mono", foundry: "Google Fonts", siteType: ["Tech", "Awwwards"], license: "free", personality: "Mono com personality — letterforms distorcidas, retro-futurista" },
+  { name: "Fira Code", source: "Google Fonts, dev", category: "mono", foundry: "Google Fonts", siteType: ["Dev", "Code"], license: "free", personality: "Mono com LIGATURES — != → ≠, => → ⇒, code poetry" },
+  { name: "IBM Plex Mono", source: "IBM, Awwwards", category: "mono", foundry: "IBM (Google)", siteType: ["Enterprise", "Tech"], license: "free", personality: "Mono corporativa IBM — mais técnica/angular que JetBrains" },
+  { name: "Berkeley Mono", source: "Terminal.dev, premium", category: "mono", foundry: "Berkeley Graphics", siteType: ["Dev", "Terminal"], license: "paid", freeAlternative: "JetBrains Mono (Google)", personality: "Mono premium CARA — terminal aesthetic, wide, retro" },
+  { name: "Commit Mono", source: "Awwwards dev, free", category: "mono", foundry: "Commit (free)", siteType: ["Dev", "Terminal"], license: "free", personality: "Mono slim/narrow — mais condensada que JetBrains, distinctive" },
 ];
 
 // Helper: filtrar fonts por categoria

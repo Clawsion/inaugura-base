@@ -978,44 +978,74 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           )}
         </AnimatePresence>
 
-        {/* ═══ POPUP EXPANDIDO (fullscreen, click fora fecha) ═══ */}
+        {/* ═══ POPUP EXPANDIDO (3x maior, style switcher dentro, click fora fecha) ═══ */}
         <AnimatePresence>
           {expandedMockup && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-2"
               onClick={() => setExpandedMockup(false)}
             >
               <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
+                initial={{ scale: 0.85, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
+                exit={{ scale: 0.85, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-2xl border-2 border-border shadow-2xl"
+                className="relative flex max-h-[95vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border-2 border-border bg-card shadow-2xl"
               >
-                <button
-                  type="button"
-                  onClick={() => setExpandedMockup(false)}
-                  className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-                <MockupPreview
-                  style={mockupStyle}
-                  bg={previewBg}
-                  text={previewText}
-                  accent={previewAccent}
-                  card={previewCard}
-                  colors={previewColors}
-                  fontHeading={value.fontHeading}
-                  fontBody={value.fontBody}
-                  fontMono={value.fontMono}
-                  fontCount={value.fontCount}
-                  colorCount={value.colorCount}
-                  expanded
-                />
+                {/* Header com style switcher DENTRO do popup */}
+                <div className="flex items-center justify-between border-b border-border p-3">
+                  <div className="flex flex-wrap items-center gap-1">
+                    <span className="text-[10px] font-semibold text-muted-foreground mr-1">Estilo:</span>
+                    {([
+                      { id: "saas", label: "SaaS" },
+                      { id: "ecommerce", label: "E-commerce" },
+                      { id: "portfolio", label: "Portfolio" },
+                      { id: "editorial", label: "Editorial" },
+                      { id: "brutalist", label: "Brutalist" },
+                      { id: "vintage", label: "Vintage" },
+                      { id: "tech", label: "Tech" },
+                    ] as const).map((m) => (
+                      <button
+                        key={m.id}
+                        type="button"
+                        onClick={() => setMockupStyle(m.id)}
+                        className={cn(
+                          "rounded-md px-2 py-1 text-[10px] font-medium transition-all",
+                          mockupStyle === m.id ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                        )}
+                      >
+                        {m.label}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setExpandedMockup(false)}
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+                {/* Mockup content — scrollable */}
+                <div className="overflow-y-auto p-4">
+                  <MockupPreview
+                    style={mockupStyle}
+                    bg={previewBg}
+                    text={previewText}
+                    accent={previewAccent}
+                    card={previewCard}
+                    colors={previewColors}
+                    fontHeading={value.fontHeading}
+                    fontBody={value.fontBody}
+                    fontMono={value.fontMono}
+                    fontCount={value.fontCount}
+                    colorCount={value.colorCount}
+                    expanded
+                  />
+                </div>
               </motion.div>
             </motion.div>
           )}
@@ -1733,7 +1763,7 @@ function MockupPreview({
           <div className="col-span-2 space-y-1"><span className={cn("opacity-60 uppercase tracking-wider", expanded ? "text-[10px]" : "text-[8px]")}>Total Revenue</span><div className={cn("font-extrabold", hsz)} style={{ ...hd, color: c2 }}>€48.2K</div><span className={cn("opacity-50", sz)} style={{ color: c3 }}>↑ 12.5% vs last month</span></div>
           <div className="flex items-end gap-1 p-2" style={{ background: c1 + "08", borderRadius: expanded ? 12 : 8, minHeight: expanded ? 80 : 40 }}>{[40, 65, 45, 80, 55, 90, 70].map((h, i) => <div key={i} className="flex-1 rounded-t" style={{ height: `${h}%`, background: i % 2 === 0 ? c2 : c3, opacity: 0.4 + (h / 100) * 0.6 }} />)}</div>
         </div>
-        <div className={cn("grid", gap, colorCount === 2 ? "grid-cols-2" : colorCount === 3 ? "grid-cols-3" : "grid-cols-4")}>{colors.map((c, i) => <div key={i} className={cn("p-2", round)} style={{ background: c.hex + "15", border: `1px solid ${c.hex}30` }}><div className={cn("rounded mb-1", iconS)} style={{ background: c.hex }} /><div className={cn("font-semibold", expanded ? "text-[11px]" : "text-[9px]")} style={hd}>{c.role}</div></div>)}</div>
+        <div className={cn("grid", gap, colorCount === 2 ? "grid-cols-2" : colorCount === 3 ? "grid-cols-3" : "grid-cols-4")}>{colors.map((c, i) => <div key={i} className={cn("p-2", round)} style={{ background: c.hex + "15", border: `1px solid ${c.hex}30` }}><div className={cn("rounded mb-1", iconS)} style={{ background: c.hex }} /><div className={cn("font-semibold", expanded ? "text-[11px]" : "text-[9px]")} style={hd}>Feature {i + 1}</div></div>)}</div>
         {fontCount === 3 && <div className="mt-2 px-2 py-1 flex items-center gap-1" style={{ background: c1 + "08", borderRadius: 6 }}><span className="text-[8px]" style={{ color: c3 }}>●</span><code className={cn(expanded ? "text-[10px]" : "text-[8px]")} style={mn}>npm run deploy --prod</code></div>}
       </div>
       <ColorLegend colors={colors} expanded={expanded} />
@@ -1780,7 +1810,7 @@ function MockupPreview({
           <div className="col-span-2 space-y-1"><span className={cn("font-bold uppercase tracking-wider px-1.5 py-0.5", expanded ? "text-[9px]" : "text-[7px]")} style={{ background: c2, color: c0, display: "inline-block" }}>Featured</span><h1 className={cn("font-bold leading-tight", expanded ? "text-2xl" : "text-sm")} style={hd}>The future of spec-driven development</h1><p className={cn("opacity-60 leading-relaxed", sz)}>How AI transforms web development — from idea to production in minutes.</p><div className="flex items-center gap-1"><div className={cn("rounded-full", expanded ? "h-5 w-5" : "h-3 w-3")} style={{ background: c3 }} /><span className={cn("opacity-50", sz)}>By Author · 5 min</span></div></div>
           <div className={cn("flex items-center justify-center relative overflow-hidden", round)} style={{ background: c3 + "30", minHeight: expanded ? 120 : 60 }}><div className={cn("rounded-lg opacity-50", expanded ? "h-16 w-12" : "h-8 w-6")} style={{ background: c3 }} /></div>
         </div>
-        <div className="space-y-1.5">{colors.map((c, i) => <div key={i} className={cn("flex items-center gap-2 p-1.5", round)} style={{ background: c.hex + "0A", border: `1px solid ${c.hex}20` }}><div className={cn("rounded shrink-0 flex items-center justify-center", expanded ? "h-10 w-10" : "h-5 w-5")} style={{ background: c.hex }}><span className={cn("font-bold", expanded ? "text-[10px]" : "text-[7px]")} style={{ color: c0 }}>{i + 1}</span></div><div className="flex-1 min-w-0"><div className={cn("font-semibold truncate", expanded ? "text-xs" : "text-[9px]")} style={hd}>Article {i + 1}</div><div className={cn("opacity-50 truncate", expanded ? "text-[10px]" : "text-[8px]")}>Understanding {c.role.toLowerCase()} in design</div></div></div>)}</div>
+        <div className="space-y-1.5">{colors.map((c, i) => <div key={i} className={cn("flex items-center gap-2 p-1.5", round)} style={{ background: c.hex + "0A", border: `1px solid ${c.hex}20` }}><div className={cn("rounded shrink-0 flex items-center justify-center", expanded ? "h-10 w-10" : "h-5 w-5")} style={{ background: c.hex }}><span className={cn("font-bold", expanded ? "text-[10px]" : "text-[7px]")} style={{ color: c0 }}>{i + 1}</span></div><div className="flex-1 min-w-0"><div className={cn("font-semibold truncate", expanded ? "text-xs" : "text-[9px]")} style={hd}>Article {i + 1}</div><div className={cn("opacity-50 truncate", expanded ? "text-[10px]" : "text-[8px]")}>Article {i + 1} excerpt about design</div></div></div>)}</div>
       </div>
       <ColorLegend colors={colors} expanded={expanded} />
     </div>
@@ -1802,7 +1832,7 @@ function MockupPreview({
         </div>
         {/* Grid — hard rectangles, no rounding */}
         <div className={cn("grid", gap, colorCount === 2 ? "grid-cols-2" : colorCount === 3 ? "grid-cols-3" : "grid-cols-4")}>
-          {colors.map((c, i) => <div key={i} className="p-2" style={{ background: c.hex, border: `2px solid ${c1}` }}><div className={cn("font-black uppercase", expanded ? "text-[10px]" : "text-[8px]")} style={{ color: c0, fontFamily: monoFont }}>{c.role}</div><div className={cn("font-bold", expanded ? "text-[9px]" : "text-[7px]")} style={{ color: c0 + "80", fontFamily: monoFont }}>0{i + 1}</div></div>)}
+          {colors.map((c, i) => <div key={i} className="p-2" style={{ background: c.hex, border: `2px solid ${c1}` }}><div className={cn("font-black uppercase", expanded ? "text-[10px]" : "text-[8px]")} style={{ color: c0, fontFamily: monoFont }}>BLOCK {i + 1}</div><div className={cn("font-bold", expanded ? "text-[9px]" : "text-[7px]")} style={{ color: c0 + "80", fontFamily: monoFont }}>0{i + 1}</div></div>)}
         </div>
         {/* Footer bar */}
         <div className="mt-3 flex items-center justify-between px-2 py-1" style={{ background: c2, color: c0 }}><span className={cn("font-black uppercase", expanded ? "text-[9px]" : "text-[7px]")} style={{ fontFamily: monoFont }}>// END</span><span className={cn("font-bold", expanded ? "text-[9px]" : "text-[7px]")} style={{ fontFamily: monoFont }}>2026</span></div>
@@ -1837,7 +1867,7 @@ function MockupPreview({
         <div className="text-center my-2" style={{ color: c3, letterSpacing: "0.5em" }}>· · ·</div>
         {/* Items — classic card style */}
         <div className={cn("grid", gap, colorCount === 2 ? "grid-cols-2" : "grid-cols-3")}>
-          {colors.map((c, i) => <div key={i} className={cn("p-2 text-center", round)} style={{ border: `1px solid ${c1}20`, background: c.hex + "08" }}><div className={cn("mb-1", expanded ? "text-[10px]" : "text-[7px]")} style={{ color: c3 }}>❧</div><div className={cn("font-semibold italic", expanded ? "text-[11px]" : "text-[9px]")} style={{ ...hd, color: c.hex }}>{c.role}</div><div className={cn("italic opacity-50", expanded ? "text-[9px]" : "text-[7px]")}>Piece No. {i + 1}</div></div>)}
+          {colors.map((c, i) => <div key={i} className={cn("p-2 text-center", round)} style={{ border: `1px solid ${c1}20`, background: c.hex + "08" }}><div className={cn("mb-1", expanded ? "text-[10px]" : "text-[7px]")} style={{ color: c3 }}>❧</div><div className={cn("font-semibold italic", expanded ? "text-[11px]" : "text-[9px]")} style={{ ...hd, color: c.hex }}>Piece {i + 1}</div><div className={cn("italic opacity-50", expanded ? "text-[9px]" : "text-[7px]")}>Piece No. {i + 1}</div></div>)}
         </div>
       </div>
       <ColorLegend colors={colors} expanded={expanded} />
@@ -1864,7 +1894,7 @@ function MockupPreview({
         {/* Grid — code block cards */}
         <div className={cn("grid", gap, colorCount === 2 ? "grid-cols-2" : "grid-cols-3")}>
           {colors.map((c, i) => <div key={i} className={cn("p-2", round)} style={{ background: c.hex + "0A", border: `1px solid ${c.hex}30` }}>
-            <div className="flex items-center gap-1 mb-1"><div className={cn("rounded-full", expanded ? "h-2 w-2" : "h-1.5 w-1.5")} style={{ background: c.hex }} /><code className={cn(expanded ? "text-[9px]" : "text-[7px]")} style={{ ...mn, color: c.hex }}>{c.role.toLowerCase().replace(/\s/g, "_")}</code></div>
+            <div className="flex items-center gap-1 mb-1"><div className={cn("rounded-full", expanded ? "h-2 w-2" : "h-1.5 w-1.5")} style={{ background: c.hex }} /><code className={cn(expanded ? "text-[9px]" : "text-[7px]")} style={{ ...mn, color: c.hex }}>var_{i + 1}</code></div>
             <div className={cn(expanded ? "h-8" : "h-4", "rounded flex items-end gap-0.5 p-0.5")}>{[60, 80, 45, 90].map((h, j) => <div key={j} className="flex-1 rounded-t" style={{ height: `${h}%`, background: c.hex, opacity: 0.3 + j * 0.2 }} />)}</div>
           </div>)}
         </div>
