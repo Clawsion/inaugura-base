@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { CATALOG } from "@/lib/catalog";
 import { FONT_CATALOG, getFontsByCategory, type FontDef } from "@/lib/font-catalog";
-import { adjustColor, generatePalette, generateRandomPalette, polishPalette, optimizePalette, polishSingleColor, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
+import { adjustColor, generatePalette, generateRandomPalette, polishPalette, optimizePalette, polishSingleColor, generateAwwwardsPalette, type AwwwardsPalette, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
 import { useFontLoader, getCssFontName } from "@/lib/use-font-loader";
 
 export interface SimpleForgeValues {
@@ -328,6 +328,8 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
   const [manualComboId, setManualComboId] = useState<string | null>(null);
   const [mockupStyle, setMockupStyle] = useState<"saas" | "ecommerce" | "portfolio" | "editorial" | "brutalist" | "vintage" | "tech">("saas");
   const [expandedMockup, setExpandedMockup] = useState(false);
+  const [specialPalette, setSpecialPalette] = useState<AwwwardsPalette | null>(null);
+  const [showSpecialPopup, setShowSpecialPopup] = useState(false);
 
   // 🔥 CARREGA FONTS EM TEMPO REAL — quando mudas uma font, ela carrega do CDN
   useFontLoader([value.fontHeading, value.fontBody, value.fontMono]);
@@ -410,6 +412,45 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
   }, [value.customColors, value.colorCount, value.colorPreset, value.trendOverrides, onChange]);
 
   // POLIMENTO INDIVIDUAL — polir uma cor específica
+  // SPECIAL (global) — gera paleta Awwwards-level completa com CSS + Tailwind
+  const generateSpecialGlobal = useCallback(() => {
+    const palette = generateAwwwardsPalette();
+    setSpecialPalette(palette);
+    setShowSpecialPopup(true);
+    // Também aplica as cores ao customColors
+    const newColors = [
+      { hex: palette.bg, role: "Background" },
+      { hex: palette.text, role: "Secundária" },
+      { hex: palette.accent, role: "Suporte" },
+      { hex: palette.highlight, role: "Destaque" },
+    ];
+    onChange({
+      customColors: newColors.slice(0, value.colorCount),
+      colorPreset: "electric-lavender",
+    });
+    toast.success(`🎨 Special: ${palette.name} — CSS + Tailwind prontos!`);
+  }, [value.colorCount, onChange]);
+
+  // SPECIAL (individual) — gera para uma trend específica
+  const generateSpecialForTrend = useCallback((trendId: string) => {
+    const palette = generateAwwwardsPalette();
+    setSpecialPalette(palette);
+    setShowSpecialPopup(true);
+    const newColors = [
+      { hex: palette.bg, role: "Background" },
+      { hex: palette.text, role: "Secundária" },
+      { hex: palette.accent, role: "Suporte" },
+      { hex: palette.highlight, role: "Destaque" },
+    ];
+    const overrides = { ...value.trendOverrides, [trendId]: newColors };
+    if (trendId === value.colorPreset) {
+      onChange({ customColors: newColors.slice(0, value.colorCount), trendOverrides: overrides });
+    } else {
+      onChange({ trendOverrides: overrides });
+    }
+    toast.success(`🎨 Special: ${palette.name} para esta palete!`);
+  }, [value.colorCount, value.colorPreset, value.trendOverrides, onChange]);
+
   const polishSingleColorHandler = useCallback((index: number) => {
     if (value.customColors.length === 0) return;
     const color = value.customColors[index];
@@ -729,6 +770,18 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
             >
               <Plus className="h-3 w-3" /> Save
             </Button>
+            {/* Special — gera paleta Awwwards-level completa com CSS + Tailwind */}
+            <Button
+              type="button"
+              size="sm"
+              variant="default"
+              onClick={() => generateSpecialGlobal()}
+              className="h-6 gap-1 px-2 text-[10px] font-bold"
+              style={{ background: "linear-gradient(135deg, #A78BFA, #00E5FF)" }}
+              title="Special — gera paleta Awwwards-level (ramps 50-950, semantic tokens, CSS + Tailwind)"
+            >
+              <Sparkles className="h-3 w-3" /> Special
+            </Button>
           </div>
         </div>
 
@@ -896,6 +949,15 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                       <Sparkles className="h-3 w-3" />
                     </button>
                   )}
+                  {/* Special individual — Awwwards palette para esta trend */}
+                  <button type="button"
+                    onClick={() => generateSpecialForTrend(trend.id)}
+                    className="flex h-8 w-8 items-center justify-center rounded-md border text-muted-foreground hover:text-white transition-all"
+                    style={{ borderColor: "#A78BFA40" }}
+                    title="Special — gerar paleta Awwwards-level (CSS + Tailwind) para esta palete"
+                  >
+                    <span style={{ fontSize: "10px" }}>🎨</span>
+                  </button>
                 </div>
                 {/* Editor de cor individual (popup inline) — com botão OK para confirmar */}
                 <AnimatePresence>
@@ -1339,6 +1401,111 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           )}
         </AnimatePresence>
       </div>
+
+      {/* ═══════════════════════════════════════════════════════════════════ */}
+      {/* POPUP SPECIAL — Awwwards palette com CSS + Tailwind pronto            */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
+      <AnimatePresence>
+        {showSpecialPopup && specialPalette && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4"
+            onClick={() => setShowSpecialPopup(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl border-2 border-border bg-card p-6 shadow-2xl"
+            >
+              {/* Header */}
+              <div className="mb-4 flex items-start justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 text-primary" />
+                    <h2 className="text-lg font-bold">{specialPalette.name}</h2>
+                    <span className="rounded-full px-2 py-0.5 text-[9px] font-bold" style={{ background: specialPalette.accent + "20", color: specialPalette.accent }}>{specialPalette.mood}</span>
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-[9px] font-bold">{specialPalette.isDark ? "DARK" : "LIGHT"}</span>
+                  </div>
+                  <p className="mt-1 text-sm text-muted-foreground">Premium Color System — Awwwards Jury Level (Lando Norris / Trionn)</p>
+                </div>
+                <button onClick={() => setShowSpecialPopup(false)} className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"><X className="h-5 w-5" /></button>
+              </div>
+
+              {/* Core colors preview */}
+              <div className="mb-4 grid grid-cols-4 gap-2">
+                {[{ l: "BG", v: specialPalette.bg }, { l: "Text", v: specialPalette.text }, { l: "Accent", v: specialPalette.accent }, { l: "Highlight", v: specialPalette.highlight }].map((c) => (
+                  <div key={c.l} className="rounded-lg overflow-hidden border border-border">
+                    <div className="h-12" style={{ background: c.v }} />
+                    <div className="p-1.5"><div className="text-[9px] font-semibold">{c.l}</div><code className="text-[8px] text-muted-foreground">{c.v}</code></div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Accent Ramp 50-950 */}
+              <div className="mb-4">
+                <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Accent Ramp (50-950)</h3>
+                <div className="flex gap-0.5 rounded-lg overflow-hidden">
+                  {Object.entries(specialPalette.accentRamp).map(([k, v]) => (
+                    <div key={k} className="flex-1 text-center" style={{ background: v }}>
+                      <div className="py-3" />
+                      <div className="text-[7px] font-bold pb-1" style={{ color: parseInt(k) > 500 ? "#FFF" : "#000", opacity: 0.6 }}>{k}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Glow preview */}
+              <div className="mb-4 rounded-lg p-3" style={{ background: specialPalette.bg }}>
+                <div className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5" style={{ background: specialPalette.accent, color: specialPalette.accentForeground, boxShadow: specialPalette.accentGlow }}>
+                  <span className="text-xs font-bold">Glow Button Preview</span>
+                </div>
+              </div>
+
+              {/* CSS Code */}
+              <div className="mb-4">
+                <div className="mb-1.5 flex items-center justify-between">
+                  <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">CSS Variables</h3>
+                  <button onClick={() => { navigator.clipboard.writeText(specialPalette.cssCode); toast.success("CSS copiado!"); }} className="rounded px-2 py-0.5 text-[9px] text-primary hover:bg-primary/10">Copiar CSS</button>
+                </div>
+                <pre className="max-h-40 overflow-y-auto rounded-lg bg-zinc-900 p-3 text-[10px] text-green-400">{specialPalette.cssCode}</pre>
+              </div>
+
+              {/* Tailwind Code */}
+              <div className="mb-4">
+                <div className="mb-1.5 flex items-center justify-between">
+                  <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Tailwind Config</h3>
+                  <button onClick={() => { navigator.clipboard.writeText(specialPalette.tailwindCode); toast.success("Tailwind copiado!"); }} className="rounded px-2 py-0.5 text-[9px] text-primary hover:bg-primary/10">Copiar Tailwind</button>
+                </div>
+                <pre className="max-h-40 overflow-y-auto rounded-lg bg-zinc-900 p-3 text-[10px] text-blue-400">{specialPalette.tailwindCode}</pre>
+              </div>
+
+              {/* Semantic tokens */}
+              <div className="mb-4">
+                <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Semantic Tokens</h3>
+                <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
+                  {Object.entries(specialPalette.semantic).slice(0, 12).map(([k, v]) => (
+                    <div key={k} className="flex items-center gap-1.5 rounded-md border border-border p-1.5">
+                      <div className="h-4 w-4 shrink-0 rounded" style={{ background: v }} />
+                      <div className="min-w-0"><div className="truncate text-[9px] font-medium">{k}</div><code className="text-[7px] text-muted-foreground">{v}</code></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-2">
+                <Button type="button" size="sm" onClick={() => { navigator.clipboard.writeText(specialPalette.cssCode); toast.success("CSS copiado!"); }} className="gap-1"><span>Copiar CSS</span></Button>
+                <Button type="button" size="sm" variant="outline" onClick={() => { navigator.clipboard.writeText(specialPalette.tailwindCode); toast.success("Tailwind copiado!"); }} className="gap-1"><span>Copiar Tailwind</span></Button>
+                <Button type="button" size="sm" variant="outline" onClick={() => generateSpecialGlobal()} className="ml-auto gap-1"><RefreshCw className="h-3 w-3" /> Gerar outra</Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ═══════════════════════════════════════════════════════════════════ */}
       {/* POPUP MANUAL — guia de implementação passo-a-passo                    */}

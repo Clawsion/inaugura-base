@@ -573,6 +573,206 @@ export function polishSingleColor(hex: string, role: string, polishType: PolishT
 }
 
 // ============================================================================
+// PREMIUM COLOR SYSTEM ARCHITECT — Awwwards Jury Level (Lando Norris / Trionn)
+// ============================================================================
+// Gera paleta completa Awwwards-level com:
+// - Rich blacks (NUNCA pure #000)
+// - Luminous accent (sweet spot)
+// - Ramps 50-950 para cada cor
+// - Semantic tokens completos
+// - Light + Dark mode
+// - Glow values
+// - CSS variables + Tailwind config prontos
+// ============================================================================
+export interface AwwwardsPalette {
+  name: string;
+  mood: string;
+  isDark: boolean;
+  // Core colors
+  bg: string;
+  card: string;
+  text: string;
+  muted: string;
+  accent: string;
+  accentForeground: string;
+  border: string;
+  highlight: string;
+  // Ramps 50-950
+  accentRamp: Record<string, string>;
+  neutralRamp: Record<string, string>;
+  // Semantic tokens
+  semantic: Record<string, string>;
+  // Glow
+  accentGlow: string;
+  // CSS code
+  cssCode: string;
+  tailwindCode: string;
+}
+
+const MOOD_PRESETS: Record<string, { hue: number; sat: number; light: number; isDark: boolean; name: string }> = {
+  "dark-electric": { hue: 200, sat: 85, light: 52, isDark: true, name: "Dark Electric" },
+  "dark-luxury-gold": { hue: 42, sat: 68, light: 50, isDark: true, name: "Dark Luxury Gold" },
+  "dark-cyber-magenta": { hue: 320, sat: 88, light: 54, isDark: true, name: "Dark Cyber Magenta" },
+  "dark-emerald-premium": { hue: 155, sat: 72, light: 48, isDark: true, name: "Dark Emerald Premium" },
+  "dark-violet-ai": { hue: 265, sat: 78, light: 52, isDark: true, name: "Dark Violet AI" },
+  "dark-coral-warm": { hue: 15, sat: 82, light: 54, isDark: true, name: "Dark Coral Warm" },
+  "dark-ice-blue": { hue: 195, sat: 75, light: 50, isDark: true, name: "Dark Ice Blue" },
+  "dark-amber-terminal": { hue: 38, sat: 90, light: 52, isDark: true, name: "Dark Amber Terminal" },
+};
+
+export function generateAwwwardsPalette(mood?: string): AwwwardsPalette {
+  // Escolher mood
+  const moods = Object.keys(MOOD_PRESETS);
+  const selectedMood = mood && MOOD_PRESETS[mood] ? mood : moods[Math.floor(Math.random() * moods.length)];
+  const preset = MOOD_PRESETS[selectedMood];
+
+  const { hue, sat, light, isDark, name } = preset;
+
+  // Rich black — NUNCA pure #000, sempre tinted
+  const bgSat = 22 + Math.random() * 10;
+  const bgLight = isDark ? 6 + Math.random() * 4 : 96 + Math.random() * 2;
+  const bg = hslToHex(hue, bgSat, bgLight);
+
+  // Card — um tom acima do bg
+  const cardSat = bgSat + 4;
+  const cardLight = isDark ? bgLight + 4 : bgLight - 2;
+  const card = hslToHex(hue, cardSat, cardLight);
+
+  // Text — rich cream (dark) ou deep saturated (light)
+  const textSat = isDark ? 14 + Math.random() * 8 : 42 + Math.random() * 10;
+  const textLight = isDark ? 92 + Math.random() * 3 : 16 + Math.random() * 5;
+  let text = hslToHex(hue, textSat, textLight);
+  text = ensureContrast(text, bg, 4.5);
+
+  // Muted — texto secundário
+  const mutedSat = isDark ? 10 : 25;
+  const mutedLight = isDark ? 60 + Math.random() * 8 : 45 + Math.random() * 8;
+  const muted = hslToHex(hue, mutedSat, mutedLight);
+
+  // Accent — LUMINOUS, sweet spot
+  const accentSat = Math.max(68, Math.min(82, sat));
+  const accentLight = Math.max(48, Math.min(56, light));
+  const accent = hslToHex(hue, accentSat, accentLight);
+  const accentForeground = isDark ? bg : "#FFFFFF";
+
+  // Border — subtil, tinted
+  const borderSat = isDark ? 18 : 15;
+  const borderLight = isDark ? 16 + Math.random() * 4 : 88 + Math.random() * 4;
+  const border = hslToHex(hue, borderSat, borderLight);
+
+  // Highlight — complementar harmonioso (35° offset)
+  const highlightH = (hue + 35) % 360;
+  const highlightSat = Math.max(55, Math.min(70, accentSat - 8));
+  const highlightLight = Math.max(50, Math.min(62, accentLight + 6));
+  const highlight = hslToHex(highlightH, highlightSat, highlightLight);
+
+  // Ramp 50-950 para accent
+  const accentRamp: Record<string, string> = {};
+  for (let i = 50; i <= 950; i += 50) {
+    const rampLight = isDark
+      ? Math.max(8, Math.min(95, accentLight + (i - 500) * 0.08))
+      : Math.max(10, Math.min(92, accentLight + (i - 500) * 0.07));
+    const rampSat = Math.max(30, Math.min(90, accentSat + (i - 500) * 0.02));
+    accentRamp[i.toString()] = hslToHex(hue, rampSat, rampLight);
+  }
+
+  // Ramp 50-950 para neutral (tinted com hue)
+  const neutralRamp: Record<string, string> = {};
+  for (let i = 50; i <= 950; i += 50) {
+    const nLight = isDark
+      ? Math.max(6, Math.min(96, (i / 950) * 90 + 6))
+      : Math.max(8, Math.min(98, (i / 950) * 90 + 8));
+    const nSat = isDark ? bgSat * 0.6 : bgSat * 0.3;
+    neutralRamp[i.toString()] = hslToHex(hue, nSat, nLight);
+  }
+
+  // Semantic tokens
+  const semantic = {
+    "bg-primary": bg,
+    "bg-secondary": card,
+    "bg-tertiary": hslToHex(hue, bgSat + 6, isDark ? bgLight + 8 : bgLight - 4),
+    "text-primary": text,
+    "text-secondary": muted,
+    "text-tertiary": hslToHex(hue, mutedSat, isDark ? mutedLight - 10 : mutedLight + 10),
+    "accent-primary": accent,
+    "accent-hover": hslToHex(hue, accentSat, accentLight + (isDark ? 4 : -4)),
+    "accent-active": hslToHex(hue, accentSat + 4, accentLight - 4),
+    "border-subtle": hslToHex(hue, borderSat, borderLight),
+    "border-strong": hslToHex(hue, borderSat + 6, borderLight + (isDark ? 4 : -4)),
+    "border-accent": hslToHex(hue, accentSat * 0.4, accentLight * 0.6),
+    "success": hslToHex(140, 65, 50),
+    "warning": hslToHex(38, 80, 52),
+    "error": hslToHex(0, 72, 54),
+    "info": hslToHex(200, 72, 52),
+  };
+
+  // Glow
+  const accentGlow = `0 0 30px ${accent}40, 0 0 60px ${accent}20`;
+
+  // CSS code
+  const cssCode = `:root {
+  --bg: ${bg};
+  --card: ${card};
+  --text: ${text};
+  --muted: ${muted};
+  --accent: ${accent};
+  --accent-foreground: ${accentForeground};
+  --border: ${border};
+  --highlight: ${highlight};
+  --accent-glow: ${accentGlow};
+  
+  /* Accent Ramp */
+${Object.entries(accentRamp).map(([k, v]) => `  --accent-${k}: ${v};`).join("\n")}
+  
+  /* Neutral Ramp */
+${Object.entries(neutralRamp).map(([k, v]) => `  --neutral-${k}: ${v};`).join("\n")}
+  
+  /* Semantic */
+${Object.entries(semantic).map(([k, v]) => `  --${k}: ${v};`).join("\n")}
+}`;
+
+  // Tailwind code
+  const tailwindCode = `// tailwind.config.ts
+const config = {
+  theme: {
+    extend: {
+      colors: {
+        bg: "${bg}",
+        card: "${card}",
+        text: "${text}",
+        muted: "${muted}",
+        accent: {
+          DEFAULT: "${accent}",
+          foreground: "${accentForeground}",
+${Object.entries(accentRamp).map(([k, v]) => `          ${k}: "${v}",`).join("\n")}
+        },
+        neutral: {
+${Object.entries(neutralRamp).map(([k, v]) => `          ${k}: "${v}",`).join("\n")}
+        },
+        highlight: "${highlight}",
+        success: "${semantic.success}",
+        warning: "${semantic.warning}",
+        error: "${semantic.error}",
+        info: "${semantic.info}",
+      },
+      boxShadow: {
+        glow: "${accentGlow}",
+      },
+    },
+  },
+};`;
+
+  return {
+    name,
+    mood: selectedMood,
+    isDark,
+    bg, card, text, muted, accent, accentForeground, border, highlight,
+    accentRamp, neutralRamp, semantic, accentGlow,
+    cssCode, tailwindCode,
+  };
+}
+
+// ============================================================================
 // GERAR PALETA ALEATÓRIA ROBUSTA — infinitas variações com COR VISÍVEL
 // ============================================================================
 // Princípio: TODAS as 4 posições devem ter cor visível (hue tint).
