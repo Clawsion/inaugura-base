@@ -696,6 +696,39 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
             <Button type="button" size="sm" variant="default" onClick={() => optimizeColorPalette()} className="h-6 gap-1 px-2 text-[10px] font-semibold" title="Ajuste Total — otimiza todas as cores para look de site caro (Linear/Stripe/Vercel)">
               <Zap className="h-3 w-3" /> Ajuste Total
             </Button>
+            {/* Save User — guarda a palete atual no localStorage do user */}
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                if (value.customColors.length === 0) {
+                  toast.info("Gera ou seleciona uma palete primeiro.");
+                  return;
+                }
+                try {
+                  const saved = JSON.parse(localStorage.getItem("inaugura:savedPalettes") || "[]");
+                  const newPalette = {
+                    id: `palette_${Date.now()}`,
+                    colors: value.customColors,
+                    colorCount: value.colorCount,
+                    colorPreset: value.colorPreset,
+                    colorStyle: value.colorStyle,
+                    polishType: value.polishType,
+                    savedAt: new Date().toISOString(),
+                  };
+                  saved.push(newPalette);
+                  localStorage.setItem("inaugura:savedPalettes", JSON.stringify(saved));
+                  toast.success(`Palete guardada! (${saved.length} paletes guardadas)`);
+                } catch {
+                  toast.error("Erro ao guardar palete.");
+                }
+              }}
+              className="h-6 gap-1 px-2 text-[10px]"
+              title="Guardar esta palete nas tuas paletes guardadas"
+            >
+              <Plus className="h-3 w-3" /> Save
+            </Button>
           </div>
         </div>
 

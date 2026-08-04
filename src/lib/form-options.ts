@@ -735,7 +735,320 @@ export const PRESETS_RECOMENDADOS: PresetRecomendado[] = [
   },
 ];
 
+// ============================================================================
+// LAYOUT PRESETS — 25 presets de layout completo por nicho (Awwwards 2026)
+// ============================================================================
+// Cada preset define: secções + efeitos + layout style + descrição
+// Inspirado em sites Awwwards SOTD, sites premium reais por nicho
+// ============================================================================
+export interface LayoutPreset {
+  id: string;
+  name: string;
+  nicho: string;
+  description: string;
+  layout: string;
+  secoes: string[];
+  efeitos: string[];
+  references: string[];
+}
+
+export const LAYOUT_PRESETS: LayoutPreset[] = [
+  // ─── PORTFOLIO / AGENCY ───
+  {
+    id: "portfolio-cinematic",
+    name: "Portfolio Cinematic",
+    nicho: "Portfolio / Agência",
+    description: "Hero fullscreen com vídeo/3D, scroll storytelling, project gallery masonry, about com stats, contact form.",
+    layout: "Fullscreen sections + Scroll Storytelling",
+    secoes: ["hero", "work", "about", "services", "contact", "footer"],
+    efeitos: ["Cinematic", "Smooth scroll", "Scroll Storytelling", "Image Reveal Clip", "Cursor Custom"],
+    references: ["Active Theory", "Bureau Cool", "Locomotive"],
+  },
+  {
+    id: "agency-bold-grid",
+    name: "Agency Bold Grid",
+    nicho: "Portfolio / Agência",
+    description: "Nav hamburger, hero com texto gigante, bento grid de projetos, marquee de clientes, about minimal.",
+    layout: "Bento Grid + Marquee Infinite",
+    secoes: ["hero", "work", "clients", "about", "contact", "footer"],
+    efeitos: ["Bento Grid Animated", "Marquee Infinite", "Magnetic Hover", "Reveal on scroll"],
+    references: ["Resn", "Locomotive", "Awwwards agencies"],
+  },
+  {
+    id: "portfolio-split-reveal",
+    name: "Portfolio Split Reveal",
+    nicho: "Portfolio / Agência",
+    description: "Split screen com projetos que se revelam ao hover, scroll horizontal para cases, about fullscreen.",
+    layout: "Split Screen Scroll + Horizontal Scroll",
+    secoes: ["hero", "work", "process", "about", "contact", "footer"],
+    efeitos: ["Split Screen Scroll", "Horizontal scroll", "Image Reveal Clip", "Smooth scroll"],
+    references: ["Trionn", "Awwwards SOTD"],
+  },
+
+  // ─── SaaS / TECH ───
+  {
+    id: "saas-hero-features",
+    name: "SaaS Hero + Features",
+    nicho: "SaaS / Tech",
+    description: "Nav com tabs, hero centrado com CTA, features grid 3-col, pricing table, testimonials, FAQ accordion.",
+    layout: "Hero Centered + Bento Grid",
+    secoes: ["hero", "features", "how-it-works", "pricing", "testimonials", "faq", "cta", "footer"],
+    efeitos: ["Reveal on scroll", "Smooth scroll", "Minimal classic", "Number Counter"],
+    references: ["Linear", "Vercel", "Cal.com"],
+  },
+  {
+    id: "saas-dashboard-preview",
+    name: "SaaS Dashboard Preview",
+    nicho: "SaaS / Tech",
+    description: "Hero com mockup de dashboard animado, features com tabs interativos, stats com number counter, CTA.",
+    layout: "Hero Split + Animated Stats",
+    secoes: ["hero", "features", "stats", "pricing", "logos", "cta", "footer"],
+    efeitos: ["Number Counter", "Reveal on scroll", "Gradient Mesh BG", "Magnetic Hover"],
+    references: ["Stripe", "Resend", "Cursor"],
+  },
+  {
+    id: "saas-dark-premium",
+    name: "SaaS Dark Premium",
+    nicho: "SaaS / Tech",
+    description: "Dark mode hero com gradient mesh, glassmorphism cards, pricing com toggle mensal/anual, CTA glow.",
+    layout: "Dark Hero + Glassmorphism",
+    secoes: ["hero", "features", "pricing", "testimonials", "cta", "footer"],
+    efeitos: ["Glassmorphism", "Gradient Mesh BG", "Reveal on scroll", "Neon Glow Pulse"],
+    references: ["Linear dark", "Vercel edge"],
+  },
+
+  // ─── E-COMMERCE ───
+  {
+    id: "ecommerce-boutique",
+    name: "E-commerce Boutique",
+    nicho: "E-commerce",
+    description: "Hero com product showcase split, grid de produtos com hover zoom, categorias, newsletter, reviews.",
+    layout: "Hero Split + Product Grid",
+    secoes: ["hero", "categories", "products", "reviews", "newsletter", "footer"],
+    efeitos: ["Parallax", "Image Reveal Clip", "Magnetic Hover", "Reveal on scroll"],
+    references: ["Allbirds", "Awwwards e-commerce"],
+  },
+  {
+    id: "ecommerce-luxury",
+    name: "E-commerce Luxury",
+    nicho: "E-commerce",
+    description: "Fullscreen hero com vídeo, product gallery cinematic, story section, atelier, contact concierge.",
+    layout: "Fullscreen + Cinematic Story",
+    secoes: ["hero", "collection", "story", "atelier", "contact", "footer"],
+    efeitos: ["Cinematic", "Smooth scroll", "Image Reveal Clip", "Fullscreen sections"],
+    references: ["Sotheby's", "Luxury brands"],
+  },
+  {
+    id: "ecommerce-marketplace",
+    name: "Marketplace Grid",
+    nicho: "E-commerce",
+    description: "Search bar hero, filters sidebar, masonry grid de produtos, vendor cards, trust badges.",
+    layout: "Masonry Pinterest + Filters",
+    secoes: ["hero", "filters", "products", "vendors", "trust", "footer"],
+    efeitos: ["Bento Grid Animated", "Reveal on scroll", "Number Counter"],
+    references: ["Etsy", "Airbnb experiences"],
+  },
+
+  // ─── RESTAURANT / FOOD ───
+  {
+    id: "restaurant-menu-story",
+    name: "Restaurant Menu Story",
+    nicho: "Restaurante / Food",
+    description: "Hero com comida fullscreen, menu scroll horizontal, chef story, gallery, reservation form.",
+    layout: "Fullscreen + Horizontal Scroll Menu",
+    secoes: ["hero", "menu", "chef", "gallery", "reservation", "footer"],
+    efeitos: ["Cinematic", "Horizontal scroll", "Parallax", "Image Reveal Clip"],
+    references: ["Eleven Madison Park", "Awwwards food"],
+  },
+  {
+    id: "restaurant-warm-craft",
+    name: "Restaurant Warm Craft",
+    nicho: "Restaurante / Food",
+    description: "Hero warm com food close-up, story da origem, menu em cards, gallery, localização + horas.",
+    layout: "Warm Hero + Story Cards",
+    secoes: ["hero", "story", "menu", "gallery", "location", "footer"],
+    efeitos: ["Parallax", "Reveal on scroll", "Smooth scroll", "Text Reveal Mask"],
+    references: ["Sweetgreen", "Chipotle premium"],
+  },
+
+  // ─── EDUCATION / EDTECH ───
+  {
+    id: "education-friendly-cards",
+    name: "Education Friendly Cards",
+    nicho: "Educação / EdTech",
+    description: "Hero com ilustração, course cards coloridos, progress tracking visual, testimonials de alunos, CTA signup.",
+    layout: "Hero + Colorful Course Grid",
+    secoes: ["hero", "courses", "features", "testimonials", "pricing", "cta", "footer"],
+    efeitos: ["Reveal on scroll", "Magnetic Hover", "Number Counter", "Bento Grid Animated"],
+    references: ["Duolingo", "Khan Academy", "Coursera"],
+  },
+  {
+    id: "education-platform-dashboard",
+    name: "Education Platform",
+    nicho: "Educação / EdTech",
+    description: "Hero com video preview, features em bento grid, learning path visual, stats, teacher profiles.",
+    layout: "Hero Video + Bento Features",
+    secoes: ["hero", "features", "paths", "stats", "teachers", "cta", "footer"],
+    efeitos: ["Bento Grid Animated", "Number Counter", "Reveal on scroll", "Smooth scroll"],
+    references: ["Notion learn", "MasterClass"],
+  },
+
+  // ─── REAL ESTATE ───
+  {
+    id: "realestate-luxury-gallery",
+    name: "Real Estate Luxury Gallery",
+    nicho: "Imobiliário",
+    description: "Fullscreen property hero, gallery com map integration, property details, agent contact, virtual tour CTA.",
+    layout: "Fullscreen + Gallery + Map",
+    secoes: ["hero", "gallery", "details", "map", "agent", "contact", "footer"],
+    efeitos: ["Cinematic", "Parallax", "Image Reveal Clip", "Smooth scroll"],
+    references: ["Sotheby's Realty", "Compass"],
+  },
+  {
+    id: "realestate-trust-listings",
+    name: "Real Estate Trust Listings",
+    nicho: "Imobiliário",
+    description: "Search hero com filtros, listings grid, property cards com stats, neighborhood info, agent profiles.",
+    layout: "Search Hero + Listings Grid",
+    secoes: ["hero", "listings", "neighborhood", "agents", "testimonials", "contact", "footer"],
+    efeitos: ["Reveal on scroll", "Number Counter", "Bento Grid Animated"],
+    references: ["Zillow Premier", "Redfin"],
+  },
+
+  // ─── BLOG / CONTENT ───
+  {
+    id: "editorial-magazine",
+    name: "Editorial Magazine",
+    nicho: "Blog / Conteúdo",
+    description: "Masthead, featured article split, article grid 3-col, author profiles, newsletter, categories nav.",
+    layout: "Magazine Layout + Article Grid",
+    secoes: ["hero", "featured", "articles", "authors", "newsletter", "footer"],
+    efeitos: ["Reveal on scroll", "Text Reveal Mask", "Smooth scroll", "Minimal classic"],
+    references: ["Stripe blog", "Linear blog", "Resend"],
+  },
+  {
+    id: "blog-minimal-swiss",
+    name: "Blog Minimal Swiss",
+    nicho: "Blog / Conteúdo",
+    description: "Clean hero, single-column article list, typography-focused, reading progress bar, minimal footer.",
+    layout: "Swiss Minimal + Reading Progress",
+    secoes: ["hero", "articles", "categories", "about", "footer"],
+    efeitos: ["Minimal classic", "Scroll Progress", "Text Reveal Mask"],
+    references: ["Notion blog", "Swiss design"],
+  },
+
+  // ─── CREATIVE / EXPERIMENTAL ───
+  {
+    id: "creative-3d-immersive",
+    name: "Creative 3D Immersive",
+    nicho: "Agência Criativa",
+    description: "3D hero com WebGL, scroll-driven 3D camera, project cases em 3D cards, about com particles.",
+    layout: "3D Hero + Scroll 3D Camera",
+    secoes: ["hero", "work", "about", "contact", "footer"],
+    efeitos: ["3D / WebGL leve", "Cinematic", "Scroll Storytelling", "Cursor Custom"],
+    references: ["Active Theory", "Resn", "Bureau"],
+  },
+  {
+    id: "experimental-brutalist",
+    name: "Experimental Brutalist",
+    nicho: "Agência Criativa",
+    description: "Raw blocks, huge typography, marquee strips, grid hard rectangles, monospace nav, no rounding.",
+    layout: "Brutalist Raw Blocks",
+    secoes: ["hero", "work", "manifesto", "contact", "footer"],
+    efeitos: ["Marquee Infinite", "Tilt 3D Cards", "Cursor Custom", "Scroll Progress"],
+    references: ["Gumroad", "Bruno Simon"],
+  },
+  {
+    id: "vintage-heritage",
+    name: "Vintage Heritage",
+    nicho: "Agência Criativa",
+    description: "Ornamental header, serif typography, split hero, collection grid, heritage quote, contact form.",
+    layout: "Ornamental + Split Editorial",
+    secoes: ["hero", "collection", "heritage", "about", "contact", "footer"],
+    efeitos: ["Smooth scroll", "Text Reveal Mask", "Parallax", "Image Reveal Clip"],
+    references: ["Luxury brands", "Heritage sites"],
+  },
+
+  // ─── DASHBOARD / ADMIN ───
+  {
+    id: "dashboard-saas-admin",
+    name: "Dashboard SaaS Admin",
+    nicho: "Dashboard / Admin",
+    description: "Sidebar nav, top bar, stats cards, data table, chart area, settings panel, activity feed.",
+    layout: "Sidebar + Stats + Table",
+    secoes: ["sidebar", "stats", "chart", "table", "activity", "settings"],
+    efeitos: ["Number Counter", "Reveal on scroll", "Minimal classic"],
+    references: ["Linear app", "Vercel dashboard"],
+  },
+
+  // ─── LANDING PAGE ───
+  {
+    id: "landing-ai-product",
+    name: "AI Product Landing",
+    nicho: "Landing Page",
+    description: "Hero com AI demo, features em bento grid, how it works 3-step, pricing, waitlist CTA.",
+    layout: "Hero AI Demo + Bento + Steps",
+    secoes: ["hero", "demo", "features", "how-it-works", "pricing", "waitlist", "footer"],
+    efeitos: ["Gradient Mesh BG", "Reveal on scroll", "Number Counter", "Magnetic Hover"],
+    references: ["Cursor", "Perplexity", "v0.dev"],
+  },
+  {
+    id: "landing-waitlist-viral",
+    name: "Waitlist Viral Landing",
+    nicho: "Landing Page",
+    description: "Bold hero com countdown, features minimal, social proof, waitlist form com referral, FAQ.",
+    layout: "Bold Hero + Countdown + Waitlist",
+    secoes: ["hero", "countdown", "features", "social", "waitlist", "faq", "footer"],
+    efeitos: ["Number Counter", "Confetti Burst", "Gradient Mesh BG", "Reveal on scroll"],
+    references: ["Linear launch", "Vercel waitlist"],
+  },
+  {
+    id: "landing-mobile-app",
+    name: "Mobile App Landing",
+    nicho: "Landing Page",
+    description: "Phone mockup hero, feature carousel, screenshots scroll, app store badges, testimonials, CTA.",
+    layout: "Phone Mockup + Carousel",
+    secoes: ["hero", "features", "screenshots", "testimonials", "download", "footer"],
+    efeitos: ["Parallax", "Reveal on scroll", "Magnetic Hover", "Smooth scroll"],
+    references: ["Notion mobile", "Things app"],
+  },
+
+  // ─── CORPORATE / ENTERPRISE ───
+  {
+    id: "corporate-trust-premium",
+    name: "Corporate Trust Premium",
+    nicho: "Enterprise / Corporate",
+    description: "Professional hero, services grid, case studies, client logos, team, stats, contact enterprise.",
+    layout: "Hero + Services + Cases + Logos",
+    secoes: ["hero", "services", "cases", "logos", "team", "stats", "contact", "footer"],
+    efeitos: ["Reveal on scroll", "Number Counter", "Smooth scroll", "Minimal classic"],
+    references: ["Stripe", "Vercel enterprise", "Notion B2B"],
+  },
+
+  // ─── HEALTH / WELLNESS ───
+  {
+    id: "wellness-calm-organic",
+    name: "Wellness Calm Organic",
+    nicho: "Health / Wellness",
+    description: "Soft hero com natureza, features em cards orgânicos, testimonials calm, booking, about story.",
+    layout: "Soft Hero + Organic Cards",
+    secoes: ["hero", "features", "story", "testimonials", "booking", "footer"],
+    efeitos: ["Smooth scroll", "Parallax", "Text Reveal Mask", "Reveal on scroll"],
+    references: ["Calm", "Headspace", "One Medical"],
+  },
+];
+
 // Helper: obter preset por nicho
 export function getPresetByNicho(nicho: string): PresetRecomendado | null {
   return PRESETS_RECOMENDADOS.find((p) => p.nicho === nicho) ?? null;
+}
+
+// Helper: obter presets por nicho
+export function getLayoutPresetsByNicho(nicho: string): LayoutPreset[] {
+  return LAYOUT_PRESETS.filter((p) => p.nicho === nicho);
+}
+
+// Helper: obter preset por ID
+export function getLayoutPresetById(id: string): LayoutPreset | undefined {
+  return LAYOUT_PRESETS.find((p) => p.id === id);
 }
