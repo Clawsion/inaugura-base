@@ -159,6 +159,7 @@ export default function Home() {
     idioma: "pt",
     layoutStyle: "auto",
     effectsStyle: [],
+    _quickPresetId: "",
   });
   const [showForm, setShowForm] = useState(true);
   const [activePreset, setActivePreset] = useState<string | null>(null);

@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { LayoutSelector } from "@/components/forms/LayoutSelector";
+import { QuickPresets, type QuickPreset } from "@/components/forms/QuickPresets";
+import { SavedPalettesLibrary, type SavedPalette } from "@/components/palette/SavedPalettesLibrary";
 import {
   Sparkles, Lightbulb, Plus, Trash2, ChevronDown, Wand2, ArrowRight,
   Dices, Eye, X, Layers, Zap, Lock, RefreshCw, Palette, Maximize2, Check, Info, BookOpen, Cpu,
@@ -59,6 +61,8 @@ export interface SimpleForgeValues {
   layoutStyle: string;
   // Effects style (scroll, hover, transitions)
   effectsStyle: string[];
+  // ID do Quick Preset ativo (para highlight no grid)
+  _quickPresetId?: string;
 }
 
 interface SimpleForgeProps {
@@ -697,6 +701,23 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       />
 
       {/* ═══════════════════════════════════════════════════════════════════ */}
+      {/* QUICK PRESETS — 25 starter kits (1 clique aplica estética + efeitos)  */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
+      <QuickPresets
+        activeId={value._quickPresetId}
+        onApply={(preset: QuickPreset) => {
+          // Aplica o patch do preset ao state + marca qual está ativo
+          onChange({
+            ...preset.patch,
+            _quickPresetId: preset.id,
+          } as any);
+          toast.success(`Preset "${preset.name}" aplicado!`, {
+            description: `${preset.patch.effectsStyle?.length ?? 0} efeitos · ${preset.patch.mood?.length ?? 0} moods`,
+          });
+        }}
+      />
+
+      {/* ═══════════════════════════════════════════════════════════════════ */}
       {/* PALETES DE CORES — 2/3/4 cores + filtro + generate + preview + edit  */}
       {/* ═══════════════════════════════════════════════════════════════════ */}
       <div className="space-y-3">
@@ -770,6 +791,19 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
             >
               <Plus className="h-3 w-3" /> Save
             </Button>
+            {/* Biblioteca — abre popup com todas as paletes guardadas para carregar */}
+            <SavedPalettesLibrary
+              onLoad={(p: SavedPalette) => {
+                // Aplica a palete guardada ao state atual
+                onChange({
+                  customColors: p.colors,
+                  colorCount: p.colorCount,
+                  colorPreset: p.colorPreset,
+                  colorStyle: p.colorStyle as any,
+                  polishType: p.polishType as any,
+                });
+              }}
+            />
             {/* Special — gera paleta Awwwards-level completa com CSS + Tailwind */}
             <Button
               type="button"
