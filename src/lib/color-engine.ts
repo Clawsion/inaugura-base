@@ -387,7 +387,7 @@ export const POLISH_TYPES: PolishTypeDef[] = [
     bgLightLightRange: [95, 97],
     textSatRange: [14, 22],
     accentSatRange: [62, 72],
-    accentLightRange: [46, 54],
+    accentLightRange: [40, 48],
     highlightOffsetHue: 30,
     highlightSatDelta: -4,
     highlightLightDelta: 6,
@@ -397,12 +397,12 @@ export const POLISH_TYPES: PolishTypeDef[] = [
     id: "cream",
     name: "Cream",
     description: "Warm cream tints — Stripe/Resend editorial",
-    bgSatRange: [24, 34],
-    bgLightRange: [11, 15],
-    bgLightLightRange: [95, 98],
-    textSatRange: [16, 26],
-    accentSatRange: [58, 68],
-    accentLightRange: [44, 52],
+    bgSatRange: [28, 38],
+    bgLightRange: [14, 18],
+    bgLightLightRange: [94, 97],
+    textSatRange: [18, 28],
+    accentSatRange: [55, 65],
+    accentLightRange: [52, 60],
     highlightOffsetHue: 25,
     highlightSatDelta: -8,
     highlightLightDelta: 8,
@@ -412,12 +412,12 @@ export const POLISH_TYPES: PolishTypeDef[] = [
     id: "vivid",
     name: "Vivid",
     description: "High saturation bold — Awwwards energetic",
-    bgSatRange: [28, 40],
-    bgLightRange: [8, 12],
-    bgLightLightRange: [94, 97],
-    textSatRange: [20, 30],
-    accentSatRange: [75, 88],
-    accentLightRange: [48, 56],
+    bgSatRange: [32, 44],
+    bgLightRange: [7, 11],
+    bgLightLightRange: [93, 96],
+    textSatRange: [22, 32],
+    accentSatRange: [78, 92],
+    accentLightRange: [45, 52],
     highlightOffsetHue: 35,
     highlightSatDelta: -2,
     highlightLightDelta: 4,
@@ -427,12 +427,12 @@ export const POLISH_TYPES: PolishTypeDef[] = [
     id: "soft-muted",
     name: "Soft Muted",
     description: "Desaturated sophisticated — calm editorial",
-    bgSatRange: [16, 24],
-    bgLightRange: [10, 14],
+    bgSatRange: [14, 22],
+    bgLightRange: [12, 16],
     bgLightLightRange: [96, 98],
-    textSatRange: [10, 18],
-    accentSatRange: [45, 58],
-    accentLightRange: [44, 54],
+    textSatRange: [8, 16],
+    accentSatRange: [40, 52],
+    accentLightRange: [58, 68],
     highlightOffsetHue: 20,
     highlightSatDelta: -10,
     highlightLightDelta: 10,
@@ -442,12 +442,12 @@ export const POLISH_TYPES: PolishTypeDef[] = [
     id: "dark-premium",
     name: "Dark Premium",
     description: "Deep jewel-tinted dark — Linear dark mode",
-    bgSatRange: [25, 35],
-    bgLightRange: [6, 10],
+    bgSatRange: [28, 38],
+    bgLightRange: [5, 9],
     bgLightLightRange: [96, 98],
-    textSatRange: [18, 26],
-    accentSatRange: [60, 72],
-    accentLightRange: [54, 62],
+    textSatRange: [20, 30],
+    accentSatRange: [58, 68],
+    accentLightRange: [62, 72],
     highlightOffsetHue: 30,
     highlightSatDelta: -6,
     highlightLightDelta: 5,
@@ -457,12 +457,12 @@ export const POLISH_TYPES: PolishTypeDef[] = [
     id: "glass",
     name: "Glass",
     description: "Translucent feel — Glassmorphism frosted",
-    bgSatRange: [12, 22],
-    bgLightRange: [14, 20],
-    bgLightLightRange: [92, 96],
-    textSatRange: [8, 16],
-    accentSatRange: [55, 68],
-    accentLightRange: [50, 60],
+    bgSatRange: [10, 18],
+    bgLightRange: [18, 24],
+    bgLightLightRange: [90, 94],
+    textSatRange: [6, 14],
+    accentSatRange: [50, 62],
+    accentLightRange: [65, 75],
     highlightOffsetHue: 40,
     highlightSatDelta: -12,
     highlightLightDelta: 12,
@@ -472,27 +472,27 @@ export const POLISH_TYPES: PolishTypeDef[] = [
     id: "mono-accent",
     name: "Mono Accent",
     description: "Swiss minimal — 1 accent + neutral grays",
-    bgSatRange: [4, 10],
+    bgSatRange: [3, 8],
     bgLightRange: [8, 12],
-    bgLightLightRange: [96, 99],
-    textSatRange: [2, 6],
-    accentSatRange: [65, 80],
-    accentLightRange: [46, 56],
+    bgLightLightRange: [97, 99],
+    textSatRange: [1, 5],
+    accentSatRange: [70, 85],
+    accentLightRange: [48, 55],
     highlightOffsetHue: 0,
-    highlightSatDelta: -20,
-    highlightLightDelta: 15,
+    highlightSatDelta: -25,
+    highlightLightDelta: 18,
     tags: ["Swiss", "Minimal", "Mono"],
   },
   {
     id: "neon-glow",
     name: "Neon Glow",
     description: "Cyberpunk — neon over deep dark",
-    bgSatRange: [30, 45],
-    bgLightRange: [4, 8],
-    bgLightLightRange: [88, 94],
-    textSatRange: [25, 40],
-    accentSatRange: [85, 100],
-    accentLightRange: [55, 65],
+    bgSatRange: [35, 50],
+    bgLightRange: [3, 7],
+    bgLightLightRange: [86, 92],
+    textSatRange: [28, 42],
+    accentSatRange: [88, 100],
+    accentLightRange: [55, 62],
     highlightOffsetHue: 60,
     highlightSatDelta: 5,
     highlightLightDelta: 2,
@@ -502,6 +502,74 @@ export const POLISH_TYPES: PolishTypeDef[] = [
 
 export function getPolishType(id: string): PolishTypeDef | undefined {
   return POLISH_TYPES.find((p) => p.id === id);
+}
+
+// ============================================================================
+// OPTIMIZE PALETTE — Ajuste Total que dá "aquela cor de site caro"
+// ============================================================================
+export function optimizePalette(colors: { hex: string; role: string }[]): { hex: string; role: string }[] {
+  const roles = ["Background", "Secundária", "Suporte", "Destaque"];
+  const count = colors.length;
+  if (count === 0) return colors;
+
+  let accentColor = colors.find((c) => c.role === "Suporte");
+  if (!accentColor) accentColor = colors.find((c) => c.role === "Destaque") ?? colors[0];
+  const accentHsl = hexToHsl(accentColor.hex);
+  const accentHue = accentHsl.h;
+
+  const bgL = colors[0] ? hexToHsl(colors[0].hex).l : 6;
+  const isDark = bgL < 30;
+
+  const optAccentSat = Math.max(65, Math.min(78, accentHsl.s));
+  const optAccentLight = Math.max(45, Math.min(55, accentHsl.l));
+  const optAccentHex = hslToHex(accentHue, optAccentSat, optAccentLight);
+
+  const optBgSat = isDark ? 25 + Math.random() * 8 : 28 + Math.random() * 8;
+  const optBgLight = isDark ? 8 + Math.random() * 4 : 95 + Math.random() * 2;
+  const optBgHex = hslToHex(accentHue, optBgSat, optBgLight);
+
+  const optTextSat = isDark ? 15 + Math.random() * 8 : 45 + Math.random() * 10;
+  const optTextLight = isDark ? 92 + Math.random() * 3 : 18 + Math.random() * 5;
+  let optTextHex = hslToHex(accentHue, optTextSat, optTextLight);
+  optTextHex = ensureContrast(optTextHex, optBgHex, 4.5);
+
+  const highlightH = (accentHue + 35) % 360;
+  const highlightSat = Math.max(55, Math.min(68, optAccentSat - 5));
+  const highlightLight = Math.max(52, Math.min(62, optAccentLight + 8));
+  const optHighlightHex = hslToHex(highlightH, highlightSat, highlightLight);
+
+  const result: { hex: string; role: string }[] = [];
+  for (let i = 0; i < count; i++) {
+    if (i === 0) result.push({ hex: optBgHex, role: roles[0] });
+    else if (i === 1) result.push({ hex: optTextHex, role: roles[1] });
+    else if (i === 2) result.push({ hex: optAccentHex, role: roles[2] });
+    else result.push({ hex: optHighlightHex, role: roles[3] });
+  }
+  return result;
+}
+
+// ============================================================================
+// POLISH SINGLE COLOR — polimento individual de uma cor específica
+// ============================================================================
+export function polishSingleColor(hex: string, role: string, polishType: PolishType = "jewel"): string {
+  const hsl = hexToHsl(hex);
+  const pt = getPolishType(polishType) ?? POLISH_TYPES[0];
+  const rand = (range: [number, number]) => range[0] + Math.random() * (range[1] - range[0]);
+
+  if (role === "Background") {
+    const bgL = hsl.l < 30 ? rand(pt.bgLightRange) : rand(pt.bgLightLightRange);
+    return hslToHex(hsl.h, rand(pt.bgSatRange), bgL);
+  } else if (role === "Secundária") {
+    const textL = hsl.l > 50 ? 92 + Math.random() * 3 : 18 + Math.random() * 5;
+    return hslToHex(hsl.h, rand(pt.textSatRange), textL);
+  } else if (role === "Suporte") {
+    return hslToHex(hsl.h, Math.max(pt.accentSatRange[0], Math.min(pt.accentSatRange[1], hsl.s)), Math.max(pt.accentLightRange[0], Math.min(pt.accentLightRange[1], hsl.l)));
+  } else {
+    const compH = (hsl.h + pt.highlightOffsetHue) % 360;
+    const compSat = Math.max(40, Math.min(95, hsl.s + pt.highlightSatDelta));
+    const compLight = Math.max(40, Math.min(75, hsl.l + pt.highlightLightDelta));
+    return hslToHex(compH, compSat, compLight);
+  }
 }
 
 // ============================================================================

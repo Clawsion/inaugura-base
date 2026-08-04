@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { CATALOG } from "@/lib/catalog";
 import { FONT_CATALOG, getFontsByCategory, type FontDef } from "@/lib/font-catalog";
-import { adjustColor, generatePalette, generateRandomPalette, polishPalette, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
+import { adjustColor, generatePalette, generateRandomPalette, polishPalette, optimizePalette, polishSingleColor, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
 
 export interface SimpleForgeValues {
   briefing: string;
@@ -356,7 +356,6 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
 
   // Polimento — dá toque moderno premium à cor (usa engine robusto)
   const polishColor = useCallback(() => {
-    // Garantir que customColors tem as cores atuais
     const currentColors: { hex: string; role: string }[] = value.customColors.length > 0
       ? value.customColors
       : (() => {
@@ -365,10 +364,8 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           return trend.colors.slice(0, value.colorCount).map((hex, i) => ({ hex, role: roles[i] ?? `Cor ${i + 1}` }));
         })();
 
-    // Usa a função robusta do color-engine com o polishType selecionado
     const polished = polishPalette(currentColors, value.polishType);
     const effectiveTrendId = value.colorPreset !== "auto" ? value.colorPreset : "electric-lavender";
-    // Atualiza customColors (do trend ativo) E o override desse trend
     onChange({
       customColors: polished,
       colorPreset: effectiveTrendId,
@@ -377,6 +374,42 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     const polishName = POLISH_TYPES.find(p => p.id === value.polishType)?.name ?? "Jewel";
     toast.success(`Polimento ${polishName} aplicado — tom ${polished.find(c => c.role === "Suporte")?.hex ?? polished[0].hex}`);
   }, [value.customColors, value.colorCount, value.colorPreset, value.trendOverrides, value.polishType, onChange]);
+
+  // AJUSTE TOTAL — otimiza TODAS as cores para "aquela cor de site caro"
+  const optimizeColorPalette = useCallback(() => {
+    const currentColors: { hex: string; role: string }[] = value.customColors.length > 0
+      ? value.customColors
+      : (() => {
+          const trend = COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
+          const roles = ["Background", "Secundária", "Suporte", "Destaque"];
+          return trend.colors.slice(0, value.colorCount).map((hex, i) => ({ hex, role: roles[i] ?? `Cor ${i + 1}` }));
+        })();
+
+    const optimized = optimizePalette(currentColors);
+    const effectiveTrendId = value.colorPreset !== "auto" ? value.colorPreset : "electric-lavender";
+    onChange({
+      customColors: optimized,
+      colorPreset: effectiveTrendId,
+      trendOverrides: { ...value.trendOverrides, [effectiveTrendId]: optimized },
+    });
+    toast.success(`Ajuste Total aplicado — cores otimizadas para site premium`, { duration: 3000 });
+  }, [value.customColors, value.colorCount, value.colorPreset, value.trendOverrides, onChange]);
+
+  // POLIMENTO INDIVIDUAL — polir uma cor específica
+  const polishSingleColorHandler = useCallback((index: number) => {
+    if (value.customColors.length === 0) return;
+    const color = value.customColors[index];
+    if (!color) return;
+    const polishedHex = polishSingleColor(color.hex, color.role, value.polishType);
+    const newColors = [...value.customColors];
+    newColors[index] = { ...color, hex: polishedHex };
+    const effectiveTrendId = value.colorPreset !== "auto" ? value.colorPreset : "electric-lavender";
+    onChange({
+      customColors: newColors,
+      trendOverrides: { ...value.trendOverrides, [effectiveTrendId]: newColors },
+    });
+    toast.success(`${color.role} polida: ${polishedHex}`);
+  }, [value.customColors, value.polishType, value.colorPreset, value.trendOverrides, onChange]);
 
   // Generate INDIVIDUAL — gera variação para UMA palete específica
   // (atualiza apenas o override desse trend; se for o ativo, atualiza customColors também)
@@ -638,9 +671,13 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
             <Button type="button" size="sm" variant="outline" onClick={() => generateAllPalettes()} className="h-6 gap-1 px-2 text-[10px]" title="Gerar todas as paletes visíveis (cada uma com a sua harmonia)">
               <RefreshCw className="h-3 w-3" /> Generate
             </Button>
-            {/* Polimento — dá toque premium à cor ativa (Linear/Vercel style) */}
-            <Button type="button" size="sm" variant="outline" onClick={() => polishColor()} className="h-6 gap-1 px-2 text-[10px]" title="Polimento — tom jewel premium com hue tint visível">
+            {/* Polimento — dá toque premium à cor ativa */}
+            <Button type="button" size="sm" variant="outline" onClick={() => polishColor()} className="h-6 gap-1 px-2 text-[10px]" title="Polimento — tom premium com hue tint visível">
               <Sparkles className="h-3 w-3" /> Polimento
+            </Button>
+            {/* Ajuste Total — otimiza TODAS as cores para site premium */}
+            <Button type="button" size="sm" variant="default" onClick={() => optimizeColorPalette()} className="h-6 gap-1 px-2 text-[10px] font-semibold" title="Ajuste Total — otimiza todas as cores para look de site caro (Linear/Stripe/Vercel)">
+              <Zap className="h-3 w-3" /> Ajuste Total
             </Button>
           </div>
         </div>
@@ -789,6 +826,26 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                     title="Gerar variação desta palete">
                     <RefreshCw className="h-3 w-3" />
                   </button>
+                  {/* Polimento individual — polir cada cor */}
+                  {isActive && value.customColors.length > 0 && (
+                    <button type="button"
+                      onClick={() => {
+                        // Polir cada cor individualmente
+                        const newColors = value.customColors.map((c, idx) => ({
+                          ...c,
+                          hex: polishSingleColor(c.hex, c.role, value.polishType),
+                        }));
+                        onChange({
+                          customColors: newColors,
+                          trendOverrides: { ...value.trendOverrides, [trend.id]: newColors },
+                        });
+                        toast.success(`Cores polidas individualmente — ${value.polishType}`);
+                      }}
+                      className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:border-primary hover:text-primary"
+                      title="Polir cada cor individualmente com o tipo de polimento selecionado">
+                      <Sparkles className="h-3 w-3" />
+                    </button>
+                  )}
                 </div>
                 {/* Editor de cor individual (popup inline) — com botão OK para confirmar */}
                 <AnimatePresence>
