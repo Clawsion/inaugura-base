@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { LayoutSelector } from "@/components/forms/LayoutSelector";
 import {
   Sparkles, Lightbulb, Plus, Trash2, ChevronDown, Wand2, ArrowRight,
-  Dices, Eye, X, Layers, Zap, Lock, RefreshCw, Palette, Maximize2, Check, Info, BookOpen,
+  Dices, Eye, X, Layers, Zap, Lock, RefreshCw, Palette, Maximize2, Check, Info, BookOpen, Cpu,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -1387,6 +1387,70 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                             </button>
                           </div>
                         )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* AI's Recomendados por função — Ouro/Prata/Bronze + Open Source */}
+                <div className="border-t border-border pt-3">
+                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground flex items-center gap-1">
+                    <Cpu className="h-3 w-3" /> AI's Recomendados por função
+                  </h3>
+                  <p className="mb-3 text-[10px] text-muted-foreground/70 italic">
+                    Melhores modelos para cada função do stack. Ouro = melhor qualidade. Prata = bom equilíbrio. Bronze = custo baixo. Open Source = grátis/self-host.
+                  </p>
+                  <div className="space-y-1.5">
+                    {[
+                      { fn: "Architect (spec/riscos)", gold: "Claude Opus 5", goldNote: "Max reasoning", silver: "GPT-5.5", silverNote: "Agentic", bronze: "GLM-5.2", bronzeNote: "Free", open: "DeepSeek R1", openNote: "Open weight reasoning" },
+                      { fn: "Design System", gold: "Claude Fable 5", goldNote: "Topo design", silver: "Kimi K3", silverNote: "1M context", bronze: "Qwen 3.5 Coder", bronzeNote: "Free", open: "GLM-5.2", openNote: "Coding top" },
+                      { fn: "Frontend / UI", gold: "Kimi K3", goldNote: "Excelente UI", silver: "Claude Sonnet 5", silverNote: "Workhorse", bronze: "Qwen 3.5 Coder", bronzeNote: "Free", open: "GLM-5.2", openNote: "Open weight" },
+                      { fn: "Backend / Logic", gold: "GPT-5.3 Codex", goldNote: "Agentic coding", silver: "DeepSeek V4 Pro", silverNote: "Open weight", bronze: "Claude Sonnet 5", bronzeNote: "Reliable", open: "DeepSeek V4 Flash", openNote: "$0.28/M" },
+                      { fn: "Motion / 3D", gold: "Kimi K3", goldNote: "1M context", silver: "Claude Sonnet 5", silverNote: "Bom gosto", bronze: "Gemini 3.1 Flash", bronzeNote: "Barato", open: "GLM-5.2", openNote: "Coding" },
+                      { fn: "Security", gold: "Claude Opus 5", goldNote: "Deep reasoning", silver: "GPT-5.5", silverNote: "Audit", bronze: "DeepSeek V4 Pro", bronzeNote: "Open", open: "GLM-5.2", openNote: "Free" },
+                      { fn: "QA / Testing", gold: "Claude Sonnet 5", goldNote: "Reliable", silver: "Gemini 3.1 Flash", silverNote: "Rápido", bronze: "Claude Haiku 4.5", bronzeNote: "Barato", open: "GLM-5.2", openNote: "Free" },
+                      { fn: "Deploy / Ship", gold: "Claude Sonnet 5", goldNote: "Handover", silver: "GPT-5.5", silverNote: "Agentic", bronze: "Gemini 3.1 Flash", bronzeNote: "Low cost", open: "DeepSeek V4 Flash", openNote: "Cheap" },
+                    ].map((rec) => (
+                      <div key={rec.fn} className="rounded-lg border border-border p-2">
+                        <div className="mb-1.5 text-[11px] font-semibold">{rec.fn}</div>
+                        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
+                          {/* Ouro */}
+                          <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-1.5">
+                            <div className="flex items-center gap-1">
+                              <span className="text-[10px]">🥇</span>
+                              <span className="text-[9px] font-bold text-amber-400">Ouro</span>
+                            </div>
+                            <div className="mt-0.5 text-[10px] font-semibold">{rec.gold}</div>
+                            <div className="text-[8px] text-muted-foreground">{rec.goldNote}</div>
+                          </div>
+                          {/* Prata */}
+                          <div className="rounded-md border border-slate-400/30 bg-slate-400/5 p-1.5">
+                            <div className="flex items-center gap-1">
+                              <span className="text-[10px]">🥈</span>
+                              <span className="text-[9px] font-bold text-slate-300">Prata</span>
+                            </div>
+                            <div className="mt-0.5 text-[10px] font-semibold">{rec.silver}</div>
+                            <div className="text-[8px] text-muted-foreground">{rec.silverNote}</div>
+                          </div>
+                          {/* Bronze */}
+                          <div className="rounded-md border border-orange-700/30 bg-orange-700/5 p-1.5">
+                            <div className="flex items-center gap-1">
+                              <span className="text-[10px]">🥉</span>
+                              <span className="text-[9px] font-bold text-orange-600">Bronze</span>
+                            </div>
+                            <div className="mt-0.5 text-[10px] font-semibold">{rec.bronze}</div>
+                            <div className="text-[8px] text-muted-foreground">{rec.bronzeNote}</div>
+                          </div>
+                          {/* Open Source */}
+                          <div className="rounded-md border border-green-500/30 bg-green-500/5 p-1.5">
+                            <div className="flex items-center gap-1">
+                              <span className="text-[10px]">🔧</span>
+                              <span className="text-[9px] font-bold text-green-400">Open Source</span>
+                            </div>
+                            <div className="mt-0.5 text-[10px] font-semibold">{rec.open}</div>
+                            <div className="text-[8px] text-muted-foreground">{rec.openNote}</div>
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
