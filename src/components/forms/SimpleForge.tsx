@@ -984,7 +984,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className="relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-2xl border-2 border-border shadow-2xl"
+                className="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-2xl border-2 border-border shadow-2xl"
               >
                 <button
                   type="button"
@@ -1697,200 +1697,256 @@ function MockupPreview({
   const headingFont = fontHeading || "inherit";
   const bodyFont = fontBody || "inherit";
   const monoFont = fontCount === 3 ? (fontMono || "monospace") : bodyFont;
-  const size = expanded ? "text-base" : "text-xs";
-  const headingSize = expanded ? "text-4xl" : "text-xl";
-  const padding = expanded ? "p-8" : "p-4";
+  const size = expanded ? "text-sm" : "text-[10px]";
+  const headingSize = expanded ? "text-3xl" : "text-lg";
+  const padding = expanded ? "p-6" : "p-3";
+  // Cores discriminadas — cada cor tem um uso específico no mockup
+  const c0 = colors[0]?.hex ?? bg;       // Background
+  const c1 = colors[1]?.hex ?? text;     // Secundária (texto/elements)
+  const c2 = colors[2]?.hex ?? accent;   // Suporte (accent/CTA)
+  const c3 = colors[3]?.hex ?? accent;   // Destaque (highlight)
 
-  const baseStyle = {
-    background: bg,
-    color: text,
+  const baseStyle: React.CSSProperties = {
+    background: c0,
+    color: c1,
     fontFamily: bodyFont,
     fontFeatureSettings: '"kern" 1, "liga" 1, "calt" 1',
-    textRendering: "optimizeLegibility" as const,
-    letterSpacing: "0.01em",
+    textRendering: "optimizeLegibility",
   };
-  const headingStyle = {
+  const headingStyle: React.CSSProperties = {
     fontFamily: headingFont,
     letterSpacing: "-0.025em",
     fontFeatureSettings: '"kern" 1, "liga" 1, "calt" 1, "ss01" 1',
-    textRendering: "optimizeLegibility" as const,
+    textRendering: "optimizeLegibility",
   };
-  const monoStyle = {
+  const monoStyle: React.CSSProperties = {
     fontFamily: monoFont,
     fontFeatureSettings: '"kern" 1, "liga" 1, "zero" 1',
   };
 
-  // ═══ ESTILO 1: SaaS Landing (Linear/Vercel style) ═══
+  // ═══ ESTILO 1: SaaS Dashboard (Linear/Vercel style — com gráfico) ═══
   if (style === "saas") {
     return (
-      <div className={cn("rounded-xl border-2 border-border", padding)} style={baseStyle}>
-        {/* Nav */}
-        <div className="flex items-center justify-between mb-6">
-          <span className="text-sm font-bold" style={headingStyle}>◆ Brand</span>
-          <div className="flex items-center gap-3">
-            {["Features", "Pricing", "Docs"].map((l) => (
-              <span key={l} className={cn("opacity-70 hover:opacity-100 cursor-pointer", size)}>{l}</span>
-            ))}
-            <button className={cn("rounded-lg px-3 py-1 font-semibold", size)} style={{ background: accent, color: bg }}>Sign In</button>
-          </div>
-        </div>
-        {/* Hero */}
-        <div className="text-center space-y-3 mb-6">
-          <h1 className={cn("font-extrabold", headingSize)} style={headingStyle}>
-            Build faster with AI
-          </h1>
-          <p className={cn("opacity-80 max-w-md mx-auto", size)} style={bodyFont ? { fontFamily: bodyFont } : {}}>
-            Ship production-ready projects in minutes, not weeks. Spec-driven development powered by AI.
-          </p>
-          <div className="flex justify-center gap-2">
-            <button className={cn("rounded-lg px-4 py-2 font-semibold", size)} style={{ background: accent, color: bg }}>Get Started →</button>
-            <button className={cn("rounded-lg border px-4 py-2 font-semibold", size)} style={{ borderColor: text + "40", color: text }}>Live Demo</button>
-          </div>
-        </div>
-        {/* Feature cards — respeita colorCount */}
-        <div className={cn("grid gap-2", colorCount === 2 ? "grid-cols-2" : colorCount === 3 ? "grid-cols-3" : "grid-cols-4")}>
-          {colors.map((c, i) => (
-            <div key={i} className="rounded-lg border p-2" style={{ borderColor: text + "15", background: text + "05" }}>
-              <div className={cn("rounded-md mb-1.5", expanded ? "h-10 w-10" : "h-6 w-6")} style={{ background: c.hex }} />
-              <div className={cn("font-semibold", expanded ? "text-xs" : "text-[10px]")} style={headingStyle}>{c.role}</div>
-              <div className={cn("opacity-50", expanded ? "text-[10px]" : "text-[8px]")} style={monoStyle}>{c.hex}</div>
+      <div>
+        <div className={cn("rounded-xl border-2", padding)} style={{ ...baseStyle, borderColor: c1 + "20" }}>
+          {/* Nav bar */}
+          <div className="flex items-center justify-between mb-4" style={{ borderBottom: `1px solid ${c1}15`, paddingBottom: "8px" }}>
+            <div className="flex items-center gap-1.5">
+              <div className={cn("rounded", expanded ? "h-5 w-5" : "h-3 w-3")} style={{ background: c2 }} />
+              <span className={cn("font-bold", expanded ? "text-sm" : "text-[11px]")} style={headingStyle}>Dashboard</span>
             </div>
-          ))}
-        </div>
-        {/* Code snippet se fontCount=3 */}
-        {fontCount === 3 && (
-          <div className="mt-3 rounded-lg p-2" style={{ background: text + "08" }}>
-            <code className={cn(expanded ? "text-[10px]" : "text-[8px]")} style={monoStyle}>npm install @inaugura/core</code>
+            <div className="flex items-center gap-2">
+              {["Overview", "Analytics", "Settings"].map((l, i) => (
+                <span key={l} className={cn("cursor-pointer", size, i === 0 ? "font-semibold" : "opacity-50")}>{l}</span>
+              ))}
+              <div className={cn("rounded-full", expanded ? "h-7 w-7" : "h-4 w-4")} style={{ background: c3 }} />
+            </div>
           </div>
-        )}
+          {/* Hero stat + chart */}
+          <div className="grid grid-cols-3 gap-2 mb-3">
+            <div className="col-span-2 space-y-1">
+              <span className={cn("opacity-60 uppercase tracking-wider", expanded ? "text-[10px]" : "text-[8px]")}>Total Revenue</span>
+              <div className={cn("font-extrabold", headingSize)} style={{ ...headingStyle, color: c2 }}>€48.2K</div>
+              <span className={cn("opacity-50", size)} style={{ color: c3 }}>↑ 12.5% vs last month</span>
+            </div>
+            {/* Bar chart — usa c2 e c3 para barras */}
+            <div className="flex items-end gap-1 rounded-lg p-2" style={{ background: c1 + "08", minHeight: expanded ? 80 : 40 }}>
+              {[40, 65, 45, 80, 55, 90, 70].map((h, i) => (
+                <div key={i} className="flex-1 rounded-t" style={{ height: `${h}%`, background: i % 2 === 0 ? c2 : c3, opacity: 0.4 + (h / 100) * 0.6 }} />
+              ))}
+            </div>
+          </div>
+          {/* Feature cards — respeita colorCount, cada card usa cor diferente */}
+          <div className={cn("grid gap-2", colorCount === 2 ? "grid-cols-2" : colorCount === 3 ? "grid-cols-3" : "grid-cols-4")}>
+            {colors.map((c, i) => (
+              <div key={i} className="rounded-lg p-2" style={{ background: c.hex + "15", border: `1px solid ${c.hex}30` }}>
+                <div className={cn("rounded-md mb-1", expanded ? "h-8 w-8" : "h-5 w-5")} style={{ background: c.hex }} />
+                <div className={cn("font-semibold", expanded ? "text-[11px]" : "text-[9px]")} style={headingStyle}>{c.role}</div>
+                {fontCount === 3 && <code className={cn(expanded ? "text-[9px]" : "text-[7px]")} style={{ ...monoStyle, color: c.hex }}>{c.hex}</code>}
+              </div>
+            ))}
+          </div>
+          {/* Code line se fontCount=3 */}
+          {fontCount === 3 && (
+            <div className="mt-2 rounded-md px-2 py-1 flex items-center gap-1" style={{ background: c1 + "08" }}>
+              <span className="text-[8px]" style={{ color: c3 }}>●</span>
+              <code className={cn(expanded ? "text-[10px]" : "text-[8px]")} style={monoStyle}>npm run deploy --prod</code>
+            </div>
+          )}
+        </div>
+        {/* Legenda — cores discriminadas em baixo */}
+        <ColorLegend colors={colors} expanded={expanded} />
       </div>
     );
   }
 
-  // ═══ ESTILO 2: E-commerce (Shopify/product showcase) ═══
+  // ═══ ESTILO 2: E-commerce (Shopify — com product cards e preços) ═══
   if (style === "ecommerce") {
     return (
-      <div className={cn("rounded-xl border-2 border-border", padding)} style={baseStyle}>
-        {/* Nav */}
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-sm font-bold" style={headingStyle}>✦ Boutique</span>
-          <div className="flex items-center gap-2">
-            <span className={cn("opacity-60", size)}>Search</span>
-            <span className={cn("opacity-60", size)}>Cart (2)</span>
-          </div>
-        </div>
-        {/* Hero: product split */}
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="space-y-2">
-            <h1 className={cn("font-bold", expanded ? "text-3xl" : "text-lg")} style={headingStyle}>Autumn Collection</h1>
-            <p className={cn("opacity-70", size)}>Handcrafted pieces for the modern lifestyle.</p>
-            <button className={cn("rounded-lg px-3 py-1.5 font-semibold", size)} style={{ background: accent, color: bg }}>Shop Now →</button>
-          </div>
-          <div className="rounded-lg" style={{ background: accent + "30", minHeight: expanded ? 120 : 60 }}>
-            <div className="flex h-full items-center justify-center">
-              <span className={cn("opacity-50", size)}>Product Image</span>
-            </div>
-          </div>
-        </div>
-        {/* Product grid — respeita colorCount */}
-        <div className={cn("grid gap-2", colorCount === 2 ? "grid-cols-2" : colorCount === 3 ? "grid-cols-3" : "grid-cols-4")}>
-          {colors.map((c, i) => (
-            <div key={i} className="rounded-lg overflow-hidden border" style={{ borderColor: text + "15" }}>
-              <div className={cn(expanded ? "h-20" : "h-10")} style={{ background: c.hex }} />
-              <div className="p-1.5">
-                <div className={cn("font-semibold", expanded ? "text-xs" : "text-[9px]")} style={headingStyle}>Product {i + 1}</div>
-                <div className={cn("font-bold", expanded ? "text-xs" : "text-[9px]")} style={{ color: accent }}>€{(i + 1) * 49}</div>
+      <div>
+        <div className={cn("rounded-xl border-2", padding)} style={{ ...baseStyle, borderColor: c1 + "20" }}>
+          {/* Top bar */}
+          <div className="flex items-center justify-between mb-3">
+            <span className={cn("font-bold", expanded ? "text-base" : "text-[11px]")} style={headingStyle}>✦ Boutique</span>
+            <div className="flex items-center gap-2">
+              <div className={cn("rounded-full flex items-center justify-center", expanded ? "h-7 w-7" : "h-4 w-4")} style={{ background: c2 }}>
+                <span className={cn("font-bold", expanded ? "text-[10px]" : "text-[7px]")} style={{ color: c0 }}>2</span>
               </div>
             </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  // ═══ ESTILO 3: Portfolio (fullscreen hero, agency) ═══
-  if (style === "portfolio") {
-    return (
-      <div className={cn("rounded-xl border-2 border-border", padding)} style={baseStyle}>
-        {/* Minimal nav */}
-        <div className="flex items-center justify-between mb-8">
-          <span className={cn("font-bold tracking-tight", expanded ? "text-lg" : "text-sm")} style={headingStyle}>Studio</span>
-          <div className="flex items-center gap-3">
-            {["Work", "About", "Contact"].map((l) => (
-              <span key={l} className={cn("opacity-60 hover:opacity-100", size)}>{l}</span>
+          </div>
+          {/* Hero: product split — c2 como product image bg, c3 como badge */}
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            <div className="space-y-1">
+              <span className={cn("font-bold uppercase tracking-wider", expanded ? "text-[10px]" : "text-[8px]")} style={{ color: c2 }}>New</span>
+              <h1 className={cn("font-bold leading-tight", expanded ? "text-2xl" : "text-sm")} style={headingStyle}>Autumn<br/>Collection</h1>
+              <p className={cn("opacity-60", size)}>Handcrafted premium pieces.</p>
+              <button className={cn("rounded-lg px-3 py-1 font-bold", size)} style={{ background: c2, color: c0 }}>Shop →</button>
+            </div>
+            <div className="rounded-lg flex items-center justify-center relative overflow-hidden" style={{ background: c2 + "30", minHeight: expanded ? 120 : 60 }}>
+              {/* "Product image" placeholder com forma geométrica */}
+              <div className={cn("rounded-full opacity-60", expanded ? "h-16 w-16" : "h-8 w-8")} style={{ background: c3 }} />
+              <div className="absolute top-1 right-1 rounded-full px-1.5 py-0.5" style={{ background: c3 }}>
+                <span className={cn("font-bold", expanded ? "text-[9px]" : "text-[7px]")} style={{ color: c0 }}>-30%</span>
+              </div>
+            </div>
+          </div>
+          {/* Product grid — cada product usa cor diferente */}
+          <div className={cn("grid gap-2", colorCount === 2 ? "grid-cols-2" : colorCount === 3 ? "grid-cols-3" : "grid-cols-4")}>
+            {colors.map((c, i) => (
+              <div key={i} className="rounded-lg overflow-hidden" style={{ border: `1px solid ${c1}15` }}>
+                <div className={cn("relative", expanded ? "h-20" : "h-10")} style={{ background: c.hex }}>
+                  <div className={cn("absolute bottom-1 left-1 rounded px-1", expanded ? "text-[8px]" : "text-[6px]")} style={{ background: c0 + "90", color: c1 }}>{c.role}</div>
+                </div>
+                <div className="p-1.5">
+                  <div className={cn("font-semibold", expanded ? "text-[11px]" : "text-[9px]")} style={headingStyle}>Item {i + 1}</div>
+                  <div className={cn("font-bold", expanded ? "text-xs" : "text-[9px]")} style={{ color: c2 }}>€{(i + 1) * 49}.00</div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
-        {/* Fullscreen hero — centered */}
-        <div className="text-center py-8">
-          <h1 className={cn("font-extrabold leading-none", expanded ? "text-6xl" : "text-3xl")} style={headingStyle}>
-            We craft<br/>digital experiences
-          </h1>
-          <p className={cn("opacity-60 mt-3 max-w-sm mx-auto", size)}>
-            Award-winning design studio building the future of the web.
-          </p>
-          <div className="mt-4 flex justify-center gap-2">
-            <button className={cn("rounded-full px-4 py-1.5 font-semibold", size)} style={{ background: accent, color: bg }}>View Work</button>
-          </div>
-        </div>
-        {/* Project showcase — respeita colorCount */}
-        <div className={cn("grid gap-2", colorCount === 2 ? "grid-cols-2" : colorCount === 3 ? "grid-cols-3" : "grid-cols-2")}>
-          {colors.slice(0, colorCount).map((c, i) => (
-            <div key={i} className={cn("rounded-lg flex items-end overflow-hidden", expanded ? "h-32" : "h-16")} style={{ background: c.hex }}>
-              <div className="p-2 w-full" style={{ background: bg + "80" }}>
-                <div className={cn("font-semibold", expanded ? "text-xs" : "text-[9px]")} style={headingStyle}>Project {i + 1}</div>
-                <div className={cn("opacity-60", expanded ? "text-[10px]" : "text-[8px]")} style={monoStyle}>{c.role}</div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <ColorLegend colors={colors} expanded={expanded} />
       </div>
     );
   }
 
-  // ═══ ESTILO 4: Editorial (Stripe/Resend magazine) ═══
-  return (
-    <div className={cn("rounded-xl border-2 border-border", padding)} style={baseStyle}>
-      {/* Top bar */}
-      <div className="flex items-center justify-between mb-4 border-b pb-2" style={{ borderColor: text + "20" }}>
-        <span className={cn("font-bold", expanded ? "text-base" : "text-xs")} style={headingStyle}>The Journal</span>
-        <span className={cn("opacity-50", size)} style={monoStyle}>Vol. 24 · 2026</span>
-      </div>
-      {/* Editorial hero — split */}
-      <div className="grid grid-cols-3 gap-3 mb-4">
-        <div className="col-span-2 space-y-2">
-          <span className={cn("font-semibold uppercase tracking-wider", expanded ? "text-[10px]" : "text-[8px]")} style={{ color: accent }}>Featured</span>
-          <h1 className={cn("font-bold leading-tight", expanded ? "text-3xl" : "text-lg")} style={headingStyle}>
-            The future of spec-driven development is here
-          </h1>
-          <p className={cn("opacity-70 leading-relaxed", size)} style={bodyFont ? { fontFamily: bodyFont } : {}}>
-            How AI is transforming the way we build websites — from idea to production in minutes.
-          </p>
-          <div className="flex items-center gap-2">
-            <span className={cn("opacity-50", size)}>By Author</span>
-            <span className={cn("opacity-30", size)}>·</span>
-            <span className={cn("opacity-50", size)} style={monoStyle}>5 min read</span>
-          </div>
-        </div>
-        <div className="rounded-lg" style={{ background: accent + "20", minHeight: expanded ? 140 : 70 }}>
-          <div className="flex h-full items-center justify-center">
-            <span className={cn("opacity-30", size)}>Cover</span>
-          </div>
-        </div>
-      </div>
-      {/* Article list — respeita colorCount */}
-      <div className="space-y-1.5">
-        {colors.map((c, i) => (
-          <div key={i} className="flex items-center gap-2 rounded-md p-1.5" style={{ background: text + "05" }}>
-            <div className={cn("rounded shrink-0", expanded ? "h-12 w-12" : "h-6 w-6")} style={{ background: c.hex }} />
-            <div className="flex-1 min-w-0">
-              <div className={cn("font-semibold truncate", expanded ? "text-sm" : "text-[10px]")} style={headingStyle}>Article {i + 1}: {c.role}</div>
-              <div className={cn("opacity-50 truncate", expanded ? "text-xs" : "text-[8px]")}>A deep dive into {c.role.toLowerCase()} and its impact on design.</div>
+  // ═══ ESTILO 3: Portfolio (Agency — com project cases e números) ═══
+  if (style === "portfolio") {
+    return (
+      <div>
+        <div className={cn("rounded-xl border-2", padding)} style={{ ...baseStyle, borderColor: c1 + "20" }}>
+          {/* Minimal nav */}
+          <div className="flex items-center justify-between mb-4">
+            <span className={cn("font-bold tracking-tight", expanded ? "text-lg" : "text-xs")} style={headingStyle}>STUDIO</span>
+            <div className="flex items-center gap-2">
+              {["Work", "About"].map((l) => (
+                <span key={l} className={cn("opacity-60", size)}>{l}</span>
+              ))}
+              <button className={cn("rounded-full px-2 py-0.5 font-bold", expanded ? "text-[10px]" : "text-[8px]")} style={{ background: c2, color: c0 }}>Hire</button>
             </div>
-            <span className={cn("opacity-40 shrink-0", size)} style={monoStyle}>{i + 1}m</span>
           </div>
-        ))}
+          {/* Fullscreen hero */}
+          <div className="text-center py-4">
+            <h1 className={cn("font-extrabold leading-none", expanded ? "text-5xl" : "text-2xl")} style={headingStyle}>
+              We craft<br/><span style={{ color: c2 }}>digital</span> experiences
+            </h1>
+            <p className={cn("opacity-50 mt-2 max-w-xs mx-auto", size)}>Award-winning studio building the future of the web.</p>
+          </div>
+          {/* Stats bar — usa c2 e c3 */}
+          <div className="grid grid-cols-3 gap-2 mb-3 rounded-lg p-2" style={{ background: c1 + "08" }}>
+            {[
+              { num: "150+", label: "Projects" },
+              { num: "28", label: "Awards" },
+              { num: "12y", label: "Experience" },
+            ].map((s, i) => (
+              <div key={i} className="text-center">
+                <div className={cn("font-extrabold", expanded ? "text-2xl" : "text-sm")} style={{ ...headingStyle, color: i === 0 ? c2 : i === 1 ? c3 : c1 }}>{s.num}</div>
+                <div className={cn("opacity-50 uppercase", expanded ? "text-[9px]" : "text-[7px]")}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+          {/* Project showcase — cada project usa cor de fundo diferente */}
+          <div className={cn("grid gap-2", colorCount === 2 ? "grid-cols-2" : "grid-cols-3")}>
+            {colors.slice(0, colorCount).map((c, i) => (
+              <div key={i} className={cn("rounded-lg overflow-hidden flex flex-col", expanded ? "h-28" : "h-14")} style={{ background: c.hex }}>
+                <div className="flex-1 flex items-center justify-center">
+                  <div className={cn("rounded-full opacity-40", expanded ? "h-10 w-10" : "h-5 w-5")} style={{ background: c0 }} />
+                </div>
+                <div className="p-1.5" style={{ background: c0 + "90" }}>
+                  <div className={cn("font-bold", expanded ? "text-[10px]" : "text-[8px]")} style={{ ...headingStyle, color: c1 }}>Project {i + 1}</div>
+                  <div className={cn("opacity-50", expanded ? "text-[9px]" : "text-[7px]")} style={{ color: c1 }}>{c.role}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <ColorLegend colors={colors} expanded={expanded} />
       </div>
+    );
+  }
+
+  // ═══ ESTILO 4: Editorial (Stripe/Resend — com article cards e tags) ═══
+  return (
+    <div>
+      <div className={cn("rounded-xl border-2", padding)} style={{ ...baseStyle, borderColor: c1 + "20" }}>
+        {/* Top bar */}
+        <div className="flex items-center justify-between mb-3 pb-2" style={{ borderBottom: `1px solid ${c1}20` }}>
+          <span className={cn("font-bold", expanded ? "text-base" : "text-[11px]")} style={headingStyle}>The Journal</span>
+          <span className={cn("opacity-40", expanded ? "text-[10px]" : "text-[8px]")} style={monoStyle}>Vol. 24 · 2026</span>
+        </div>
+        {/* Featured article — split com c2 como tag, c3 como cover */}
+        <div className="grid grid-cols-3 gap-2 mb-3">
+          <div className="col-span-2 space-y-1">
+            <span className={cn("font-bold uppercase tracking-wider rounded px-1.5 py-0.5", expanded ? "text-[9px]" : "text-[7px]")} style={{ background: c2, color: c0, display: "inline-block" }}>Featured</span>
+            <h1 className={cn("font-bold leading-tight", expanded ? "text-2xl" : "text-sm")} style={headingStyle}>
+              The future of spec-driven development
+            </h1>
+            <p className={cn("opacity-60 leading-relaxed", size)}>How AI transforms web development — from idea to production in minutes.</p>
+            <div className="flex items-center gap-1">
+              <div className={cn("rounded-full", expanded ? "h-5 w-5" : "h-3 w-3")} style={{ background: c3 }} />
+              <span className={cn("opacity-50", size)}>By Author · 5 min</span>
+            </div>
+          </div>
+          <div className="rounded-lg flex items-center justify-center relative overflow-hidden" style={{ background: c3 + "30", minHeight: expanded ? 120 : 60 }}>
+            <div className={cn("rounded-lg opacity-50", expanded ? "h-16 w-12" : "h-8 w-6")} style={{ background: c3 }} />
+          </div>
+        </div>
+        {/* Article list — cada article tem thumbnail com cor diferente */}
+        <div className="space-y-1.5">
+          {colors.map((c, i) => (
+            <div key={i} className="flex items-center gap-2 rounded-md p-1.5" style={{ background: c.hex + "0A", border: `1px solid ${c.hex}20` }}>
+              <div className={cn("rounded shrink-0 flex items-center justify-center", expanded ? "h-10 w-10" : "h-5 w-5")} style={{ background: c.hex }}>
+                <span className={cn("font-bold", expanded ? "text-[10px]" : "text-[7px]")} style={{ color: c0 }}>{i + 1}</span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className={cn("font-semibold truncate", expanded ? "text-xs" : "text-[9px]")} style={headingStyle}>Article {i + 1}</div>
+                <div className={cn("opacity-50 truncate", expanded ? "text-[10px]" : "text-[8px]")}>Understanding {c.role.toLowerCase()} in design</div>
+              </div>
+              {fontCount === 3 && <span className={cn("opacity-40 shrink-0", expanded ? "text-[9px]" : "text-[7px]")} style={monoStyle}>{c.hex}</span>}
+            </div>
+          ))}
+        </div>
+      </div>
+      <ColorLegend colors={colors} expanded={expanded} />
+    </div>
+  );
+}
+
+// ============================================================================
+// ColorLegend — legenda com cores discriminadas em baixo do mockup
+// ============================================================================
+function ColorLegend({ colors, expanded }: { colors: { hex: string; role: string }[]; expanded?: boolean }) {
+  return (
+    <div className={cn("mt-2 flex flex-wrap gap-1.5 rounded-lg border border-border bg-card/30 p-2", expanded && "p-3")}>
+      {colors.map((c, i) => (
+        <div key={i} className="flex items-center gap-1.5">
+          <div className={cn("rounded shrink-0", expanded ? "h-5 w-5" : "h-3 w-3")} style={{ background: c.hex, border: `1px solid ${c.hex}40` }} />
+          <div>
+            <div className={cn("font-semibold", expanded ? "text-[10px]" : "text-[8px]")} style={{ color: "hsl(var(--foreground))" }}>{c.role}</div>
+            <div className={cn("opacity-50", expanded ? "text-[9px]" : "text-[7px]")} style={{ fontFamily: "monospace" }}>{c.hex}</div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
