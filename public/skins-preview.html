@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inaugura-Base — 5 Skins Awwwards (Dark Mode)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', system-ui, sans-serif; background: #000; color: #fff; }
+.preview-grid { display: grid; grid-template-columns: 1fr; gap: 2px; }
+.skin-card { padding: 48px 40px; min-height: 400px; position: relative; overflow: hidden; }
+.skin-label { position: absolute; top: 16px; right: 20px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.3; }
+.skin-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+.skin-logo { font-size: 18px; font-weight: 800; }
+.skin-nav-items { display: flex; gap: 20px; font-size: 13px; opacity: 0.6; }
+.skin-cta { padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
+.skin-hero { margin-bottom: 32px; }
+.skin-hero h1 { font-size: 48px; font-weight: 900; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 12px; }
+.skin-hero p { font-size: 15px; line-height: 1.6; max-width: 480px; opacity: 0.6; margin-bottom: 20px; }
+.skin-hero-actions { display: flex; gap: 10px; }
+.skin-btn-primary { padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 700; }
+.skin-btn-secondary { padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; border: 1px solid; }
+.skin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.skin-feature { padding: 16px; border-radius: 8px; }
+.skin-feature-icon { width: 32px; height: 32px; border-radius: 8px; margin-bottom: 10px; }
+.skin-feature h3 { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.skin-feature p { font-size: 11px; opacity: 0.5; line-height: 1.5; }
+.skin-footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid; display: flex; justify-content: space-between; font-size: 11px; opacity: 0.3; }
+.skin-mono { font-family: 'JetBrains Mono', monospace; }
+.skin-code { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 8px 12px; border-radius: 6px; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="preview-grid">
+
+<!-- 1. AWwwARDS VOID -->
+<div class="skin-card" style="background: #050507; color: #F0F0F5; border-color: #1A1A24; background-image: radial-gradient(circle at 50% 0%, rgba(0,229,255,0.06) 0%, transparent 60%);">
+  <span class="skin-label" style="color: #00E5FF;">Awwwards Void</span>
+  <div class="skin-nav">
+    <div class="skin-logo">◆ Void</div>
+    <div class="skin-nav-items"><span>Features</span><span>Pricing</span><span>Docs</span></div>
+    <div class="skin-cta" style="background: #00E5FF; color: #050507;">Sign In</div>
+  </div>
+  <div class="skin-hero">
+    <h1>Build in the <span style="color: #00E5FF;">void</span></h1>
+    <p>Deep black with electric cyan. Premium dark for Awwwards SOTD. Clean, minimal, impactful.</p>
+    <div class="skin-hero-actions">
+      <div class="skin-btn-primary" style="background: #00E5FF; color: #050507;">Get Started →</div>
+      <div class="skin-btn-secondary" style="border-color: #F0F0F540; color: #F0F0F5;">Live Demo</div>
+    </div>
+  </div>
+  <div class="skin-grid">
+    <div class="skin-feature" style="background: #0D0D12; border: 1px solid #1A1A24; border-radius: 12px;"><div class="skin-feature-icon" style="background: #00E5FF;"></div><h3>Electric</h3><p>Cyan accent that glows in the void.</p></div>
+    <div class="skin-feature" style="background: #0D0D12; border: 1px solid #1A1A24; border-radius: 12px;"><div class="skin-feature-icon" style="background: #00E5FF; opacity: 0.5;"></div><h3>Deep</h3><p>#050507 — darker than pure black.</p></div>
+    <div class="skin-feature" style="background: #0D0D12; border: 1px solid #1A1A24; border-radius: 12px;"><div class="skin-feature-icon" style="background: #00E5FF; opacity: 0.3;"></div><h3>Clean</h3><p>12px radius, generous spacing.</p></div>
+  </div>
+  <div class="skin-code" style="background: #0D0D12; color: #00E5FF; border: 1px solid #1A1A24;">$ deploy --prod ✓ Ready in 3.2s</div>
+  <div class="skin-footer" style="border-color: #1A1A24; color: #6B6B7B;">© 2026 Void · Dark Mode Premium</div>
+</div>
+
+<!-- 2. BUREAU STUDIO -->
+<div class="skin-card" style="background: #0E0B08; color: #F5EDE0; border-color: #2A2218; background-image: radial-gradient(circle at 20% 80%, rgba(255,107,74,0.05) 0%, transparent 40%);">
+  <span class="skin-label" style="color: #FF6B4A;">Bureau Studio</span>
+  <div class="skin-nav">
+    <div class="skin-logo">✦ Bureau</div>
+    <div class="skin-nav-items"><span>Work</span><span>About</span><span>Contact</span></div>
+    <div class="skin-cta" style="background: #FF6B4A; color: #0E0B08; border-radius: 4px;">Hire Us</div>
+  </div>
+  <div class="skin-hero">
+    <h1>We craft <span style="color: #FF6B4A;">warm</span> digital experiences</h1>
+    <p>Warm dark with coral accent. Creative agency aesthetic. 4px radius — sharp, intentional, editorial.</p>
+    <div class="skin-hero-actions">
+      <div class="skin-btn-primary" style="background: #FF6B4A; color: #0E0B08; border-radius: 4px;">View Work →</div>
+      <div class="skin-btn-secondary" style="border-color: #F5EDE040; color: #F5EDE0; border-radius: 4px;">Our Process</div>
+    </div>
+  </div>
+  <div class="skin-grid">
+    <div class="skin-feature" style="background: #1A1510; border: 1px solid #2A2218; border-radius: 4px;"><div class="skin-feature-icon" style="background: #FF6B4A; border-radius: 4px;"></div><h3>Warm</h3><p>Coral on warm dark — not cold.</p></div>
+    <div class="skin-feature" style="background: #1A1510; border: 1px solid #2A2218; border-radius: 4px;"><div class="skin-feature-icon" style="background: #FF6B4A; opacity: 0.5; border-radius: 4px;"></div><h3>Editorial</h3><p>4px radius — sharp, intentional.</p></div>
+    <div class="skin-feature" style="background: #1A1510; border: 1px solid #2A2218; border-radius: 4px;"><div class="skin-feature-icon" style="background: #FF6B4A; opacity: 0.3; border-radius: 4px;"></div><h3>Agency</h3><p>Bureau Cool / Locomotive vibe.</p></div>
+  </div>
+  <div class="skin-footer" style="border-color: #2A2218; color: #8A7E6B;">© 2026 Bureau · Creative Agency</div>
+</div>
+
+<!-- 3. TERMINAL MONO -->
+<div class="skin-card" style="background: #0A0E0A; color: #C8E6C9; border-color: #1A2218; background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,136,0.01) 2px, rgba(0,255,136,0.01) 4px); font-family: 'JetBrains Mono', monospace;">
+  <span class="skin-label skin-mono" style="color: #00FF88;">Terminal Mono</span>
+  <div class="skin-nav">
+    <div class="skin-logo skin-mono">$ inaugura</div>
+    <div class="skin-nav-items skin-mono"><span>~/projects</span><span>~/docs</span><span>~/config</span></div>
+    <div class="skin-cta skin-mono" style="background: #00FF88; color: #0A0E0A; border-radius: 2px;">$ run</div>
+  </div>
+  <div class="skin-hero">
+    <h1 class="skin-mono" style="font-size: 36px; letter-spacing: -0.02em;">Build.<span style="color: #00FF88;">Ship.</span>Scale.</h1>
+    <p class="skin-mono" style="font-size: 13px; opacity: 0.5;">Terminal aesthetic. Monospace everything. Scan lines. Green on dark. Dev tools premium.</p>
+    <div class="skin-hero-actions">
+      <div class="skin-btn-primary skin-mono" style="background: #00FF88; color: #0A0E0A; border-radius: 2px;">$ deploy --prod</div>
+      <div class="skin-btn-secondary skin-mono" style="border-color: #00FF8850; color: #00FF88; border-radius: 2px;">--docs</div>
+    </div>
+  </div>
+  <div class="skin-grid">
+    <div class="skin-feature skin-mono" style="background: #111611; border: 1px solid #1A2218; border-radius: 2px;"><div class="skin-feature-icon" style="background: #00FF88; border-radius: 2px;"></div><h3>metric_1</h3><p>98% uptime</p></div>
+    <div class="skin-feature skin-mono" style="background: #111611; border: 1px solid #1A2218; border-radius: 2px;"><div class="skin-feature-icon" style="background: #00FF88; opacity: 0.5; border-radius: 2px;"></div><h3>metric_2</h3><p>45ms latency</p></div>
+    <div class="skin-feature skin-mono" style="background: #111611; border: 1px solid #1A2218; border-radius: 2px;"><div class="skin-feature-icon" style="background: #00FF88; opacity: 0.3; border-radius: 2px;"></div><h3>metric_3</h3><p>12% CPU</p></div>
+  </div>
+  <div class="skin-code skin-mono" style="background: #111611; color: #00FF88; border: 1px solid #1A2218;">$ inaugura init --premium ✓ Ready in 3.2s</div>
+  <div class="skin-footer skin-mono" style="border-color: #1A2218; color: #4A6B4E;">// inaugura-base v0.3.0 · uptime: 99.9%</div>
+</div>
+
+<!-- 4. AURORA -->
+<div class="skin-card" style="background: #080812; color: #EDEDF5; border-color: #1E1E32; background-image: radial-gradient(ellipse at 20% 30%, rgba(167,139,250,0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(0,229,255,0.06) 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(236,72,153,0.04) 0%, transparent 60%);">
+  <span class="skin-label" style="color: #A78BFA;">Aurora</span>
+  <div class="skin-nav">
+    <div class="skin-logo">◇ Aurora</div>
+    <div class="skin-nav-items"><span>Features</span><span>Pricing</span><span>Docs</span></div>
+    <div class="skin-cta" style="background: #A78BFA; color: #080812; border-radius: 16px;">Sign In</div>
+  </div>
+  <div class="skin-hero">
+    <h1>Experience the <span style="color: #A78BFA;">aurora</span></h1>
+    <p>Gradient mesh dark. Multiple color radials creating an aurora borealis effect. 16px radius — soft, organic, premium.</p>
+    <div class="skin-hero-actions">
+      <div class="skin-btn-primary" style="background: #A78BFA; color: #080812; border-radius: 16px;">Get Started →</div>
+      <div class="skin-btn-secondary" style="border-color: #EDEDF540; color: #EDEDF5; border-radius: 16px;">Live Demo</div>
+    </div>
+  </div>
+  <div class="skin-grid">
+    <div class="skin-feature" style="background: #0F0F1E; border: 1px solid #1E1E32; border-radius: 16px;"><div class="skin-feature-icon" style="background: #A78BFA; border-radius: 12px;"></div><h3>Gradient</h3><p>Multi-color mesh background.</p></div>
+    <div class="skin-feature" style="background: #0F0F1E; border: 1px solid #1E1E32; border-radius: 16px;"><div class="skin-feature-icon" style="background: #00E5FF; border-radius: 12px; opacity: 0.7;"></div><h3>Organic</h3><p>16px radius — soft and flowing.</p></div>
+    <div class="skin-feature" style="background: #0F0F1E; border: 1px solid #1E1E32; border-radius: 16px;"><div class="skin-feature-icon" style="background: #EC4899; border-radius: 12px; opacity: 0.5;"></div><h3>Premium</h3><p>Stripe / Linear gradient hero.</p></div>
+  </div>
+  <div class="skin-footer" style="border-color: #1E1E32; color: #7878A0;">© 2026 Aurora · Gradient Mesh Premium</div>
+</div>
+
+<!-- 5. OBSIDIAN GOLD -->
+<div class="skin-card" style="background: #070705; color: #F5F0E0; border-color: #1E1C10; background-image: radial-gradient(circle at 50% 0%, rgba(201,169,97,0.04) 0%, transparent 50%); font-family: Georgia, 'Times New Roman', serif;">
+  <span class="skin-label" style="color: #C9A961; font-family: 'Inter', sans-serif;">Obsidian Gold</span>
+  <div class="skin-nav" style="font-family: 'Inter', sans-serif;">
+    <div class="skin-logo" style="font-family: Georgia, serif;">The Atelier</div>
+    <div class="skin-nav-items"><span>Collection</span><span>Heritage</span><span>Contact</span></div>
+    <div class="skin-cta" style="background: #C9A961; color: #070705; border-radius: 2px;">Discover</div>
+  </div>
+  <div class="skin-hero">
+    <h1 style="font-style: italic;">A <span style="color: #C9A961;">timeless</span> collection</h1>
+    <p style="font-family: 'Inter', sans-serif;">Luxury dark with gold accent. Serif headings. 2px radius — sharp, exclusive. For premium/luxury brands.</p>
+    <div class="skin-hero-actions" style="font-family: 'Inter', sans-serif;">
+      <div class="skin-btn-primary" style="background: #C9A961; color: #070705; border-radius: 2px; font-style: italic;">Discover →</div>
+      <div class="skin-btn-secondary" style="border-color: #C9A96150; color: #C9A961; border-radius: 2px;">Heritage</div>
+    </div>
+  </div>
+  <div class="skin-grid" style="font-family: 'Inter', sans-serif;">
+    <div class="skin-feature" style="background: #0F0E08; border: 1px solid #1E1C10; border-radius: 2px; text-align: center;"><div style="font-size: 20px; color: #C9A961; margin-bottom: 6px;">❦</div><h3 style="font-style: italic;">Piece I</h3><p>Limited edition</p></div>
+    <div class="skin-feature" style="background: #0F0E08; border: 1px solid #1E1C10; border-radius: 2px; text-align: center;"><div style="font-size: 20px; color: #C9A961; margin-bottom: 6px;">❧</div><h3 style="font-style: italic;">Piece II</h3><p>Handcrafted</p></div>
+    <div class="skin-feature" style="background: #0F0E08; border: 1px solid #1E1C10; border-radius: 2px; text-align: center;"><div style="font-size: 20px; color: #C9A961; margin-bottom: 6px;">✦</div><h3 style="font-style: italic;">Piece III</h3><p>Since 1924</p></div>
+  </div>
+  <div class="skin-footer" style="border-color: #1E1C10; color: #7A7460; font-family: 'Inter', sans-serif;">✦ ✦ ✦ · © The Atelier · Since 1924</div>
+</div>
+
+</div>
+</body>
+</html>
