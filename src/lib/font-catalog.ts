@@ -21,6 +21,10 @@ export interface FontDef {
   category: "sans" | "display" | "serif" | "mono";
   foundry: string;
   siteType: string[];
+  // Alternativa gratuita (para fonts pagas) — free alternative com vibe similar
+  freeAlternative?: string;
+  // Se é paid ou free
+  license?: "free" | "paid" | "freemium";
 }
 
 export const FONT_CATALOG: FontDef[] = [
@@ -43,9 +47,9 @@ export const FONT_CATALOG: FontDef[] = [
   { name: "Onest", source: "Google Fonts, Awwwards", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Modern"] },
   { name: "Mona Sans", source: "GitHub, Figma brand", category: "sans", foundry: "GitHub (Google)", siteType: ["Dev", "SaaS"] },
   { name: "Hubot Sans", source: "GitHub", category: "sans", foundry: "GitHub (Google)", siteType: ["Dev", "SaaS"] },
-  { name: "PP Neue Montreal", source: "Awwwards SOTD 2026", category: "sans", foundry: "Pangram Pangram", siteType: ["Awwwards", "Premium", "Editorial"] },
-  { name: "Aeonik", source: "CoType, premium SaaS", category: "sans", foundry: "CoType", siteType: ["SaaS", "Premium"] },
-  { name: "Söhne", source: "Stripe (confirmed typ.io)", category: "sans", foundry: "Klim Type Foundry", siteType: ["SaaS", "Premium", "Fintech"] },
+  { name: "PP Neue Montreal", source: "Awwwards SOTD 2026 (demandespeciale)", category: "sans", foundry: "Pangram Pangram", siteType: ["Awwwards", "Premium", "Editorial"], license: "freemium", freeAlternative: "Inter (Google) — mesma中性grotesk vibe, free" },
+  { name: "Aeonik", source: "CoType, premium SaaS", category: "sans", foundry: "CoType", siteType: ["SaaS", "Premium"], license: "paid", freeAlternative: "Geist (Vercel/Google) — geometric clean, free" },
+  { name: "Söhne", source: "Stripe (confirmed typ.io)", category: "sans", foundry: "Klim Type Foundry", siteType: ["SaaS", "Premium", "Fintech"], license: "paid", freeAlternative: "Inter (Google) — a #1 free alternative ao Söhne, quase idêntica" },
   { name: "Poppins", source: "Google Fonts, popular", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Friendly", "E-commerce"] },
   { name: "Work Sans", source: "Google Fonts", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Clean"] },
   { name: "Nunito", source: "Google Fonts, friendly", category: "sans", foundry: "Google Fonts", siteType: ["Education", "Friendly"] },
@@ -144,9 +148,9 @@ export const FONT_CATALOG: FontDef[] = [
   { name: "Fraunces", source: "Google Fonts, Awwwards", category: "serif", foundry: "Google Fonts", siteType: ["Editorial", "Magazine", "Premium"] },
   { name: "Newsreader", source: "Google Fonts, editorial", category: "serif", foundry: "Google Fonts", siteType: ["Editorial", "Blog"] },
   { name: "Instrument Serif", source: "Instrument, Awwwards", category: "serif", foundry: "Instrument (Google)", siteType: ["Editorial", "Premium", "Stripe"] },
-  { name: "Lyon", source: "Notion marketing (confirmed)", category: "serif", foundry: "Commercial Type", siteType: ["Editorial", "Luxury", "Premium"] },
-  { name: "GT Sectra", source: "Awwwards editorial, Klim", category: "serif", foundry: "Grilli Type", siteType: ["Editorial", "Luxury"] },
-  { name: "Tiempos Text", source: "Awwwards editorial, Klim", category: "serif", foundry: "Klim Type Foundry", siteType: ["Editorial", "Magazine"] },
+  { name: "Lyon", source: "Notion marketing (confirmed)", category: "serif", foundry: "Commercial Type", siteType: ["Editorial", "Luxury", "Premium"], license: "paid", freeAlternative: "Playfair Display (Google) — serif elegante luxury, free" },
+  { name: "GT Sectra", source: "Awwwards editorial, Klim", category: "serif", foundry: "Grilli Type", siteType: ["Editorial", "Luxury"], license: "paid", freeAlternative: "Fraunces (Google) — serif variable premium, free" },
+  { name: "Tiempos Text", source: "Awwwards editorial, Klim", category: "serif", foundry: "Klim Type Foundry", siteType: ["Editorial", "Magazine"], license: "paid", freeAlternative: "Newsreader (Google) — editorial serif clean, free" },
   { name: "Lora", source: "Google Fonts, editorial", category: "serif", foundry: "Google Fonts", siteType: ["Editorial", "Blog"] },
   { name: "Playfair Display", source: "Google Fonts, luxury", category: "serif", foundry: "Google Fonts", siteType: ["Luxury", "Editorial", "Fashion"] },
   { name: "Merriweather", source: "Google Fonts, editorial", category: "serif", foundry: "Google Fonts", siteType: ["Editorial", "Blog"] },
@@ -168,8 +172,8 @@ export const FONT_CATALOG: FontDef[] = [
   { name: "Space Mono", source: "Google Fonts, Awwwards", category: "mono", foundry: "Google Fonts", siteType: ["Tech", "Awwwards"] },
   { name: "Fira Code", source: "Google Fonts, dev", category: "mono", foundry: "Google Fonts", siteType: ["Dev", "Code"] },
   { name: "IBM Plex Mono", source: "IBM, Awwwards", category: "mono", foundry: "IBM (Google)", siteType: ["Enterprise", "Tech"] },
-  { name: "Berkeley Mono", source: "Terminal.dev, premium", category: "mono", foundry: "Berkeley Graphics", siteType: ["Dev", "Premium", "Terminal"] },
-  { name: "Commit Mono", source: "Awwwards dev, free", category: "mono", foundry: "Commit (free)", siteType: ["Dev", "Terminal"] },
+  { name: "Berkeley Mono", source: "Terminal.dev, premium", category: "mono", foundry: "Berkeley Graphics", siteType: ["Dev", "Premium", "Terminal"], license: "paid", freeAlternative: "JetBrains Mono (Google) — mono premium free, top choice" },
+  { name: "Commit Mono", source: "Awwwards dev, free", category: "mono", foundry: "Commit (free)", siteType: ["Dev", "Terminal"], license: "free" },
   { name: "Azeret Mono", source: "Google Fonts", category: "mono", foundry: "Google Fonts", siteType: ["Tech", "Dev"] },
 ];
 
