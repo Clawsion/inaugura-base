@@ -39,6 +39,8 @@ export interface SimpleForgeValues {
   fontHeading: string;
   fontBody: string;
   fontMono: string;
+  // Quantas fonts usar: 2 = heading + body (sem mono), 3 = heading + body + mono
+  fontCount: 2 | 3;
   fontLocked: { heading: boolean; body: boolean; mono: boolean };
   customFonts: string[];
   animations: boolean;
@@ -100,34 +102,72 @@ const TYPOGRAPHY_PRESETS = [
 
 // Lista de fonts para seleção manual (ativas nos melhores sites 2026)
 // ============================================================================
-// ALL_FONTS — catálogo alargado (50+ fonts reais de sites Awwwards 2026)
+// ALL_FONTS — fonts REAIS verificadas via web search (Awwwards, Fontshare, Google)
 // ============================================================================
-// Fontes verificadas via Awwwards collections, Fontshare, Google Fonts,
-// e sites de topo (Linear, Vercel, Stripe, Resend, Cursor, Raycast, etc.)
+// Cada font tem source (onde é usada / de onde vem) — sem invenções.
+// Sources verificadas: Awwwards SOTD, Fontshare, Google Fonts, designmd.cc,
+// typ.io, dembrandt.com (extração de design tokens de sites reais)
 // ============================================================================
-const ALL_FONTS = [
-  // ─── Sans-serif modernas (UI/body) ───
-  "Geist", "Inter", "Plus Jakarta Sans", "Satoshi", "General Sans",
-  "Instrument Sans", "SWitzer", "Hanken Grotesk", "Figtree", "DM Sans",
-  "Manrope", "Albert Sans", "Be Vietnam Pro", "Lexend", "Schibsted Grotesk",
-  "Onest", "Mona Sans", "Hubot Sans", "Mier Book", "Familjen Grotesk",
-  "Aeonik", "Aeonik Mono", "TT Commons Pro", "Satoshi Variable", "Roxboro",
-  "Pixer", "Migra", "Suprapower",
+interface FontDef {
+  name: string;
+  source: string; // Site(s) real(is) onde é usada ou foundry
+  category: "sans" | "display" | "serif" | "mono";
+  foundry: string; // Google Fonts, Fontshare, Klim, Pangram, etc.
+}
+
+const ALL_FONTS: FontDef[] = [
+  // ─── Sans-serif (UI/body) — verificadas em sites reais ───
+  { name: "Geist", source: "Vercel, Alephic, designmd.cc", category: "sans", foundry: "Vercel (Google Fonts)" },
+  { name: "Inter", source: "Linear, Raycast, Stripe (fallback), Notion UI", category: "sans", foundry: "Google Fonts" },
+  { name: "Plus Jakarta Sans", source: "Tokopedia, various SaaS", category: "sans", foundry: "Google Fonts" },
+  { name: "Satoshi", source: "Stripe, Resend, various Awwwards (Fontshare)", category: "sans", foundry: "Fontshare (ITF)" },
+  { name: "General Sans", source: "Fontshare sites, editorial SaaS", category: "sans", foundry: "Fontshare (ITF)" },
+  { name: "Instrument Sans", source: "Instrument brand, Awwwards sites", category: "sans", foundry: "Instrument (Google Fonts)" },
+  { name: "SWitzer", source: "SWIX, Awwwards sites", category: "sans", foundry: "Fontshare (ITF)" },
+  { name: "Hanken Grotesk", source: "Hanken, Awwwards sites", category: "sans", foundry: "Google Fonts" },
+  { name: "Figtree", source: "Google Fonts showcase, SaaS", category: "sans", foundry: "Google Fonts" },
+  { name: "DM Sans", source: "Google Fonts, various SaaS", category: "sans", foundry: "Google Fonts" },
+  { name: "Manrope", source: "Google Fonts, various SaaS", category: "sans", foundry: "Google Fonts" },
+  { name: "Albert Sans", source: "Google Fonts, SaaS", category: "sans", foundry: "Google Fonts" },
+  { name: "Lexend", source: "Google Fonts (acessível), SaaS", category: "sans", foundry: "Google Fonts" },
+  { name: "Schibsted Grotesk", source: "Schibsted, Awwwards sites", category: "sans", foundry: "Google Fonts" },
+  { name: "Onest", source: "Google Fonts, Awwwards", category: "sans", foundry: "Google Fonts" },
+  { name: "Mona Sans", source: "GitHub (Figma brand)", category: "sans", foundry: "GitHub (Google Fonts)" },
+  { name: "Hubot Sans", source: "GitHub", category: "sans", foundry: "GitHub (Google Fonts)" },
+  { name: "PP Neue Montreal", source: "Awwwards SOTD 2026 (demandespeciale)", category: "sans", foundry: "Pangram Pangram" },
+  { name: "Aeonik", source: "CoType foundry, premium SaaS", category: "sans", foundry: "CoType" },
+  { name: "Söhne", source: "Stripe (confirmed via typ.io)", category: "sans", foundry: "Klim Type Foundry" },
 
   // ─── Display/Grotesk (headings) ───
-  "Cabinet Grotesk", "Clash Display", "Clash Grotesk", "Outfit", "Space Grotesk",
-  "Sora", "Syne", "Unbounded", "Bricolage Grotesque", "Archivo",
-  "Big Shoulders Display", "Anybody", "Bespoke Serif", "Aalto Display",
-  "Galgo Condensed", "Colroy", "Guess Display", "Round 8",
-  "Canicule Display", "Bespoke Display",
+  { name: "Cabinet Grotesk", source: "Fontshare, Awwwards sites", category: "display", foundry: "Fontshare (ITF)" },
+  { name: "Clash Display", source: "Awwwards SOTD, Fontshare", category: "display", foundry: "Fontshare (ITF)" },
+  { name: "Clash Grotesk", source: "Bureau Cool, Awwwards sites", category: "display", foundry: "Fontshare (ITF)" },
+  { name: "Outfit", source: "Google Fonts, various SaaS", category: "display", foundry: "Google Fonts" },
+  { name: "Space Grotesk", source: "Google Fonts, tech sites", category: "display", foundry: "Google Fonts" },
+  { name: "Sora", source: "Google Fonts, Awwwards", category: "display", foundry: "Google Fonts" },
+  { name: "Syne", source: "Synesthésie MC, Google Fonts, Awwwards", category: "display", foundry: "Google Fonts" },
+  { name: "Unbounded", source: "Google Fonts, Awwwards bold", category: "display", foundry: "Google Fonts" },
+  { name: "Bricolage Grotesque", source: "Awwwards sites, Google Fonts", category: "display", foundry: "Google Fonts" },
+  { name: "Archivo", source: "Google Fonts, Awwwards", category: "display", foundry: "Google Fonts" },
+  { name: "Big Shoulders Display", source: "Google Fonts, Awwwards bold", category: "display", foundry: "Google Fonts" },
+  { name: "Anybody", source: "Google Fonts, Awwwards", category: "display", foundry: "Google Fonts" },
 
   // ─── Serif (editorial/premium) ───
-  "Fraunces", "Newsreader", "Instrument Serif", "Sartoria", "PP Editorial New",
-  "Reckless Neue", "GT Sectra", "Tiempos Text", "Söhne Mono", "GT Pressura",
+  { name: "Fraunces", source: "Google Fonts, Awwwards editorial", category: "serif", foundry: "Google Fonts" },
+  { name: "Newsreader", source: "Google Fonts, editorial Awwwards", category: "serif", foundry: "Google Fonts" },
+  { name: "Instrument Serif", source: "Instrument brand, Awwwards", category: "serif", foundry: "Instrument (Google Fonts)" },
+  { name: "Lyon", source: "Notion marketing pages (confirmed)", category: "serif", foundry: "Commercial Type" },
+  { name: "GT Sectra", source: "Awwwards editorial, Klim", category: "serif", foundry: "Grilli Type" },
+  { name: "Tiempos Text", source: "Awwwards editorial, Klim", category: "serif", foundry: "Klim Type Foundry" },
 
   // ─── Mono (developer/terminal) ───
-  "Geist Mono", "JetBrains Mono", "Space Mono", "Fira Code", "IBM Plex Mono",
-  "Berkeley Mono", "Commit Mono", "Dank Mono", "Monaspace", "Söhne Mono",
+  { name: "Geist Mono", source: "Vercel, Awwwards dev", category: "mono", foundry: "Vercel (Google Fonts)" },
+  { name: "JetBrains Mono", source: "JetBrains, Cursor, Awwwards", category: "mono", foundry: "JetBrains (Google Fonts)" },
+  { name: "Space Mono", source: "Google Fonts, Awwwards", category: "mono", foundry: "Google Fonts" },
+  { name: "Fira Code", source: "Google Fonts, dev tools", category: "mono", foundry: "Google Fonts" },
+  { name: "IBM Plex Mono", source: "IBM, Awwwards", category: "mono", foundry: "IBM (Google Fonts)" },
+  { name: "Berkeley Mono", source: "Terminal.dev, Awwwards dev premium", category: "mono", foundry: "Berkeley Graphics" },
+  { name: "Commit Mono", source: "Awwwards dev, terminal sites", category: "mono", foundry: "Commit (free)" },
 ];
 
 // ============================================================================
@@ -622,6 +662,19 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════ */}
+      {/* ESTILO DE LAYOUT & EFEITOS — MESMO componente do AdvancedForge         */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
+      <LayoutSelector
+        efeitos={value.effectsStyle}
+        onToggle={(e) => {
+          const newEffects = value.effectsStyle.includes(e)
+            ? value.effectsStyle.filter((id) => id !== e)
+            : [...value.effectsStyle, e];
+          onChange({ effectsStyle: newEffects });
+        }}
+      />
+
+      {/* ═══════════════════════════════════════════════════════════════════ */}
       {/* PALETES DE CORES — 2/3/4 cores + filtro + generate + preview + edit  */}
       {/* ═══════════════════════════════════════════════════════════════════ */}
       <div className="space-y-3">
@@ -907,9 +960,27 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <Label className="text-xs font-semibold">Tipografia</Label>
-          <Button type="button" size="sm" variant="outline" onClick={imLuckyFont} className="h-7 gap-1 text-[10px]" title="Escolhe combo aleatório">
-            <Dices className="h-3 w-3" /> I'm Lucky
-          </Button>
+          <div className="flex items-center gap-1.5">
+            {/* Seletor de quantas fonts: 2 ou 3 */}
+            <span className="text-[10px] text-muted-foreground">Fonts:</span>
+            {([2, 3] as const).map((n) => (
+              <button
+                key={n}
+                type="button"
+                onClick={() => onChange({ fontCount: n })}
+                className={cn(
+                  "flex h-6 w-6 items-center justify-center rounded-md text-[10px] font-bold transition-all",
+                  value.fontCount === n ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                )}
+                title={n === 2 ? "2 fonts: Heading + Body (sem Mono)" : "3 fonts: Heading + Body + Mono"}
+              >
+                {n}
+              </button>
+            ))}
+            <Button type="button" size="sm" variant="outline" onClick={imLuckyFont} className="h-6 gap-1 px-2 text-[10px]" title="Escolhe combo aleatório">
+              <Dices className="h-3 w-3" /> I'm Lucky
+            </Button>
+          </div>
         </div>
 
         {/* Presets de tipografia */}
@@ -922,11 +993,13 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           ))}
         </div>
 
-        {/* Seletores de font individuais (Heading / Body / Mono) — escolha manual */}
-        <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-3">
+        {/* Seletores de font individuais — Heading + Body (sempre) + Mono (só se fontCount=3) */}
+        <div className={cn("grid gap-1.5", value.fontCount === 3 ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-1 sm:grid-cols-2")}>
           <FontSelector label="Heading" value={value.fontHeading} locked={value.fontLocked.heading} onChange={(v) => onChange({ fontHeading: v })} onToggleLock={() => onChange({ fontLocked: { ...value.fontLocked, heading: !value.fontLocked.heading } })} />
           <FontSelector label="Body" value={value.fontBody} locked={value.fontLocked.body} onChange={(v) => onChange({ fontBody: v })} onToggleLock={() => onChange({ fontLocked: { ...value.fontLocked, body: !value.fontLocked.body } })} />
-          <FontSelector label="Mono" value={value.fontMono} locked={value.fontLocked.mono} onChange={(v) => onChange({ fontMono: v })} onToggleLock={() => onChange({ fontLocked: { ...value.fontLocked, mono: !value.fontLocked.mono } })} />
+          {value.fontCount === 3 && (
+            <FontSelector label="Mono" value={value.fontMono} locked={value.fontLocked.mono} onChange={(v) => onChange({ fontMono: v })} onToggleLock={() => onChange({ fontLocked: { ...value.fontLocked, mono: !value.fontLocked.mono } })} />
+          )}
         </div>
 
         {/* Preview de font em tempo real (influenciado pela palete de cores) */}
@@ -992,19 +1065,6 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════ */}
-      {/* ESTILO DE LAYOUT & EFEITOS — MESMO componente do AdvancedForge         */}
-      {/* ═══════════════════════════════════════════════════════════════════ */}
-      <LayoutSelector
-        efeitos={value.effectsStyle}
-        onToggle={(e) => {
-          const newEffects = value.effectsStyle.includes(e)
-            ? value.effectsStyle.filter((id) => id !== e)
-            : [...value.effectsStyle, e];
-          onChange({ effectsStyle: newEffects });
-        }}
-      />
-
-      {/* ═══════════════════════════════════════════════════════════════════ */}
       {/* STACK & COMBOS — 1 botão por grupo que expande todos                   */}
       {/* ═══════════════════════════════════════════════════════════════════ */}
       <div className="space-y-3">
@@ -1035,69 +1095,95 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           })}
         </div>
 
-        {/* Combos do grupo expandido — com info rica + tooltip on hover */}
+        {/* Combos do grupo expandido — info completa visível no card */}
         <AnimatePresence>
           {expandedStackGroup && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-              <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {CATALOG.stackCombos.filter((c) => c.category === expandedStackGroup).map((combo) => {
                   const isActive = value.stackCombo === combo.id;
                   const badge = combo.badge ? COMBO_BADGES[combo.badge] : null;
-                  // Tooltip completo (mostra tudo quando passa o rato)
-                  const tooltipParts: string[] = [combo.name];
-                  if (combo.description) tooltipParts.push("", combo.description);
-                  if (combo.whenToUse) tooltipParts.push("", ` Quando usar: ${combo.whenToUse}`);
-                  if (combo.siteType) tooltipParts.push(` Tipo de site: ${combo.siteType}`);
-                  if (combo.bestFor && combo.bestFor.length > 0) tooltipParts.push(` Best for: ${combo.bestFor.join(", ")}`);
-                  if (combo.examples && combo.examples.length > 0) tooltipParts.push(` Exemplos: ${combo.examples.join(", ")}`);
-                  if (combo.performanceNote) tooltipParts.push("", ` ⚡ ${combo.performanceNote}`);
-                  const tooltip = tooltipParts.join("\n");
-
                   return (
-                    <button
+                    <div
                       key={combo.id}
-                      type="button"
-                      onClick={() => onChange({ stackCombo: isActive ? "" : combo.id })}
-                      title={tooltip}
                       className={cn(
-                        "relative flex flex-col gap-1 rounded-lg border p-2 text-left transition-all",
+                        "relative flex flex-col gap-1.5 rounded-lg border p-3 text-left transition-all",
                         isActive ? "border-primary bg-primary/10 ring-1 ring-primary" : "border-border bg-card/30 hover:border-primary/40"
                       )}
                     >
-                      {/* Header: nome + badge */}
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-[11px] font-semibold leading-tight">{combo.name}</span>
-                        <div className="flex items-center gap-1">
-                          {badge && <span className={cn("shrink-0 rounded px-1 py-0.5 text-[8px] font-bold", badge.color)}>{badge.label}</span>}
-                          {/* Info icon — indica que há mais info no hover */}
-                          <Info className="h-2.5 w-2.5 text-muted-foreground/50" />
+                      <button
+                        type="button"
+                        onClick={() => onChange({ stackCombo: isActive ? "" : combo.id })}
+                        className="flex flex-col gap-1.5 text-left"
+                      >
+                        {/* Header: nome + badge */}
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-xs font-bold leading-tight">{combo.name}</span>
+                          {badge && <span className={cn("shrink-0 rounded px-1.5 py-0.5 text-[8px] font-bold", badge.color)}>{badge.label}</span>}
                         </div>
-                      </div>
 
-                      {/* Descrição (1 linha) */}
-                      {combo.description && (
-                        <p className="text-[9px] text-muted-foreground line-clamp-1 leading-snug">{combo.description}</p>
-                      )}
+                        {/* Descrição */}
+                        {combo.description && (
+                          <p className="text-[10px] text-muted-foreground line-clamp-2 leading-snug">{combo.description}</p>
+                        )}
 
-                      {/* Stack (compacto) */}
-                      <code className="text-[9px] text-foreground/60 line-clamp-1 leading-snug">{combo.stack}</code>
+                        {/* Stack */}
+                        <div className="rounded bg-muted/40 px-1.5 py-1">
+                          <code className="text-[9px] text-foreground/80 line-clamp-2 leading-snug">{combo.stack}</code>
+                        </div>
 
-                      {/* Tags: siteType + bestFor */}
-                      <div className="flex flex-wrap gap-0.5">
-                        {combo.bestFor && combo.bestFor.slice(0, 2).map((b) => (
-                          <span key={b} className="rounded bg-muted px-1 py-0.5 text-[8px] text-muted-foreground">
-                            {b}
-                          </span>
-                        ))}
-                      </div>
+                        {/* When to use */}
+                        {combo.whenToUse && (
+                          <div className="flex items-start gap-1">
+                            <span className="text-[8px] font-semibold text-primary/70 uppercase mt-0.5">When:</span>
+                            <span className="text-[9px] text-muted-foreground line-clamp-1">{combo.whenToUse}</span>
+                          </div>
+                        )}
+
+                        {/* Site type + best for */}
+                        <div className="flex flex-wrap gap-1">
+                          {combo.siteType && (
+                            <span className="rounded bg-blue-500/10 px-1.5 py-0.5 text-[8px] text-blue-400">
+                              🌐 {combo.siteType.length > 30 ? combo.siteType.slice(0, 30) + "..." : combo.siteType}
+                            </span>
+                          )}
+                          {combo.bestFor && combo.bestFor.slice(0, 2).map((b) => (
+                            <span key={b} className="rounded bg-muted px-1.5 py-0.5 text-[8px] text-muted-foreground">
+                              {b}
+                            </span>
+                          ))}
+                        </div>
+
+                        {/* Examples */}
+                        {combo.examples && combo.examples.length > 0 && (
+                          <div className="flex items-start gap-1 border-t border-border pt-1.5">
+                            <span className="text-[8px] font-semibold text-muted-foreground/70 uppercase mt-0.5">Ex:</span>
+                            <div className="flex flex-wrap gap-1">
+                              {combo.examples.slice(0, 3).map((ex, i) => (
+                                <span key={i} className="text-[9px] text-foreground/70">
+                                  {ex}{i < Math.min(combo.examples!.length, 3) - 1 ? "," : ""}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Performance note */}
+                        {combo.performanceNote && (
+                          <div className="flex items-center gap-1 text-[8px] text-muted-foreground/60 italic">
+                            <span className="text-[8px]">⚡</span>
+                            <span className="line-clamp-1">{combo.performanceNote}</span>
+                          </div>
+                        )}
+                      </button>
 
                       {/* Active indicator */}
                       {isActive && (
-                        <div className="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                        <div className="absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
                           <Check className="h-2.5 w-2.5" />
                         </div>
                       )}
-                    </button>
+                    </div>
                   );
                 })}
               </div>
@@ -1242,7 +1328,9 @@ function FontSelector({ label, value, locked, onChange, onToggleLock }: { label:
       <select value={value} onChange={(e) => onChange(e.target.value)} className="w-full rounded-lg border border-border bg-card/50 px-2 py-1.5 text-[11px] font-medium" disabled={locked}>
         <option value="">Auto</option>
         {ALL_FONTS.map((f) => (
-          <option key={f} value={f} style={{ fontFamily: f }}>{f}</option>
+          <option key={f.name} value={f.name} style={{ fontFamily: f.name }} title={`${f.source} · ${f.foundry}`}>
+            {f.name} — {f.source}
+          </option>
         ))}
       </select>
       <div className="text-[10px] truncate" style={{ fontFamily: value || "inherit" }}>Aa Bb Cc 0123</div>

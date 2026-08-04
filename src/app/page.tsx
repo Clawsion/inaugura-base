@@ -147,6 +147,7 @@ export default function Home() {
     fontHeading: "",
     fontBody: "",
     fontMono: "",
+    fontCount: 3,
     fontLocked: { heading: false, body: false, mono: false },
     customFonts: [],
     animations: true,
