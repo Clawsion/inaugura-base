@@ -773,6 +773,232 @@ ${Object.entries(neutralRamp).map(([k, v]) => `          ${k}: "${v}",`).join("\
 }
 
 // ============================================================================
+// TRANSFORMAR PARA AWWWARDS — pega nas CORES ATUAIS e eleva-as ao nível máximo
+// ============================================================================
+// Esta é a função que o botão "Special" usa:
+//   1. DETETA as cores atuais (preserva o hue/harmonia que o user escolheu)
+//   2. TRANSFORMA-as para a máxima definição premium (Awwwards level)
+//   3. NÃO gera cores novas — apenas eleva as existentes ao nível de sites premium
+//
+// Princípios aplicados (skill de "Premium Color System Architect"):
+//   - Rich black (NUNCA pure #000) — sempre tinted com o hue do accent
+//   - Luminous accent (sweet spot s=68-80%, l=48-56%)
+//   - Text com contrast ratio ≥ 7:1 (AAA) se possível
+//   - Card com elevation subtil (ΔL 3-5%)
+//   - Border tinted, não neutro
+//   - Highlight harmonioso (35° offset do accent)
+//   - Glow calculado para o accent
+//   - Ramps 50-950 tinted com o hue base
+//   - Semantic tokens completos
+// ============================================================================
+export function transformToAwwwards(
+  inputColors: { hex: string; role: string }[]
+): AwwwardsPalette {
+  // Se não há cores, fallback para gerar
+  if (!inputColors || inputColors.length === 0) {
+    return generateAwwwardsPalette();
+  }
+
+  // Extrair cores por role (preservando o que o user escolheu)
+  const find = (keywords: string[]) =>
+    inputColors.find((c) =>
+      keywords.some((k) => c.role.toLowerCase().includes(k))
+    );
+
+  const bgInput = find(["background", "bg", "fundo"]) ?? inputColors[0];
+  const textInput = find(["secundária", "secundaria", "text", "texto", "foreground"]);
+  const accentInput = find(["destaque", "accent", "primary", "cta", "vibrant"]) ??
+                       find(["suporte", "support", "secondary"]) ??
+                       inputColors[inputColors.length - 1];
+  const highlightInput = find(["suporte", "support", "highlight"]);
+
+  // Converter para HSL para analisar
+  const bgHsl = hexToHsl(bgInput.hex);
+  const accentHsl = hexToHsl(accentInput.hex);
+  const textHsl = textInput ? hexToHsl(textInput.hex) : null;
+
+  // DETETAR dark/light baseado no background atual
+  const isDark = bgHsl.l < 35;
+
+  // Hue base = MANTER o hue do accent do user (preserva a identidade da palete)
+  const hue = accentHsl.h;
+  const baseSat = accentHsl.s;
+
+  // Nome baseado no hue + darkness
+  const hueNames: Record<number, string> = {
+    0: "Crimson", 15: "Coral", 30: "Amber", 45: "Gold",
+    60: "Lime", 90: "Forest", 120: "Emerald", 150: "Teal",
+    180: "Cyan", 200: "Sky", 220: "Ocean", 240: "Indigo",
+    260: "Violet", 280: "Purple", 300: "Magenta", 320: "Pink",
+    340: "Rose",
+  };
+  const hueName = hueNames[Math.round(hue / 20) * 20] ?? "Aurora";
+  const name = `${hueName} ${isDark ? "Premium Dark" : "Premium Light"}`;
+  const mood = hueName;
+
+  // ─── TRANSFORMAR cada cor para Awwwards level ────────────────────────────
+  // RICH BLACK bg — tinted com o hue do accent, NUNCA pure #000
+  const bgSat = isDark
+    ? Math.max(20, Math.min(35, baseSat * 0.3))     // dark: 20-35% sat
+    : Math.max(15, Math.min(28, baseSat * 0.2));    // light: 15-28% sat
+  const bgLight = isDark
+    ? Math.max(6, Math.min(12, bgHsl.l))             // dark: 6-12% (rich black)
+    : Math.max(94, Math.min(98, bgHsl.l));           // light: 94-98% (cream)
+  const bg = hslToHex(hue, bgSat, bgLight);
+
+  // Card — elevação subtil (ΔL 3-5%)
+  const cardSat = bgSat + 3;
+  const cardLight = isDark ? bgLight + 4 : bgLight - 3;
+  const card = hslToHex(hue, cardSat, cardLight);
+
+  // Text — rich cream (dark) ou deep saturated (light), com contrast máximo
+  const textSat = isDark
+    ? Math.max(12, Math.min(22, baseSat * 0.18))
+    : Math.max(38, Math.min(52, baseSat * 0.4));
+  const textLight = isDark
+    ? Math.max(90, Math.min(96, textHsl?.l ?? 93))   // 90-96% cream
+    : Math.max(14, Math.min(22, textHsl?.l ?? 18));   // 14-22% deep
+  let text = hslToHex(hue, textSat, textLight);
+  text = ensureContrast(text, bg, 7);  // AAA contrast
+
+  // Muted — texto secundário
+  const mutedSat = isDark ? 8 : 22;
+  const mutedLight = isDark ? 60 : 48;
+  const muted = hslToHex(hue, mutedSat, mutedLight);
+
+  // Accent — LUMINOUS, sweet spot (MANTÉM o hue do user)
+  const accentSat = Math.max(68, Math.min(82, accentHsl.s));  // 68-82% (vivid)
+  const accentLight = Math.max(48, Math.min(56, accentHsl.l)); // 48-56% (luminous)
+  const accent = hslToHex(hue, accentSat, accentLight);
+  const accentForeground = isDark ? bg : "#FFFFFF";
+
+  // Border — subtil, tinted
+  const borderSat = isDark ? 16 : 14;
+  const borderLight = isDark ? 16 : 88;
+  const border = hslToHex(hue, borderSat, borderLight);
+
+  // Highlight — complementar harmonioso (35° offset)
+  const highlightH = (hue + 35) % 360;
+  const highlightSat = Math.max(55, Math.min(70, accentSat - 8));
+  const highlightLight = Math.max(50, Math.min(62, accentLight + 6));
+  const highlight = highlightInput
+    ? hslToHex(hexToHsl(highlightInput.hex).h, highlightSat, highlightLight)
+    : hslToHex(highlightH, highlightSat, highlightLight);
+
+  // Ramp 50-950 para accent (tinted com hue)
+  const accentRamp: Record<string, string> = {};
+  for (let i = 50; i <= 950; i += 50) {
+    const rampLight = isDark
+      ? Math.max(8, Math.min(95, accentLight + (i - 500) * 0.08))
+      : Math.max(10, Math.min(92, accentLight + (i - 500) * 0.07));
+    const rampSat = Math.max(30, Math.min(90, accentSat + (i - 500) * 0.02));
+    accentRamp[i.toString()] = hslToHex(hue, rampSat, rampLight);
+  }
+
+  // Ramp 50-950 para neutral (tinted com hue)
+  const neutralRamp: Record<string, string> = {};
+  for (let i = 50; i <= 950; i += 50) {
+    const nLight = isDark
+      ? Math.max(6, Math.min(96, (i / 950) * 90 + 6))
+      : Math.max(8, Math.min(98, (i / 950) * 90 + 8));
+    const nSat = isDark ? bgSat * 0.6 : bgSat * 0.3;
+    neutralRamp[i.toString()] = hslToHex(hue, nSat, nLight);
+  }
+
+  // Semantic tokens
+  const semantic = {
+    "bg-primary": bg,
+    "bg-secondary": card,
+    "bg-tertiary": hslToHex(hue, bgSat + 6, isDark ? bgLight + 8 : bgLight - 4),
+    "text-primary": text,
+    "text-secondary": muted,
+    "text-tertiary": hslToHex(hue, mutedSat, isDark ? mutedLight - 10 : mutedLight + 10),
+    "accent-primary": accent,
+    "accent-hover": hslToHex(hue, accentSat, accentLight + (isDark ? 4 : -4)),
+    "accent-active": hslToHex(hue, accentSat + 4, accentLight - 4),
+    "border-subtle": hslToHex(hue, borderSat, borderLight),
+    "border-strong": hslToHex(hue, borderSat + 6, borderLight + (isDark ? 4 : -4)),
+    "border-accent": hslToHex(hue, accentSat * 0.4, accentLight * 0.6),
+    "success": hslToHex(140, 65, 50),
+    "warning": hslToHex(38, 80, 52),
+    "error": hslToHex(0, 72, 54),
+    "info": hslToHex(200, 72, 52),
+  };
+
+  // Glow
+  const accentGlow = `0 0 30px ${accent}40, 0 0 60px ${accent}20`;
+
+  // CSS code
+  const cssCode = `:root {
+  --bg: ${bg};
+  --card: ${card};
+  --text: ${text};
+  --muted: ${muted};
+  --accent: ${accent};
+  --accent-foreground: ${accentForeground};
+  --border: ${border};
+  --highlight: ${highlight};
+  --accent-glow: ${accentGlow};
+}
+
+/* Light mode */
+[data-theme="light"] {
+  --bg: ${isDark ? hslToHex(hue, 18, 97) : bg};
+  --text: ${isDark ? hslToHex(hue, 40, 18) : text};
+}
+
+/* Glow utility */
+.glow-accent {
+  box-shadow: var(--accent-glow);
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 200ms, border-color 200ms, color 200ms;
+}`;
+
+  // Tailwind code
+  const tailwindCode = `// tailwind.config.ts
+const colors = {
+  bg: "${bg}",
+  card: "${card}",
+  text: "${text}",
+  muted: "${muted}",
+  accent: {
+    DEFAULT: "${accent}",
+    foreground: "${accentForeground}",
+    glow: "${accentGlow}",
+    50: "${accentRamp["50"]}",
+    100: "${accentRamp["100"]}",
+    200: "${accentRamp["200"]}",
+    300: "${accentRamp["300"]}",
+    400: "${accentRamp["400"]}",
+    500: "${accentRamp["500"]}",
+    600: "${accentRamp["600"]}",
+    700: "${accentRamp["700"]}",
+    800: "${accentRamp["800"]}",
+    900: "${accentRamp["900"]}",
+    950: "${accentRamp["950"]}",
+  },
+  border: "${border}",
+  highlight: "${highlight}",
+};
+
+module.exports = {
+  theme: {
+    extend: { colors },
+  },
+};`;
+
+  return {
+    name, mood, isDark,
+    bg, card, text, muted, accent, accentForeground, border, highlight,
+    accentRamp, neutralRamp, semantic, accentGlow,
+    cssCode, tailwindCode,
+  };
+}
+
+// ============================================================================
 // GERAR PALETA ALEATÓRIA ROBUSTA — infinitas variações com COR VISÍVEL
 // ============================================================================
 // Princípio: TODAS as 4 posições devem ter cor visível (hue tint).

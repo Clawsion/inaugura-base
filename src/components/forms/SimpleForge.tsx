@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { CATALOG } from "@/lib/catalog";
 import { FONT_CATALOG, getFontsByCategory, type FontDef } from "@/lib/font-catalog";
-import { adjustColor, generatePalette, generateRandomPalette, polishPalette, optimizePalette, polishSingleColor, generateAwwwardsPalette, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
+import { adjustColor, generatePalette, generateRandomPalette, polishPalette, optimizePalette, polishSingleColor, generateAwwwardsPalette, transformToAwwwards, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
 import { useFontLoader, getCssFontName } from "@/lib/use-font-loader";
 
 export interface SimpleForgeValues {
@@ -419,13 +419,23 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
   }, [value.customColors, value.colorCount, value.colorPreset, value.trendOverrides, onChange]);
 
   // POLIMENTO INDIVIDUAL — polir uma cor específica
-  // SPECIAL (global) — gera paleta Awwwards-level e APLICA DIRETO (sem popup)
-  // O user pediu: "na parte do special individual e global nao precisa de preview
-  // automaticamente ele faz o ajuste com o rigor preciso"
-  // Special global afeta TODAS as paletes visíveis no grid + a ativa
+  // SPECIAL (global) — DETETA as cores atuais e TRANSFORMA-as para Awwwards level
+  // O user pediu: "o modo Special é o modo que deteta as cores atuais e transforma
+  // na maxima definição, mesmo premium, um skill que sabe como meter a palete
+  // de cores ao mais alto nivel"
+  // Special global = deteta cada palete visível no grid e transforma para premium
   const generateSpecialGlobal = useCallback(() => {
-    const palette = generateAwwwardsPalette();
-    // Aplica ao customColors (palete ativa)
+    // Para a palete ATIVA: usar customColors se existirem, senão gerar da trend
+    const activeTrend = COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
+    const activeColors = value.customColors.length > 0
+      ? value.customColors
+      : activeTrend.colors.slice(0, value.colorCount).map((hex, i) => ({
+          hex,
+          role: ["Background", "Secundária", "Suporte", "Destaque"][i] ?? `Cor ${i + 1}`,
+        }));
+
+    // Transformar a palete ativa
+    const palette = transformToAwwwards(activeColors);
     const newColors = [
       { hex: palette.bg, role: "Background" },
       { hex: palette.text, role: "Secundária" },
@@ -433,11 +443,17 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       { hex: palette.highlight, role: "Destaque" },
     ];
 
-    // Aplica também a TODAS as trends visíveis no grid (rigor máximo global)
+    // Para CADA trend visível no grid: deteta as cores atuais dessa trend e transforma
     const newOverrides: Record<string, { hex: string; role: string }[]> = {};
     COLOR_TRENDS_2026.forEach((trend) => {
-      // Para cada trend, gera uma paleta Awwwards nova (rigor máximo)
-      const p = generateAwwwardsPalette();
+      // Cores atuais dessa trend = override existente OU cores estáticas da trend
+      const currentTrendColors = value.trendOverrides[trend.id] ??
+        trend.colors.slice(0, value.colorCount).map((hex, i) => ({
+          hex,
+          role: ["Background", "Secundária", "Suporte", "Destaque"][i] ?? `Cor ${i + 1}`,
+        }));
+      // Transforma essas cores para Awwwards level
+      const p = transformToAwwwards(currentTrendColors);
       newOverrides[trend.id] = [
         { hex: p.bg, role: "Background" },
         { hex: p.text, role: "Secundária" },
@@ -448,19 +464,30 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
 
     onChange({
       customColors: newColors.slice(0, value.colorCount),
-      colorPreset: value.colorPreset !== "auto" ? value.colorPreset : "electric-lavender",
+      colorPreset: value.colorPreset !== "auto" ? value.colorPreset : activeTrend.id,
       trendOverrides: newOverrides,
-      polishType: "jewel", // Awwwards = jewel polish
+      polishType: "jewel",
     });
-    toast.success(`🎨 Special aplicado a TODAS as paletes — ${palette.name}`, {
-      description: "Cores otimizadas ao nível Awwwards (ramps, semantic tokens, glow)",
+    toast.success(`🎨 Special: "${palette.name}" aplicado`, {
+      description: `Cores atuais elevadas ao nível Awwwards — ${value.colorCount} cores otimizadas`,
       duration: 3500,
     });
-  }, [value.colorCount, value.colorPreset, onChange]);
+  }, [value.customColors, value.colorCount, value.colorPreset, value.trendOverrides, onChange]);
 
-  // SPECIAL (individual) — gera para UMA trend específica e aplica direto
+  // SPECIAL (individual) — DETETA cores de UMA trend específica e TRANSFORMA-as
   const generateSpecialForTrend = useCallback((trendId: string) => {
-    const palette = generateAwwwardsPalette();
+    const trend = COLOR_TRENDS_2026.find((t) => t.id === trendId);
+    if (!trend) return;
+
+    // Cores atuais dessa trend = override existente OU cores estáticas da trend
+    const currentColors = value.trendOverrides[trendId] ??
+      trend.colors.slice(0, value.colorCount).map((hex, i) => ({
+        hex,
+        role: ["Background", "Secundária", "Suporte", "Destaque"][i] ?? `Cor ${i + 1}`,
+      }));
+
+    // Transforma essas cores para Awwwards level
+    const palette = transformToAwwwards(currentColors);
     const newColors = [
       { hex: palette.bg, role: "Background" },
       { hex: palette.text, role: "Secundária" },
@@ -477,8 +504,8 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     } else {
       onChange({ trendOverrides: overrides, polishType: "jewel" });
     }
-    toast.success(`🎨 Special: ${palette.name} aplicada a esta palete`, {
-      description: "Rigor Awwwards — sem preview, aplicado direto",
+    toast.success(`🎨 Special: "${palette.name}" aplicada`, {
+      description: "Cores atuais elevadas ao nível Awwwards — preserva a identidade",
       duration: 3000,
     });
   }, [value.colorCount, value.colorPreset, value.trendOverrides, onChange]);

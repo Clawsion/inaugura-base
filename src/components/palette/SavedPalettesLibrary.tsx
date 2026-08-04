@@ -20,7 +20,6 @@ import {
   Bookmark,
   Trash2,
   Upload,
-  X,
   Layers,
   Calendar,
   AlertCircle,
@@ -220,14 +219,7 @@ export function SavedPalettesLibrary({ onLoad }: SavedPalettesLibraryProps) {
                 {confirmClear ? "Confirmar limpar tudo" : "Limpar tudo"}
               </Button>
             )}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7"
-              onClick={() => setOpen(false)}
-            >
-              <X className="h-3.5 w-3.5" />
-            </Button>
+            {/* X removido — o Dialog já tem botão de fechar próprio no canto superior direito */}
           </div>
         </div>
 
