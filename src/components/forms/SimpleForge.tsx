@@ -13,6 +13,7 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { CATALOG } from "@/lib/catalog";
+import { FONT_CATALOG, getFontsByCategory, type FontDef } from "@/lib/font-catalog";
 import { adjustColor, generatePalette, generateRandomPalette, polishPalette, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
 
 export interface SimpleForgeValues {
@@ -98,76 +99,6 @@ const TYPOGRAPHY_PRESETS = [
   { id: "humanist", label: "Humanist" },
   { id: "editorial-serif", label: "Editorial Serif" },
   { id: "mono-tech", label: "Mono / Tech" },
-];
-
-// Lista de fonts para seleção manual (ativas nos melhores sites 2026)
-// ============================================================================
-// ALL_FONTS — fonts REAIS verificadas via web search (Awwwards, Fontshare, Google)
-// ============================================================================
-// Cada font tem source (onde é usada / de onde vem) — sem invenções.
-// Sources verificadas: Awwwards SOTD, Fontshare, Google Fonts, designmd.cc,
-// typ.io, dembrandt.com (extração de design tokens de sites reais)
-// ============================================================================
-interface FontDef {
-  name: string;
-  source: string; // Site(s) real(is) onde é usada ou foundry
-  category: "sans" | "display" | "serif" | "mono";
-  foundry: string; // Google Fonts, Fontshare, Klim, Pangram, etc.
-}
-
-const ALL_FONTS: FontDef[] = [
-  // ─── Sans-serif (UI/body) — verificadas em sites reais ───
-  { name: "Geist", source: "Vercel, Alephic, designmd.cc", category: "sans", foundry: "Vercel (Google Fonts)" },
-  { name: "Inter", source: "Linear, Raycast, Stripe (fallback), Notion UI", category: "sans", foundry: "Google Fonts" },
-  { name: "Plus Jakarta Sans", source: "Tokopedia, various SaaS", category: "sans", foundry: "Google Fonts" },
-  { name: "Satoshi", source: "Stripe, Resend, various Awwwards (Fontshare)", category: "sans", foundry: "Fontshare (ITF)" },
-  { name: "General Sans", source: "Fontshare sites, editorial SaaS", category: "sans", foundry: "Fontshare (ITF)" },
-  { name: "Instrument Sans", source: "Instrument brand, Awwwards sites", category: "sans", foundry: "Instrument (Google Fonts)" },
-  { name: "SWitzer", source: "SWIX, Awwwards sites", category: "sans", foundry: "Fontshare (ITF)" },
-  { name: "Hanken Grotesk", source: "Hanken, Awwwards sites", category: "sans", foundry: "Google Fonts" },
-  { name: "Figtree", source: "Google Fonts showcase, SaaS", category: "sans", foundry: "Google Fonts" },
-  { name: "DM Sans", source: "Google Fonts, various SaaS", category: "sans", foundry: "Google Fonts" },
-  { name: "Manrope", source: "Google Fonts, various SaaS", category: "sans", foundry: "Google Fonts" },
-  { name: "Albert Sans", source: "Google Fonts, SaaS", category: "sans", foundry: "Google Fonts" },
-  { name: "Lexend", source: "Google Fonts (acessível), SaaS", category: "sans", foundry: "Google Fonts" },
-  { name: "Schibsted Grotesk", source: "Schibsted, Awwwards sites", category: "sans", foundry: "Google Fonts" },
-  { name: "Onest", source: "Google Fonts, Awwwards", category: "sans", foundry: "Google Fonts" },
-  { name: "Mona Sans", source: "GitHub (Figma brand)", category: "sans", foundry: "GitHub (Google Fonts)" },
-  { name: "Hubot Sans", source: "GitHub", category: "sans", foundry: "GitHub (Google Fonts)" },
-  { name: "PP Neue Montreal", source: "Awwwards SOTD 2026 (demandespeciale)", category: "sans", foundry: "Pangram Pangram" },
-  { name: "Aeonik", source: "CoType foundry, premium SaaS", category: "sans", foundry: "CoType" },
-  { name: "Söhne", source: "Stripe (confirmed via typ.io)", category: "sans", foundry: "Klim Type Foundry" },
-
-  // ─── Display/Grotesk (headings) ───
-  { name: "Cabinet Grotesk", source: "Fontshare, Awwwards sites", category: "display", foundry: "Fontshare (ITF)" },
-  { name: "Clash Display", source: "Awwwards SOTD, Fontshare", category: "display", foundry: "Fontshare (ITF)" },
-  { name: "Clash Grotesk", source: "Bureau Cool, Awwwards sites", category: "display", foundry: "Fontshare (ITF)" },
-  { name: "Outfit", source: "Google Fonts, various SaaS", category: "display", foundry: "Google Fonts" },
-  { name: "Space Grotesk", source: "Google Fonts, tech sites", category: "display", foundry: "Google Fonts" },
-  { name: "Sora", source: "Google Fonts, Awwwards", category: "display", foundry: "Google Fonts" },
-  { name: "Syne", source: "Synesthésie MC, Google Fonts, Awwwards", category: "display", foundry: "Google Fonts" },
-  { name: "Unbounded", source: "Google Fonts, Awwwards bold", category: "display", foundry: "Google Fonts" },
-  { name: "Bricolage Grotesque", source: "Awwwards sites, Google Fonts", category: "display", foundry: "Google Fonts" },
-  { name: "Archivo", source: "Google Fonts, Awwwards", category: "display", foundry: "Google Fonts" },
-  { name: "Big Shoulders Display", source: "Google Fonts, Awwwards bold", category: "display", foundry: "Google Fonts" },
-  { name: "Anybody", source: "Google Fonts, Awwwards", category: "display", foundry: "Google Fonts" },
-
-  // ─── Serif (editorial/premium) ───
-  { name: "Fraunces", source: "Google Fonts, Awwwards editorial", category: "serif", foundry: "Google Fonts" },
-  { name: "Newsreader", source: "Google Fonts, editorial Awwwards", category: "serif", foundry: "Google Fonts" },
-  { name: "Instrument Serif", source: "Instrument brand, Awwwards", category: "serif", foundry: "Instrument (Google Fonts)" },
-  { name: "Lyon", source: "Notion marketing pages (confirmed)", category: "serif", foundry: "Commercial Type" },
-  { name: "GT Sectra", source: "Awwwards editorial, Klim", category: "serif", foundry: "Grilli Type" },
-  { name: "Tiempos Text", source: "Awwwards editorial, Klim", category: "serif", foundry: "Klim Type Foundry" },
-
-  // ─── Mono (developer/terminal) ───
-  { name: "Geist Mono", source: "Vercel, Awwwards dev", category: "mono", foundry: "Vercel (Google Fonts)" },
-  { name: "JetBrains Mono", source: "JetBrains, Cursor, Awwwards", category: "mono", foundry: "JetBrains (Google Fonts)" },
-  { name: "Space Mono", source: "Google Fonts, Awwwards", category: "mono", foundry: "Google Fonts" },
-  { name: "Fira Code", source: "Google Fonts, dev tools", category: "mono", foundry: "Google Fonts" },
-  { name: "IBM Plex Mono", source: "IBM, Awwwards", category: "mono", foundry: "IBM (Google Fonts)" },
-  { name: "Berkeley Mono", source: "Terminal.dev, Awwwards dev premium", category: "mono", foundry: "Berkeley Graphics" },
-  { name: "Commit Mono", source: "Awwwards dev, terminal sites", category: "mono", foundry: "Commit (free)" },
 ];
 
 // ============================================================================
@@ -1312,9 +1243,15 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
 }
 
 // ============================================================================
-// FontSelector — dropdown de seleção manual de font com botão bloquear
+// FontSelector — dropdown com 100+ fonts reais agrupadas por categoria
 // ============================================================================
-function FontSelector({ label, value, locked, onChange, onToggleLock }: { label: string; value: string; locked: boolean; onChange: (v: string) => void; onToggleLock: () => void }) {
+function FontSelector({ label, value, locked, onChange, onToggleLock, category }: { label: string; value: string; locked: boolean; onChange: (v: string) => void; onToggleLock: () => void; category?: "sans" | "display" | "serif" | "mono" }) {
+  // Se category é especificado, mostra só dessa categoria; senão mostra todas agrupadas
+  const sansFonts = getFontsByCategory("sans");
+  const displayFonts = getFontsByCategory("display");
+  const serifFonts = getFontsByCategory("serif");
+  const monoFonts = getFontsByCategory("mono");
+
   return (
     <div className="space-y-0.5">
       <div className="flex items-center justify-between">
@@ -1327,11 +1264,46 @@ function FontSelector({ label, value, locked, onChange, onToggleLock }: { label:
       </div>
       <select value={value} onChange={(e) => onChange(e.target.value)} className="w-full rounded-lg border border-border bg-card/50 px-2 py-1.5 text-[11px] font-medium" disabled={locked}>
         <option value="">Auto</option>
-        {ALL_FONTS.map((f) => (
-          <option key={f.name} value={f.name} style={{ fontFamily: f.name }} title={`${f.source} · ${f.foundry}`}>
-            {f.name} — {f.source}
-          </option>
-        ))}
+        {category ? (
+          // Modo filtrado por categoria
+          getFontsByCategory(category).map((f) => (
+            <option key={f.name} value={f.name} style={{ fontFamily: f.name }} title={`${f.source} · ${f.foundry} · ${f.siteType.join(", ")}`}>
+              {f.name} — {f.source}
+            </option>
+          ))
+        ) : (
+          // Modo completo: agrupado por categoria
+          <>
+            <optgroup label={`── Sans-serif (${sansFonts.length}) ──`}>
+              {sansFonts.map((f) => (
+                <option key={f.name} value={f.name} style={{ fontFamily: f.name }} title={`${f.source} · ${f.foundry}`}>
+                  {f.name} — {f.source}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label={`── Display/Grotesk (${displayFonts.length}) ──`}>
+              {displayFonts.map((f) => (
+                <option key={f.name} value={f.name} style={{ fontFamily: f.name }} title={`${f.source} · ${f.foundry}`}>
+                  {f.name} — {f.source}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label={`── Serif/Editorial (${serifFonts.length}) ──`}>
+              {serifFonts.map((f) => (
+                <option key={f.name} value={f.name} style={{ fontFamily: f.name }} title={`${f.source} · ${f.foundry}`}>
+                  {f.name} — {f.source}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label={`── Mono/Dev (${monoFonts.length}) ──`}>
+              {monoFonts.map((f) => (
+                <option key={f.name} value={f.name} style={{ fontFamily: f.name }} title={`${f.source} · ${f.foundry}`}>
+                  {f.name} — {f.source}
+                </option>
+              ))}
+            </optgroup>
+          </>
+        )}
       </select>
       <div className="text-[10px] truncate" style={{ fontFamily: value || "inherit" }}>Aa Bb Cc 0123</div>
     </div>
