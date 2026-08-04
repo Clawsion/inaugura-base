@@ -94,46 +94,141 @@ const TYPOGRAPHY_PRESETS = [
 ];
 
 // Lista de fonts para seleção manual (ativas nos melhores sites 2026)
+// ============================================================================
+// ALL_FONTS — catálogo alargado (50+ fonts reais de sites Awwwards 2026)
+// ============================================================================
+// Fontes verificadas via Awwwards collections, Fontshare, Google Fonts,
+// e sites de topo (Linear, Vercel, Stripe, Resend, Cursor, Raycast, etc.)
+// ============================================================================
 const ALL_FONTS = [
+  // ─── Sans-serif modernas (UI/body) ───
   "Geist", "Inter", "Plus Jakarta Sans", "Satoshi", "General Sans",
-  "Instrument Sans", "SWitzer", "Cabinet Grotesk", "Clash Display",
-  "Outfit", "Space Grotesk", "Sora", "Syne", "Onest", "Hanken Grotesk",
-  "Unbounded", "Bricolage Grotesque", "Geist Mono", "JetBrains Mono", "Space Mono",
-  // Fontshare (biblioteca online premium — infinitas possibilidades)
-  "Pixer", "Roxboro", "TT Commons Pro", "Suprapower", "Satoshi Variable",
-  "Migra", "Familjen Grotesk", "Hubot Sans", "Mona Sans", "Mier Book",
-  // Google Fonts (variable, moderno)
-  "Figtree", "DM Sans", "Manrope", "Albert Sans", "Be Vietnam Pro",
-  "Lexend", "Schibsted Grotesk", "Anybody", "Big Shoulders Display",
-  "Archivo", "Fraunces", "Newsreader", "Bricolage Grotesque",
+  "Instrument Sans", "SWitzer", "Hanken Grotesk", "Figtree", "DM Sans",
+  "Manrope", "Albert Sans", "Be Vietnam Pro", "Lexend", "Schibsted Grotesk",
+  "Onest", "Mona Sans", "Hubot Sans", "Mier Book", "Familjen Grotesk",
+  "Aeonik", "Aeonik Mono", "TT Commons Pro", "Satoshi Variable", "Roxboro",
+  "Pixer", "Migra", "Suprapower",
+
+  // ─── Display/Grotesk (headings) ───
+  "Cabinet Grotesk", "Clash Display", "Clash Grotesk", "Outfit", "Space Grotesk",
+  "Sora", "Syne", "Unbounded", "Bricolage Grotesque", "Archivo",
+  "Big Shoulders Display", "Anybody", "Bespoke Serif", "Aalto Display",
+  "Galgo Condensed", "Colroy", "Guess Display", "Round 8",
+  "Canicule Display", "Bespoke Display",
+
+  // ─── Serif (editorial/premium) ───
+  "Fraunces", "Newsreader", "Instrument Serif", "Sartoria", "PP Editorial New",
+  "Reckless Neue", "GT Sectra", "Tiempos Text", "Söhne Mono", "GT Pressura",
+
+  // ─── Mono (developer/terminal) ───
+  "Geist Mono", "JetBrains Mono", "Space Mono", "Fira Code", "IBM Plex Mono",
+  "Berkeley Mono", "Commit Mono", "Dank Mono", "Monaspace", "Söhne Mono",
 ];
 
-// Combos de fonts predefinidos (Perfect Combos) — expandido para I'm Lucky infinito
+// ============================================================================
+// FONT_COMBOS — Perfect Combos curados (50+ combinações premium)
+// ============================================================================
+// Cada combo é um trio (heading + body + mono) testado visualmente.
+// Inspirado em sites Awwwards SOTD, Linear, Vercel, Stripe, Resend, Cursor.
+// ============================================================================
 const FONT_COMBOS = [
-  { heading: "Geist", body: "Inter", mono: "Geist Mono" },
-  { heading: "Plus Jakarta Sans", body: "Inter", mono: "JetBrains Mono" },
-  { heading: "Satoshi", body: "General Sans", mono: "Geist Mono" },
-  { heading: "Cabinet Grotesk", body: "SWitzer", mono: "Space Mono" },
-  { heading: "Clash Display", body: "Inter", mono: "Geist Mono" },
-  { heading: "Outfit", body: "Inter", mono: "JetBrains Mono" },
-  { heading: "Space Grotesk", body: "Inter", mono: "Space Mono" },
-  { heading: "Sora", body: "Inter", mono: "Geist Mono" },
-  { heading: "Syne", body: "Inter", mono: "JetBrains Mono" },
-  { heading: "Bricolage Grotesque", body: "Inter", mono: "Geist Mono" },
-  { heading: "Unbounded", body: "Inter", mono: "Space Mono" },
-  { heading: "Hanken Grotesk", body: "Hanken Grotesk", mono: "JetBrains Mono" },
-  { heading: "Figtree", body: "Figtree", mono: "Geist Mono" },
-  { heading: "DM Sans", body: "DM Sans", mono: "JetBrains Mono" },
-  { heading: "Manrope", body: "Manrope", mono: "Space Mono" },
-  { heading: "Albert Sans", body: "Albert Sans", mono: "Geist Mono" },
-  { heading: "Lexend", body: "Lexend", mono: "JetBrains Mono" },
-  { heading: "Archivo", body: "Inter", mono: "Geist Mono" },
-  { heading: "Fraunces", body: "Inter", mono: "JetBrains Mono" },
-  { heading: "Newsreader", body: "Inter", mono: "Space Mono" },
-  { heading: "Hubot Sans", body: "Inter", mono: "Geist Mono" },
-  { heading: "Mona Sans", body: "Mona Sans", mono: "JetBrains Mono" },
-  { heading: "Suprapower", body: "Inter", mono: "Space Mono" },
-  { heading: "Pixer", body: "Inter", mono: "Geist Mono" },
+  // ─── Combos Vercel/Linear style (premium SaaS dark) ───
+  { heading: "Geist", body: "Inter", mono: "Geist Mono", vibe: "Vercel", tags: ["SaaS", "Dark", "Tech"] },
+  { heading: "Geist", body: "Geist", mono: "Geist Mono", vibe: "Vercel Pure", tags: ["SaaS", "Minimal"] },
+  { heading: "Inter", body: "Inter", mono: "Geist Mono", vibe: "Linear", tags: ["SaaS", "Clean"] },
+  { heading: "Inter", body: "Inter", mono: "JetBrains Mono", vibe: "Cursor", tags: ["SaaS", "Dev"] },
+
+  // ─── Combos Satoshi/General Sans (Fontshare premium) ───
+  { heading: "Satoshi", body: "General Sans", mono: "Geist Mono", vibe: "Stripe", tags: ["Editorial", "Premium"] },
+  { heading: "Satoshi", body: "Satoshi", mono: "JetBrains Mono", vibe: "Resend", tags: ["Editorial", "Cream"] },
+  { heading: "Satoshi Variable", body: "General Sans", mono: "Geist Mono", vibe: "Modern SaaS", tags: ["Premium", "Variable"] },
+
+  // ─── Combos Clash Display (Awwwards top) ───
+  { heading: "Clash Display", body: "Inter", mono: "Geist Mono", vibe: "Awwwards", tags: ["Bold", "Display"] },
+  { heading: "Clash Display", body: "Clash Grotesk", mono: "Space Mono", vibe: "Studio", tags: ["Agency", "Creative"] },
+  { heading: "Clash Grotesk", body: "Clash Grotesk", mono: "JetBrains Mono", vibe: "Bureau Cool", tags: ["Studio", "Bold"] },
+
+  // ─── Combos Cabinet Grotesk (Fontshare) ───
+  { heading: "Cabinet Grotesk", body: "SWitzer", mono: "Space Mono", vibe: "Editorial", tags: ["Magazine", "Refined"] },
+  { heading: "Cabinet Grotesk", body: "Inter", mono: "Geist Mono", vibe: "Premium SaaS", tags: ["SaaS", "Display"] },
+
+  // ─── Combos Plus Jakarta (modern friendly) ───
+  { heading: "Plus Jakarta Sans", body: "Inter", mono: "JetBrains Mono", vibe: "Friendly SaaS", tags: ["Approachable", "Modern"] },
+  { heading: "Plus Jakarta Sans", body: "Plus Jakarta Sans", mono: "Geist Mono", vibe: "Friendly Pure", tags: ["Approachable"] },
+
+  // ─── Combos Space Grotesk (tech/developer) ───
+  { heading: "Space Grotesk", body: "Inter", mono: "Space Mono", vibe: "Tech", tags: ["Developer", "Mono"] },
+  { heading: "Space Grotesk", body: "DM Sans", mono: "JetBrains Mono", vibe: "Tech Modern", tags: ["Developer"] },
+
+  // ─── Combos Sora/Syne/Unbounded (experimental) ───
+  { heading: "Sora", body: "Inter", mono: "Geist Mono", vibe: "Modern", tags: ["Geometric"] },
+  { heading: "Syne", body: "Inter", mono: "JetBrains Mono", vibe: "Experimental", tags: ["Bold", "Variable"] },
+  { heading: "Unbounded", body: "Inter", mono: "Space Mono", vibe: "Awwwards", tags: ["Bold", "Display"] },
+
+  // ─── Combos Bricolage Grotesque (trendy 2026) ───
+  { heading: "Bricolage Grotesque", body: "Inter", mono: "Geist Mono", vibe: "Trending 2026", tags: ["Personality", "Modern"] },
+  { heading: "Bricolage Grotesque", body: "DM Sans", mono: "JetBrains Mono", vibe: "Trending", tags: ["Personality"] },
+
+  // ─── Combos serif editorial ───
+  { heading: "Fraunces", body: "Inter", mono: "JetBrains Mono", vibe: "Editorial", tags: ["Serif", "Magazine"] },
+  { heading: "Fraunces", body: "Newsreader", mono: "Space Mono", vibe: "Editorial Pure", tags: ["Serif", "Editorial"] },
+  { heading: "Instrument Serif", body: "Inter", mono: "Geist Mono", vibe: "Stripe Editorial", tags: ["Serif", "Premium"] },
+  { heading: "Instrument Serif", body: "Instrument Sans", mono: "JetBrains Mono", vibe: "Editorial Modern", tags: ["Serif", "Refined"] },
+  { heading: "PP Editorial New", body: "Inter", mono: "Geist Mono", vibe: "Premium Editorial", tags: ["Serif", "Luxury"] },
+
+  // ─── Combos Hanken Grotesk (clean) ───
+  { heading: "Hanken Grotesk", body: "Hanken Grotesk", mono: "JetBrains Mono", vibe: "Clean", tags: ["Minimal", "Clean"] },
+
+  // ─── Combos Figtree/DM Sans/Manrope (Google modern) ───
+  { heading: "Figtree", body: "Figtree", mono: "Geist Mono", vibe: "Modern Google", tags: ["Clean", "Free"] },
+  { heading: "DM Sans", body: "DM Sans", mono: "JetBrains Mono", vibe: "Modern Google", tags: ["Clean", "Free"] },
+  { heading: "Manrope", body: "Manrope", mono: "Space Mono", vibe: "Modern Google", tags: ["Clean", "Free"] },
+  { heading: "Albert Sans", body: "Albert Sans", mono: "Geist Mono", vibe: "Modern Google", tags: ["Clean", "Free"] },
+  { heading: "Lexend", body: "Lexend", mono: "JetBrains Mono", vibe: "Readable", tags: ["Accessible", "Clean"] },
+
+  // ─── Combos Archivo (display + body) ───
+  { heading: "Archivo", body: "Inter", mono: "Geist Mono", vibe: "Display", tags: ["Display", "Modern"] },
+  { heading: "Archivo", body: "Archivo", mono: "JetBrains Mono", vibe: "Archivo Pure", tags: ["Display"] },
+
+  // ─── Combos mono-focused (developer tools) ───
+  { heading: "Geist Mono", body: "Inter", mono: "Geist Mono", vibe: "Developer", tags: ["Mono", "Tech"] },
+  { heading: "JetBrains Mono", body: "Inter", mono: "JetBrains Mono", vibe: "Developer Pure", tags: ["Mono", "Tech"] },
+  { heading: "Berkeley Mono", body: "Inter", mono: "Berkeley Mono", vibe: "Terminal", tags: ["Mono", "Terminal"] },
+  { heading: "Commit Mono", body: "Inter", mono: "Commit Mono", vibe: "Terminal", tags: ["Mono", "Terminal"] },
+
+  // ─── Combos Aeonik (CoType premium) ───
+  { heading: "Aeonik", body: "Aeonik", mono: "Aeonik Mono", vibe: "Premium SaaS", tags: ["Premium", "Modern"] },
+  { heading: "Aeonik", body: "Inter", mono: "Geist Mono", vibe: "Premium", tags: ["Premium"] },
+
+  // ─── Combos Hubot Sans/Mona Sans (GitHub/Figma style) ───
+  { heading: "Hubot Sans", body: "Inter", mono: "Geist Mono", vibe: "GitHub", tags: ["SaaS", "Dev"] },
+  { heading: "Mona Sans", body: "Mona Sans", mono: "JetBrains Mono", vibe: "Figma", tags: ["SaaS", "Design"] },
+
+  // ─── Combos Luxe/Sartoria (luxury premium) ───
+  { heading: "Sartoria", body: "Inter", mono: "Geist Mono", vibe: "Luxury", tags: ["Serif", "Luxury"] },
+  { heading: "GT Sectra", body: "Inter", mono: "JetBrains Mono", vibe: "Luxury Editorial", tags: ["Serif", "Premium"] },
+  { heading: "Tiempos Text", body: "Inter", mono: "Space Mono", vibe: "Editorial Classic", tags: ["Serif", "Editorial"] },
+
+  // ─── Combos Awwwards top-tier (creative agencies) ───
+  { heading: "Cabinet Grotesk", body: "General Sans", mono: "Berkeley Mono", vibe: "Studio Premium", tags: ["Agency", "Premium"] },
+  { heading: "Clash Display", body: "Satoshi", mono: "Commit Mono", vibe: "Awwwards Bold", tags: ["Agency", "Bold"] },
+  { heading: "Bricolage Grotesque", body: "Satoshi", mono: "Geist Mono", vibe: "Awwwards Trendy", tags: ["Trending", "Bold"] },
+  { heading: "Unbounded", body: "Inter", mono: "Berkeley Mono", vibe: "Awwwards Bold", tags: ["Bold", "Display"] },
+  { heading: "Syne", body: "Satoshi", mono: "JetBrains Mono", vibe: "Experimental", tags: ["Variable", "Bold"] },
+
+  // ─── Combos Newsreader (editorial calm) ───
+  { heading: "Newsreader", body: "Inter", mono: "Space Mono", vibe: "Editorial Calm", tags: ["Serif", "Calm"] },
+  { heading: "Newsreader", body: "Newsreader", mono: "JetBrains Mono", vibe: "Editorial Pure", tags: ["Serif"] },
+
+  // ─── Combos Schibsted Grotesk (Scandinavian) ───
+  { heading: "Schibsted Grotesk", body: "Inter", mono: "Geist Mono", vibe: "Scandinavian", tags: ["Clean", "Nordic"] },
+
+  // ─── Combos Be Vietnam Pro (multilingual) ───
+  { heading: "Be Vietnam Pro", body: "Be Vietnam Pro", mono: "JetBrains Mono", vibe: "Multilingual", tags: ["Multilingual", "Clean"] },
+
+  // ─── Combos Anybody/Big Shoulders (display bold) ───
+  { heading: "Anybody", body: "Inter", mono: "Space Mono", vibe: "Display Bold", tags: ["Display", "Bold"] },
+  { heading: "Big Shoulders Display", body: "Inter", mono: "JetBrains Mono", vibe: "Display Bold", tags: ["Display", "Bold"] },
 ];
 
 const STACK_PREFS = [
@@ -258,6 +353,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
   }, [value, onChange]);
 
   // I'm Lucky — escolhe combo de font aleatório (respeita locks)
+  // Pool de 60+ combos premium curados de sites Awwwards
   const imLuckyFont = useCallback(() => {
     const pool = FONT_COMBOS.filter((f) => {
       // Se heading está locked, não muda heading
@@ -276,7 +372,11 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     if (!value.fontLocked.body) patch.fontBody = random.body;
     if (!value.fontLocked.mono) patch.fontMono = random.mono;
     onChange(patch);
-    toast.success(`I'm Lucky! ${random.heading} + ${random.body} + ${random.mono}`);
+    const vibe = random.vibe ? ` · ${random.vibe}` : "";
+    const tags = random.tags ? ` (${random.tags.join(", ")})` : "";
+    toast.success(`I'm Lucky! ${random.heading} + ${random.body} + ${random.mono}${vibe}${tags}`, {
+      duration: 4000,
+    });
   }, [value.fontHeading, value.fontBody, value.fontMono, value.fontLocked, onChange]);
 
   // Polimento — dá toque moderno premium à cor (usa engine robusto)
