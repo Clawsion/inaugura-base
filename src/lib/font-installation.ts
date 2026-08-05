@@ -14,7 +14,7 @@
 // ============================================================================
 
 import { FONT_CATALOG, getFontInfo, type FontDef } from "./font-catalog";
-import { GOOGLE_FONTS_CONFIRMED, FONTSHARE_FONTS_CONFIRMED } from "./use-font-loader";
+import { GOOGLE_FONTS_CONFIRMED, FONTSHARE_FONTS_CONFIRMED } from "./font-cdns";
 
 export interface FontInstallation {
   fontName: string;

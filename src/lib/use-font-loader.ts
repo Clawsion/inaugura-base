@@ -12,56 +12,10 @@
 // ============================================================================
 
 import { useEffect } from "react";
+import { GOOGLE_FONTS_CONFIRMED, FONTSHARE_FONTS_CONFIRMED } from "./font-cdns";
 
-// Fonts confirmadas no Google Fonts (carregamento garantido)
-export const GOOGLE_FONTS_CONFIRMED = new Set([
-  "Geist", "Geist Mono", "Inter", "Plus Jakarta Sans", "DM Sans", "Manrope",
-  "Lexend", "Poppins", "Space Grotesk", "Sora", "Syne", "Unbounded",
-  "Bricolage Grotesque", "Archivo", "Big Shoulders Display", "Anton",
-  "Bebas Neue", "Oswald", "Outfit", "Fraunces", "Newsreader",
-  "Instrument Serif", "Playfair Display", "Cormorant Garamond", "Lora",
-  "Merriweather", "Fira Code", "Space Mono", "IBM Plex Mono", "Azeret Mono",
-  "Hanken Grotesk", "Schibsted Grotesk", "Onest", "Mona Sans", "Hubot Sans",
-  "Figtree", "Albert Sans", "Be Vietnam Pro", "Work Sans", "Nunito",
-  "Public Sans", "Crimson Pro", "Literata", "JetBrains Mono",
-  "Roboto", "Roboto Mono", "Roboto Flex", "Source Sans 3", "Source Serif 4",
-  "Source Code Pro", "PT Sans", "PT Serif", "Lato", "Open Sans",
-  "Montserrat", "Raleway", "Dancing Script", "Pacifico", "Caveat",
-  "Sacramento", "Allura", "Alex Brush", "Arizonia", "Bad Script",
-  "Bilbo Swash Caps", "Cookie", "Great Vibes", "Italianno", "Marck Script",
-  "Parisienne", "Noto Serif", "Noto Serif Display", "EB Garamond",
-  "Spectral", "Spectral SC", "Crimson Text", "DM Serif Display",
-  "DM Serif Text", "Enriqueta", "Frank Ruhl Libre", "Glegoo", "Hepta Slab",
-  "IBM Plex Serif", "Inria Serif", "Markazi Text", "Mate", "Mate SC",
-  "Noto Serif SC", "Old Standard TT", "Philosopher", "Pridi", "Prata",
-  "Teko", "Tourney", "Yanone Kaffeesatz", "Goldman", "Grenze",
-  "Grenze Gotisch", "Holtwood One SC", "Iceberg", "Iceland",
-  "Jacques Francois", "Jacques Francois Shadow", "Kavoon", "Kdam Thmor",
-  "Keania One", "Kreon", "Kristi", "La Belle Aurore", "Lakki Reddy",
-  "Langar", "Lemon", "Lemonada", "Lilita One", "Lobster", "Lobster Two",
-  "Codystar", "Dela Gothic One", "DotGothic16", "Bungee", "Bungee Inline",
-  "Bungee Shade", "Alfa Slab One", "Archivo Black", "Khand", "Karla",
-  "Mulish", "Nunito Sans", "Quicksand", "Questrial", "Rajdhani",
-  "Rationale", "Rubik", "Saira", "Saira Condensed", "Sarabun", "Tajawal",
-  "Zen Kaku Gothic New", "Zen Loop", "Zen Maru Gothic", "Zen Old Mincho",
-  "Zen Tokyo Zoo", "Anybody", "Arimo", "Atkinson Hyperlegible", "Bitter",
-  "Carlito", "Chivo", "Commissioner", "Domine", "Encode Sans", "Epilogue",
-  "Familjen Grotesk", "Gudea", "Heebo", "Hind", "IBM Plex Sans",
-  "Inconsolata", "Inika", "Jost", "Kanit", "Khand", "Mada", "Orienta",
-  "Cutive Mono", "DM Mono", "Nanum Gothic Coding", "Spline Sans Mono",
-  "Cousine", "Major Mono Display", "DotGothic16", "Barriecito",
-  "GTL001", "Getai Grotesk", "Hyperlegible Sans",
-]);
-
-// Fonts confirmadas no Fontshare (carregamento garantido)
-export const FONTSHARE_FONTS_CONFIRMED = new Set([
-  "Satoshi", "General Sans", "Switzer", "Cabinet Grotesk", "Clash Display",
-  "Clash Grotesk", "Boska", "Technor", "Melodrama", "Aktura", "RX100",
-  "Zodiak", "Tanker", "Sentient", "Bespoke Serif", "Erode", "Gambetta",
-  "Nippo", "Supreme", "Commit Mono", "Author", "Ranade", "Chillax", "Pally",
-  "Telma", "Wargaming", "Strike", "Migra", "Panch", "Rocher", "Penaflor",
-  "Sahitya", "Triode",
-]);
+// Re-export para compatibilidade (outros ficheiros já importam de use-font-loader)
+export { GOOGLE_FONTS_CONFIRMED, FONTSHARE_FONTS_CONFIRMED };
 
 // Fonts pagas — usar alternativa gratuita
 const PAID_FONT_ALTERNATIVES: Record<string, string> = {
@@ -111,66 +65,38 @@ export function loadFont(fontName: string) {
   if (!fontName || fontName === "Auto" || fontName === "" || loadedFonts.has(fontName)) return;
   if (failedFonts.has(fontName)) return;
 
-  const urls = getFontUrls(fontName);
-  if (urls.length === 0) return;
-
   // Verifica se já existe um link para esta font
   const existing = document.querySelector(`link[data-font="${fontName}"]`);
   if (existing) return;
 
-  // Para fonts confirmadas, carrega diretamente
-  // Para fonts não-confirmadas, tenta carregar mas verifica se o CSS é válido
-  const isConfirmed = GOOGLE_FONTS_CONFIRMED.has(fontName) || FONTSHARE_FONTS_CONFIRMED.has(fontName);
+  // USAR A API ROUTE /api/font/[name] — ela tenta Google → Fontshare → Fontsup → fallback
+  // Isto garante que TODAS as fonts carregam (as que estão em qualquer CDN)
+  const apiUrl = `/api/font/${encodeURIComponent(fontName)}`;
 
-  if (isConfirmed) {
-    // Font confirmada — carrega diretamente
-    urls.forEach((url) => {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = url;
-      link.dataset.font = fontName;
-      document.head.appendChild(link);
-    });
-    loadedFonts.add(fontName);
-  } else {
-    // Font não-confirmada — tenta via fetch para verificar se o CSS é válido
-    // Se for válido, injeta o link; se não, marca como falhada
-    urls.forEach((url, i) => {
-      // Para Google Fonts, verificar se retorna CSS (não HTML de erro)
-      if (url.includes("fonts.googleapis.com")) {
-        fetch(url)
-          .then((res) => res.text())
-          .then((css) => {
-            // Google Fonts retorna CSS válido com @font-face se a font existe
-            // Se retornar HTML, a font não existe
-            if (css.includes("@font-face")) {
-              const link = document.createElement("link");
-              link.rel = "stylesheet";
-              link.href = url;
-              link.dataset.font = fontName;
-              document.head.appendChild(link);
-              loadedFonts.add(fontName);
-            } else if (i === urls.length - 1) {
-              failedFonts.add(fontName);
-            }
-          })
-          .catch(() => {
-            if (i === urls.length - 1) failedFonts.add(fontName);
-          });
-      } else {
-        // Fontshare — carrega diretamente (retorna 404 se não existe)
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = url;
-        link.dataset.font = fontName;
-        link.onerror = () => {
-          if (i === urls.length - 1) failedFonts.add(fontName);
-        };
-        document.head.appendChild(link);
-        loadedFonts.add(fontName);
-      }
-    });
-  }
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = apiUrl;
+  link.dataset.font = fontName;
+
+  link.onerror = () => {
+    // Se a API falhou, tentar carregamento direto como fallback
+    const urls = getFontUrls(fontName);
+    if (urls.length > 0) {
+      urls.forEach((url) => {
+        const fallbackLink = document.createElement("link");
+        fallbackLink.rel = "stylesheet";
+        fallbackLink.href = url;
+        fallbackLink.dataset.font = `${fontName}-fallback`;
+        document.head.appendChild(fallbackLink);
+      });
+      loadedFonts.add(fontName);
+    } else {
+      failedFonts.add(fontName);
+    }
+  };
+
+  document.head.appendChild(link);
+  loadedFonts.add(fontName);
 }
 
 export function useFontLoader(fonts: string[]) {
