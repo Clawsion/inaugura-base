@@ -1,133 +1,128 @@
 // ============================================================================
-// /api/font/[name]/route.ts — Font Server API
+// /api/font/[name]/route.ts — Font Server API v2
 // ============================================================================
 // Serve @font-face CSS para QUALQUER font do catálogo.
-// Tenta múltiplas fontes em sequência:
-//   1. Google Fonts (se a font existe lá)
-//   2. Fontshare (se a font existe lá)
-//   3. Fontsup.com (agregador gratuito — tem milhares de fonts)
-//   4. Fallback: retorna CSS com system-ui
+// Tenta múltiplas fontes em sequência (primeiro que funciona é usado):
 //
-// COMO USAR:
-//   <link href="/api/font/Amazing+Sweety" rel="stylesheet">
-//   ou
-//   @import url('/api/font/Amazing+Sweety');
-//
-// A API retorna CSS @font-face que o browser pode usar imediatamente.
+//   1. Fontsource CDN (jsDelivr) — serve .woff2 diretamente
+//      Cobertura: TODAS as Google Fonts + Commit Mono + outras open-source
+//   2. Google Fonts CSS API — @import CSS
+//   3. Fontshare CDN — @import CSS (Satoshi, Clash Display, etc.)
+//   4. GitHub raw (google/fonts repo) — .ttf diretamente
+//   5. Fallback: local() — não bloqueia o render
 // ============================================================================
 
 import { NextRequest, NextResponse } from "next/server";
-import { GOOGLE_FONTS_CONFIRMED, FONTSHARE_FONTS_CONFIRMED } from "@/lib/font-cdns";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 86400; // Cache 24h
+export const revalidate = 86400;
 
-// Cache em memória para evitar refetch
 const cssCache = new Map<string, { css: string; timestamp: number }>();
-const CACHE_TTL = 24 * 60 * 60 * 1000; // 24h
+const CACHE_TTL = 24 * 60 * 60 * 1000;
 
-interface FontSourceResult {
-  css: string | null;
-  source: string;
+function toSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim();
 }
 
-// Tentar Google Fonts
-async function tryGoogleFonts(fontName: string): Promise<FontSourceResult> {
+// 1. Fontsource CDN
+async function tryFontsource(fontName: string): Promise<string | null> {
+  const slug = toSlug(fontName);
+  const url400 = `https://cdn.jsdelivr.net/fontsource/fonts/${slug}@latest/latin-400-normal.woff2`;
+
+  try {
+    const res = await fetch(url400, {
+      method: "HEAD",
+      signal: AbortSignal.timeout(5000),
+    });
+
+    if (res.status === 200) {
+      const weights = [400, 500, 600, 700, 800];
+      return weights.map((w) => {
+        const woff2Url = `https://cdn.jsdelivr.net/fontsource/fonts/${slug}@latest/latin-${w}-normal.woff2`;
+        return `@font-face {
+  font-family: '${fontName}';
+  src: url('${woff2Url}') format('woff2');
+  font-weight: ${w};
+  font-display: swap;
+  font-style: normal;
+}`;
+      }).join("\n\n");
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+// 2. Google Fonts CSS API
+async function tryGoogleFonts(fontName: string): Promise<string | null> {
   const family = fontName.replace(/\s+/g, "+");
   const url = `https://fonts.googleapis.com/css2?family=${family}:wght@400;500;600;700;800;900&display=swap`;
 
   try {
     const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
     const css = await res.text();
-
-    // Google Fonts retorna CSS com @font-face se a font existe
-    // Se retornar HTML, a font não existe
     if (css.includes("@font-face")) {
-      return { css, source: "google" };
+      return `@import url('${url}');`;
     }
-    return { css: null, source: "google" };
+    return null;
   } catch {
-    return { css: null, source: "google" };
+    return null;
   }
 }
 
-// Tentar Fontshare
-async function tryFontshare(fontName: string): Promise<FontSourceResult> {
-  const slug = fontName.toLowerCase().replace(/\s+/g, "-");
+// 3. Fontshare CDN
+async function tryFontshare(fontName: string): Promise<string | null> {
+  const slug = toSlug(fontName);
   const url = `https://api.fontshare.com/v2/css?f[]=${slug}@400,500,600,700,800,900&display=swap`;
 
   try {
     const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
     const css = await res.text();
-
-    // Fontshare retorna CSS com @font-face se a font existe
-    // Se retornar vazio ou erro, a font não existe
     if (css.includes("@font-face")) {
-      return { css, source: "fontshare" };
+      return css;
     }
-    return { css: null, source: "fontshare" };
+    return null;
   } catch {
-    return { css: null, source: "fontshare" };
+    return null;
   }
 }
 
-// Tentar Fontsup (agregador gratuito com milhares de fonts)
-async function tryFontsup(fontName: string): Promise<FontSourceResult> {
-  const slug = fontName.toLowerCase().replace(/\s+/g, "-");
-  const searchUrl = `https://www.fontsup.com/search/${encodeURIComponent(fontName)}`;
+// 4. GitHub raw (google/fonts repo)
+async function tryGitHubRaw(fontName: string): Promise<string | null> {
+  const slug = toSlug(fontName);
+  const fileName = fontName.replace(/\s+/g, "");
+  const possiblePaths = [
+    `https://raw.githubusercontent.com/google/fonts/main/ofl/${slug}/${fileName}-Regular.ttf`,
+    `https://raw.githubusercontent.com/google/fonts/main/ofl/${slug}/${fileName}[wght].ttf`,
+  ];
 
-  try {
-    const res = await fetch(searchUrl, {
-      signal: AbortSignal.timeout(8000),
-      headers: { "User-Agent": "Mozilla/5.0" },
-    });
-    const html = await res.text();
-
-    // Procurar por links de download de .woff2 ou .ttf
-    const woff2Match = html.match(/href="([^"]+\.woff2[^"]*)"/i);
-    const ttfMatch = html.match(/href="([^"]+\.ttf[^"]*)"/i);
-
-    const fontUrl = woff2Match?.[1] || ttfMatch?.[1];
-    if (fontUrl) {
-      // Construir URL completa se for relativa
-      const fullUrl = fontUrl.startsWith("http") ? fontUrl : `https://www.fontsup.com${fontUrl}`;
-
-      // Gerar @font-face com a URL do Fontsup
-      const css = `@font-face {
+  for (const url of possiblePaths) {
+    try {
+      const res = await fetch(url, { method: "HEAD", signal: AbortSignal.timeout(4000) });
+      if (res.status === 200) {
+        return `@font-face {
   font-family: '${fontName}';
-  src: url('${fullUrl}') format('${woff2Match ? 'woff2' : 'truetype'}');
-  font-weight: 400 900;
+  src: url('${url}') format('truetype');
+  font-weight: 400;
   font-display: swap;
   font-style: normal;
 }`;
-      return { css, source: "fontsup" };
+      }
+    } catch {
+      continue;
     }
-    return { css: null, source: "fontsup" };
-  } catch {
-    return { css: null, source: "fontsup" };
   }
-}
-
-// Verificar se a font existe no Google Fonts (fetch rápido)
-async function checkGoogleFontsExists(fontName: string): Promise<boolean> {
-  // Se está na lista confirmada, existe
-  if (GOOGLE_FONTS_CONFIRMED.has(fontName)) return true;
-
-  // Caso contrário, tentar fetch rápido
-  const family = fontName.replace(/\s+/g, "+");
-  const url = `https://fonts.googleapis.com/css2?family=${family}:wght@400&display=swap`;
-
-  try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(3000) });
-    const css = await res.text();
-    return css.includes("@font-face");
-  } catch {
-    return false;
-  }
+  return null;
 }
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ name: string }> }
 ) {
   const { name } = await params;
@@ -139,85 +134,33 @@ export async function GET(
     });
   }
 
-  // Verificar cache
   const cached = cssCache.get(fontName);
   if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
     return new NextResponse(cached.css, {
-      headers: {
-        "Content-Type": "text/css",
-        "Cache-Control": "public, max-age=86400",
-      },
+      headers: { "Content-Type": "text/css", "Cache-Control": "public, max-age=86400" },
     });
   }
 
-  // 1. Se está confirmada no Google Fonts, retornar CSS direto
-  if (GOOGLE_FONTS_CONFIRMED.has(fontName)) {
-    const family = fontName.replace(/\s+/g, "+");
-    const css = `@import url('https://fonts.googleapis.com/css2?family=${family}:wght@400;500;600;700;800;900&display=swap');`;
-    cssCache.set(fontName, { css, timestamp: Date.now() });
-    return new NextResponse(css, {
-      headers: {
-        "Content-Type": "text/css",
-        "Cache-Control": "public, max-age=86400",
-      },
-    });
+  const sources = [
+    { name: "Fontsource", fn: () => tryFontsource(fontName) },
+    { name: "Google Fonts", fn: () => tryGoogleFonts(fontName) },
+    { name: "Fontshare", fn: () => tryFontshare(fontName) },
+    { name: "GitHub raw", fn: () => tryGitHubRaw(fontName) },
+  ];
+
+  for (const source of sources) {
+    const css = await source.fn();
+    if (css) {
+      const result = `/* ${fontName} — via ${source.name} */\n${css}`;
+      cssCache.set(fontName, { css: result, timestamp: Date.now() });
+      return new NextResponse(result, {
+        headers: { "Content-Type": "text/css", "Cache-Control": "public, max-age=86400" },
+      });
+    }
   }
 
-  // 2. Se está confirmada no Fontshare, retornar CSS direto
-  if (FONTSHARE_FONTS_CONFIRMED.has(fontName)) {
-    const slug = fontName.toLowerCase().replace(/\s+/g, "-");
-    const css = `@import url('https://api.fontshare.com/v2/css?f[]=${slug}@400,500,600,700,800,900&display=swap');`;
-    cssCache.set(fontName, { css, timestamp: Date.now() });
-    return new NextResponse(css, {
-      headers: {
-        "Content-Type": "text/css",
-        "Cache-Control": "public, max-age=86400",
-      },
-    });
-  }
-
-  // 3. Para fonts não-confirmadas, tentar múltiplas fontes
-  // Primeiro verificar se existe no Google Fonts (pode não estar na lista confirmada)
-  const googleExists = await checkGoogleFontsExists(fontName);
-  if (googleExists) {
-    const family = fontName.replace(/\s+/g, "+");
-    const css = `@import url('https://fonts.googleapis.com/css2?family=${family}:wght@400;500;600;700;800;900&display=swap');`;
-    cssCache.set(fontName, { css, timestamp: Date.now() });
-    return new NextResponse(css, {
-      headers: {
-        "Content-Type": "text/css",
-        "Cache-Control": "public, max-age=86400",
-      },
-    });
-  }
-
-  // 4. Tentar Fontshare
-  const fontshareResult = await tryFontshare(fontName);
-  if (fontshareResult.css) {
-    cssCache.set(fontName, { css: fontshareResult.css, timestamp: Date.now() });
-    return new NextResponse(fontshareResult.css, {
-      headers: {
-        "Content-Type": "text/css",
-        "Cache-Control": "public, max-age=86400",
-      },
-    });
-  }
-
-  // 5. Tentar Fontsup (agregador)
-  const fontsupResult = await tryFontsup(fontName);
-  if (fontsupResult.css) {
-    cssCache.set(fontName, { css: fontsupResult.css, timestamp: Date.now() });
-    return new NextResponse(fontsupResult.css, {
-      headers: {
-        "Content-Type": "text/css",
-        "Cache-Control": "public, max-age=86400",
-      },
-    });
-  }
-
-  // 6. Fallback — retornar CSS com system-ui (não bloqueia o render)
-  const fallbackCss = `/* ${fontName} — font não encontrada em nenhum CDN.
-   Usa fallback do sistema. Para instalar manualmente, ver font-installation.ts. */
+  // Fallback
+  const fallback = `/* ${fontName} — não encontrada. Usar instalação manual. */
 @font-face {
   font-family: '${fontName}';
   src: local('${fontName}'), local('${fontName.replace(/\s+/g, "")}');
@@ -226,10 +169,7 @@ export async function GET(
   font-style: normal;
 }`;
 
-  return new NextResponse(fallbackCss, {
-    headers: {
-      "Content-Type": "text/css",
-      "Cache-Control": "public, max-age=300", // Cache menor para retry
-    },
+  return new NextResponse(fallback, {
+    headers: { "Content-Type": "text/css", "Cache-Control": "public, max-age=300" },
   });
 }
