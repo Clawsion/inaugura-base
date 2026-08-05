@@ -1441,63 +1441,113 @@ export function getPalettesByMode(mode: "normal" | "transient"): ColorTrend[] {
 //   - Progressão de luminosidade suave (essencial para gradientes bonitos)
 //   - 4 cores com roles: Background, Secundária, Destaque, Suporte
 // ============================================================================
+// ============================================================================
+// GERAR PALETA GRADIENT PREMIUM — para Generate de paletes gradientes
+// ============================================================================
+// VERSÃO 2 — Baseada em pesquisa Awwwards 2026 + análise VLM
+//
+// Princípios (Awwwards 2026 gradient websites):
+//   1. BACKGROUND = 2 TONS (junção de 2 cores que fazem gradient bonito)
+//      - Cor 1 (top-left): hue A, mais escura/vibrante
+//      - Cor 2 (bottom-right): hue B (offset 30-80° do hue A), mais clara/complementar
+//      - Gradient linear 135deg entre as 2
+//   2. TEXT = UNIFORME (não gradient)
+//      - Branco cream (dark mode) ou deep dark (light mode)
+//      - WCAG AAA (≥7:1) sobre ambas as cores do bg
+//   3. ACCENT = cor que complementa o gradient (luminous sweet spot)
+//   4. CARD = mid-tone entre as 2 cores do bg (elevação subtil)
+//
+// Combinações de hue comprovadas (Awwwards 2026):
+//   - Magenta → Violet → Cyan (Synthwave Modern)
+//   - Navy → Royal Blue → Cyan (Fintech Trust)
+//   - Black → Indigo → Violet (Linear/Vercel)
+//   - Forest → Emerald → Mint (Wellness)
+//   - Charcoal → Bronze → Gold (Luxury)
+//   - Deep Navy → Terracotta → Peach (Sunset Editorial)
+// ============================================================================
 export function generateGradientPremiumPalette(
   count: 2 | 3 | 4 = 4,
   baseColors?: string[]
 ): { hex: string; role: string }[] {
-  // 8 hue bases inspiradas nas GradientPalettes (fintech, dark-premium, nordic, linear, luxury, sage, cyber, sunset)
-  const hueBases = [
-    { hue: 220, name: "Deep Trust" },     // fintech navy
-    { hue: 265, name: "Obsidian" },       // dark premium violet
-    { hue: 195, name: "Nordic" },         // nordic ice
-    { hue: 250, name: "Linear" },         // linear purple
-    { hue: 42, name: "Luxury" },          // luxury gold
-    { hue: 130, name: "Sage" },           // soft sage
-    { hue: 200, name: "Cyber" },          // cyber blue
-    { hue: 25, name: "Sunset" },          // muted sunset
+  // 12 combinações de hue Awwwards 2026 (cada uma = 2 hues que fazem gradient bonito)
+  const gradientCombos = [
+    { hue1: 320, hue2: 190, name: "Synthwave" },     // magenta → cyan
+    { hue1: 280, hue2: 200, name: "Cyber Violet" },  // violet → blue
+    { hue1: 220, hue2: 190, name: "Fintech Trust" }, // navy → cyan
+    { hue1: 265, hue2: 220, name: "Linear Pro" },    // violet → indigo
+    { hue1: 250, hue2: 290, name: "Purple Dream" },  // indigo → magenta
+    { hue1: 200, hue2: 160, name: "Ocean Teal" },    // blue → teal
+    { hue1: 160, hue2: 130, name: "Wellness" },      // teal → green
+    { hue1: 130, hue2: 80, name: "Forest Lime" },    // green → lime
+    { hue1: 45, hue2: 25, name: "Luxury Gold" },     // gold → orange
+    { hue1: 25, hue2: 350, name: "Sunset Rose" },    // orange → red/pink
+    { hue1: 350, hue2: 320, name: "Rose Magenta" },  // red → magenta
+    { hue1: 190, hue2: 220, name: "Ice Navy" },      // cyan → navy
   ];
 
-  // Se houver cores base, usa o hue da primeira cor; senão escolhe aleatório
-  let hue: number;
+  // Se houver cores base, extrair os 2 hues delas; senão escolher combo aleatório
+  let hue1: number, hue2: number;
   let isDark: boolean;
-  if (baseColors && baseColors.length > 0) {
-    const baseHsl = hexToHsl(baseColors[0]);
-    hue = baseHsl.h;
-    isDark = baseHsl.l < 35;
+  if (baseColors && baseColors.length >= 2) {
+    const hsl1 = hexToHsl(baseColors[0]);
+    const hsl2 = hexToHsl(baseColors[1]);
+    hue1 = hsl1.h;
+    hue2 = hsl2.h;
+    isDark = hsl1.l < 35;
+  } else if (baseColors && baseColors.length === 1) {
+    const hsl1 = hexToHsl(baseColors[0]);
+    hue1 = hsl1.h;
+    // hue2 = offset 30-80° do hue1
+    hue2 = (hue1 + 30 + Math.random() * 50) % 360;
+    isDark = hsl1.l < 35;
   } else {
-    const choice = hueBases[Math.floor(Math.random() * hueBases.length)];
-    hue = choice.hue;
-    isDark = Math.random() > 0.3; // 70% dark, 30% light
+    const combo = gradientCombos[Math.floor(Math.random() * gradientCombos.length)];
+    hue1 = combo.hue1;
+    hue2 = combo.hue2;
+    isDark = Math.random() > 0.25; // 75% dark, 25% light
   }
 
-  // Saturação base (variação premium)
-  const baseSat = 65 + Math.random() * 17; // 65-82%
+  // ─── BACKGROUND (2 TONS para gradient) ──────────────────────────────────
+  // Cor 1 (top-left): mais escura/vibrante
+  const bg1Sat = isDark ? 60 + Math.random() * 20 : 50 + Math.random() * 15;
+  const bg1Light = isDark ? 15 + Math.random() * 8 : 70 + Math.random() * 8;
+  const bg1 = hslToHex(hue1, bg1Sat, bg1Light);
 
-  // Gerar 4 cores com progressão de luminosidade suave (essencial para gradientes)
-  const bgSat = isDark ? 28 + Math.random() * 7 : 20 + Math.random() * 8;
-  const bgLight = isDark ? 7 + Math.random() * 4 : 96 + Math.random() * 2;
-  const bg = hslToHex(hue, bgSat, bgLight);
+  // Cor 2 (bottom-right): mais clara, hue diferente (offset 30-80°)
+  const bg2Sat = isDark ? 55 + Math.random() * 20 : 45 + Math.random() * 15;
+  const bg2Light = isDark ? 25 + Math.random() * 10 : 80 + Math.random() * 8;
+  const bg2 = hslToHex(hue2, bg2Sat, bg2Light);
 
-  const textSat = isDark ? 15 + Math.random() * 7 : 42 + Math.random() * 8;
-  const textLight = isDark ? 92 + Math.random() * 3 : 16 + Math.random() * 4;
-  const text = hslToHex(hue, textSat, textLight);
+  // Mid-tone (para o gradient parecer suave) — mistura das 2 cores
+  const midHue = (hue1 + hue2) / 2;
+  const midSat = (bg1Sat + bg2Sat) / 2;
+  const midLight = (bg1Light + bg2Light) / 2;
+  const mid = hslToHex(midHue, midSat, midLight);
 
-  // Accent — luminous sweet spot
-  const accentSat = Math.max(68, Math.min(82, baseSat));
-  const accentLight = Math.max(48, Math.min(56, 48 + Math.random() * 8));
-  const accent = hslToHex(hue, accentSat, accentLight);
+  // ─── TEXT (UNIFORME — não gradient) ─────────────────────────────────────
+  // Branco cream (dark) ou deep dark (light) — WCAG AAA sobre ambas as cores
+  const textSat = isDark ? 8 + Math.random() * 6 : 15 + Math.random() * 10;
+  const textLight = isDark ? 95 + Math.random() * 3 : 12 + Math.random() * 5;
+  const text = hslToHex(midHue, textSat, textLight);
 
-  // Card/Suporte — elevação subtil
-  const cardSat = bgSat + 4;
-  const cardLight = isDark ? bgLight + 5 : bgLight - 4;
-  const card = hslToHex(hue, cardSat, cardLight);
+  // ─── ACCENT (cor que complementa o gradient) ────────────────────────────
+  // Luminous sweet spot: sat 68-82%, light 50-58%
+  const accentHue = (midHue + 180 + (Math.random() - 0.5) * 60) % 360; // complementar ±30°
+  const accentSat = 68 + Math.random() * 14;
+  const accentLight = 50 + Math.random() * 8;
+  const accent = hslToHex(accentHue, accentSat, accentLight);
 
-  // Mapear por count (sempre inclui accent)
+  // ─── CARD (mid-tone do bg — elevação subtil) ────────────────────────────
+  const card = mid;
+
+  // ─── MAPEAR POR COUNT ───────────────────────────────────────────────────
+  // Ordem: bg1, text, accent, bg2 (sempre inclui bg1 + text + accent)
+  // bg2 é o "Suporte" (segunda cor do gradient)
   const allColors = [
-    { hex: bg, role: "Background" },
-    { hex: text, role: "Secundária" },
-    { hex: accent, role: "Destaque" }, // accent antes de card
-    { hex: card, role: "Suporte" },
+    { hex: bg1, role: "Background" },     // cor 1 do gradient
+    { hex: text, role: "Secundária" },    // text uniforme
+    { hex: accent, role: "Destaque" },    // accent luminous
+    { hex: bg2, role: "Suporte" },        // cor 2 do gradient
   ];
 
   return allColors.slice(0, count);

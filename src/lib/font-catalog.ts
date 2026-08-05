@@ -8,6 +8,8 @@
 // Sources: Fontshare API, Google Fonts, Awwwards SOTD, typ.io, dembrandt.com
 // ============================================================================
 
+import { NEW_FONTS_2026 } from "./new-fonts-2026";
+
 export interface FontDef {
   name: string;
   source: string;
@@ -105,6 +107,12 @@ export const FONT_CATALOG: FontDef[] = [
   { name: "Figtree", source: "Google Fonts, Awwwards", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Clean"], license: "free", personality: "Sans moderna clean — distinta de Inter, mais organic" },
   { name: "Instrument Sans", source: "Instrument, Google", category: "sans", foundry: "Instrument (Google)", siteType: ["Editorial", "Premium"], license: "free", personality: "Sans editorial fina — par perfeito de Instrument Serif" },
   { name: "Libre Baskerville", source: "Google Fonts, editorial", category: "serif", foundry: "Google Fonts", siteType: ["Editorial", "Blog"], license: "free", personality: "Serif clássica readability — Baskerville open source, body-friendly" },
+
+  // ════════════════════════════════════════════════════════════════════════
+  // EXPANSÃO 2026 — +150 fonts premium (Awwwards + Google + Fontshare)
+  // Pesquisa: Awwwards typography 2026, Google Fonts trending, Fontshare premium
+  // ════════════════════════════════════════════════════════════════════════
+  ...NEW_FONTS_2026,
 ];
 
 // Helper: filtrar fonts por categoria

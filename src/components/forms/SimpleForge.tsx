@@ -567,7 +567,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     }
     if (value.paletteMode === "transient") {
       toast.success(`"${trend.name}" regenerada — Paleta Gradient Premium`, {
-        description: "Rich black + luminous accent + progressão suave para gradientes",
+        description: "2 tons bg + text uniforme + accent luminous (Awwwards 2026)",
       });
     } else {
       const styleName = value.colorStyle === "auto" ? "Auto" : (COLOR_STYLES.find(s => s.id === value.colorStyle)?.name ?? "Auto");
@@ -598,15 +598,22 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     }
 
     // Atualiza customColors também se houver um trend ativo
-    const activeTrendId = value.colorPreset !== "auto" ? value.colorPreset : null;
+    // Se colorPreset for "auto", usar a primeira palete da secção ativa
+    const activeTrendId = value.colorPreset !== "auto"
+      ? value.colorPreset
+      : (trendsToGenerate[0]?.id ?? null);
     const patch: Partial<SimpleForgeValues> = { trendOverrides: newOverrides };
     if (activeTrendId && newOverrides[activeTrendId]) {
       patch.customColors = newOverrides[activeTrendId];
+      // Também atualiza colorPreset para que o preview mostre a palete gerada
+      if (value.colorPreset === "auto") {
+        patch.colorPreset = activeTrendId;
+      }
     }
     onChange(patch);
     if (value.paletteMode === "transient") {
       toast.success(`${trendsToGenerate.length} Paletas Gradient Premium geradas`, {
-        description: "Rich black + luminous accent + progressão suave para gradientes",
+        description: "2 tons bg + text uniforme + accent luminous (Awwwards 2026)",
       });
     } else {
       const styleName = value.colorStyle === "auto" ? "Auto" : (COLOR_STYLES.find(s => s.id === value.colorStyle)?.name ?? "Auto");
