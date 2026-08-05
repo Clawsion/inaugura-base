@@ -340,7 +340,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
   const [colorEditIndex, setColorEditIndex] = useState<number | null>(null);
   const [showStylePicker, setShowStylePicker] = useState(false);
   const [manualComboId, setManualComboId] = useState<string | null>(null);
-  const [mockupStyle, setMockupStyle] = useState<"saas" | "ecommerce" | "portfolio" | "editorial" | "brutalist" | "vintage" | "tech">("saas");
+  const [mockupStyle, setMockupStyle] = useState<"saas" | "ecommerce" | "portfolio" | "editorial" | "brutalist" | "landing" | "restaurant">("saas");
   const [expandedMockup, setExpandedMockup] = useState(false);
   // Popup global "AI's por função" — mesma info para todos os stacks (não varia)
   const [showAiByFunction, setShowAiByFunction] = useState(false);
@@ -1339,8 +1339,8 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                 { id: "portfolio", label: "Portfolio" },
                 { id: "editorial", label: "Editorial" },
                 { id: "brutalist", label: "Brutalist" },
-                { id: "vintage", label: "Vintage" },
-                { id: "tech", label: "Tech" },
+                { id: "landing", label: "Landing" },
+                { id: "restaurant", label: "Restaurant" },
               ] as const).map((m) => (
                 <button
                   key={m.id}
@@ -1413,8 +1413,8 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                       { id: "portfolio", label: "Portfolio" },
                       { id: "editorial", label: "Editorial" },
                       { id: "brutalist", label: "Brutalist" },
-                      { id: "vintage", label: "Vintage" },
-                      { id: "tech", label: "Tech" },
+                      { id: "landing", label: "Landing" },
+                      { id: "restaurant", label: "Restaurant" },
                     ] as const).map((m) => (
                       <button
                         key={m.id}
@@ -2403,7 +2403,7 @@ function MiniSlider({ label, defaultValue = 0, onChange }: { label: string; defa
 function MockupPreview({
   style, bg, text, accent, card, colors, fontHeading, fontBody, fontMono, fontCount, colorCount, expanded,
 }: {
-  style: "saas" | "ecommerce" | "portfolio" | "editorial" | "brutalist" | "vintage" | "tech";
+  style: "saas" | "ecommerce" | "portfolio" | "editorial" | "brutalist" | "landing" | "restaurant";
   bg: string; text: string; accent: string; card: string;
   colors: { hex: string; role: string }[];
   fontHeading: string; fontBody: string; fontMono: string;
@@ -2427,41 +2427,62 @@ function MockupPreview({
   const sec = expanded ? "py-6" : "py-2.5";
   const bdr = expanded ? "2px" : "1px";
 
-  // ═══ 1. SAAS — Dashboard completo com sidebar + chart + table ═══
+  // ═══ 1. SAAS — Linear/Vercel style: hero + bento features + pricing ═══
   if (style === "saas") return (
     <div>
       <div className={cn("overflow-hidden border", r)} style={{ ...base, borderColor: c1 + "20" }}>
-        {/* TOP NAV */}
-        <div className="flex items-center justify-between px-4 py-2.5" style={{ borderBottom: `${bdr} solid ${c1}15`, background: c0 }}>
-          <div className="flex items-center gap-2"><div className={cn("rounded", expanded ? "h-5 w-5" : "h-3 w-3")} style={{ background: c2 }} /><span className={cn("font-bold", expanded ? "text-sm" : "text-[10px]")} style={hd}>Dashboard</span></div>
-          <div className="flex items-center gap-3">{["Overview", "Analytics", "Customers", "Settings"].map((l, i) => <span key={l} className={cn(expanded ? "text-[11px]" : "text-[8px]", i === 0 ? "font-semibold" : "opacity-50")}>{l}</span>)}<div className={cn("rounded-full", expanded ? "h-6 w-6" : "h-3 w-3")} style={{ background: c3 }} /></div>
-        </div>
-        {/* BODY: sidebar + content */}
-        <div className="flex" style={{ minHeight: expanded ? 400 : 160 }}>
-          {/* Sidebar */}
-          <div className="flex flex-col gap-1 p-2" style={{ width: expanded ? 120 : 50, borderRight: `${bdr} solid ${c1}10`, background: c1 + "05" }}>
-            {["Home", "Sales", "Products", "Reports", "Users"].map((s, i) => <div key={s} className={cn("flex items-center gap-1.5 rounded px-2 py-1.5", expanded ? "text-[10px]" : "text-[7px]")} style={{ background: i === 1 ? c2 + "20" : "transparent", color: i === 1 ? c2 : c1, opacity: i === 1 ? 1 : 0.6 }}><div className={cn("rounded", expanded ? "h-3 w-3" : "h-2 w-2")} style={{ background: i === 1 ? c2 : c1, opacity: 0.5 }} />{expanded && s}</div>)}
+        {/* NAV */}
+        <div className="flex items-center justify-between px-4 py-2.5" style={{ borderBottom: `${bdr} solid ${c1}10` }}>
+          <div className="flex items-center gap-2">
+            <div className={cn("rounded-md", expanded ? "h-5 w-5" : "h-3 w-3")} style={{ background: c2 }} />
+            <span className={cn("font-bold tracking-tight", expanded ? "text-sm" : "text-[10px]")} style={hd}>Linear</span>
           </div>
-          {/* Main content */}
-          <div className="flex-1 p-3 space-y-3">
-            {/* Stats row */}
-            <div className={cn("grid grid-cols-3", gap)}>
-              {[{ l: "Revenue", v: "€48.2K", d: "↑12%", c: c2 }, { l: "Orders", v: "1,284", d: "↑8%", c: c3 }, { l: "Visitors", v: "32.1K", d: "↑23%", c: c1 }].map((s) => <div className={cn("p-2", r)} style={{ background: c1 + "06", border: `${bdr} solid ${c1}10` }}><div className={cn("opacity-50 uppercase", expanded ? "text-[9px]" : "text-[6px]")} style={mn}>{s.l}</div><div className={cn("font-extrabold", expanded ? "text-xl" : "text-[10px]")} style={{ ...hd, color: s.c }}>{s.v}</div><div className={cn(expanded ? "text-[9px]" : "text-[6px]")} style={{ color: c3 }}>{s.d}</div></div>)}
-            </div>
-            {/* Chart area */}
-            <div className={cn("p-2", r)} style={{ background: c1 + "06", border: `${bdr} solid ${c1}10` }}>
-              <div className="flex items-center justify-between mb-2"><span className={cn("font-semibold", expanded ? "text-[10px]" : "text-[8px]")} style={hd}>Weekly Performance</span><span className={cn(expanded ? "text-[9px]" : "text-[7px]")} style={{ ...mn, color: c2 }}>Last 7 days</span></div>
-              <div className="flex items-end gap-1" style={{ height: expanded ? 100 : 40 }}>{[40, 65, 45, 80, 55, 90, 70].map((h, i) => <div key={i} className="flex-1 rounded-t" style={{ height: `${h}%`, background: i % 2 === 0 ? c2 : c3, opacity: 0.4 + (h / 100) * 0.6 }} />)}</div>
-            </div>
-            {/* Table preview */}
-            <div className={cn(r)} style={{ border: `${bdr} solid ${c1}10`, overflow: "hidden" }}>
-              <div className="flex items-center px-2 py-1.5" style={{ background: c1 + "08", borderBottom: `${bdr} solid ${c1}10` }}><span className={cn("font-semibold", expanded ? "text-[10px]" : "text-[7px]")} style={hd}>Recent Orders</span></div>
-              {[1, 2, 3].map((row) => <div key={row} className="flex items-center gap-2 px-2 py-1.5" style={{ borderBottom: row < 3 ? `${bdr} solid ${c1}08` : "none" }}><div className={cn("rounded-full", expanded ? "h-5 w-5" : "h-3 w-3")} style={{ background: row === 1 ? c2 : row === 2 ? c3 : c1, opacity: 0.6 }} /><div className="flex-1"><div className={cn(expanded ? "text-[10px]" : "text-[7px]", "font-medium")}>Order #00{row * 127}</div><div className={cn("opacity-40", expanded ? "text-[9px]" : "text-[6px]")} style={mn}>2 min ago</div></div><span className={cn("font-bold", expanded ? "text-[10px]" : "text-[7px]")} style={{ color: c2 }}>€{row * 149}.00</span></div>)}
-            </div>
+          <div className="flex items-center gap-3">
+            {["Product", "Pricing", "Docs"].map((l, i) => <span key={l} className={cn(expanded ? "text-[11px]" : "text-[8px]", i === 0 ? "font-semibold" : "opacity-50")} style={{ fontFamily: bf }}>{l}</span>)}
+            <button className={cn("rounded-md font-semibold", expanded ? "px-3 py-1 text-[10px]" : "px-1.5 py-0.5 text-[7px]")} style={{ background: c2, color: c0 }}>Sign in</button>
           </div>
         </div>
-        {/* Footer */}
-        <div className="flex items-center justify-between px-3 py-2" style={{ borderTop: `${bdr} solid ${c1}10`, background: c1 + "05" }}><span className={cn("opacity-40", expanded ? "text-[9px]" : "text-[7px]")} style={mn}>© 2026 Dashboard Inc.</span><div className="flex gap-2">{["Privacy", "Terms"].map(l => <span key={l} className={cn("opacity-40", expanded ? "text-[9px]" : "text-[7px]")}>{l}</span>)}</div></div>
+        {/* HERO */}
+        <div className={cn("text-center px-6", sec)}>
+          <div className={cn("inline-block rounded-full px-2.5 py-0.5 mb-2", expanded ? "text-[10px]" : "text-[7px]")} style={{ background: c2 + "15", color: c2 }}>New · v2.0</div>
+          <h1 className={cn("font-bold leading-tight tracking-tight", expanded ? "text-4xl" : "text-lg")} style={hd}>Build better<br/><span style={{ color: c2 }}>products faster</span></h1>
+          <p className={cn("mt-2 opacity-60 mx-auto", sz, expanded ? "max-w-sm" : "max-w-[180px]")}>The issue tracking tool that moves teams forward.</p>
+          <div className="flex justify-center gap-2 mt-3">
+            <button className={cn("rounded-md font-bold", expanded ? "px-4 py-2 text-[11px]" : "px-2 py-1 text-[8px]")} style={{ background: c2, color: c0 }}>Start free</button>
+            <button className={cn("rounded-md font-bold border", expanded ? "px-4 py-2 text-[11px]" : "px-2 py-1 text-[8px]")} style={{ borderColor: c1 + "30", color: c1 }}>Demo</button>
+          </div>
+        </div>
+        {/* BENTO FEATURES */}
+        <div className={cn("grid gap-2 px-4 pb-3", expanded ? "grid-cols-3" : "grid-cols-2")}>
+          {["Issues", "Cycles", "Roadmaps", "Projects", "Insights", "Git Sync"].slice(0, expanded ? 6 : 4).map((f, i) => (
+            <div key={i} className={cn("p-2.5", r)} style={{ background: c1 + "05", border: `${bdr} solid ${c1}10` }}>
+              <div className={cn("mb-1 rounded-md", expanded ? "h-6 w-6" : "h-3 w-3")} style={{ background: [c2, c3, c1, c2, c3, c1][i] + "30" }} />
+              <div className={cn("font-bold", expanded ? "text-[11px]" : "text-[8px]")} style={hd}>{f}</div>
+              <div className={cn("opacity-50", expanded ? "text-[10px]" : "text-[7px]")} style={{ fontFamily: bf }}>{["Track work", "Sprint plan", "Timeline", "Group work", "Analytics", "GitHub"][i]}</div>
+            </div>
+          ))}
+        </div>
+        {/* SOCIAL PROOF */}
+        <div className={cn("px-4 py-2 text-center", expanded ? "py-3" : "py-1.5")} style={{ borderTop: `${bdr} solid ${c1}10` }}>
+          <div className={cn("opacity-40 mb-1", expanded ? "text-[10px]" : "text-[7px]")} style={{ fontFamily: bf }}>Trusted by 10,000+ teams</div>
+          <div className="flex justify-center gap-3 items-center">
+            {["Vercel", "Stripe", "Notion", "Raycast"].map(brand => <span key={brand} className={cn("font-bold opacity-40", expanded ? "text-[11px]" : "text-[8px]")} style={hd}>{brand}</span>)}
+          </div>
+        </div>
+        {/* PRICING */}
+        <div className="grid gap-2 px-4 pb-3 grid-cols-3">
+          {[{ n: "Free", p: "€0", f: false }, { n: "Pro", p: "€12", f: true }, { n: "Ent", p: "Custom", f: false }].map((plan, i) => (
+            <div key={i} className={cn("p-2", r)} style={{ background: plan.f ? c2 + "10" : c1 + "05", border: `${bdr} solid ${plan.f ? c2 + "40" : c1 + "10"}` }}>
+              <div className={cn("font-bold", expanded ? "text-[10px]" : "text-[7px]")} style={hd}>{plan.n}</div>
+              <div className={cn("font-extrabold", expanded ? "text-lg" : "text-[9px]")} style={{ ...hd, color: plan.f ? c2 : c1 }}>{plan.p}</div>
+            </div>
+          ))}
+        </div>
+        {/* FOOTER */}
+        <div className="flex items-center justify-between px-4 py-2" style={{ borderTop: `${bdr} solid ${c1}10`, background: c1 + "05" }}>
+          <span className={cn("opacity-40", expanded ? "text-[9px]" : "text-[7px]")} style={mn}>© 2026 Linear</span>
+          <div className="flex gap-2">{["Privacy", "Terms"].map(l => <span key={l} className={cn("opacity-40", expanded ? "text-[9px]" : "text-[7px]")} style={{ fontFamily: bf }}>{l}</span>)}</div>
+        </div>
       </div>
       <ColorLegend colors={colors} expanded={expanded} />
     </div>
@@ -2626,85 +2647,129 @@ function MockupPreview({
     </div>
   );
 
-  // ═══ 6. VINTAGE — Ornamental, serif, classic luxury ═══
-  if (style === "vintage") return (
+  // ═══ 6. LANDING — Product launch page with hero + countdown + CTA ═══
+  if (style === "landing") return (
     <div>
-      <div className={cn("border-2", pd, r)} style={{ ...base, borderColor: c1 + "30", boxShadow: `inset 0 0 30px ${c1}08` }}>
-        {/* MASTHEAD ornamental */}
-        <div className="text-center mb-3 pb-3" style={{ borderBottom: `2px solid ${c1}20` }}>
-          <div className={cn("mb-1", expanded ? "text-[12px]" : "text-[8px]")} style={{ color: c3, letterSpacing: "0.3em" }}>✦ EST. 1924 ✦</div>
-          <span className={cn("font-bold", expanded ? "text-3xl" : "text-base")} style={{ ...hd, letterSpacing: "0.05em" }}>The Atelier</span>
-          <div className={cn("mt-1 italic", expanded ? "text-[10px]" : "text-[7px]")} style={{ color: c2 }}>"Craftsmanship & Heritage"</div>
-        </div>
-        {/* NAV ornamental */}
-        <div className="text-center mb-3"><div className={cn("flex items-center justify-center gap-3", expanded ? "text-[10px]" : "text-[8px]")}><span style={{ color: c3 }}>·</span>{["Collection", "Atelier", "Heritage", "Contact"].map((l, i) => <span key={l} className={cn("italic", i === 0 ? "font-bold" : "opacity-60")} style={{ color: i === 0 ? c2 : c1 }}>{l}</span>)}<span style={{ color: c3 }}>·</span></div></div>
-        {/* HERO split */}
-        <div className={cn("grid grid-cols-2 gap-3 mb-3")}>
-          <div className="space-y-1.5"><span className={cn("italic", expanded ? "text-[10px]" : "text-[8px]")} style={{ color: c2 }}>— No. XII —</span><h1 className={cn("font-bold leading-tight", expanded ? "text-3xl" : "text-sm")} style={{ ...hd, fontStyle: "italic" }}>A Timeless<br/>Collection</h1><p className={cn("opacity-70 leading-relaxed italic", sz)}>Curated with passion, crafted by hand, for those who appreciate the finer things in life. Each piece tells a story of dedication.</p><button className={cn("px-3 py-1.5 font-semibold italic", expanded ? "text-[11px]" : "text-[8px]", r)} style={{ border: `1px solid ${c2}`, color: c2, background: "transparent" }}>Discover →</button></div>
-          <div className={cn("flex items-center justify-center", r)} style={{ background: c2 + "15", border: `1px solid ${c2}30`, minHeight: expanded ? 140 : 60 }}><div className="text-center"><div className={cn(expanded ? "text-3xl" : "text-lg")} style={{ color: c3 }}>❦</div><div className={cn("italic opacity-50 mt-1", expanded ? "text-[9px]" : "text-[7px]")} style={{ color: c2 }}>Handcrafted<br/>with care</div></div></div>
-        </div>
-        {/* Ornamental divider */}
-        <div className="text-center my-3" style={{ color: c3, letterSpacing: "0.5em" }}>· · ·</div>
-        {/* COLLECTION grid */}
-        <div className="mb-3">
-          <div className="text-center mb-2"><span className={cn("italic font-semibold", expanded ? "text-[12px]" : "text-[9px]")} style={{ ...hd, color: c2 }}>The Collection</span></div>
-          <div className={cn("grid", gap, colorCount === 2 ? "grid-cols-2" : "grid-cols-3")}>
-            {colors.map((c, i) => <div key={i} className={cn("p-2 text-center", r)} style={{ border: `1px solid ${c1}20`, background: c.hex + "08" }}>
-              <div className={cn("mb-1", expanded ? "text-[12px]" : "text-[8px]")} style={{ color: c3 }}>❧</div>
-              <div className={cn("font-semibold italic", expanded ? "text-[12px]" : "text-[9px]")} style={{ ...hd, color: c.hex }}>Piece {i + 1}</div>
-              <div className={cn("italic opacity-50", expanded ? "text-[9px]" : "text-[7px]")}>No. {i + 1} · Limited</div>
-              {fontCount === 3 && <div className={cn("italic opacity-30 mt-0.5", expanded ? "text-[8px]" : "text-[6px]")} style={mn}>Ref: 19{24 + i}</div>}
-            </div>)}
+      <div className={cn("overflow-hidden border", r)} style={{ ...base, borderColor: c1 + "20" }}>
+        {/* NAV */}
+        <div className="flex items-center justify-between px-4 py-2.5" style={{ borderBottom: `${bdr} solid ${c1}10` }}>
+          <span className={cn("font-bold", expanded ? "text-sm" : "text-[10px]")} style={hd}>Nova</span>
+          <div className="flex items-center gap-3">
+            {["Features", "Pricing", "Blog"].map(l => <span key={l} className={cn("opacity-60", expanded ? "text-[11px]" : "text-[8px]")} style={{ fontFamily: bf }}>{l}</span>)}
+            <button className={cn("rounded-md font-bold", expanded ? "px-3 py-1 text-[10px]" : "px-1.5 py-0.5 text-[7px]")} style={{ background: c2, color: c0 }}>Get started</button>
           </div>
         </div>
-        {/* HERITAGE quote */}
-        <div className={cn("text-center py-3 my-2", r)} style={{ background: c2 + "08", borderTop: `1px solid ${c2}20`, borderBottom: `1px solid ${c2}20` }}>
-          <div className={cn("italic font-semibold", expanded ? "text-[14px]" : "text-[10px]")} style={{ ...hd, color: c2 }}>"Quality is never an accident;<br/>it is always the result of intelligent effort."</div>
-          <div className={cn("mt-1 opacity-50 italic", expanded ? "text-[9px]" : "text-[7px]")} style={mn}>— John Ruskin</div>
+        {/* HERO — countdown + email capture */}
+        <div className={cn("text-center px-6", sec)}>
+          <div className={cn("inline-block rounded-full px-2.5 py-0.5 mb-2", expanded ? "text-[10px]" : "text-[7px]")} style={{ background: c2 + "15", color: c2 }}>🚀 Launching in 3 days</div>
+          <h1 className={cn("font-bold leading-tight", expanded ? "text-5xl" : "text-xl")} style={hd}>The future of<br/><span style={{ color: c2 }}>work is here</span></h1>
+          <p className={cn("mt-2 opacity-60 mx-auto", sz, expanded ? "max-w-md" : "max-w-[200px]")}>Join 5,000+ early adopters. Be the first to experience the next generation of productivity.</p>
+          {/* Email capture */}
+          <div className={cn("flex justify-center gap-1 mt-3 max-w-xs mx-auto")}>
+            <input className={cn("flex-1 rounded-md border px-2 py-1.5", expanded ? "text-[11px]" : "text-[8px]")} style={{ background: c0, borderColor: c1 + "30", color: c1 }} placeholder="your@email.com" readOnly />
+            <button className={cn("rounded-md font-bold px-3 py-1.5 whitespace-nowrap", expanded ? "text-[11px]" : "text-[8px]")} style={{ background: c2, color: c0 }}>Notify me →</button>
+          </div>
+          {/* Countdown */}
+          <div className={cn("flex justify-center gap-2 mt-3")}>
+            {[{ v: "03", l: "days" }, { v: "14", l: "hrs" }, { v: "37", l: "min" }, { v: "52", l: "sec" }].map((t) => (
+              <div className={cn("text-center rounded-md p-1.5", expanded ? "w-12" : "w-8")} style={{ background: c1 + "08", border: `${bdr} solid ${c1}15` }}>
+                <div className={cn("font-extrabold", expanded ? "text-xl" : "text-[10px]")} style={{ ...hd, color: c2 }}>{t.v}</div>
+                <div className={cn("opacity-40 uppercase", expanded ? "text-[8px]" : "text-[5px]")} style={mn}>{t.l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* FEATURE SHOWCASE — 3 columns with icons */}
+        <div className={cn("grid gap-3 px-4 py-3", expanded ? "grid-cols-3" : "grid-cols-3")} style={{ borderTop: `${bdr} solid ${c1}10` }}>
+          {[
+            { icon: "⚡", t: "Lightning Fast", d: "10x faster than competitors" },
+            { icon: "🔒", t: "Bank-grade Security", d: "SOC2 + GDPR compliant" },
+            { icon: "🤖", t: "AI Powered", d: "Smart automation built-in" },
+          ].map((f, i) => (
+            <div key={i} className="text-center">
+              <div className={cn("mb-1", expanded ? "text-2xl" : "text-sm")}>{f.icon}</div>
+              <div className={cn("font-bold", expanded ? "text-[11px]" : "text-[8px]")} style={hd}>{f.t}</div>
+              <div className={cn("opacity-50", expanded ? "text-[10px]" : "text-[7px]")} style={{ fontFamily: bf }}>{f.d}</div>
+            </div>
+          ))}
+        </div>
+        {/* STATS bar */}
+        <div className={cn("flex justify-around px-4 py-2", expanded ? "py-3" : "py-1.5")} style={{ background: c1 + "05", borderTop: `${bdr} solid ${c1}10` }}>
+          {[{ n: "5K+", l: "Waitlist" }, { n: "98%", l: "Satisfaction" }, { n: "4.9★", l: "Rating" }].map((s, i) => (
+            <div className="text-center">
+              <div className={cn("font-extrabold", expanded ? "text-lg" : "text-[9px]")} style={{ ...hd, color: [c2, c3, c1][i] }}>{s.n}</div>
+              <div className={cn("opacity-40", expanded ? "text-[9px]" : "text-[6px]")} style={{ fontFamily: bf }}>{s.l}</div>
+            </div>
+          ))}
         </div>
         {/* FOOTER */}
-        <div className="text-center py-2"><div style={{ color: c3, letterSpacing: "0.3em" }} className={cn(expanded ? "text-[9px]" : "text-[7px]")}>✦ ✦ ✦</div><div className={cn("italic opacity-40 mt-1", expanded ? "text-[9px]" : "text-[7px]")} style={mn}>© The Atelier · Since 1924</div></div>
+        <div className="flex items-center justify-between px-4 py-2" style={{ borderTop: `${bdr} solid ${c1}10` }}>
+          <span className={cn("opacity-40", expanded ? "text-[9px]" : "text-[7px]")} style={mn}>© 2026 Nova</span>
+          <div className="flex gap-2">{["Twitter", "Discord"].map(l => <span key={l} className={cn("opacity-40", expanded ? "text-[9px]" : "text-[7px]")} style={{ fontFamily: bf }}>{l}</span>)}</div>
+        </div>
       </div>
       <ColorLegend colors={colors} expanded={expanded} />
     </div>
   );
 
-  // ═══ 7. TECH — Terminal/code, glow, dark, status bars ═══
-  if (style === "tech") return (
+  // ═══ 7. RESTAURANT — Menu + reservation + gallery ═══
+  if (style === "restaurant") return (
     <div>
-      <div className={cn("border-2", pd, r)} style={{ ...base, borderColor: c2 + "40", boxShadow: `0 0 ${expanded ? "30px" : "12px"} ${c2}20` }}>
-        {/* Terminal nav */}
-        <div className="flex items-center gap-2 mb-4 pb-2" style={{ borderBottom: `1px solid ${c2}30` }}>
-          <div className="flex gap-1">{[c2, c3, c1].map((col, i) => <div key={i} className={cn("rounded-full", expanded ? "h-3 w-3" : "h-2 w-2")} style={{ background: col, opacity: 0.7 }} />)}</div>
-          <code className={cn(expanded ? "text-[11px]" : "text-[8px]")} style={{ ...mn, color: c2 }}>~/inaugura-base</code>
-          <span className={cn("ml-auto flex items-center gap-1", expanded ? "text-[10px]" : "text-[8px]")} style={{ ...mn, color: c3 }}><span style={{ color: c3 }}>●</span> LIVE</span>
+      <div className={cn("overflow-hidden border", r)} style={{ ...base, borderColor: c1 + "20" }}>
+        {/* NAV */}
+        <div className="flex items-center justify-between px-4 py-2.5" style={{ borderBottom: `${bdr} solid ${c1}15` }}>
+          <span className={cn("font-bold italic", expanded ? "text-base" : "text-[10px]")} style={{ ...hd, letterSpacing: "0.05em" }}>Bistro</span>
+          <div className="flex items-center gap-3">
+            {["Menu", "About", "Gallery"].map(l => <span key={l} className={cn("opacity-60", expanded ? "text-[11px]" : "text-[8px]")} style={{ fontFamily: bf }}>{l}</span>)}
+            <button className={cn("rounded font-semibold", expanded ? "px-3 py-1 text-[10px]" : "px-1.5 py-0.5 text-[7px]")} style={{ background: c2, color: c0 }}>Reserve</button>
+          </div>
         </div>
-        {/* Terminal output */}
-        <div className="space-y-1 mb-4">
-          <code className={cn(expanded ? "text-[11px]" : "text-[8px]")} style={{ ...mn, color: c3 }}>$ inaugura init --premium --awwwards</code>
-          <code className={cn(expanded ? "text-[11px]" : "text-[8px]")} style={{ ...mn, color: c1, opacity: 0.5 }}>→ Initializing project structure...</code>
-          <code className={cn(expanded ? "text-[11px]" : "text-[8px]")} style={{ ...mn, color: c1, opacity: 0.5 }}>→ Installing dependencies [████████████] 100%</code>
-          <code className={cn(expanded ? "text-[11px]" : "text-[8px]")} style={{ ...mn, color: c2 }}>✓ Ready in 3.2s</code>
-          <h1 className={cn("font-bold mt-2", expanded ? "text-4xl" : "text-lg")} style={{ ...hd, ...mn, color: c2 }}>Build.Ship.Scale.</h1>
-          <code className={cn(expanded ? "text-[10px]" : "text-[8px]")} style={{ ...mn, color: c1, opacity: 0.5 }}>// Production-ready spec-driven development</code>
+        {/* HERO — full bleed image placeholder + overlay */}
+        <div className={cn("relative flex items-end overflow-hidden", r)} style={{ background: c2 + "30", minHeight: expanded ? 200 : 80 }}>
+          <div className={cn("absolute inset-0")} style={{ background: `linear-gradient(135deg, ${c0}00 0%, ${c0}CC 60%, ${c0} 100%)` }} />
+          <div className={cn("relative p-4")}>
+            <div className={cn("rounded-full px-2 py-0.5 mb-1 inline-block", expanded ? "text-[9px]" : "text-[6px]")} style={{ background: c3, color: c0 }}>★ Michelin Recommended</div>
+            <h1 className={cn("font-bold leading-tight italic", expanded ? "text-3xl" : "text-sm")} style={{ ...hd, letterSpacing: "0.02em" }}>Seasonal<br/>Cuisine</h1>
+            <p className={cn("opacity-70 italic mt-1", sz)}>Farm-to-table dining experience</p>
+          </div>
         </div>
-        {/* CTA buttons */}
-        <div className="flex gap-2 mb-4"><button className={cn("font-bold px-3 py-1.5", expanded ? "text-[11px]" : "text-[8px]", r)} style={{ background: c2, color: c0, fontFamily: mf }}>$ deploy --prod</button><button className={cn("font-bold px-3 py-1.5", expanded ? "text-[11px]" : "text-[8px]", r)} style={{ border: `1px solid ${c2}`, color: c2, fontFamily: mf, background: "transparent" }}>--docs</button><button className={cn("font-bold px-3 py-1.5", expanded ? "text-[11px]" : "text-[8px]", r)} style={{ border: `1px solid ${c3}`, color: c3, fontFamily: mf, background: "transparent" }}>--help</button></div>
-        {/* METRICS grid */}
-        <div className={cn("grid", gap, colorCount === 2 ? "grid-cols-2" : "grid-cols-3")}>
-          {colors.map((c, i) => <div key={i} className={cn("p-2", r)} style={{ background: c.hex + "0A", border: `1px solid ${c.hex}30` }}>
-            <div className="flex items-center justify-between mb-1"><code className={cn(expanded ? "text-[9px]" : "text-[7px]")} style={{ ...mn, color: c.hex }}>metric_{i + 1}</code><span className={cn("font-bold", expanded ? "text-[10px]" : "text-[7px]")} style={{ ...mn, color: c.hex }}>{[98, 45, 12, 87][i] ?? 50}%</span></div>
-            <div className={cn(expanded ? "h-10" : "h-5", "rounded flex items-end gap-0.5")}>{[60, 80, 45, 90, 70, 55].map((h, j) => <div key={j} className="flex-1 rounded-t" style={{ height: `${h}%`, background: c.hex, opacity: 0.3 + j * 0.12 }} />)}</div>
-            <div className={cn("mt-1 flex items-center gap-1", expanded ? "text-[8px]" : "text-[6px]")} style={{ ...mn, color: c1, opacity: 0.4 }}><span style={{ color: c3 }}>●</span> running</div>
-          </div>)}
+        {/* MENU — 3 sections with dishes */}
+        <div className={cn("px-4 py-3 space-y-3")}>
+          {[
+            { cat: "Starters", items: [{ n: "Burrata", d: "Heirloom tomato, basil oil", p: "14" }, { n: "Ceviche", d: "Sea bass, citrus, chili", p: "18" }] },
+            { cat: "Mains", items: [{ n: "Risotto", d: "Wild mushroom, parmesan", p: "26" }, { n: "Duck", d: "Confit, cherry, root veg", p: "32" }] },
+            { cat: "Desserts", items: [{ n: "Crème brûlée", d: "Vanilla bean, berry", p: "12" }] },
+          ].map((section) => (
+            <div key={section.cat}>
+              <div className={cn("font-bold italic mb-1.5", expanded ? "text-[12px]" : "text-[9px]")} style={{ ...hd, color: c2, borderBottom: `${bdr} solid ${c2}30`, paddingBottom: "2px" }}>{section.cat}</div>
+              {section.items.map((item) => (
+                <div className="flex items-baseline gap-2 mb-1">
+                  <div className="flex-1">
+                    <span className={cn("font-semibold", expanded ? "text-[11px]" : "text-[8px]")} style={hd}>{item.n}</span>
+                    <span className={cn("opacity-50 italic ml-1", expanded ? "text-[10px]" : "text-[7px]")} style={{ fontFamily: bf }}>— {item.d}</span>
+                  </div>
+                  <span className={cn("font-bold", expanded ? "text-[11px]" : "text-[8px]")} style={{ color: c2 }}>€{item.p}</span>
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
-        {/* STATUS bar */}
-        <div className={cn("mt-3 flex items-center justify-between px-3 py-1.5", r)} style={{ background: c1 + "08" }}>
-          <div className="flex items-center gap-3"><code className={cn(expanded ? "text-[9px]" : "text-[7px]")} style={{ ...mn, color: c3 }}>CPU: 12%</code><code className={cn(expanded ? "text-[9px]" : "text-[7px]")} style={{ ...mn, color: c3 }}>MEM: 340MB</code><code className={cn(expanded ? "text-[9px]" : "text-[7px]")} style={{ ...mn, color: c2 }}>↑ 1.2KB/s</code></div>
-          <code className={cn(expanded ? "text-[9px]" : "text-[7px]")} style={{ ...mn, color: c2 }}>200 OK ✓</code>
+        {/* RESERVATION CTA */}
+        <div className={cn("mx-4 mb-3 p-3 flex items-center justify-between", r)} style={{ background: c2 + "10", border: `${bdr} solid ${c2}30` }}>
+          <div>
+            <div className={cn("font-bold italic", expanded ? "text-sm" : "text-[9px]")} style={{ ...hd, color: c2 }}>Reserve your table</div>
+            <div className={cn("opacity-50 italic", expanded ? "text-[10px]" : "text-[7px]")} style={{ fontFamily: bf }}>Tue–Sun · 18:00–23:00</div>
+          </div>
+          <button className={cn("rounded font-bold italic px-3 py-1.5", expanded ? "text-[10px]" : "text-[8px]")} style={{ background: c2, color: c0 }}>Book →</button>
         </div>
-        {/* Footer */}
-        <div className={cn("mt-2 flex items-center justify-between", expanded ? "text-[9px]" : "text-[7px]")} style={{ ...mn, color: c1, opacity: 0.3 }}><span>// inaugura-base v0.3.0</span><span>uptime: 99.9%</span></div>
+        {/* FOOTER */}
+        <div className="flex items-center justify-between px-4 py-2" style={{ borderTop: `${bdr} solid ${c1}10` }}>
+          <div>
+            <span className={cn("font-bold italic", expanded ? "text-[10px]" : "text-[7px]")} style={hd}>Bistro</span>
+            <span className={cn("opacity-40 italic ml-2", expanded ? "text-[9px]" : "text-[7px]")} style={{ fontFamily: bf }}>123 Rue Saint-Honoré, Paris</span>
+          </div>
+          <div className="flex gap-2">{["Insta", "FB"].map(l => <span key={l} className={cn("opacity-40", expanded ? "text-[9px]" : "text-[7px]")} style={{ fontFamily: bf }}>{l}</span>)}</div>
+        </div>
       </div>
       <ColorLegend colors={colors} expanded={expanded} />
     </div>
