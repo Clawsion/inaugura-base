@@ -476,7 +476,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       trendOverrides: newOverrides,
       polishType: "jewel",
     });
-    const modeLabel = value.paletteMode === "transient" ? "transientes" : "normais";
+    const modeLabel = value.paletteMode === "transient" ? "gradientes" : "normais";
     toast.success(`🎨 Special: "${palette.name}" aplicado às paletes ${modeLabel}`, {
       description: `Cores atuais elevadas ao nível Awwwards — ${value.colorCount} cores otimizadas`,
       duration: 3500,
@@ -583,7 +583,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     }
     onChange(patch);
     const styleName = value.colorStyle === "auto" ? "Auto" : (COLOR_STYLES.find(s => s.id === value.colorStyle)?.name ?? "Auto");
-    const modeLabel = value.paletteMode === "transient" ? "transientes" : "normais";
+    const modeLabel = value.paletteMode === "transient" ? "gradientes" : "normais";
     toast.success(`${trendsToGenerate.length} paletes ${modeLabel} regeneradas — estilo ${styleName}`);
   }, [value.colorCount, value.colorPreset, value.trendOverrides, value.colorStyle, paletteFilter, value.paletteMode, onChange]);
 
@@ -1015,7 +1015,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
         </div>
 
         {/* ═══════════════════════════════════════════════════════════════════ */}
-        {/* TABS: Paletes Normais vs Transientes                              */}
+        {/* TABS: Paletes Normais vs Gradientes                                */}
         {/* ═══════════════════════════════════════════════════════════════════ */}
         <div className="flex gap-1 rounded-lg border border-border bg-card/30 p-1">
           <button
@@ -1046,10 +1046,10 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
               background: "linear-gradient(135deg, #8B5CF6, #3B82F6)",
               color: "#fff",
             } : undefined}
-            title="25 paletes transientes — otimizadas para gradientes/aurora/mesh"
+            title="Paletes Gradientes — otimizadas para gradientes/aurora/mesh"
           >
             <Sparkles className="mr-1 inline h-3 w-3" />
-            Paletes Transientes
+            Paletes Gradientes
             <span className="ml-1 opacity-60">({COLOR_TRANSIENTS_2026.length})</span>
           </button>
         </div>
@@ -1057,7 +1057,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
         {/* Descrição do modo ativo */}
         <div className="text-[9px] italic text-muted-foreground">
           {value.paletteMode === "transient"
-            ? "✨ Modo Transiente — paletes otimizadas para gradientes, mesh, aurora. Generate só afeta esta secção."
+            ? "✨ Modo Gradientes — paletes otimizadas para gradientes, mesh, aurora. Generate só afeta esta secção."
             : "📋 Modo Normal — paletes estáticas para uso geral. Generate só afeta esta secção."}
         </div>
 
@@ -1071,8 +1071,8 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           ))}
         </div>
 
-        {/* Grid de paletes — cada uma com swatches + generate individual + botão expandir cor */}
-        <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+        {/* Grid de paletes — 4 por linha com preview gradient em cima (estilo botão roxo) */}
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
           {filteredPalettes.map((trend) => {
             const isActive = value.colorPreset === trend.id;
             // Ordem de prioridade das cores a mostrar:
@@ -1085,18 +1085,26 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
               : override
                 ? override.slice(0, value.colorCount).map(c => c.hex)
                 : trend.colors.slice(0, value.colorCount);
+            // Gerar gradient hero para preview (linear-gradient com as 4 cores)
+            const heroGradient = `linear-gradient(135deg, ${displayColors[0]} 0%, ${displayColors[1] ?? displayColors[0]} 35%, ${displayColors[2] ?? displayColors[0]} 70%, ${displayColors[3] ?? displayColors[0]} 100%)`;
+            // Gerar mesh gradient para overlay (3-4 radial-gradient sobrepostos)
+            const meshGradient = [
+              `radial-gradient(at 20% 20%, ${displayColors[1] ?? displayColors[0]} 0px, transparent 50%)`,
+              `radial-gradient(at 80% 10%, ${displayColors[2] ?? displayColors[0]} 0px, transparent 45%)`,
+              `radial-gradient(at 70% 80%, ${displayColors[3] ?? displayColors[1] ?? displayColors[0]} 0px, transparent 50%)`,
+              `radial-gradient(at 10% 70%, ${displayColors[0]} 0px, transparent 45%)`,
+            ].join(", ");
             return (
               <div
                 key={trend.id}
                 className={cn(
-                  "rounded-lg border p-2 transition-all cursor-pointer",
+                  "group overflow-hidden rounded-xl border transition-all cursor-pointer",
                   isActive
-                    ? "border-primary bg-primary/10 ring-1 ring-primary"
-                    : "border-border bg-card/30 hover:border-primary/40"
+                    ? "border-primary ring-2 ring-primary"
+                    : "border-border hover:border-primary/50"
                 )}
                 onClick={() => {
                   // Card inteiro clicável — seleciona a palete ao clicar em qualquer zona
-                  // (nome, swatches, tags). Os botões de ação usam stopPropagation.
                   const existingOverride = value.trendOverrides[trend.id];
                   onChange({
                     colorPreset: trend.id,
@@ -1104,73 +1112,97 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                   });
                 }}
               >
-                {/* Header: nome + tags */}
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-semibold">{trend.name}</span>
-                  <span className="text-[8px] text-muted-foreground">{trend.tags.slice(0, 2).join(" · ")}</span>
-                </div>
-                {/* Swatches — cada uma com ícone para editar individualmente */}
-                <div className="mt-1.5 flex gap-1">
-                  {displayColors.map((c, i) => (
-                    <div key={i} className="group relative flex-1">
-                      <div className="h-8 rounded-md transition-colors duration-200" style={{ background: c }} />
-                      {/* Ícone para ampliar cor individualmente */}
-                      <button type="button" onClick={(e) => {
-                        e.stopPropagation(); // Não seleciona a palete ao editar cor
-                        // Ao abrir o editor, garantir que customColors tem as cores atuais
-                        if (value.customColors.length === 0) {
-                          const trendDef = COLOR_TRENDS_2026.find((t) => t.id === trend.id) ?? COLOR_TRENDS_2026[0];
-                          const roles = ["Background", "Secundária", "Suporte", "Destaque"];
-                          const newCustom = trendDef.colors.slice(0, value.colorCount).map((hex, idx) => ({
-                            hex, role: roles[idx] ?? `Cor ${idx + 1}`,
-                          }));
-                          onChange({ customColors: newCustom, colorPreset: trend.id });
-                        }
-                        setColorEditIndex(colorEditIndex === i ? null : i);
-                      }}
-                        className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-bl-md rounded-tr-md bg-black/50 opacity-0 transition-opacity group-hover:opacity-100"
-                        title="Editar cor individual">
-                        <Maximize2 className="h-2.5 w-2.5 text-white" />
-                      </button>
-                    </div>
-                  ))}
-                  {/* Generate individual */}
-                  <button type="button" onClick={(e) => { e.stopPropagation(); generatePaletteVariation(trend.id); }}
-                    className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:border-primary hover:text-primary"
-                    title="Gerar variação desta palete">
-                    <RefreshCw className="h-3 w-3" />
-                  </button>
-                  {/* Polimento individual — polir cada cor */}
-                  {isActive && value.customColors.length > 0 && (
-                    <button type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // Polir cada cor individualmente
-                        const newColors = value.customColors.map((c, idx) => ({
-                          ...c,
-                          hex: polishSingleColor(c.hex, c.role, value.polishType),
-                        }));
-                        onChange({
-                          customColors: newColors,
-                          trendOverrides: { ...value.trendOverrides, [trend.id]: newColors },
-                        });
-                        toast.success(`Cores polidas individualmente — ${value.polishType}`);
-                      }}
-                      className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:border-primary hover:text-primary"
-                      title="Polir cada cor individualmente com o tipo de polimento selecionado">
-                      <Sparkles className="h-3 w-3" />
-                    </button>
+                {/* Preview do gradient (mesh) em cima — como o botão roxo de Gradientes */}
+                <div
+                  className="relative h-20 w-full transition-all group-hover:h-24"
+                  style={{ background: heroGradient }}
+                >
+                  {/* Overlay com mesh gradient (mais subtil) */}
+                  <div
+                    className="absolute inset-0 opacity-60"
+                    style={{ background: meshGradient }}
+                  />
+                  {/* Badge active */}
+                  {isActive && (
+                    <span className="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                      <Check className="h-2.5 w-2.5" />
+                    </span>
                   )}
-                  {/* Special individual — Awwwards palette para esta trend */}
-                  <button type="button"
-                    onClick={(e) => { e.stopPropagation(); generateSpecialForTrend(trend.id); }}
-                    className="flex h-8 w-8 items-center justify-center rounded-md border text-muted-foreground hover:text-white transition-all"
-                    style={{ borderColor: "#A78BFA40" }}
-                    title="Special — elevar esta palete ao nível Awwwards"
-                  >
-                    <span style={{ fontSize: "10px" }}>🎨</span>
-                  </button>
+                  {/* Nome + tags sobrepostas no preview */}
+                  <div className="absolute bottom-1.5 left-1.5 right-1.5">
+                    <div className="text-[10px] font-bold text-white drop-shadow-md line-clamp-1">{trend.name}</div>
+                    <div className="text-[8px] text-white/80 drop-shadow-sm line-clamp-1">{trend.tags.slice(0, 2).join(" · ")}</div>
+                  </div>
                 </div>
+
+                {/* Body: swatches pequenas + ações */}
+                <div className="p-1.5">
+                  {/* Swatches — cada uma com ícone para editar individualmente */}
+                  <div className="mb-1.5 flex gap-0.5">
+                    {displayColors.map((c, i) => (
+                      <div key={i} className="group/sw relative flex-1">
+                        <div className="h-6 rounded transition-colors duration-200" style={{ background: c }} />
+                        {/* Ícone para ampliar cor individualmente */}
+                        <button type="button" onClick={(e) => {
+                          e.stopPropagation();
+                          if (value.customColors.length === 0) {
+                            const allPalettes = getAllPalettes();
+                            const trendDef = allPalettes.find((t) => t.id === trend.id) ?? COLOR_TRENDS_2026[0];
+                            const roles = ["Background", "Secundária", "Suporte", "Destaque"];
+                            const newCustom = trendDef.colors.slice(0, value.colorCount).map((hex, idx) => ({
+                              hex, role: roles[idx] ?? `Cor ${idx + 1}`,
+                            }));
+                            onChange({ customColors: newCustom, colorPreset: trend.id });
+                          }
+                          setColorEditIndex(colorEditIndex === i ? null : i);
+                        }}
+                          className="absolute right-0 top-0 flex h-3.5 w-3.5 items-center justify-center rounded-bl rounded-tr bg-black/50 opacity-0 transition-opacity group-hover/sw:opacity-100"
+                          title="Editar cor individual">
+                          <Maximize2 className="h-2 w-2 text-white" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Ações: Generate + Polimento + Special */}
+                  <div className="flex gap-0.5">
+                    {/* Generate individual */}
+                    <button type="button" onClick={(e) => { e.stopPropagation(); generatePaletteVariation(trend.id); }}
+                      className="flex h-6 flex-1 items-center justify-center rounded border border-border text-muted-foreground hover:border-primary hover:text-primary"
+                      title="Gerar variação desta palete">
+                      <RefreshCw className="h-2.5 w-2.5" />
+                    </button>
+                    {/* Polimento individual — polir cada cor */}
+                    {isActive && value.customColors.length > 0 && (
+                      <button type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const newColors = value.customColors.map((c, idx) => ({
+                            ...c,
+                            hex: polishSingleColor(c.hex, c.role, value.polishType),
+                          }));
+                          onChange({
+                            customColors: newColors,
+                            trendOverrides: { ...value.trendOverrides, [trend.id]: newColors },
+                          });
+                          toast.success(`Cores polidas — ${value.polishType}`);
+                        }}
+                        className="flex h-6 flex-1 items-center justify-center rounded border border-border text-muted-foreground hover:border-primary hover:text-primary"
+                        title="Polir cada cor individualmente">
+                        <Sparkles className="h-2.5 w-2.5" />
+                      </button>
+                    )}
+                    {/* Special individual — elevar ao nível Awwwards */}
+                    <button type="button"
+                      onClick={(e) => { e.stopPropagation(); generateSpecialForTrend(trend.id); }}
+                      className="flex h-6 flex-1 items-center justify-center rounded border text-muted-foreground hover:text-white transition-all"
+                      style={{ borderColor: "#A78BFA40", background: "linear-gradient(135deg, rgba(167,139,250,0.1), rgba(0,229,255,0.1))" }}
+                      title="Special — elevar ao nível Awwwards">
+                      <span style={{ fontSize: "9px" }}>🎨</span>
+                    </button>
+                  </div>
+                </div>
+
                 {/* Editor de cor individual (popup inline) — com botão OK para confirmar */}
                 <AnimatePresence>
                   {colorEditIndex !== null && isActive && (
@@ -1178,15 +1210,14 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      className="mt-1.5 overflow-hidden rounded-md border border-border bg-card/50 p-2"
-                      onClick={(e) => e.stopPropagation()} // Não fechar/selecionar ao clicar no editor
+                      className="overflow-hidden rounded-t border-t border-border bg-card/95 p-2"
+                      onClick={(e) => e.stopPropagation()}
                     >
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
                           <span className="text-[9px] text-muted-foreground">Cor {colorEditIndex + 1}:</span>
                           <input type="color" value={previewColors[colorEditIndex]?.hex ?? "#5E6AD2"}
                             onChange={(e) => {
-                              // Atualiza imediatamente — persiste em customColors
                               const newColors = [...value.customColors];
                               while (newColors.length <= colorEditIndex) newColors.push({ hex: "#5E6AD2", role: "" });
                               newColors[colorEditIndex] = { hex: e.target.value, role: ["Background", "Secundária", "Suporte", "Destaque"][colorEditIndex] ?? `Cor ${colorEditIndex + 1}` };
