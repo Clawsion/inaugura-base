@@ -111,6 +111,48 @@ export const FONT_CATALOG: FontDef[] = [
   // ════════════════════════════════════════════════════════════════════════
   ...NEW_FONTS_2026,
 
+
+  // ─── NOVAS FONTS FONTSHARE (Awwwards premium) ─────────────────────
+  { name: "Kihim", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Awwwards", "Premium"], license: "free", personality: "Display, Awwwards — Fontshare premium" },
+  { name: "Synonym", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Premium", "Modern"], license: "free", personality: "Sans, Premium — Fontshare premium" },
+  { name: "Comico", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Display, Playful — Fontshare premium" },
+  { name: "Gambarino", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Display, Bold — Fontshare premium" },
+  { name: "Rowan", source: "Fontshare", category: "serif", foundry: "Fontshare", siteType: ["Editorial", "Magazine"], license: "free", personality: "Serif, Editorial — Fontshare premium" },
+  { name: "Tabular", source: "Fontshare", category: "mono", foundry: "Fontshare", siteType: ["Tech", "Dev"], license: "free", personality: "Mono, Tech — Fontshare premium" },
+  { name: "Expose", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Display, Bold — Fontshare premium" },
+  { name: "Boxing", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Display, Sport — Fontshare premium" },
+  { name: "Striper", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Display, Bold — Fontshare premium" },
+  { name: "Pilcrow Rounded", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Friendly", "Modern"], license: "free", personality: "Sans, Rounded — Fontshare premium" },
+  { name: "New Title", source: "Fontshare", category: "serif", foundry: "Fontshare", siteType: ["Editorial", "Magazine"], license: "free", personality: "Display, Editorial — Fontshare premium" },
+  { name: "Alpino", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Sans, Geometric — Fontshare premium" },
+  { name: "Amulya", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Sans, Modern — Fontshare premium" },
+  { name: "Array", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Tech", "Dev"], license: "free", personality: "Sans, Tech — Fontshare premium" },
+  { name: "Bespoke Sans", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Premium", "Modern"], license: "free", personality: "Sans, Premium — Fontshare premium" },
+  { name: "Bespoke Slab", source: "Fontshare", category: "serif", foundry: "Fontshare", siteType: ["Editorial", "Magazine"], license: "free", personality: "Slab, Editorial — Fontshare premium" },
+  { name: "Bespoke Stencil", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Display, Stencil — Fontshare premium" },
+  { name: "Chubbo", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Friendly", "Modern"], license: "free", personality: "Sans, Rounded — Fontshare premium" },
+  { name: "Britney", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Display, Bold — Fontshare premium" },
+  { name: "Bonny", source: "Fontshare", category: "serif", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Serif, Elegant — Fontshare premium" },
+  { name: "Bevellier", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Premium", "Modern"], license: "free", personality: "Display, Premium — Fontshare premium" },
+  { name: "Kola", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Display, Bold — Fontshare premium" },
+  { name: "Excon", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Tech", "Dev"], license: "free", personality: "Sans, Tech — Fontshare premium" },
+  { name: "Hoover", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Sans, Display — Fontshare premium" },
+  { name: "Roundo", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Friendly", "Modern"], license: "free", personality: "Sans, Rounded — Fontshare premium" },
+  { name: "Panchang", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Sans, Devanagari — Fontshare premium" },
+  { name: "Neco", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Display, Bold — Fontshare premium" },
+  { name: "Pramukh Rounded", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Friendly", "Modern"], license: "free", personality: "Sans, Rounded — Fontshare premium" },
+  { name: "Paquito", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Display, Bold — Fontshare premium" },
+  { name: "Sharpie", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Display, Handwritten — Fontshare premium" },
+  { name: "Styro", source: "Fontshare", category: "sans", foundry: "Fontshare", siteType: ["Tech", "Dev"], license: "free", personality: "Sans, Tech — Fontshare premium" },
+  { name: "Stardom", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Display, Bold — Fontshare premium" },
+  { name: "Trench Slab", source: "Fontshare", category: "serif", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Slab, Bold — Fontshare premium" },
+  { name: "Quilon", source: "Fontshare", category: "serif", foundry: "Fontshare", siteType: ["Editorial", "Magazine"], license: "free", personality: "Serif, Editorial — Fontshare premium" },
+  { name: "Zina", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Display, Bold — Fontshare premium" },
+  { name: "Rosaline", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Display, Elegant — Fontshare premium" },
+  { name: "Segment", source: "Fontshare", category: "mono", foundry: "Fontshare", siteType: ["Tech", "Dev"], license: "free", personality: "Mono, Tech — Fontshare premium" },
+  { name: "Recia", source: "Fontshare", category: "serif", foundry: "Fontshare", siteType: ["Editorial", "Magazine"], license: "free", personality: "Serif, Editorial — Fontshare premium" },
+  { name: "Plein", source: "Fontshare", category: "display", foundry: "Fontshare", siteType: ["Modern", "Display"], license: "free", personality: "Display, Bold — Fontshare premium" },
+
   // ════════════════════════════════════════════════════════════════════════
   // SCRAPED FONTS — Extraídas de sites curados (BeFonts, Fontesk, FreeFaces, UseModify)
   // Todas free for commercial use. Organizadas por site de origem.

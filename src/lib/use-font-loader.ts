@@ -107,6 +107,28 @@ export function useFontLoader(fonts: string[]) {
   }, [fonts.join(",")]);
 }
 
+// ─── PRÉ-CARREGAMENTO de fonts populares ──────────────────────────────────
+// Carrega as fonts mais usadas imediatamente quando a app abre,
+// para que mudem instantaneamente quando o user as seleciona.
+const POPULAR_FONTS = [
+  "Inter", "Geist", "Geist Mono", "Satoshi", "General Sans",
+  "Clash Display", "Clash Grotesk", "Cabinet Grotesk", "Switzer",
+  "Plus Jakarta Sans", "DM Sans", "Manrope", "Space Grotesk",
+  "Sora", "Outfit", "Bricolage Grotesque", "Figtree",
+  "JetBrains Mono", "Playfair Display", "Fraunces",
+];
+
+let preloaded = false;
+export function preloadPopularFonts() {
+  if (preloaded) return;
+  preloaded = true;
+  // Carregar em background (não bloqueia o render)
+  POPULAR_FONTS.forEach((f) => {
+    // Pequeno delay para não saturar a rede
+    setTimeout(() => loadFont(f), 100 + Math.random() * 2000);
+  });
+}
+
 // Helper: obter o nome real da font para CSS (com fallback para pagas)
 export function getCssFontName(fontName: string): string {
   if (!fontName || fontName === "Auto" || fontName === "") return "inherit";

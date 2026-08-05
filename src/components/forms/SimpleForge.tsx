@@ -20,7 +20,7 @@ import { toast } from "sonner";
 import { CATALOG } from "@/lib/catalog";
 import { FONT_CATALOG, getFontsByCategory, type FontDef } from "@/lib/font-catalog";
 import { adjustColor, generatePalette, generateRandomPalette, generateGradientPremiumPalette, polishPalette, optimizePalette, polishSingleColor, generateAwwwardsPalette, transformToAwwwards, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_TRANSIENTS_2026, getPalettesByMode, getAllPalettes, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
-import { useFontLoader, getCssFontName, isFontOnCdn } from "@/lib/use-font-loader";
+import { useFontLoader, getCssFontName, isFontOnCdn, preloadPopularFonts } from "@/lib/use-font-loader";
 import { generateFontPack, type FontInstallation } from "@/lib/font-installation";
 import { GradientPalettesLibrary } from "@/components/palette/GradientPalettesLibrary";
 import type { GradientPalette } from "@/lib/gradient-palettes";
@@ -350,6 +350,11 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
 
   // 🔥 CARREGA FONTS EM TEMPO REAL — quando mudas uma font, ela carrega do CDN
   useFontLoader([value.fontHeading, value.fontBody, value.fontMono]);
+
+  // Pré-carregar fonts populares em background (carregam instantaneamente quando selecionadas)
+  useEffect(() => {
+    preloadPopularFonts();
+  }, []);
 
   const toggleArray = useCallback((key: "references" | "mood" | "integrations", item: string) => {
     const arr = value[key];
