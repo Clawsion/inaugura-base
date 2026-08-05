@@ -85,39 +85,18 @@ export function Logo({ className, size = 36, accentColor }: LogoProps) {
         {/* Inner solid circle — o núcleo do logo */}
         <circle cx="16" cy="16" r="6.5" fill={`url(#${uid}-grad)`} />
 
-        {/* Center lock icon (cadeado) — substitui o quadrado preto original */}
-        {/* Corpo do cadeado — rect arredondado com cor do fundo (cutout effect) */}
-        <rect
-          x="12.5"
-          y="14.5"
-          width="7"
-          height="5.5"
-          rx="1.2"
-          fill="var(--card, #08080A)"
-        />
-        {/* Arco do cadeado (shackle) — semicírculo no topo */}
-        <path
-          d="M 13.5 14.5 L 13.5 13 C 13.5 11.62 14.62 10.5 16 10.5 C 17.38 10.5 18.5 11.62 18.5 13 L 18.5 14.5"
-          fill="none"
-          stroke="var(--card, #08080A)"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
-        {/* Furo da chave — circle + line descendente (com cor do gradiente) */}
+        {/* Keyhole (furo da chave) — recortado do círculo com cor do fundo */}
+        {/* Parte redonda de cima (onde se insere a chave) */}
         <circle
           cx="16"
-          cy="16.5"
-          r="0.9"
-          fill={`url(#${uid}-grad)`}
+          cy="14.5"
+          r="1.8"
+          fill="var(--card, #08080A)"
         />
-        <line
-          x1="16"
-          y1="17.2"
-          x2="16"
-          y2="18.8"
-          stroke={`url(#${uid}-grad)`}
-          strokeWidth="0.9"
-          strokeLinecap="round"
+        {/* Parte triangular de baixo (slot por onde a chave desliza) */}
+        <path
+          d="M 14.7 15.5 L 17.3 15.5 L 16 19 Z"
+          fill="var(--card, #08080A)"
         />
       </svg>
     </div>
