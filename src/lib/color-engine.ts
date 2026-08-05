@@ -1442,113 +1442,382 @@ export function getPalettesByMode(mode: "normal" | "transient"): ColorTrend[] {
 //   - 4 cores com roles: Background, Secundária, Destaque, Suporte
 // ============================================================================
 // ============================================================================
-// GERAR PALETA GRADIENT PREMIUM — para Generate de paletes gradientes
+// GERADOR DE PALETAS UI/UX — Design Tokens com Gradiente Âncora
 // ============================================================================
-// VERSÃO 2 — Baseada em pesquisa Awwwards 2026 + análise VLM
+// Sistema robusto baseado em Design Systems e CSS moderno.
 //
-// Princípios (Awwwards 2026 gradient websites):
-//   1. BACKGROUND = 2 TONS (junção de 2 cores que fazem gradient bonito)
-//      - Cor 1 (top-left): hue A, mais escura/vibrante
-//      - Cor 2 (bottom-right): hue B (offset 30-80° do hue A), mais clara/complementar
-//      - Gradient linear 135deg entre as 2
-//   2. TEXT = UNIFORME (não gradient)
-//      - Branco cream (dark mode) ou deep dark (light mode)
-//      - WCAG AAA (≥7:1) sobre ambas as cores do bg
-//   3. ACCENT = cor que complementa o gradient (luminous sweet spot)
-//   4. CARD = mid-tone entre as 2 cores do bg (elevação subtil)
+// Regras matemáticas e de design aplicadas estritamente:
 //
-// Combinações de hue comprovadas (Awwwards 2026):
-//   - Magenta → Violet → Cyan (Synthwave Modern)
-//   - Navy → Royal Blue → Cyan (Fintech Trust)
-//   - Black → Indigo → Violet (Linear/Vercel)
-//   - Forest → Emerald → Mint (Wellness)
-//   - Charcoal → Bronze → Gold (Luxury)
-//   - Deep Navy → Terracotta → Peach (Sunset Editorial)
+// 1. GERADOR DE GRADIENTE ÂNCORA:
+//    - Identifica 2 cores sólidas base (--cor-marca-1 e --cor-marca-2)
+//    - As 2 cores são VIZINHAS na roda de cores (Analogia, offset 15-45°)
+//      para evitar transições cinzentas no meio do gradient
+//    - Variação de luminosidade entre as 2 (uma mais clara que a outra
+//      para simular iluminação)
+//    - Token: --gradiente-opcao: linear-gradient(135deg, cor1, cor2)
+//
+// 2. INJEÇÃO DE NEUTROS:
+//    - NUNCA pretos ou cinzentos puros (#000 ou #888)
+//    - Injeta 5% da --cor-marca-1 nos tons de fundo e texto
+//      para garantir harmonia cromática global
+//
+// 3. SAÍDA DE CÓDIGO:
+//    - CSS estruturado dentro de :root
+//    - Classes utilitárias modulares (.btn / .btn-gradient,
+//      .titulo / .titulo-gradient) para ativar gradiente como opção no HTML
 // ============================================================================
+export interface GradientDesignTokens {
+  // 2 cores âncora (vizinhas na roda de cores)
+  corMarca1: string;
+  corMarca2: string;
+  // Neutros injetados com 5% da cor-marca-1
+  bg: string;
+  bgElevado: string;
+  texto: string;
+  textoSuave: string;
+  borda: string;
+  // Gradiente âncora
+  gradiente: string;
+  // Classes utilitárias CSS prontas
+  cssCode: string;
+  // Nome da paleta
+  name: string;
+  isDark: boolean;
+}
+
+// Helper: misturar 2 cores em proporção (0-1)
+function mixColors(hex1: string, hex2: string, ratio: number): string {
+  const r1 = parseInt(hex1.slice(1, 3), 16);
+  const g1 = parseInt(hex1.slice(3, 5), 16);
+  const b1 = parseInt(hex1.slice(5, 7), 16);
+  const r2 = parseInt(hex2.slice(1, 3), 16);
+  const g2 = parseInt(hex2.slice(3, 5), 16);
+  const b2 = parseInt(hex2.slice(5, 7), 16);
+  const r = Math.round(r1 * (1 - ratio) + r2 * ratio);
+  const g = Math.round(g1 * (1 - ratio) + g2 * ratio);
+  const b = Math.round(b1 * (1 - ratio) + b2 * ratio);
+  return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+}
+
+// Helper: converter hex para RGB object
+function hexToRgb(hex: string): { r: number; g: number; b: number } {
+  return {
+    r: parseInt(hex.slice(1, 3), 16),
+    g: parseInt(hex.slice(3, 5), 16),
+    b: parseInt(hex.slice(5, 7), 16),
+  };
+}
+
 export function generateGradientPremiumPalette(
   count: 2 | 3 | 4 = 4,
   baseColors?: string[]
 ): { hex: string; role: string }[] {
-  // 12 combinações de hue Awwwards 2026 (cada uma = 2 hues que fazem gradient bonito)
-  const gradientCombos = [
-    { hue1: 320, hue2: 190, name: "Synthwave" },     // magenta → cyan
-    { hue1: 280, hue2: 200, name: "Cyber Violet" },  // violet → blue
-    { hue1: 220, hue2: 190, name: "Fintech Trust" }, // navy → cyan
-    { hue1: 265, hue2: 220, name: "Linear Pro" },    // violet → indigo
-    { hue1: 250, hue2: 290, name: "Purple Dream" },  // indigo → magenta
-    { hue1: 200, hue2: 160, name: "Ocean Teal" },    // blue → teal
-    { hue1: 160, hue2: 130, name: "Wellness" },      // teal → green
-    { hue1: 130, hue2: 80, name: "Forest Lime" },    // green → lime
-    { hue1: 45, hue2: 25, name: "Luxury Gold" },     // gold → orange
-    { hue1: 25, hue2: 350, name: "Sunset Rose" },    // orange → red/pink
-    { hue1: 350, hue2: 320, name: "Rose Magenta" },  // red → magenta
-    { hue1: 190, hue2: 220, name: "Ice Navy" },      // cyan → navy
+  // ─── 12 DUPLAS DE HUES VIZINHOS (Analogia) — Awwwards 2026 ─────────────
+  // Cada dupla tem offset 15-45° (vizinhos na roda de cores)
+  // Isto evita transições cinzentas no meio do gradient
+  const anchorCombos = [
+    { hue1: 320, hue2: 350, name: "Magenta Rose" },     // 30° offset
+    { hue1: 280, hue2: 310, name: "Violet Magenta" },   // 30° offset
+    { hue1: 220, hue2: 250, name: "Navy Indigo" },      // 30° offset
+    { hue1: 200, hue2: 230, name: "Ocean Blue" },       // 30° offset
+    { hue1: 180, hue2: 210, name: "Cyan Navy" },        // 30° offset
+    { hue1: 160, hue2: 190, name: "Teal Cyan" },        // 30° offset
+    { hue1: 140, hue2: 170, name: "Emerald Teal" },     // 30° offset
+    { hue1: 90, hue2: 120, name: "Lime Emerald" },      // 30° offset
+    { hue1: 45, hue2: 75, name: "Gold Lime" },          // 30° offset
+    { hue1: 25, hue2: 55, name: "Orange Gold" },        // 30° offset
+    { hue1: 350, hue2: 20, name: "Red Orange" },        // 30° offset
+    { hue1: 310, hue2: 340, name: "Pink Magenta" },     // 30° offset
   ];
 
-  // Se houver cores base, extrair os 2 hues delas; senão escolher combo aleatório
+  // ─── 1. GERADOR DE GRADIENTE ÂNCORA ─────────────────────────────────────
+  // NOTA: Para garantir variedade infinita, 70% das vezes escolhe combo aleatório
+  //        (ignora baseColors), 30% usa baseColors se fornecidos
   let hue1: number, hue2: number;
   let isDark: boolean;
+  let name: string;
+
+  const useRandom = Math.random() < 0.7 || !baseColors || baseColors.length === 0;
+
+  if (!useRandom && baseColors && baseColors.length >= 2) {
+    // Usar hues das cores base fornecidas
+    const hsl1 = hexToHsl(baseColors[0]);
+    const hsl2 = hexToHsl(baseColors[1]);
+    hue1 = hsl1.h;
+    hue2 = hsl2.h;
+    isDark = hsl1.l < 35;
+    name = "Custom Anchor";
+  } else if (!useRandom && baseColors && baseColors.length === 1) {
+    // 1 cor base — gerar vizinha (offset 15-45°)
+    const hsl1 = hexToHsl(baseColors[0]);
+    hue1 = hsl1.h;
+    hue2 = (hue1 + 15 + Math.random() * 30) % 360;
+    isDark = hsl1.l < 35;
+    name = "Custom Anchor";
+  } else {
+    // Sem cores base OU 70% aleatório — escolher dupla aleatória
+    const combo = anchorCombos[Math.floor(Math.random() * anchorCombos.length)];
+    hue1 = combo.hue1;
+    hue2 = combo.hue2;
+    name = combo.name;
+    isDark = Math.random() > 0.25; // 75% dark, 25% light
+  }
+
+  // Cor-marca-1: mais escura/vibrante (simula sombra)
+  const marca1Sat = 70 + Math.random() * 15; // 70-85% (vibrante)
+  const marca1Light = isDark ? 35 + Math.random() * 10 : 45 + Math.random() * 10;
+  const corMarca1 = hslToHex(hue1, marca1Sat, marca1Light);
+
+  // Cor-marca-2: mais clara (simula iluminação) — variação de luminosidade
+  const marca2Sat = 65 + Math.random() * 15; // ligeiramente menos saturada
+  const marca2Light = marca1Light + 15 + Math.random() * 10; // +15-25% luminosidade
+  const corMarca2 = hslToHex(hue2, marca2Sat, Math.min(85, marca2Light));
+
+  // ─── 2. INJEÇÃO DE NEUTROS (5% da cor-marca-1) ──────────────────────────
+  // NUNCA pretos ou cinzentos puros — sempre tinted com a cor-marca-1
+  const NEUTRO_PURO_DARK = "#0A0A0A";
+  const NEUTRO_PURO_LIGHT = "#FAFAFA";
+  const NEUTRO_PURO_TEXTO_DARK = "#F5F5F5";
+  const NEUTRO_PURO_TEXTO_LIGHT = "#0A0A0A";
+
+  // Injetar 5% da cor-marca-1 nos neutros
+  const bg = isDark
+    ? mixColors(NEUTRO_PURO_DARK, corMarca1, 0.05)
+    : mixColors(NEUTRO_PURO_LIGHT, corMarca1, 0.05);
+
+  const bgElevado = isDark
+    ? mixColors("#1A1A1A", corMarca1, 0.05)
+    : mixColors("#F0F0F0", corMarca1, 0.05);
+
+  const texto = isDark
+    ? mixColors(NEUTRO_PURO_TEXTO_DARK, corMarca1, 0.05)
+    : mixColors(NEUTRO_PURO_TEXTO_LIGHT, corMarca1, 0.05);
+
+  const textoSuave = isDark
+    ? mixColors("#888888", corMarca1, 0.05)
+    : mixColors("#555555", corMarca1, 0.05);
+
+  const borda = isDark
+    ? mixColors("#2A2A2A", corMarca1, 0.08)
+    : mixColors("#E0E0E0", corMarca1, 0.08);
+
+  // ─── GRADIENTE ÂNCORA ───────────────────────────────────────────────────
+  const gradiente = `linear-gradient(135deg, ${corMarca1}, ${corMarca2})`;
+
+  // ─── 3. MAPEAR PARA O SISTEMA EXISTENTE (roles) ─────────────────────────
+  // Background = bg (neutro injetado)
+  // Secundária = texto (neutro injetado)
+  // Destaque = corMarca1 (cor âncora principal)
+  // Suporte = corMarca2 (cor âncora secundária — para gradient)
+  const allColors = [
+    { hex: bg, role: "Background" },
+    { hex: texto, role: "Secundária" },
+    { hex: corMarca1, role: "Destaque" },
+    { hex: corMarca2, role: "Suporte" },
+  ];
+
+  return allColors.slice(0, count);
+}
+
+// ============================================================================
+// GERAR DESIGN TOKENS COMPLETOS (CSS pronto com :root + classes utilitárias)
+// ============================================================================
+// Esta função gera o output CSS completo conforme a instrução de sistema:
+// - CSS estruturado em :root
+// - Classes utilitárias modulares (.btn / .btn-gradient, .titulo / .titulo-gradient)
+// ============================================================================
+export function generateGradientDesignTokens(
+  baseColors?: string[]
+): GradientDesignTokens {
+  // Reaproveitar a lógica do generateGradientPremiumPalette
+  const anchorCombos = [
+    { hue1: 320, hue2: 350, name: "Magenta Rose" },
+    { hue1: 280, hue2: 310, name: "Violet Magenta" },
+    { hue1: 220, hue2: 250, name: "Navy Indigo" },
+    { hue1: 200, hue2: 230, name: "Ocean Blue" },
+    { hue1: 180, hue2: 210, name: "Cyan Navy" },
+    { hue1: 160, hue2: 190, name: "Teal Cyan" },
+    { hue1: 140, hue2: 170, name: "Emerald Teal" },
+    { hue1: 90, hue2: 120, name: "Lime Emerald" },
+    { hue1: 45, hue2: 75, name: "Gold Lime" },
+    { hue1: 25, hue2: 55, name: "Orange Gold" },
+    { hue1: 350, hue2: 20, name: "Red Orange" },
+    { hue1: 310, hue2: 340, name: "Pink Magenta" },
+  ];
+
+  let hue1: number, hue2: number;
+  let isDark: boolean;
+  let name: string;
+
   if (baseColors && baseColors.length >= 2) {
     const hsl1 = hexToHsl(baseColors[0]);
     const hsl2 = hexToHsl(baseColors[1]);
     hue1 = hsl1.h;
     hue2 = hsl2.h;
     isDark = hsl1.l < 35;
+    name = "Custom Anchor";
   } else if (baseColors && baseColors.length === 1) {
     const hsl1 = hexToHsl(baseColors[0]);
     hue1 = hsl1.h;
-    // hue2 = offset 30-80° do hue1
-    hue2 = (hue1 + 30 + Math.random() * 50) % 360;
+    hue2 = (hue1 + 15 + Math.random() * 30) % 360;
     isDark = hsl1.l < 35;
+    name = "Custom Anchor";
   } else {
-    const combo = gradientCombos[Math.floor(Math.random() * gradientCombos.length)];
+    const combo = anchorCombos[Math.floor(Math.random() * anchorCombos.length)];
     hue1 = combo.hue1;
     hue2 = combo.hue2;
-    isDark = Math.random() > 0.25; // 75% dark, 25% light
+    name = combo.name;
+    isDark = Math.random() > 0.25;
   }
 
-  // ─── BACKGROUND (2 TONS para gradient) ──────────────────────────────────
-  // Cor 1 (top-left): mais escura/vibrante
-  const bg1Sat = isDark ? 60 + Math.random() * 20 : 50 + Math.random() * 15;
-  const bg1Light = isDark ? 15 + Math.random() * 8 : 70 + Math.random() * 8;
-  const bg1 = hslToHex(hue1, bg1Sat, bg1Light);
+  // Cor-marca-1 (mais escura/vibrante)
+  const marca1Sat = 70 + Math.random() * 15;
+  const marca1Light = isDark ? 35 + Math.random() * 10 : 45 + Math.random() * 10;
+  const corMarca1 = hslToHex(hue1, marca1Sat, marca1Light);
 
-  // Cor 2 (bottom-right): mais clara, hue diferente (offset 30-80°)
-  const bg2Sat = isDark ? 55 + Math.random() * 20 : 45 + Math.random() * 15;
-  const bg2Light = isDark ? 25 + Math.random() * 10 : 80 + Math.random() * 8;
-  const bg2 = hslToHex(hue2, bg2Sat, bg2Light);
+  // Cor-marca-2 (mais clara — variação de luminosidade)
+  const marca2Sat = 65 + Math.random() * 15;
+  const marca2Light = marca1Light + 15 + Math.random() * 10;
+  const corMarca2 = hslToHex(hue2, marca2Sat, Math.min(85, marca2Light));
 
-  // Mid-tone (para o gradient parecer suave) — mistura das 2 cores
-  const midHue = (hue1 + hue2) / 2;
-  const midSat = (bg1Sat + bg2Sat) / 2;
-  const midLight = (bg1Light + bg2Light) / 2;
-  const mid = hslToHex(midHue, midSat, midLight);
+  // Neutros injetados com 5% da cor-marca-1
+  const NEUTRO_DARK = "#0A0A0A";
+  const NEUTRO_LIGHT = "#FAFAFA";
 
-  // ─── TEXT (UNIFORME — não gradient) ─────────────────────────────────────
-  // Branco cream (dark) ou deep dark (light) — WCAG AAA sobre ambas as cores
-  const textSat = isDark ? 8 + Math.random() * 6 : 15 + Math.random() * 10;
-  const textLight = isDark ? 95 + Math.random() * 3 : 12 + Math.random() * 5;
-  const text = hslToHex(midHue, textSat, textLight);
+  const bg = isDark
+    ? mixColors(NEUTRO_DARK, corMarca1, 0.05)
+    : mixColors(NEUTRO_LIGHT, corMarca1, 0.05);
 
-  // ─── ACCENT (cor que complementa o gradient) ────────────────────────────
-  // Luminous sweet spot: sat 68-82%, light 50-58%
-  const accentHue = (midHue + 180 + (Math.random() - 0.5) * 60) % 360; // complementar ±30°
-  const accentSat = 68 + Math.random() * 14;
-  const accentLight = 50 + Math.random() * 8;
-  const accent = hslToHex(accentHue, accentSat, accentLight);
+  const bgElevado = isDark
+    ? mixColors("#1A1A1A", corMarca1, 0.05)
+    : mixColors("#F0F0F0", corMarca1, 0.05);
 
-  // ─── CARD (mid-tone do bg — elevação subtil) ────────────────────────────
-  const card = mid;
+  const texto = isDark
+    ? mixColors("#F5F5F5", corMarca1, 0.05)
+    : mixColors("#0A0A0A", corMarca1, 0.05);
 
-  // ─── MAPEAR POR COUNT ───────────────────────────────────────────────────
-  // Ordem: bg1, text, accent, bg2 (sempre inclui bg1 + text + accent)
-  // bg2 é o "Suporte" (segunda cor do gradient)
-  const allColors = [
-    { hex: bg1, role: "Background" },     // cor 1 do gradient
-    { hex: text, role: "Secundária" },    // text uniforme
-    { hex: accent, role: "Destaque" },    // accent luminous
-    { hex: bg2, role: "Suporte" },        // cor 2 do gradient
-  ];
+  const textoSuave = isDark
+    ? mixColors("#888888", corMarca1, 0.05)
+    : mixColors("#555555", corMarca1, 0.05);
 
-  return allColors.slice(0, count);
+  const borda = isDark
+    ? mixColors("#2A2A2A", corMarca1, 0.08)
+    : mixColors("#E0E0E0", corMarca1, 0.08);
+
+  const gradiente = `linear-gradient(135deg, ${corMarca1}, ${corMarca2})`;
+
+  // ─── CSS CODE — :root + classes utilitárias modulares ───────────────────
+  const cssCode = `:root {
+  /* ═══ Design Tokens — Gradiente Âncora ═══ */
+
+  /* Cores Âncora (vizinhas na roda de cores — Analogia) */
+  --cor-marca-1: ${corMarca1};
+  --cor-marca-2: ${corMarca2};
+
+  /* Gradiente Âncora (opcional — ativa com .btn-gradient ou .titulo-gradient) */
+  --gradiente-opcao: linear-gradient(135deg, var(--cor-marca-1), var(--cor-marca-2));
+
+  /* Neutros injetados com 5% da cor-marca-1 (harmonia cromática global) */
+  --bg: ${bg};
+  --bg-elevado: ${bgElevado};
+  --texto: ${texto};
+  --texto-suave: ${textoSuave};
+  --borda: ${borda};
+}
+
+/* ═══ Classes Utilitárias Modulares ═══ */
+
+/* Botão padrão (sólido) */
+.btn {
+  background: var(--cor-marca-1);
+  color: ${isDark ? "#FFFFFF" : "#FFFFFF"};
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.btn:hover {
+  background: var(--cor-marca-2);
+  transform: translateY(-1px);
+}
+
+/* Botão com gradiente (opção) */
+.btn-gradient {
+  background: var(--gradiente-opcao);
+  color: ${isDark ? "#FFFFFF" : "#FFFFFF"};
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.btn-gradient:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+/* Título padrão (sólido) */
+.titulo {
+  color: var(--texto);
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Título com gradiente (opção) */
+.titulo-gradient {
+  background: var(--gradiente-opcao);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Texto padrão */
+.texto {
+  color: var(--texto-suave);
+  line-height: 1.6;
+}
+
+/* Texto com gradiente (opção) */
+.texto-gradient {
+  background: var(--gradiente-opcao);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Card/Surface */
+.card {
+  background: var(--bg-elevado);
+  border: 1px solid var(--borda);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+/* Body */
+body {
+  background: var(--bg);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, sans-serif;
+}`;
+
+  return {
+    corMarca1,
+    corMarca2,
+    bg,
+    bgElevado,
+    texto,
+    textoSuave,
+    borda,
+    gradiente,
+    cssCode,
+    name,
+    isDark,
+  };
 }

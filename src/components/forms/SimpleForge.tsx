@@ -566,8 +566,8 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       onChange({ trendOverrides: newOverrides });
     }
     if (value.paletteMode === "transient") {
-      toast.success(`"${trend.name}" regenerada — Paleta Gradient Premium`, {
-        description: "2 tons bg + text uniforme + accent luminous (Awwwards 2026)",
+      toast.success(`"${trend.name}" regenerada — Design Tokens`, {
+        description: "Gradiente âncora + neutros injetados (5% cor-marca) + classes utilitárias",
       });
     } else {
       const styleName = value.colorStyle === "auto" ? "Auto" : (COLOR_STYLES.find(s => s.id === value.colorStyle)?.name ?? "Auto");
@@ -612,8 +612,8 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     }
     onChange(patch);
     if (value.paletteMode === "transient") {
-      toast.success(`${trendsToGenerate.length} Paletas Gradient Premium geradas`, {
-        description: "2 tons bg + text uniforme + accent luminous (Awwwards 2026)",
+      toast.success(`${trendsToGenerate.length} Design Tokens gerados`, {
+        description: "Gradiente âncora + neutros injetados (5% cor-marca) + classes utilitárias",
       });
     } else {
       const styleName = value.colorStyle === "auto" ? "Auto" : (COLOR_STYLES.find(s => s.id === value.colorStyle)?.name ?? "Auto");
