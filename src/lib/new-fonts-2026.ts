@@ -55,7 +55,6 @@ export const NEW_FONTS_2026: FontDef[] = [
   { name: "Saira", source: "Google Fonts", category: "sans", foundry: "Google", siteType: ["Tech", "Variable"], license: "free", personality: "Grotesk variable — technical" },
   { name: "Saira Condensed", source: "Google Fonts", category: "sans", foundry: "Google", siteType: ["Condensed", "Display"], license: "free", personality: "Saira condensada — headlines" },
   { name: "Sarabun", source: "Google Fonts", category: "sans", foundry: "Google", siteType: ["UI", "Body"], license: "free", personality: "Thai + Latin — multilingual" },
-  { name: "Sora", source: "Google Fonts", category: "sans", foundry: "Google", siteType: ["Tech", "Display"], license: "free", personality: "Geométrica tech — headings" },
   { name: "Source Sans 3", source: "Google Fonts", category: "sans", foundry: "Adobe", siteType: ["UI", "Body"], license: "free", personality: "Adobe Source — workhorse" },
   { name: "Tajawal", source: "Google Fonts", category: "sans", foundry: "Google", siteType: ["UI", "Multilingual"], license: "free", personality: "Arabic + Latin — modern" },
 
@@ -70,7 +69,6 @@ export const NEW_FONTS_2026: FontDef[] = [
   { name: "Zen Maru Gothic", source: "Google Fonts", category: "sans", foundry: "Google", siteType: ["UI", "Rounded"], license: "free", personality: "Rounded Japanese — soft" },
   { name: "Zen Old Mincho", source: "Google Fonts", category: "serif", foundry: "Google", siteType: ["Editorial", "Japanese"], license: "free", personality: "Japanese mincho — traditional" },
   { name: "Zen Tokyo Zoo", source: "Google Fonts", category: "display", foundry: "Google", siteType: ["Display", "Bold"], license: "free", personality: "Tokyo display — ultra-bold" },
-  { name: "Anton", source: "Google Fonts", category: "display", foundry: "Google", siteType: ["Bold", "Poster"], license: "free", personality: "Black condensed — poster impact" },
   { name: "Archivo Black", source: "Google Fonts", category: "display", foundry: "Google", siteType: ["Bold", "Display"], license: "free", personality: "Archivo black — heavy display" },
   { name: "Alfa Slab One", source: "Google Fonts", category: "display", foundry: "Google", siteType: ["Slab", "Bold"], license: "free", personality: "Slab-serif ultra-bold — poster" },
   { name: "Bungee", source: "Google Fonts", category: "display", foundry: "Google", siteType: ["Bold", "Urban"], license: "free", personality: "Urban display — streetwear" },
@@ -104,8 +102,6 @@ export const NEW_FONTS_2026: FontDef[] = [
   { name: "Lobster Two", source: "Google Fonts", category: "display", foundry: "Google", siteType: ["Script", "Display"], license: "free", personality: "Lobster refined — elegant" },
 
   // ─── SERIF — Editorial & Elegant (20) ──────────────────────────────────
-  { name: "Playfair Display", source: "Google Fonts", category: "serif", foundry: "Google", siteType: ["Luxury", "Fashion"], license: "free", personality: "Alto-contraste — luxury/fashion" },
-  { name: "Cormorant Garamond", source: "Google Fonts", category: "serif", foundry: "Google", siteType: ["Luxury", "Elegant"], license: "free", personality: "Ultra-fina elegante — delicada" },
   { name: "EB Garamond", source: "Google Fonts", category: "serif", foundry: "Google", siteType: ["Editorial", "Body"], license: "free", personality: "Garamond clássica — readability" },
   { name: "Spectral", source: "Google Fonts", category: "serif", foundry: "Google", siteType: ["Editorial", "Body"], license: "free", personality: "Serif moderna — screen-optimized" },
   { name: "Spectral SC", source: "Google Fonts", category: "serif", foundry: "Google", siteType: ["Editorial", "Display"], license: "free", personality: "Spectral small-caps — elegant" },
@@ -128,7 +124,6 @@ export const NEW_FONTS_2026: FontDef[] = [
   // ─── SERIF — Modern & Editorial (15) ───────────────────────────────────
   { name: "IBM Plex Serif", source: "IBM, Google", category: "serif", foundry: "IBM", siteType: ["Enterprise", "Body"], license: "free", personality: "IBM brand serif — corporate" },
   { name: "Inria Serif", source: "Google Fonts", category: "serif", foundry: "Google", siteType: ["Editorial", "Modern"], license: "free", personality: "Serif moderna — French tech" },
-  { name: "Lora", source: "Google Fonts", category: "serif", foundry: "Google", siteType: ["Editorial", "Body"], license: "free", personality: "Caligráfica brushed — warm" },
   { name: "Markazi Text", source: "Google Fonts", category: "serif", foundry: "Google", siteType: ["Editorial", "Arabic"], license: "free", personality: "Arabic + Latin — readable" },
   { name: "Mate", source: "Google Fonts", category: "serif", foundry: "Google", siteType: ["Editorial", "Body"], license: "free", personality: "Serif clássica — book style" },
   { name: "Mate SC", source: "Google Fonts", category: "serif", foundry: "Google", siteType: ["Editorial", "Display"], license: "free", personality: "Mate small-caps" },
@@ -143,19 +138,13 @@ export const NEW_FONTS_2026: FontDef[] = [
   { name: "Prata", source: "Google Fonts", category: "serif", foundry: "Google", siteType: ["Luxury", "Display"], license: "free", personality: "Serif elegante — fashion" },
 
   // ─── MONO — Code & Technical (15) ──────────────────────────────────────
-  { name: "JetBrains Mono", source: "JetBrains, Google", category: "mono", foundry: "JetBrains", siteType: ["Dev", "Code"], license: "free", personality: "Code-optimized — ligatures" },
-  { name: "Fira Code", source: "Google Fonts", category: "mono", foundry: "Google", siteType: ["Dev", "Code"], license: "free", personality: "Ligatures — code poetry" },
   { name: "Source Code Pro", source: "Google Fonts", category: "mono", foundry: "Adobe", siteType: ["Dev", "Code"], license: "free", personality: "Adobe Source Mono — workhorse" },
-  { name: "IBM Plex Mono", source: "IBM, Google", category: "mono", foundry: "IBM", siteType: ["Enterprise", "Code"], license: "free", personality: "IBM brand mono — corporate" },
   { name: "Roboto Mono", source: "Google Fonts", category: "mono", foundry: "Google", siteType: ["Dev", "Code"], license: "free", personality: "Roboto family — clean" },
   { name: "Ubuntu Mono", source: "Google Fonts", category: "mono", foundry: "Google", siteType: ["Dev", "Code"], license: "free", personality: "Ubuntu brand — distinctive" },
-  { name: "Inconsolata", source: "Google Fonts", category: "mono", foundry: "Google", siteType: ["Dev", "Code"], license: "free", personality: "Humanista — readability" },
-  { name: "Space Mono", source: "Google Fonts", category: "mono", foundry: "Google", siteType: ["Tech", "Awwwards"], license: "free", personality: "Retro-futurista — distinctive" },
   { name: "Major Mono Display", source: "Google Fonts", category: "mono", foundry: "Google", siteType: ["Display", "Tech"], license: "free", personality: "Mono display — bold tech" },
   { name: "Cousine", source: "Google Fonts", category: "mono", foundry: "Google", siteType: ["Dev", "Code"], license: "free", personality: "Courier alternative — classic" },
   { name: "Cutive Mono", source: "Google Fonts", category: "mono", foundry: "Google", siteType: ["Editorial", "Classic"], license: "free", personality: "Typewriter — vintage" },
   { name: "DM Mono", source: "Google Fonts", category: "mono", foundry: "Google", siteType: ["Dev", "Modern"], license: "free", personality: "DM family — clean modern" },
-  { name: "DotGothic16", source: "Google Fonts", category: "mono", foundry: "Google", siteType: ["Retro", "Gaming"], license: "free", personality: "Pixel dot — retro gaming" },
   { name: "Nanum Gothic Coding", source: "Google Fonts", category: "mono", foundry: "Google", siteType: ["Dev", "Korean"], license: "free", personality: "Korean + Latin code" },
   { name: "Spline Sans Mono", source: "Google Fonts", category: "mono", foundry: "Google", siteType: ["Dev", "Variable"], license: "free", personality: "Variable mono — flexible" },
 
@@ -178,7 +167,6 @@ export const NEW_FONTS_2026: FontDef[] = [
 
   // ─── Fontshare Premium (10) ────────────────────────────────────────────
   { name: "Telma", source: "Fontshare, Awwwards", category: "display", foundry: "Fontshare", siteType: ["Awwwards", "Display"], license: "free", personality: "Display geometric — Awwwards SOTD" },
-  { name: "Boska", source: "Fontshare, Awwwards", category: "display", foundry: "Fontshare", siteType: ["Awwwards", "Display"], license: "free", personality: "Wedge-serif hybrid — distinctive" },
   { name: "Wargaming", source: "Fontshare, gaming", category: "display", foundry: "Fontshare", siteType: ["Gaming", "Bold"], license: "free", personality: "Gaming display — angular bold" },
   { name: "Strike", source: "Fontshare, tech", category: "display", foundry: "Fontshare", siteType: ["Tech", "Display"], license: "free", personality: "Tech display — strike-through" },
   { name: "Migra", source: "Fontshare, editorial", category: "serif", foundry: "Fontshare", siteType: ["Editorial", "Magazine"], license: "free", personality: "Serif editorial — magazine" },

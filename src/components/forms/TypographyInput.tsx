@@ -120,8 +120,8 @@ export function TypographyInput({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {allFonts.map((f) => (
-                    <SelectItem key={f} value={f} className="text-xs">
+                  {allFonts.map((f, i) => (
+                    <SelectItem key={`${f}-${i}`} value={f} className="text-xs">
                       {f}
                       {fontsUnicas.includes(f) && (
                         <span className="ml-1 text-[9px] text-primary">★ playground</span>
@@ -138,8 +138,8 @@ export function TypographyInput({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {allFonts.map((f) => (
-                    <SelectItem key={f} value={f} className="text-xs">
+                  {allFonts.map((f, i) => (
+                    <SelectItem key={`${f}-${i}`} value={f} className="text-xs">
                       {f}
                       {fontsUnicas.includes(f) && (
                         <span className="ml-1 text-[9px] text-primary">★ playground</span>
@@ -156,8 +156,8 @@ export function TypographyInput({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {allFonts.filter((f) => f.toLowerCase().includes("mono") || f.toLowerCase().includes("code")).map((f) => (
-                    <SelectItem key={f} value={f} className="text-xs">{f}</SelectItem>
+                  {allFonts.filter((f) => f.toLowerCase().includes("mono") || f.toLowerCase().includes("code")).map((f, i) => (
+                    <SelectItem key={`${f}-${i}`} value={f} className="text-xs">{f}</SelectItem>
                   ))}
                   <SelectItem value="Geist Mono" className="text-xs">Geist Mono</SelectItem>
                   <SelectItem value="JetBrains Mono" className="text-xs">JetBrains Mono</SelectItem>

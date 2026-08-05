@@ -635,8 +635,8 @@ function FontBar({
                     <SelectLabel className="text-[10px] uppercase tracking-wider">
                       Modernas curadas ({FONTS_MODERNAS.length})
                     </SelectLabel>
-                    {FONTS_MODERNAS.map((f) => (
-                      <SelectItem key={f.family} value={f.family} className="text-xs">
+                    {FONTS_MODERNAS.map((f, i) => (
+                      <SelectItem key={`${f.family}-${i}`} value={f.family} className="text-xs">
                         <span style={{ fontFamily: fontStackFor(f) }}>{f.nome}</span>
                         <span className="ml-1 text-[10px] text-muted-foreground">
                           {f.awwwards ? "★" : ""} {f.categoria.join("/")}
@@ -648,8 +648,8 @@ function FontBar({
                     <SelectLabel className="text-[10px] uppercase tracking-wider">
                       Predefinidas
                     </SelectLabel>
-                    {FONTES_DISPONIVEIS.filter((f) => !FONTS_MODERNAS.find((fm) => fm.family === f)).map((f) => (
-                      <SelectItem key={f} value={f} className="text-xs">
+                    {FONTES_DISPONIVEIS.filter((f) => !FONTS_MODERNAS.find((fm) => fm.family === f)).map((f, i) => (
+                      <SelectItem key={`${f}-${i}`} value={f} className="text-xs">
                         <span style={{ fontFamily: fontStackFor(f) }}>{f}</span>
                       </SelectItem>
                     ))}
@@ -659,8 +659,8 @@ function FontBar({
                       <SelectLabel className="text-[10px] uppercase tracking-wider">
                         Uploads
                       </SelectLabel>
-                      {uploadedFonts.map((f) => (
-                        <SelectItem key={f.family} value={`__custom__:${f.name}`} className="text-xs">
+                      {uploadedFonts.map((f, i) => (
+                        <SelectItem key={`${f.family}-${i}`} value={`__custom__:${f.name}`} className="text-xs">
                           <span style={{ fontFamily: `"${f.family}", sans-serif` }}>{f.name}</span>
                         </SelectItem>
                       ))}

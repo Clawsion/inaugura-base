@@ -9,6 +9,7 @@
 // ============================================================================
 
 import { NEW_FONTS_2026 } from "./new-fonts-2026";
+import { SCRAPED_FONTS } from "./scraped-fonts";
 
 export interface FontDef {
   name: string;
@@ -110,9 +111,14 @@ export const FONT_CATALOG: FontDef[] = [
 
   // ════════════════════════════════════════════════════════════════════════
   // EXPANSÃO 2026 — +150 fonts premium (Awwwards + Google + Fontshare)
-  // Pesquisa: Awwwards typography 2026, Google Fonts trending, Fontshare premium
   // ════════════════════════════════════════════════════════════════════════
   ...NEW_FONTS_2026,
+
+  // ════════════════════════════════════════════════════════════════════════
+  // SCRAPED FONTS — Extraídas de sites curados (BeFonts, Fontesk, FreeFaces, UseModify)
+  // Todas free for commercial use. Organizadas por site de origem.
+  // ════════════════════════════════════════════════════════════════════════
+  ...SCRAPED_FONTS,
 ];
 
 // Helper: filtrar fonts por categoria
@@ -133,4 +139,28 @@ export function getAllFontNames(): string[] {
 // Helper: buscar info de uma font
 export function getFontInfo(name: string): FontDef | undefined {
   return FONT_CATALOG.find((f) => f.name === name);
+}
+
+// Helper: obter todos os sites/fondries únicos (para filtro por origem)
+export function getAllFontSources(): string[] {
+  const sources = new Set<string>();
+  FONT_CATALOG.forEach((f) => {
+    // Dividir source por vírgulas e adicionar cada parte
+    f.source.split(",").forEach((s) => {
+      const trimmed = s.trim();
+      if (trimmed) sources.add(trimmed);
+    });
+    // Também adicionar foundry
+    if (f.foundry) sources.add(f.foundry);
+  });
+  return Array.from(sources).sort();
+}
+
+// Helper: filtrar fonts por site/foundry de origem
+export function getFontsBySource(source: string): FontDef[] {
+  return FONT_CATALOG.filter(
+    (f) =>
+      f.source.toLowerCase().includes(source.toLowerCase()) ||
+      f.foundry.toLowerCase().includes(source.toLowerCase())
+  );
 }

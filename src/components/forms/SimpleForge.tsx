@@ -328,6 +328,9 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
   const [showExtras, setShowExtras] = useState(false);
   const [showColorPopup, setShowColorPopup] = useState(false);
   const [showFontPopup, setShowFontPopup] = useState(false);
+  // Preview de font em tempo real — frase custom + slider de tamanho
+  const [fontPreviewText, setFontPreviewText] = useState("The quick brown fox jumps over the lazy dog");
+  const [fontPreviewSize, setFontPreviewSize] = useState(24);
   const [expandedStackGroup, setExpandedStackGroup] = useState<string | null>(null);
   const [showSecretMotion, setShowSecretMotion] = useState(false);
   const [paletteFilter, setPaletteFilter] = useState("all");
@@ -1502,13 +1505,68 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
           )}
         </div>
 
-        {/* Preview de font em tempo real (influenciado pela palete de cores) */}
+        {/* Preview de font em tempo real com frase custom + slider de tamanho */}
         <div className="rounded-lg border p-3" style={{ background: previewBg, color: previewText }}>
-          <div className="space-y-1">
-            <div className="text-xl font-bold" style={{ fontFamily: getCssFontName(value.fontHeading) }}>The quick brown fox</div>
-            <div className="text-sm" style={{ fontFamily: getCssFontName(value.fontBody) }}>jumps over the lazy dog — 0123456789</div>
-            <div className="text-xs font-mono" style={{ fontFamily: getCssFontName(value.fontMono) }}>const hello = "world";</div>
+          {/* Input de frase custom + slider de tamanho */}
+          <div className="mb-3 space-y-2">
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={fontPreviewText}
+                onChange={(e) => setFontPreviewText(e.target.value)}
+                placeholder="Escreve a tua frase para preview..."
+                className="flex-1 rounded-md border px-2 py-1 text-[11px]"
+                style={{ background: previewCard, color: previewText, borderColor: previewMuted + "40" }}
+              />
+              <button
+                type="button"
+                onClick={() => setFontPreviewText("The quick brown fox jumps over the lazy dog")}
+                className="rounded-md border px-2 py-1 text-[9px] whitespace-nowrap"
+                style={{ background: previewCard, color: previewText, borderColor: previewMuted + "40" }}
+                title="Resetar frase"
+              >
+                Reset
+              </button>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] whitespace-nowrap" style={{ color: previewMuted }}>Tamanho:</span>
+              <input
+                type="range"
+                min="10"
+                max="64"
+                value={fontPreviewSize}
+                onChange={(e) => setFontPreviewSize(Number(e.target.value))}
+                className="flex-1 h-1 cursor-pointer"
+                style={{ accentColor: previewAccent }}
+              />
+              <span className="text-[9px] w-8 text-right" style={{ color: previewMuted }}>{fontPreviewSize}px</span>
+            </div>
           </div>
+
+          {/* Preview das 3 fonts com a frase custom */}
+          <div className="space-y-2">
+            <div
+              className="font-bold leading-tight"
+              style={{ fontFamily: getCssFontName(value.fontHeading), fontSize: `${fontPreviewSize}px`, color: previewText }}
+            >
+              {fontPreviewText || "Heading preview"}
+            </div>
+            <div
+              className="leading-relaxed"
+              style={{ fontFamily: getCssFontName(value.fontBody), fontSize: `${Math.max(12, fontPreviewSize * 0.6)}px`, color: previewText }}
+            >
+              {fontPreviewText || "Body preview"} — 0123456789
+            </div>
+            {value.fontCount === 3 && (
+              <div
+                className="font-mono"
+                style={{ fontFamily: getCssFontName(value.fontMono), fontSize: `${Math.max(10, fontPreviewSize * 0.45)}px`, color: previewMuted }}
+              >
+                {fontPreviewText || "const hello"} = "world";
+              </div>
+            )}
+          </div>
+
           <button type="button" onClick={() => setShowFontPopup(!showFontPopup)} className="mt-2 flex items-center gap-1 text-[10px] opacity-70 hover:opacity-100">
             <Layers className="h-3 w-3" /> {showFontPopup ? "Fechar" : "Expandir"} mockup tipografia
           </button>
@@ -2129,8 +2187,8 @@ function FontSelector({ label, value, locked, onChange, onToggleLock, category }
         <option value="">Auto</option>
         {category ? (
           // Modo filtrado por categoria
-          getFontsByCategory(category).map((f) => (
-            <option key={f.name} value={f.name} style={{ fontFamily: f.name }} title={`${f.source} · ${f.foundry} · ${f.siteType.join(", ")}`}>
+          getFontsByCategory(category).map((f, i) => (
+            <option key={`${f.name}-${f.source}-${i}`} value={f.name} style={{ fontFamily: f.name }} title={`${f.source} · ${f.foundry} · ${f.siteType.join(", ")}`}>
               {f.name} — {f.source}
             </option>
           ))
@@ -2138,29 +2196,29 @@ function FontSelector({ label, value, locked, onChange, onToggleLock, category }
           // Modo completo: agrupado por categoria
           <>
             <optgroup label={`── Sans-serif (${sansFonts.length}) ──`}>
-              {sansFonts.map((f) => (
-                <option key={f.name} value={f.name} style={{ fontFamily: f.name }} title={`${f.source} · ${f.foundry}`}>
+              {sansFonts.map((f, i) => (
+                <option key={`${f.name}-${f.source}-${i}`} value={f.name} style={{ fontFamily: f.name }} title={`${f.source} · ${f.foundry}`}>
                   {f.name} — {f.source}
                 </option>
               ))}
             </optgroup>
             <optgroup label={`── Display/Grotesk (${displayFonts.length}) ──`}>
-              {displayFonts.map((f) => (
-                <option key={f.name} value={f.name} style={{ fontFamily: f.name }} title={`${f.source} · ${f.foundry}`}>
+              {displayFonts.map((f, i) => (
+                <option key={`${f.name}-${f.source}-${i}`} value={f.name} style={{ fontFamily: f.name }} title={`${f.source} · ${f.foundry}`}>
                   {f.name} — {f.source}
                 </option>
               ))}
             </optgroup>
             <optgroup label={`── Serif/Editorial (${serifFonts.length}) ──`}>
-              {serifFonts.map((f) => (
-                <option key={f.name} value={f.name} style={{ fontFamily: f.name }} title={`${f.source} · ${f.foundry}`}>
+              {serifFonts.map((f, i) => (
+                <option key={`${f.name}-${f.source}-${i}`} value={f.name} style={{ fontFamily: f.name }} title={`${f.source} · ${f.foundry}`}>
                   {f.name} — {f.source}
                 </option>
               ))}
             </optgroup>
             <optgroup label={`── Mono/Dev (${monoFonts.length}) ──`}>
-              {monoFonts.map((f) => (
-                <option key={f.name} value={f.name} style={{ fontFamily: f.name }} title={`${f.source} · ${f.foundry}`}>
+              {monoFonts.map((f, i) => (
+                <option key={`${f.name}-${f.source}-${i}`} value={f.name} style={{ fontFamily: f.name }} title={`${f.source} · ${f.foundry}`}>
                   {f.name} — {f.source}
                 </option>
               ))}
