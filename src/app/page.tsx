@@ -160,6 +160,7 @@ export default function Home() {
     layoutStyle: "auto",
     effectsStyle: [],
     _quickPresetId: "",
+    paletteMode: "normal",
   });
   const [showForm, setShowForm] = useState(true);
   const [activePreset, setActivePreset] = useState<string | null>(null);

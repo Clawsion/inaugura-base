@@ -1342,3 +1342,61 @@ export const COLOR_TRENDS_2026: ColorTrend[] = [
   { id: "pantone-cloud", name: "Pantone Cloud Dancer", description: "Pantone 2026 — soft whites + calming influence", colors: ["#F5F2EB", "#E8E4DC", "#FFFFFF", "#A8A095"], tags: ["Pantone", "2026", "Calm"] },
   { id: "mocha-mousse", name: "Mocha Mousse", description: "Pantone 2025 — warm brown cacao tones", colors: ["#A47864", "#5D4037", "#F5F0E8", "#8B6F47"], tags: ["Pantone", "Warm", "Earth"] },
 ];
+
+// ============================================================================
+// TENDÊNCIAS TRANSIENTES — Paletes dinâmicas para gradientes/aurora/mesh
+// ============================================================================
+// 25 paletes "transientes" desenhadas para uso intensivo em gradientes.
+// Ao contrário das paletes normais (cores estáticas planas), estas são
+// otimizadas para: mesh gradients, aurora backgrounds, gradient text,
+// animated backgrounds, e efeitos de profundidade.
+//
+// Cada palete tem 4 cores com progressão de luminosidade suave (essencial
+// para gradientes bonitos) + tags indicando o tipo de gradiente recomendado.
+// ============================================================================
+export const COLOR_TRANSIENTS_2026: ColorTrend[] = [
+  // ─── Aurora / Atmospheric (5) ──────────────────────────────────────────
+  { id: "trans-aurora-violet", name: "Aurora Violet", description: "Aurora violeta — mesh gradient noturno", colors: ["#0A0A0F", "#1E1B4B", "#8B5CF6", "#C4B5FD"], tags: ["Aurora", "Mesh", "Dark"] },
+  { id: "trans-aurora-cyan", name: "Aurora Cyan", description: "Aurora cyan — gradiente atmosférico frio", colors: ["#0B1224", "#1E3A8A", "#06B6D4", "#67E8F9"], tags: ["Aurora", "Atmospheric", "Cold"] },
+  { id: "trans-aurora-rose", name: "Aurora Rose", description: "Aurora rosa — mesh gradient quente", colors: ["#1A0A1A", "#4A0E4E", "#EC4899", "#F9A8D4"], tags: ["Aurora", "Mesh", "Warm"] },
+  { id: "trans-aurora-emerald", name: "Aurora Emerald", description: "Aurora esmeralda — gradiente orgânico", colors: ["#0A1A0A", "#14532D", "#10B981", "#6EE7B7"], tags: ["Aurora", "Organic", "Green"] },
+  { id: "trans-aurora-gold", name: "Aurora Gold", description: "Aurora dourada — mesh gradient luxo", colors: ["#0F0E0C", "#3D2F1F", "#C9A961", "#F5E6CA"], tags: ["Aurora", "Luxury", "Mesh"] },
+
+  // ─── Mesh Gradient (5) ─────────────────────────────────────────────────
+  { id: "trans-mesh-ocean", name: "Mesh Ocean", description: "Mesh oceano — multi-radial premium", colors: ["#0B1224", "#1E3A8A", "#3B82F6", "#06B6D4"], tags: ["Mesh", "Ocean", "Premium"] },
+  { id: "trans-mesh-sunset", name: "Mesh Sunset", description: "Mesh sunset — radial gradient quente", colors: ["#1A0F0A", "#431407", "#FB923C", "#FED7AA"], tags: ["Mesh", "Sunset", "Warm"] },
+  { id: "trans-mesh-forest", name: "Mesh Forest", description: "Mesh floresta — radial gradient orgânico", colors: ["#0A1A0A", "#14532D", "#84CC16", "#DCFCE7"], tags: ["Mesh", "Forest", "Organic"] },
+  { id: "trans-mesh-cyber", name: "Mesh Cyber", description: "Mesh cyber — radial gradient tech", colors: ["#0A0E1A", "#1E293B", "#3B82F6", "#06B6D4"], tags: ["Mesh", "Cyber", "Tech"] },
+  { id: "trans-mesh-candy", name: "Mesh Candy", description: "Mesh candy — radial gradient playful", colors: ["#1A0A1A", "#4A0E4E", "#EC4899", "#A855F7"], tags: ["Mesh", "Candy", "Playful"] },
+
+  // ─── Linear Gradient Flow (5) ──────────────────────────────────────────
+  { id: "trans-flow-linear", name: "Linear Flow", description: "Linear flow — gradiente Linear style", colors: ["#0C0A09", "#1E1B4B", "#5E6AD2", "#8B5CF6"], tags: ["Flow", "Linear", "SaaS"] },
+  { id: "trans-flow-vercel", name: "Vercel Flow", description: "Vercel flow — gradiente Vercel style", colors: ["#000000", "#0A0A0A", "#171717", "#0070F3"], tags: ["Flow", "Vercel", "Minimal"] },
+  { id: "trans-flow-stripe", name: "Stripe Flow", description: "Stripe flow — gradiente Stripe style", colors: ["#FFFAF0", "#F5F0E8", "#6355FF", "#0A2540"], tags: ["Flow", "Stripe", "Editorial"] },
+  { id: "trans-flow-raycast", name: "Raycast Flow", description: "Raycast flow — gradiente Raycast style", colors: ["#0A0A0A", "#1A1A2E", "#7C3AED", "#06B6D4"], tags: ["Flow", "Raycast", "Dev"] },
+  { id: "trans-flow-cursor", name: "Cursor Flow", description: "Cursor flow — gradiente Cursor style", colors: ["#0A0A0A", "#1A1A1A", "#3B82F6", "#8B5CF6"], tags: ["Flow", "Cursor", "AI"] },
+
+  // ─── Liquid / Morph (5) ────────────────────────────────────────────────
+  { id: "trans-liquid-mercury", name: "Liquid Mercury", description: "Mercúrio líquido — morph metálico", colors: ["#1A1A1A", "#3D3D3D", "#9CA3AF", "#E5E7EB"], tags: ["Liquid", "Morph", "Metallic"] },
+  { id: "trans-liquid-lava", name: "Liquid Lava", description: "Lava líquida — morph quente", colors: ["#1A0A0A", "#4A0E0E", "#DC2626", "#FBBF24"], tags: ["Liquid", "Morph", "Hot"] },
+  { id: "trans-liquid-ocean", name: "Liquid Ocean", description: "Oceano líquido — morph frio", colors: ["#0A1A2E", "#0C4A6E", "#0EA5E9", "#7DD3FC"], tags: ["Liquid", "Morph", "Cold"] },
+  { id: "trans-liquid-plasma", name: "Liquid Plasma", description: "Plasma líquido — morph neon", colors: ["#0A0A1A", "#1E1B4B", "#A855F7", "#06B6D4"], tags: ["Liquid", "Morph", "Neon"] },
+  { id: "trans-liquid-aurora", name: "Liquid Aurora", description: "Aurora líquida — morph orgânico", colors: ["#0A1A0A", "#14532D", "#10B981", "#67E8F9"], tags: ["Liquid", "Morph", "Organic"] },
+
+  // ─── Glow / Bloom (5) ──────────────────────────────────────────────────
+  { id: "trans-glow-violet", name: "Glow Violet", description: "Glow violeta — bloom premium", colors: ["#0A0A0F", "#1E1B4B", "#8B5CF6", "#E9D5FF"], tags: ["Glow", "Bloom", "Violet"] },
+  { id: "trans-glow-cyan", name: "Glow Cyan", description: "Glow cyan — bloom tech", colors: ["#0B1224", "#1E3A8A", "#06B6D4", "#A5F3FC"], tags: ["Glow", "Bloom", "Cyan"] },
+  { id: "trans-glow-amber", name: "Glow Amber", description: "Glow âmbar — bloom warm", colors: ["#1A0F0A", "#431407", "#F59E0B", "#FDE68A"], tags: ["Glow", "Bloom", "Warm"] },
+  { id: "trans-glow-emerald", name: "Glow Emerald", description: "Glow esmeralda — bloom organic", colors: ["#0A1A0A", "#14532D", "#10B981", "#A7F3D0"], tags: ["Glow", "Bloom", "Organic"] },
+  { id: "trans-glow-magenta", name: "Glow Magenta", description: "Glow magenta — bloom cyber", colors: ["#1A0A1A", "#4A0E4E", "#EC4899", "#FBCFE8"], tags: ["Glow", "Bloom", "Cyber"] },
+];
+
+// Helper: obter todas as paletes (normais + transientes)
+export function getAllPalettes(): ColorTrend[] {
+  return [...COLOR_TRENDS_2026, ...COLOR_TRANSIENTS_2026];
+}
+
+// Helper: obter paletes por modo
+export function getPalettesByMode(mode: "normal" | "transient"): ColorTrend[] {
+  return mode === "transient" ? COLOR_TRANSIENTS_2026 : COLOR_TRENDS_2026;
+}

@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { CATALOG } from "@/lib/catalog";
 import { FONT_CATALOG, getFontsByCategory, type FontDef } from "@/lib/font-catalog";
-import { adjustColor, generatePalette, generateRandomPalette, polishPalette, optimizePalette, polishSingleColor, generateAwwwardsPalette, transformToAwwwards, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
+import { adjustColor, generatePalette, generateRandomPalette, polishPalette, optimizePalette, polishSingleColor, generateAwwwardsPalette, transformToAwwwards, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_TRANSIENTS_2026, getPalettesByMode, getAllPalettes, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
 import { useFontLoader, getCssFontName } from "@/lib/use-font-loader";
 import { GradientPalettesLibrary } from "@/components/palette/GradientPalettesLibrary";
 import type { GradientPalette } from "@/lib/gradient-palettes";
@@ -65,6 +65,8 @@ export interface SimpleForgeValues {
   effectsStyle: string[];
   // ID do Quick Preset ativo (para highlight no grid)
   _quickPresetId?: string;
+  // Modo de paletes: "normal" = COLOR_TRENDS_2026, "transient" = COLOR_TRANSIENTS_2026
+  paletteMode: "normal" | "transient";
 }
 
 interface SimpleForgeProps {
@@ -427,8 +429,10 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
   // de cores ao mais alto nivel"
   // Special global = deteta cada palete visível no grid e transforma para premium
   const generateSpecialGlobal = useCallback(() => {
+    // Usa a secção ativa (normal OU transiente)
+    const source = getPalettesByMode(value.paletteMode);
     // Para a palete ATIVA: usar customColors se existirem, senão gerar da trend
-    const activeTrend = COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
+    const activeTrend = source.find((t) => t.id === value.colorPreset) ?? source[0];
     const activeColors = value.customColors.length > 0
       ? value.customColors
       : activeTrend.colors.slice(0, value.colorCount).map((hex, i) => ({
@@ -447,9 +451,9 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       { hex: palette.card, role: "Suporte" },
     ];
 
-    // Para CADA trend visível no grid: deteta as cores atuais dessa trend e transforma
+    // Para CADA trend visível no grid (da secção ativa): deteta e transforma
     const newOverrides: Record<string, { hex: string; role: string }[]> = {};
-    COLOR_TRENDS_2026.forEach((trend) => {
+    source.forEach((trend) => {
       // Cores atuais dessa trend = override existente OU cores estáticas da trend
       const currentTrendColors = value.trendOverrides[trend.id] ??
         trend.colors.slice(0, value.colorCount).map((hex, i) => ({
@@ -472,15 +476,18 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       trendOverrides: newOverrides,
       polishType: "jewel",
     });
-    toast.success(`🎨 Special: "${palette.name}" aplicado`, {
+    const modeLabel = value.paletteMode === "transient" ? "transientes" : "normais";
+    toast.success(`🎨 Special: "${palette.name}" aplicado às paletes ${modeLabel}`, {
       description: `Cores atuais elevadas ao nível Awwwards — ${value.colorCount} cores otimizadas`,
       duration: 3500,
     });
-  }, [value.customColors, value.colorCount, value.colorPreset, value.trendOverrides, onChange]);
+  }, [value.customColors, value.colorCount, value.colorPreset, value.trendOverrides, value.paletteMode, onChange]);
 
   // SPECIAL (individual) — DETETA cores de UMA trend específica e TRANSFORMA-as
+  // Procura em ambas as secções (normal + transiente) para encontrar a trend
   const generateSpecialForTrend = useCallback((trendId: string) => {
-    const trend = COLOR_TRENDS_2026.find((t) => t.id === trendId);
+    const allPalettes = getAllPalettes();
+    const trend = allPalettes.find((t) => t.id === trendId);
     if (!trend) return;
 
     // Cores atuais dessa trend = override existente OU cores estáticas da trend
@@ -555,11 +562,13 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
 
   // Generate GLOBAL — gera variação para TODAS as paletes visíveis no grid
   // Cada trend recebe a sua própria combinação compatível (override independente)
+  // NOTA: Usa a secção ativa (normal OU transiente) — Generate só afeta a secção visível
   const generateAllPalettes = useCallback(() => {
     const newOverrides: Record<string, { hex: string; role: string }[]> = { ...value.trendOverrides };
+    const source = getPalettesByMode(value.paletteMode);
     const trendsToGenerate = paletteFilter === "all"
-      ? COLOR_TRENDS_2026
-      : COLOR_TRENDS_2026.filter((t) => (TREND_FILTERS[t.id] ?? []).includes(paletteFilter));
+      ? source
+      : source.filter((t) => (TREND_FILTERS[t.id] ?? []).includes(paletteFilter));
 
     const styleForGen = value.colorStyle === "auto" ? undefined : value.colorStyle;
     for (const trend of trendsToGenerate) {
@@ -574,14 +583,16 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     }
     onChange(patch);
     const styleName = value.colorStyle === "auto" ? "Auto" : (COLOR_STYLES.find(s => s.id === value.colorStyle)?.name ?? "Auto");
-    toast.success(`${trendsToGenerate.length} paletes regeneradas — estilo ${styleName}`);
-  }, [value.colorCount, value.colorPreset, value.trendOverrides, value.colorStyle, paletteFilter, onChange]);
+    const modeLabel = value.paletteMode === "transient" ? "transientes" : "normais";
+    toast.success(`${trendsToGenerate.length} paletes ${modeLabel} regeneradas — estilo ${styleName}`);
+  }, [value.colorCount, value.colorPreset, value.trendOverrides, value.colorStyle, paletteFilter, value.paletteMode, onChange]);
 
-  // Paletes filtradas
+  // Paletes filtradas — usa a secção ativa (normal OU transiente)
   const filteredPalettes = useMemo(() => {
-    if (paletteFilter === "all") return COLOR_TRENDS_2026;
-    return COLOR_TRENDS_2026.filter((t) => (TREND_FILTERS[t.id] ?? []).includes(paletteFilter));
-  }, [paletteFilter]);
+    const source = getPalettesByMode(value.paletteMode);
+    if (paletteFilter === "all") return source;
+    return source.filter((t) => (TREND_FILTERS[t.id] ?? []).includes(paletteFilter));
+  }, [paletteFilter, value.paletteMode]);
 
   // Cor ativa para preview — SEMPRE usa customColors se existirem, senão gera da tendência
   const activePalette = useMemo(() => {
@@ -1001,6 +1012,53 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
               </button>
             ))}
           </div>
+        </div>
+
+        {/* ═══════════════════════════════════════════════════════════════════ */}
+        {/* TABS: Paletes Normais vs Transientes                              */}
+        {/* ═══════════════════════════════════════════════════════════════════ */}
+        <div className="flex gap-1 rounded-lg border border-border bg-card/30 p-1">
+          <button
+            type="button"
+            onClick={() => onChange({ paletteMode: "normal" })}
+            className={cn(
+              "flex-1 rounded-md px-3 py-1.5 text-[10px] font-semibold transition-all",
+              value.paletteMode === "normal"
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+            )}
+            title="25 paletes normais — cores estáticas planas para uso geral"
+          >
+            <Layers className="mr-1 inline h-3 w-3" />
+            Paletes Normais
+            <span className="ml-1 opacity-60">({COLOR_TRENDS_2026.length})</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => onChange({ paletteMode: "transient" })}
+            className={cn(
+              "flex-1 rounded-md px-3 py-1.5 text-[10px] font-semibold transition-all",
+              value.paletteMode === "transient"
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+            )}
+            style={value.paletteMode === "transient" ? {
+              background: "linear-gradient(135deg, #8B5CF6, #3B82F6)",
+              color: "#fff",
+            } : undefined}
+            title="25 paletes transientes — otimizadas para gradientes/aurora/mesh"
+          >
+            <Sparkles className="mr-1 inline h-3 w-3" />
+            Paletes Transientes
+            <span className="ml-1 opacity-60">({COLOR_TRANSIENTS_2026.length})</span>
+          </button>
+        </div>
+
+        {/* Descrição do modo ativo */}
+        <div className="text-[9px] italic text-muted-foreground">
+          {value.paletteMode === "transient"
+            ? "✨ Modo Transiente — paletes otimizadas para gradientes, mesh, aurora. Generate só afeta esta secção."
+            : "📋 Modo Normal — paletes estáticas para uso geral. Generate só afeta esta secção."}
         </div>
 
         {/* Filtros por tipo de website */}
