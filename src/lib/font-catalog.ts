@@ -21,6 +21,12 @@ export interface FontDef {
   license?: "free" | "paid" | "freemium";
   // O que faz esta font ÚNICA vs outras da mesma categoria
   personality: string;
+  // URL para download da font (página do site original)
+  sourceUrl?: string;
+  // Tipo de licença (para incluir no .zip)
+  licenseType?: string; // ex: "OFL", "ITF-FFL", "Apache 2.0", "CC BY 4.0"
+  // CDN onde a font pode ser carregada (Google Fonts, Fontshare, etc.)
+  cdn?: "google" | "fontshare" | "none";
 }
 
 export const FONT_CATALOG: FontDef[] = [

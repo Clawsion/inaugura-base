@@ -14,7 +14,7 @@
 import { useEffect } from "react";
 
 // Fonts confirmadas no Google Fonts (carregamento garantido)
-const GOOGLE_FONTS_CONFIRMED = new Set([
+export const GOOGLE_FONTS_CONFIRMED = new Set([
   "Geist", "Geist Mono", "Inter", "Plus Jakarta Sans", "DM Sans", "Manrope",
   "Lexend", "Poppins", "Space Grotesk", "Sora", "Syne", "Unbounded",
   "Bricolage Grotesque", "Archivo", "Big Shoulders Display", "Anton",
@@ -54,7 +54,7 @@ const GOOGLE_FONTS_CONFIRMED = new Set([
 ]);
 
 // Fonts confirmadas no Fontshare (carregamento garantido)
-const FONTSHARE_FONTS_CONFIRMED = new Set([
+export const FONTSHARE_FONTS_CONFIRMED = new Set([
   "Satoshi", "General Sans", "Switzer", "Cabinet Grotesk", "Clash Display",
   "Clash Grotesk", "Boska", "Technor", "Melodrama", "Aktura", "RX100",
   "Zodiak", "Tanker", "Sentient", "Bespoke Serif", "Erode", "Gambetta",
@@ -186,4 +186,17 @@ export function getCssFontName(fontName: string): string {
   if (!fontName || fontName === "Auto" || fontName === "") return "inherit";
   const actual = PAID_FONT_ALTERNATIVES[fontName] ?? fontName;
   return `'${actual}', system-ui, sans-serif`;
+}
+
+// Helper: verificar se uma font pode carregar de CDN (Google/Fontshare)
+export function isFontOnCdn(fontName: string): boolean {
+  if (!fontName || fontName === "Auto" || fontName === "") return false;
+  const actual = PAID_FONT_ALTERNATIVES[fontName] ?? fontName;
+  return GOOGLE_FONTS_CONFIRMED.has(actual) || FONTSHARE_FONTS_CONFIRMED.has(actual);
+}
+
+// Helper: verificar se uma font já foi carregada com sucesso
+export function isFontLoaded(fontName: string): boolean {
+  if (!fontName || fontName === "Auto" || fontName === "") return false;
+  return loadedFonts.has(fontName) && !failedFonts.has(fontName);
 }

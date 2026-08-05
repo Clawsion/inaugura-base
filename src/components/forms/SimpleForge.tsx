@@ -10,7 +10,7 @@ import { QuickPresets, type QuickPreset } from "@/components/forms/QuickPresets"
 import { SavedPalettesLibrary, type SavedPalette } from "@/components/palette/SavedPalettesLibrary";
 import {
   Sparkles, Lightbulb, Plus, Trash2, ChevronDown, Wand2, ArrowRight,
-  Dices, Eye, X, Layers, Zap, Lock, RefreshCw, Palette, Maximize2, Check, Info, BookOpen, Cpu,
+  Dices, Eye, X, Layers, Zap, Lock, RefreshCw, Palette, Maximize2, Check, Info, BookOpen, Cpu, Code2,
   Rocket, AppWindow, ShoppingBag, Briefcase, LayoutDashboard, FileText, Store,
   UtensilsCrossed, GraduationCap, Home, Wand2 as WandIcon, MoreHorizontal,
 } from "lucide-react";
@@ -20,7 +20,8 @@ import { toast } from "sonner";
 import { CATALOG } from "@/lib/catalog";
 import { FONT_CATALOG, getFontsByCategory, type FontDef } from "@/lib/font-catalog";
 import { adjustColor, generatePalette, generateRandomPalette, generateGradientPremiumPalette, polishPalette, optimizePalette, polishSingleColor, generateAwwwardsPalette, transformToAwwwards, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_TRANSIENTS_2026, getPalettesByMode, getAllPalettes, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
-import { useFontLoader, getCssFontName } from "@/lib/use-font-loader";
+import { useFontLoader, getCssFontName, isFontOnCdn } from "@/lib/use-font-loader";
+import { generateFontPack, type FontInstallation } from "@/lib/font-installation";
 import { GradientPalettesLibrary } from "@/components/palette/GradientPalettesLibrary";
 import type { GradientPalette } from "@/lib/gradient-palettes";
 
@@ -331,6 +332,8 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
   // Preview de font em tempo real — frase custom + slider de tamanho
   const [fontPreviewText, setFontPreviewText] = useState("The quick brown fox jumps over the lazy dog");
   const [fontPreviewSize, setFontPreviewSize] = useState(24);
+  // Popup de código de instalação (@font-face + download + license)
+  const [showFontInstall, setShowFontInstall] = useState(false);
   const [expandedStackGroup, setExpandedStackGroup] = useState<string | null>(null);
   const [showSecretMotion, setShowSecretMotion] = useState(false);
   const [paletteFilter, setPaletteFilter] = useState("all");
@@ -1545,31 +1548,177 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
 
           {/* Preview das 3 fonts com a frase custom */}
           <div className="space-y-2">
-            <div
-              className="font-bold leading-tight"
-              style={{ fontFamily: getCssFontName(value.fontHeading), fontSize: `${fontPreviewSize}px`, color: previewText }}
-            >
-              {fontPreviewText || "Heading preview"}
-            </div>
-            <div
-              className="leading-relaxed"
-              style={{ fontFamily: getCssFontName(value.fontBody), fontSize: `${Math.max(12, fontPreviewSize * 0.6)}px`, color: previewText }}
-            >
-              {fontPreviewText || "Body preview"} — 0123456789
-            </div>
-            {value.fontCount === 3 && (
+            {/* Heading com badge de estado */}
+            <div className="flex items-start gap-2">
               <div
-                className="font-mono"
-                style={{ fontFamily: getCssFontName(value.fontMono), fontSize: `${Math.max(10, fontPreviewSize * 0.45)}px`, color: previewMuted }}
+                className="flex-1 font-bold leading-tight"
+                style={{ fontFamily: getCssFontName(value.fontHeading), fontSize: `${fontPreviewSize}px`, color: previewText }}
               >
-                {fontPreviewText || "const hello"} = "world";
+                {fontPreviewText || "Heading preview"}
+              </div>
+              {value.fontHeading && value.fontHeading !== "Auto" && (
+                <span
+                  className="mt-1 shrink-0 rounded px-1.5 py-0.5 text-[8px] font-bold whitespace-nowrap"
+                  style={isFontOnCdn(value.fontHeading)
+                    ? { background: "rgba(34,197,94,0.15)", color: "#22c55e", border: "1px solid rgba(34,197,94,0.3)" }
+                    : { background: "rgba(234,179,8,0.15)", color: "#eab308", border: "1px solid rgba(234,179,8,0.3)" }
+                  }
+                  title={isFontOnCdn(value.fontHeading)
+                    ? "✓ Font no CDN — carrega automaticamente"
+                    : "⚠ Font não está em CDN — precisa download manual (ver código de instalação)"
+                  }
+                >
+                  {isFontOnCdn(value.fontHeading) ? "✓ CDN" : "⚠ DOWNLOAD"}
+                </span>
+              )}
+            </div>
+            {/* Body com badge */}
+            <div className="flex items-start gap-2">
+              <div
+                className="flex-1 leading-relaxed"
+                style={{ fontFamily: getCssFontName(value.fontBody), fontSize: `${Math.max(12, fontPreviewSize * 0.6)}px`, color: previewText }}
+              >
+                {fontPreviewText || "Body preview"} — 0123456789
+              </div>
+              {value.fontBody && value.fontBody !== "Auto" && value.fontBody !== value.fontHeading && (
+                <span
+                  className="mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[8px] font-bold whitespace-nowrap"
+                  style={isFontOnCdn(value.fontBody)
+                    ? { background: "rgba(34,197,94,0.15)", color: "#22c55e", border: "1px solid rgba(34,197,94,0.3)" }
+                    : { background: "rgba(234,179,8,0.15)", color: "#eab308", border: "1px solid rgba(234,179,8,0.3)" }
+                  }
+                >
+                  {isFontOnCdn(value.fontBody) ? "✓ CDN" : "⚠ DOWNLOAD"}
+                </span>
+              )}
+            </div>
+            {/* Mono com badge */}
+            {value.fontCount === 3 && (
+              <div className="flex items-start gap-2">
+                <div
+                  className="flex-1 font-mono"
+                  style={{ fontFamily: getCssFontName(value.fontMono), fontSize: `${Math.max(10, fontPreviewSize * 0.45)}px`, color: previewMuted }}
+                >
+                  {fontPreviewText || "const hello"} = "world";
+                </div>
+                {value.fontMono && value.fontMono !== "Auto" && value.fontMono !== value.fontHeading && (
+                  <span
+                    className="mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[8px] font-bold whitespace-nowrap"
+                    style={isFontOnCdn(value.fontMono)
+                      ? { background: "rgba(34,197,94,0.15)", color: "#22c55e", border: "1px solid rgba(34,197,94,0.3)" }
+                      : { background: "rgba(234,179,8,0.15)", color: "#eab308", border: "1px solid rgba(234,179,8,0.3)" }
+                    }
+                  >
+                    {isFontOnCdn(value.fontMono) ? "✓ CDN" : "⚠ DOWNLOAD"}
+                  </span>
+                )}
               </div>
             )}
           </div>
 
-          <button type="button" onClick={() => setShowFontPopup(!showFontPopup)} className="mt-2 flex items-center gap-1 text-[10px] opacity-70 hover:opacity-100">
-            <Layers className="h-3 w-3" /> {showFontPopup ? "Fechar" : "Expandir"} mockup tipografia
-          </button>
+          {/* Botões: expandir mockup + ver código de instalação */}
+          <div className="mt-2 flex items-center gap-3">
+            <button type="button" onClick={() => setShowFontPopup(!showFontPopup)} className="flex items-center gap-1 text-[10px] opacity-70 hover:opacity-100">
+              <Layers className="h-3 w-3" /> {showFontPopup ? "Fechar" : "Expandir"} mockup
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const pack = generateFontPack({
+                  heading: value.fontHeading || undefined,
+                  body: value.fontBody || undefined,
+                  mono: value.fontCount === 3 ? value.fontMono || undefined : undefined,
+                });
+                setShowFontInstall(!showFontInstall);
+                if (!showFontInstall) {
+                  const downloads = pack.needsDownloadFonts.length;
+                  if (downloads > 0) {
+                    toast.info(`${downloads} font(s) precisam download`, {
+                      description: "Ver código de instalação para links e @font-face",
+                      duration: 4000,
+                    });
+                  } else {
+                    toast.success("Todas as fonts carregam via CDN", {
+                      description: "Nenhum download manual necessário",
+                      duration: 3000,
+                    });
+                  }
+                }
+              }}
+              className="flex items-center gap-1 text-[10px] opacity-70 hover:opacity-100"
+            >
+              <Code2 className="h-3 w-3" /> {showFontInstall ? "Fechar" : "Ver"} instalação
+            </button>
+          </div>
+
+          {/* Popup: código de instalação das fonts (@font-face + download + license) */}
+          <AnimatePresence>
+            {showFontInstall && (() => {
+              const pack = generateFontPack({
+                heading: value.fontHeading || undefined,
+                body: value.fontBody || undefined,
+                mono: value.fontCount === 3 ? value.fontMono || undefined : undefined,
+              });
+              return (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden rounded-lg border border-border bg-zinc-900"
+                >
+                  <div className="p-3">
+                    {/* Summary */}
+                    <div className="mb-3 text-[10px] text-zinc-400">
+                      <span className="text-green-400">{pack.installations.filter(i => !i.needsDownload).length} CDN</span>
+                      {" · "}
+                      <span className="text-yellow-400">{pack.needsDownloadFonts.length} download</span>
+                      {" · "}
+                      <span>{pack.installations.length} total</span>
+                    </div>
+                    {/* Cada font: @font-face + instructions */}
+                    <div className="space-y-3">
+                      {pack.installations.map((inst, i) => (
+                        <div key={i} className="rounded-md border border-zinc-800 p-2">
+                          <div className="mb-1.5 flex items-center justify-between">
+                            <span className="text-[11px] font-bold text-zinc-200">{inst.fontName}</span>
+                            <span className={`rounded px-1.5 py-0.5 text-[8px] font-bold ${inst.needsDownload ? "bg-yellow-500/20 text-yellow-400" : "bg-green-500/20 text-green-400"}`}>
+                              {inst.needsDownload ? "⚠ DOWNLOAD" : "✓ CDN"}
+                            </span>
+                          </div>
+                          <pre className="overflow-x-auto rounded bg-zinc-950 p-2 text-[9px] text-green-400 whitespace-pre-wrap">{inst.fontFaceCss}</pre>
+                          <div className="mt-1.5 text-[9px] text-zinc-500 whitespace-pre-wrap">{inst.installInstructions}</div>
+                          {inst.needsDownload && (
+                            <a
+                              href={inst.sourceUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="mt-1.5 inline-flex items-center gap-1 rounded bg-blue-600/20 px-2 py-1 text-[9px] text-blue-400 hover:bg-blue-600/30"
+                            >
+                              🔗 Abrir página de download
+                            </a>
+                          )}
+                          <div className="mt-1 text-[8px] text-zinc-600">Licença: {inst.licenseType}</div>
+                        </div>
+                      ))}
+                    </div>
+                    {/* Botão copiar tudo */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(pack.combinedCss);
+                        toast.success("CSS de instalação copiado!", {
+                          description: `${pack.installations.length} @font-face declarations`,
+                        });
+                      }}
+                      className="mt-2 w-full rounded bg-zinc-800 py-1.5 text-[10px] text-zinc-300 hover:bg-zinc-700"
+                    >
+                      📋 Copiar CSS completo (@font-face)
+                    </button>
+                  </div>
+                </motion.div>
+              );
+            })()}
+          </AnimatePresence>
         </div>
 
         {/* Mockup tipografia expandido — 3 vistas diferentes */}
