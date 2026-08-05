@@ -1,15 +1,15 @@
 // ============================================================================
-// /api/font/[name]/route.ts — Font Server API v2
+// /api/font/[name]/route.ts — Font Server API v3
 // ============================================================================
 // Serve @font-face CSS para QUALQUER font do catálogo.
-// Tenta múltiplas fontes em sequência (primeiro que funciona é usado):
+// Tenta múltiplas fontes em sequência:
 //
-//   1. Fontsource CDN (jsDelivr) — serve .woff2 diretamente
-//      Cobertura: TODAS as Google Fonts + Commit Mono + outras open-source
-//   2. Google Fonts CSS API — @import CSS
-//   3. Fontshare CDN — @import CSS (Satoshi, Clash Display, etc.)
-//   4. GitHub raw (google/fonts repo) — .ttf diretamente
-//   5. Fallback: local() — não bloqueia o render
+//   1. GitHub repo próprio (Clawsion/inaugura-fonts) via jsDelivr CDN
+//      — 89 fonts já descarregadas (Fontshare + Google)
+//   2. Fontsource CDN (jsDelivr) — TODAS as Google Fonts
+//   3. Google Fonts CSS API — @import CSS
+//   4. Fontshare CDN — CSS API (para fonts que não descarregámos)
+//   5. Fallback: local()
 // ============================================================================
 
 import { NextRequest, NextResponse } from "next/server";
@@ -20,6 +20,9 @@ export const revalidate = 86400;
 const cssCache = new Map<string, { css: string; timestamp: number }>();
 const CACHE_TTL = 24 * 60 * 60 * 1000;
 
+// URL base do nosso repo GitHub via jsDelivr
+const GITHUB_CDN = "https://cdn.jsdelivr.net/gh/Clawsion/inaugura-fonts@main";
+
 function toSlug(name: string): string {
   return name
     .toLowerCase()
@@ -29,17 +32,77 @@ function toSlug(name: string): string {
     .trim();
 }
 
-// 1. Fontsource CDN
+// 1. GitHub repo próprio (Clawsion/inaugura-fonts) via jsDelivr
+async function tryGitHubRepo(fontName: string): Promise<string | null> {
+  const slug = toSlug(fontName);
+  const dirUrl = `${GITHUB_CDN}/${slug}`;
+
+  // Tentar vários padrões de nomes de ficheiro
+  const possibleFiles = [
+    `${slug}-0.woff2`,
+    `${slug}-1.woff2`,
+    `${slug}-0.ttf`,
+    `${fontName.replace(/\s+/g, "")}.ttf`,
+    `${fontName.replace(/\s+/g, "")}-Regular.ttf`,
+  ];
+
+  for (const file of possibleFiles) {
+    const url = `${dirUrl}/${file}`;
+    try {
+      const res = await fetch(url, {
+        method: "HEAD",
+        signal: AbortSignal.timeout(4000),
+      });
+      if (res.status === 200) {
+        // Encontrou! Agora tentar encontrar todos os pesos (0-5)
+        const weights = [400, 500, 600, 700, 800];
+        const faceDecls: string[] = [];
+
+        for (let i = 0; i < 6; i++) {
+          const woff2Url = `${dirUrl}/${slug}-${i}.woff2`;
+          try {
+            const checkRes = await fetch(woff2Url, {
+              method: "HEAD",
+              signal: AbortSignal.timeout(2000),
+            });
+            if (checkRes.status === 200) {
+              faceDecls.push(`@font-face {
+  font-family: '${fontName}';
+  src: url('${woff2Url}') format('woff2');
+  font-weight: ${weights[i] || 400};
+  font-display: swap;
+  font-style: normal;
+}`);
+            }
+          } catch { break; }
+        }
+
+        // Se não encontrou pesos numerados, usar o ficheiro único
+        if (faceDecls.length === 0) {
+          faceDecls.push(`@font-face {
+  font-family: '${fontName}';
+  src: url('${url}') format('${file.endsWith('.woff2') ? 'woff2' : 'truetype'}');
+  font-weight: 400 900;
+  font-display: swap;
+  font-style: normal;
+}`);
+        }
+
+        return faceDecls.join("\n\n");
+      }
+    } catch { continue; }
+  }
+
+  return null;
+}
+
+// 2. Fontsource CDN
 async function tryFontsource(fontName: string): Promise<string | null> {
   const slug = toSlug(fontName);
-  const url400 = `https://cdn.jsdelivr.net/fontsource/fonts/${slug}@latest/latin-400-normal.woff2`;
+  const url = `https://cdn.jsdelivr.net/fontsource/fonts/${slug}@latest/latin-400-normal.woff2`;
 
   try {
-    const res = await fetch(url400, {
-      method: "HEAD",
-      signal: AbortSignal.timeout(5000),
-    });
-
+    const res = await fetch(url, { method: "HEAD", signal: AbortSignal.timeout(4000) });
     if (res.status === 200) {
       const weights = [400, 500, 600, 700, 800];
       return weights.map((w) => {
@@ -54,71 +117,31 @@ async function tryFontsource(fontName: string): Promise<string | null> {
       }).join("\n\n");
     }
     return null;
-  } catch {
-    return null;
-  }
+  } catch { return null; }
 }
 
-// 2. Google Fonts CSS API
+// 3. Google Fonts CSS API
 async function tryGoogleFonts(fontName: string): Promise<string | null> {
   const family = fontName.replace(/\s+/g, "+");
   const url = `https://fonts.googleapis.com/css2?family=${family}:wght@400;500;600;700;800;900&display=swap`;
-
   try {
     const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
     const css = await res.text();
-    if (css.includes("@font-face")) {
-      return `@import url('${url}');`;
-    }
+    if (css.includes("@font-face")) return `@import url('${url}');`;
     return null;
-  } catch {
-    return null;
-  }
+  } catch { return null; }
 }
 
-// 3. Fontshare CDN
+// 4. Fontshare CSS API
 async function tryFontshare(fontName: string): Promise<string | null> {
   const slug = toSlug(fontName);
   const url = `https://api.fontshare.com/v2/css?f[]=${slug}@400,500,600,700,800,900&display=swap`;
-
   try {
     const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
     const css = await res.text();
-    if (css.includes("@font-face")) {
-      return css;
-    }
+    if (css.includes("@font-face")) return css;
     return null;
-  } catch {
-    return null;
-  }
-}
-
-// 4. GitHub raw (google/fonts repo)
-async function tryGitHubRaw(fontName: string): Promise<string | null> {
-  const slug = toSlug(fontName);
-  const fileName = fontName.replace(/\s+/g, "");
-  const possiblePaths = [
-    `https://raw.githubusercontent.com/google/fonts/main/ofl/${slug}/${fileName}-Regular.ttf`,
-    `https://raw.githubusercontent.com/google/fonts/main/ofl/${slug}/${fileName}[wght].ttf`,
-  ];
-
-  for (const url of possiblePaths) {
-    try {
-      const res = await fetch(url, { method: "HEAD", signal: AbortSignal.timeout(4000) });
-      if (res.status === 200) {
-        return `@font-face {
-  font-family: '${fontName}';
-  src: url('${url}') format('truetype');
-  font-weight: 400;
-  font-display: swap;
-  font-style: normal;
-}`;
-      }
-    } catch {
-      continue;
-    }
-  }
-  return null;
+  } catch { return null; }
 }
 
 export async function GET(
@@ -142,10 +165,10 @@ export async function GET(
   }
 
   const sources = [
+    { name: "GitHub repo (jsDelivr)", fn: () => tryGitHubRepo(fontName) },
     { name: "Fontsource", fn: () => tryFontsource(fontName) },
     { name: "Google Fonts", fn: () => tryGoogleFonts(fontName) },
     { name: "Fontshare", fn: () => tryFontshare(fontName) },
-    { name: "GitHub raw", fn: () => tryGitHubRaw(fontName) },
   ];
 
   for (const source of sources) {

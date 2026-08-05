@@ -59,4 +59,4 @@ server.log
 /worklog.md
 /agent-ctx/
 /db/*.db
-/db/*.db-journal
+/db/*.db-journalfont-files/
