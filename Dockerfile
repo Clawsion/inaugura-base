@@ -76,6 +76,9 @@ RUN chmod +x /app/entrypoint.sh
 # Switch para user não-root
 USER nextjs
 
+# Criar diretório de dados para SQLite
+RUN mkdir -p /app/data
+
 # Porta exposta
 EXPOSE 3000
 
@@ -83,12 +86,12 @@ EXPOSE 3000
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
-# DATABASE_URL deve ser definido via env var (Supabase Postgres connection string)
+ENV DATABASE_URL=file:/app/data/inaugura.db
 
 # Healthcheck para Coolify/Render saber quando a app está pronta
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
     CMD curl -f http://localhost:3000/api/health || exit 1
 
-# Entrypoint: corre migrations e arranca o servidor
+# Entrypoint: corre db push e arranca o servidor
 ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["node", "server.js"]
