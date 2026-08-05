@@ -1,14 +1,8 @@
-# ============================================================================
-# nixpacks.toml — Config para Coolify com SQLite
-# ============================================================================
-
 [phases.setup]
 nixPkgs = ["nodejs_20", "bun", "openssl"]
 
 [phases.install]
-cmds = [
-    "bun install --frozen-lockfile",
-]
+cmds = ["bun install --frozen-lockfile"]
 
 [phases.build]
 cmds = [
@@ -20,7 +14,6 @@ cmds = [
 
 [start]
 cmd = """
-    mkdir -p /app/data && \
     cd /app && \
     npx prisma db push --accept-data-loss && \
     node .next/standalone/server.js
@@ -30,5 +23,4 @@ cmd = """
 NODE_ENV = "production"
 PORT = "3000"
 HOSTNAME = "0.0.0.0"
-DATABASE_URL = "file:/app/data/inaugura.db"
 NEXT_TELEMETRY_DISABLED = "1"

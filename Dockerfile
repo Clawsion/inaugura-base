@@ -77,7 +77,6 @@ RUN chmod +x /app/entrypoint.sh
 USER nextjs
 
 # Criar diretório de dados para SQLite
-RUN mkdir -p /app/data
 
 # Porta exposta
 EXPOSE 3000
@@ -86,7 +85,7 @@ EXPOSE 3000
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
-ENV DATABASE_URL=file:/app/data/inaugura.db
+# DATABASE_URL must be set via Coolify env vars (postgresql://...)
 
 # Healthcheck para Coolify/Render saber quando a app está pronta
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \

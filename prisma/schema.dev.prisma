@@ -10,8 +10,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 // ============================================================================
-// INAUGURA BASE — Schema de produção (PostgreSQL para Vercel)
+// INAUGURA BASE — Schema de produção
 // ============================================================================
 
 model User {
