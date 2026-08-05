@@ -6,9 +6,7 @@ generator client {
 }
 
 datasource db {
-  // Render free tier não suporta persistent disks → usamos PostgreSQL externo (Supabase)
-  // Para voltar a SQLite: mudar provider para "sqlite" e DATABASE_URL para "file:/app/data/inaugura.db"
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
