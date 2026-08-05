@@ -861,6 +861,45 @@ export const SKINS: Skin[] = [
       bgPattern: "radial-gradient(at 20% 20%, rgba(139, 92, 246, 0.06) 0px, transparent 50%), radial-gradient(at 80% 10%, rgba(59, 130, 246, 0.04) 0px, transparent 45%), radial-gradient(at 70% 80%, rgba(6, 182, 212, 0.03) 0px, transparent 50%)",
     },
   },
+
+  // ── 25. Neon Auto — cyan neon glow com pill shape (cyberpunk UI) ──────────
+  // Inspirado no botão "NEON AUTO ON" — fundo deep slate + cyan neon brilhante
+  // com glow radial assimétrico, border neon, e text-shadow intenso
+  {
+    id: "neon-auto",
+    name: "Neon Auto",
+    description: "Cyan neon glow — cyberpunk UI com pill shape + text-shadow intenso",
+    category: "Neon",
+    suggestedColorPreset: "nordic-ice",
+    dark: {
+      bg: "#020617",
+      card: "#0A0F1C",
+      text: "#67E8F9",
+      muted: "#4A6B7B",
+      accent: "#00F0FF",
+      accentForeground: "#020617",
+      border: "rgba(0, 240, 255, 0.4)",
+      radius: "50px",
+      shadow: "0 0 15px rgba(0, 240, 255, 0.5), 0 0 30px rgba(0, 240, 255, 0.3), 0 0 60px rgba(0, 240, 255, 0.15), inset 0 0 15px rgba(0, 240, 255, 0.1)",
+      headingFont: "var(--font-mono), var(--font-inter), ui-monospace, monospace",
+      bodyFont: "var(--font-mono), var(--font-inter), ui-monospace, monospace",
+      bgPattern: "radial-gradient(ellipse at 50% 50%, rgba(0, 240, 255, 0.12) 0%, rgba(0, 240, 255, 0.04) 40%, transparent 70%), radial-gradient(circle at 20% 30%, rgba(0, 240, 255, 0.06) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.05) 0%, transparent 45%)",
+    },
+    light: {
+      bg: "#F0FDFF",
+      card: "#FFFFFF",
+      text: "#0C4A6E",
+      muted: "#6B7B8A",
+      accent: "#0891B2",
+      accentForeground: "#FFFFFF",
+      border: "rgba(8, 145, 178, 0.25)",
+      radius: "50px",
+      shadow: "0 0 12px rgba(8, 145, 178, 0.20), 0 2px 8px rgba(0, 0, 0, 0.04)",
+      headingFont: "var(--font-mono), var(--font-inter), ui-monospace, monospace",
+      bodyFont: "var(--font-mono), var(--font-inter), ui-monospace, monospace",
+      bgPattern: "radial-gradient(ellipse at 50% 50%, rgba(8, 145, 178, 0.05) 0%, transparent 60%), radial-gradient(circle at 20% 30%, rgba(8, 145, 178, 0.03) 0%, transparent 50%)",
+    },
+  },
 ];
 
 export function getSkinById(id: string): Skin | undefined {
