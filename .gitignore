@@ -60,3 +60,7 @@ server.log
 /agent-ctx/
 /db/*.db
 /db/*.db-journalfont-files/
+prisma/schema.dev.prisma
+prisma/schema.postgres.prisma.bak
+db/
+.z-ai-config
