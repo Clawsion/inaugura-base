@@ -1341,6 +1341,19 @@ export const COLOR_TRENDS_2026: ColorTrend[] = [
   { id: "edu-friendly", name: "Edu Friendly", description: "Blue + yellow + cream — Duolingo style", colors: ["#1CB0F6", "#FFC800", "#FFFFFF", "#3C3C3C"], tags: ["Education", "Friendly", "Approachable"] },
   { id: "pantone-cloud", name: "Pantone Cloud Dancer", description: "Pantone 2026 — soft whites + calming influence", colors: ["#F5F2EB", "#E8E4DC", "#FFFFFF", "#A8A095"], tags: ["Pantone", "2026", "Calm"] },
   { id: "mocha-mousse", name: "Mocha Mousse", description: "Pantone 2025 — warm brown cacao tones", colors: ["#A47864", "#5D4037", "#F5F0E8", "#8B6F47"], tags: ["Pantone", "Warm", "Earth"] },
+  // ─── Tendências 2025-2026 (WGSN + Pantone + Trend forecasting) ───
+  { id: "future-dusk", name: "Future Dusk", description: "WGSN 2025 — dark moody blue-purple, mysterious", colors: ["#8A9CB1", "#4A5B7A", "#1E2A47", "#0A1228"], tags: ["WGSN", "2025", "Moody"] },
+  { id: "transformative-teal", name: "Transformative Teal", description: "WGSN 2026 Color of the Year — ecological teal", colors: ["#0F766E", "#14B8A6", "#5EEAD4", "#003B36"], tags: ["WGSN", "2026", "Teal"] },
+  { id: "mermaidcore", name: "Mermaidcore", description: "2026 trend — ocean aqua + coral + pearl", colors: ["#06B6D4", "#0EA5E9", "#FB7185", "#F0FDFA"], tags: ["2026", "Ocean", "Playful"] },
+  { id: "banana-yellow", name: "Banana Yellow", description: "2026 trend — energetic yellow + deep navy", colors: ["#FACC15", "#FDE047", "#1E3A8A", "#0F172A"], tags: ["2026", "Yellow", "Energetic"] },
+  { id: "tangerine-disco", name: "Tangerine Disco", description: "2026 trend — retro disco orange + brown", colors: ["#FB923C", "#EA580C", "#431407", "#FED7AA"], tags: ["2026", "Orange", "Retro"] },
+  { id: "sunwashed-soft", name: "Sunwashed Soft", description: "2026 trend — sun-bleached pastels, calm", colors: ["#FEF3C7", "#FDE68A", "#A7F3D0", "#BAE6FD"], tags: ["2026", "Soft", "Pastel"] },
+  { id: "clubroom-contrast", name: "Clubroom Contrast", description: "2026 trend — deep clubroom + bright accent", colors: ["#1A1A1A", "#3D2817", "#DC2626", "#FCD34D"], tags: ["2026", "Contrast", "Bold"] },
+  { id: "neon-shock", name: "Neon Shock", description: "2026 trend — high-contrast neon on dark", colors: ["#0A0A0A", "#1A1A1A", "#00FF88", "#FF00FF"], tags: ["2026", "Neon", "Shock"] },
+  { id: "molten-teal", name: "Molten Teal", description: "2026 trend — molten liquid teal gradient", colors: ["#0F766E", "#06B6D4", "#F59E0B", "#FED7AA"], tags: ["2026", "Teal", "Molten"] },
+  { id: "eclectic-purple", name: "Eclectic Purple", description: "2026 trend — eclectic purple mix", colors: ["#7C3AED", "#A855F7", "#EC4899", "#1E1B4B"], tags: ["2026", "Purple", "Eclectic"] },
+  { id: "electric-blue-2026", name: "Electric Blue 2026", description: "2026 trend — bold electric blue dominating", colors: ["#0066FF", "#00A3FF", "#0A0A0A", "#FFFFFF"], tags: ["2026", "Blue", "Electric"] },
+  { id: "fiery-red-2026", name: "Fiery Red 2026", description: "2026 trend — urgent passionate red", colors: ["#DC2626", "#EF4444", "#0A0A0A", "#FED7AA"], tags: ["2026", "Red", "Fiery"] },
 ];
 
 // ============================================================================
@@ -1389,6 +1402,20 @@ export const COLOR_TRANSIENTS_2026: ColorTrend[] = [
   { id: "trans-glow-amber", name: "Glow Amber", description: "Glow âmbar — bloom warm", colors: ["#1A0F0A", "#431407", "#F59E0B", "#FDE68A"], tags: ["Glow", "Bloom", "Warm"] },
   { id: "trans-glow-emerald", name: "Glow Emerald", description: "Glow esmeralda — bloom organic", colors: ["#0A1A0A", "#14532D", "#10B981", "#A7F3D0"], tags: ["Glow", "Bloom", "Organic"] },
   { id: "trans-glow-magenta", name: "Glow Magenta", description: "Glow magenta — bloom cyber", colors: ["#1A0A1A", "#4A0E4E", "#EC4899", "#FBCFE8"], tags: ["Glow", "Bloom", "Cyber"] },
+
+  // ─── Tendências 2025-2026 Transientes (12 novas) ─────────────────────
+  { id: "trans-future-dusk", name: "Future Dusk Flow", description: "WGSN 2025 — dusk blue-purple mesh gradient", colors: ["#0A1228", "#1E2A47", "#4A5B7A", "#8A9CB1"], tags: ["WGSN", "2025", "Dusk"] },
+  { id: "trans-transformative-teal", name: "Transformative Teal Flow", description: "WGSN 2026 — ecological teal mesh gradient", colors: ["#003B36", "#0F766E", "#14B8A6", "#5EEAD4"], tags: ["WGSN", "2026", "Teal"] },
+  { id: "trans-mermaidcore", name: "Mermaidcore Flow", description: "2026 — ocean aqua + coral mesh gradient", colors: ["#0A1A2E", "#0EA5E9", "#06B6D4", "#FB7185"], tags: ["2026", "Ocean", "Mermaid"] },
+  { id: "trans-banana-yellow", name: "Banana Yellow Flow", description: "2026 — energetic yellow + navy mesh", colors: ["#0F172A", "#1E3A8A", "#FACC15", "#FDE047"], tags: ["2026", "Yellow", "Energetic"] },
+  { id: "trans-tangerine-disco", name: "Tangerine Disco Flow", description: "2026 — retro disco orange mesh gradient", colors: ["#431407", "#7C2D12", "#FB923C", "#FED7AA"], tags: ["2026", "Orange", "Disco"] },
+  { id: "trans-sunwashed-soft", name: "Sunwashed Soft Flow", description: "2026 — sun-bleached pastel mesh gradient", colors: ["#FDF6E3", "#FEF3C7", "#FDE68A", "#A7F3D0"], tags: ["2026", "Soft", "Pastel"] },
+  { id: "trans-clubroom-contrast", name: "Clubroom Contrast Flow", description: "2026 — deep clubroom + bright accent mesh", colors: ["#1A1A1A", "#3D2817", "#DC2626", "#FCD34D"], tags: ["2026", "Contrast", "Clubroom"] },
+  { id: "trans-neon-shock", name: "Neon Shock Flow", description: "2026 — high-contrast neon mesh on dark", colors: ["#0A0A0A", "#1A1A1A", "#00FF88", "#FF00FF"], tags: ["2026", "Neon", "Shock"] },
+  { id: "trans-molten-teal", name: "Molten Teal Flow", description: "2026 — molten liquid teal + amber mesh", colors: ["#003B36", "#0F766E", "#06B6D4", "#F59E0B"], tags: ["2026", "Teal", "Molten"] },
+  { id: "trans-eclectic-purple", name: "Eclectic Purple Flow", description: "2026 — eclectic purple mesh gradient", colors: ["#1E1B4B", "#7C3AED", "#A855F7", "#EC4899"], tags: ["2026", "Purple", "Eclectic"] },
+  { id: "trans-electric-blue-2026", name: "Electric Blue Flow 2026", description: "2026 — bold electric blue mesh gradient", colors: ["#0A0A0A", "#003B73", "#0066FF", "#00A3FF"], tags: ["2026", "Blue", "Electric"] },
+  { id: "trans-fiery-red-2026", name: "Fiery Red Flow 2026", description: "2026 — urgent passionate red mesh gradient", colors: ["#0A0A0A", "#450A0A", "#DC2626", "#FED7AA"], tags: ["2026", "Red", "Fiery"] },
 ];
 
 // Helper: obter todas as paletes (normais + transientes)
