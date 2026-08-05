@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { CATALOG } from "@/lib/catalog";
 import { FONT_CATALOG, getFontsByCategory, type FontDef } from "@/lib/font-catalog";
-import { adjustColor, generatePalette, generateRandomPalette, polishPalette, optimizePalette, polishSingleColor, generateAwwwardsPalette, transformToAwwwards, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_TRANSIENTS_2026, getPalettesByMode, getAllPalettes, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
+import { adjustColor, generatePalette, generateRandomPalette, generateGradientPremiumPalette, polishPalette, optimizePalette, polishSingleColor, generateAwwwardsPalette, transformToAwwwards, hexToHsl, hslToHex, COLOR_TRENDS_2026, COLOR_TRANSIENTS_2026, getPalettesByMode, getAllPalettes, COLOR_STYLES, POLISH_TYPES, type ColorStyle, type PolishType } from "@/lib/color-engine";
 import { useFontLoader, getCssFontName } from "@/lib/use-font-loader";
 import { GradientPalettesLibrary } from "@/components/palette/GradientPalettesLibrary";
 import type { GradientPalette } from "@/lib/gradient-palettes";
@@ -539,13 +539,22 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
 
   // Generate INDIVIDUAL — gera variação para UMA palete específica
   // (atualiza apenas o override desse trend; se for o ativo, atualiza customColors também)
+  // NOTA: Em modo "transient" (gradientes), usa generateGradientPremiumPalette
+  //        para gerar sempre Paletas Gradient Premium
   const generatePaletteVariation = useCallback((trendId?: string) => {
     const effectiveTrendId = trendId ?? (value.colorPreset !== "auto" ? value.colorPreset : "electric-lavender");
-    const trend = COLOR_TRENDS_2026.find((t) => t.id === effectiveTrendId) ?? COLOR_TRENDS_2026[0];
+    const allPalettes = getAllPalettes();
+    const trend = allPalettes.find((t) => t.id === effectiveTrendId) ?? getPalettesByMode(value.paletteMode)[0] ?? COLOR_TRENDS_2026[0];
 
-    // Usa a função robusta do color-engine com o style selecionado
-    const styleForGen = value.colorStyle === "auto" ? undefined : value.colorStyle;
-    const colors = generateRandomPalette(value.colorCount, trend.colors, styleForGen);
+    // Em modo transient (gradientes): usar generateGradientPremiumPalette
+    // Em modo normal: usar generateRandomPalette com o style selecionado
+    let colors: { hex: string; role: string }[];
+    if (value.paletteMode === "transient") {
+      colors = generateGradientPremiumPalette(value.colorCount, trend.colors);
+    } else {
+      const styleForGen = value.colorStyle === "auto" ? undefined : value.colorStyle;
+      colors = generateRandomPalette(value.colorCount, trend.colors, styleForGen);
+    }
 
     // Atualiza o override deste trend específico
     const newOverrides = { ...value.trendOverrides, [effectiveTrendId]: colors };
@@ -556,13 +565,20 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     } else {
       onChange({ trendOverrides: newOverrides });
     }
-    const styleName = value.colorStyle === "auto" ? "Auto" : (COLOR_STYLES.find(s => s.id === value.colorStyle)?.name ?? "Auto");
-    toast.success(`"${trend.name}" regenerada — estilo ${styleName}`);
-  }, [value.colorCount, value.colorPreset, value.trendOverrides, value.colorStyle, onChange]);
+    if (value.paletteMode === "transient") {
+      toast.success(`"${trend.name}" regenerada — Paleta Gradient Premium`, {
+        description: "Rich black + luminous accent + progressão suave para gradientes",
+      });
+    } else {
+      const styleName = value.colorStyle === "auto" ? "Auto" : (COLOR_STYLES.find(s => s.id === value.colorStyle)?.name ?? "Auto");
+      toast.success(`"${trend.name}" regenerada — estilo ${styleName}`);
+    }
+  }, [value.colorCount, value.colorPreset, value.trendOverrides, value.colorStyle, value.paletteMode, onChange]);
 
   // Generate GLOBAL — gera variação para TODAS as paletes visíveis no grid
   // Cada trend recebe a sua própria combinação compatível (override independente)
   // NOTA: Usa a secção ativa (normal OU transiente) — Generate só afeta a secção visível
+  //        Em modo "transient" (gradientes), gera sempre Paletas Gradient Premium
   const generateAllPalettes = useCallback(() => {
     const newOverrides: Record<string, { hex: string; role: string }[]> = { ...value.trendOverrides };
     const source = getPalettesByMode(value.paletteMode);
@@ -572,7 +588,13 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
 
     const styleForGen = value.colorStyle === "auto" ? undefined : value.colorStyle;
     for (const trend of trendsToGenerate) {
-      newOverrides[trend.id] = generateRandomPalette(value.colorCount, trend.colors, styleForGen);
+      if (value.paletteMode === "transient") {
+        // Modo gradientes: sempre Paleta Gradient Premium
+        newOverrides[trend.id] = generateGradientPremiumPalette(value.colorCount, trend.colors);
+      } else {
+        // Modo normal: usa generateRandomPalette com style
+        newOverrides[trend.id] = generateRandomPalette(value.colorCount, trend.colors, styleForGen);
+      }
     }
 
     // Atualiza customColors também se houver um trend ativo
@@ -582,9 +604,15 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
       patch.customColors = newOverrides[activeTrendId];
     }
     onChange(patch);
-    const styleName = value.colorStyle === "auto" ? "Auto" : (COLOR_STYLES.find(s => s.id === value.colorStyle)?.name ?? "Auto");
-    const modeLabel = value.paletteMode === "transient" ? "gradientes" : "normais";
-    toast.success(`${trendsToGenerate.length} paletes ${modeLabel} regeneradas — estilo ${styleName}`);
+    if (value.paletteMode === "transient") {
+      toast.success(`${trendsToGenerate.length} Paletas Gradient Premium geradas`, {
+        description: "Rich black + luminous accent + progressão suave para gradientes",
+      });
+    } else {
+      const styleName = value.colorStyle === "auto" ? "Auto" : (COLOR_STYLES.find(s => s.id === value.colorStyle)?.name ?? "Auto");
+      const modeLabel = "normais";
+      toast.success(`${trendsToGenerate.length} paletes ${modeLabel} regeneradas — estilo ${styleName}`);
+    }
   }, [value.colorCount, value.colorPreset, value.trendOverrides, value.colorStyle, paletteFilter, value.paletteMode, onChange]);
 
   // Paletes filtradas — usa a secção ativa (normal OU transiente)

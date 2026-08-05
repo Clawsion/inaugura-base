@@ -1427,3 +1427,78 @@ export function getAllPalettes(): ColorTrend[] {
 export function getPalettesByMode(mode: "normal" | "transient"): ColorTrend[] {
   return mode === "transient" ? COLOR_TRANSIENTS_2026 : COLOR_TRENDS_2026;
 }
+
+// ============================================================================
+// GERAR PALETA GRADIENT PREMIUM — para Generate de paletes gradientes
+// ============================================================================
+// Quando o user faz Generate no modo "Gradientes" (individual ou global),
+// esta função gera uma palete gradient premium aleatória baseada nas 8
+// paletes curatoriais da GradientPalettesLibrary.
+//
+// Princípios:
+//   - Rich black bg (tinted, nunca pure #000)
+//   - Luminous accent (sweet spot s=68-82%, l=48-56%)
+//   - Progressão de luminosidade suave (essencial para gradientes bonitos)
+//   - 4 cores com roles: Background, Secundária, Destaque, Suporte
+// ============================================================================
+export function generateGradientPremiumPalette(
+  count: 2 | 3 | 4 = 4,
+  baseColors?: string[]
+): { hex: string; role: string }[] {
+  // 8 hue bases inspiradas nas GradientPalettes (fintech, dark-premium, nordic, linear, luxury, sage, cyber, sunset)
+  const hueBases = [
+    { hue: 220, name: "Deep Trust" },     // fintech navy
+    { hue: 265, name: "Obsidian" },       // dark premium violet
+    { hue: 195, name: "Nordic" },         // nordic ice
+    { hue: 250, name: "Linear" },         // linear purple
+    { hue: 42, name: "Luxury" },          // luxury gold
+    { hue: 130, name: "Sage" },           // soft sage
+    { hue: 200, name: "Cyber" },          // cyber blue
+    { hue: 25, name: "Sunset" },          // muted sunset
+  ];
+
+  // Se houver cores base, usa o hue da primeira cor; senão escolhe aleatório
+  let hue: number;
+  let isDark: boolean;
+  if (baseColors && baseColors.length > 0) {
+    const baseHsl = hexToHsl(baseColors[0]);
+    hue = baseHsl.h;
+    isDark = baseHsl.l < 35;
+  } else {
+    const choice = hueBases[Math.floor(Math.random() * hueBases.length)];
+    hue = choice.hue;
+    isDark = Math.random() > 0.3; // 70% dark, 30% light
+  }
+
+  // Saturação base (variação premium)
+  const baseSat = 65 + Math.random() * 17; // 65-82%
+
+  // Gerar 4 cores com progressão de luminosidade suave (essencial para gradientes)
+  const bgSat = isDark ? 28 + Math.random() * 7 : 20 + Math.random() * 8;
+  const bgLight = isDark ? 7 + Math.random() * 4 : 96 + Math.random() * 2;
+  const bg = hslToHex(hue, bgSat, bgLight);
+
+  const textSat = isDark ? 15 + Math.random() * 7 : 42 + Math.random() * 8;
+  const textLight = isDark ? 92 + Math.random() * 3 : 16 + Math.random() * 4;
+  const text = hslToHex(hue, textSat, textLight);
+
+  // Accent — luminous sweet spot
+  const accentSat = Math.max(68, Math.min(82, baseSat));
+  const accentLight = Math.max(48, Math.min(56, 48 + Math.random() * 8));
+  const accent = hslToHex(hue, accentSat, accentLight);
+
+  // Card/Suporte — elevação subtil
+  const cardSat = bgSat + 4;
+  const cardLight = isDark ? bgLight + 5 : bgLight - 4;
+  const card = hslToHex(hue, cardSat, cardLight);
+
+  // Mapear por count (sempre inclui accent)
+  const allColors = [
+    { hex: bg, role: "Background" },
+    { hex: text, role: "Secundária" },
+    { hex: accent, role: "Destaque" }, // accent antes de card
+    { hex: card, role: "Suporte" },
+  ];
+
+  return allColors.slice(0, count);
+}
