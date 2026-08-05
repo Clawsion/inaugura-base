@@ -636,40 +636,7 @@ export const SKINS: Skin[] = [
     },
   },
 
-  // ── 18. Void Magenta — void + magenta neon (Awwwards cyberpunk) ───────────
-  {
-    id: "void-magenta",
-    name: "Void Magenta",
-    description: "Void + magenta neon — cyberpunk Awwwards",
-    category: "Dark",
-    dark: {
-      bg: "#060408",
-      card: "#0E0A12",
-      text: "#F8E8F4",
-      muted: "#6B4A5B",
-      accent: "#E93D82",
-      accentForeground: "#060408",
-      border: "#1A1018",
-      radius: "10px",
-      shadow: "0 0 50px rgba(233, 61, 130, 0.10), 0 4px 20px rgba(0, 0, 0, 0.6)",
-      headingFont: "var(--font-inter), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-      bgPattern: "radial-gradient(ellipse at 50% 0%, rgba(233, 61, 130, 0.08) 0%, transparent 50%), radial-gradient(circle at 20% 60%, rgba(124, 58, 237, 0.05) 0%, transparent 40%)",
-    },
-    light: {
-      bg: "#FCF0F5",
-      card: "#FFFFFF",
-      text: "#060408",
-      muted: "#7A5A6B",
-      accent: "#BE185D",
-      accentForeground: "#FFFFFF",
-      border: "#F0D8E0",
-      radius: "10px",
-      shadow: "0 2px 12px rgba(190, 24, 93, 0.06)",
-      headingFont: "var(--font-inter), system-ui, sans-serif",
-      bodyFont: "var(--font-inter), system-ui, sans-serif",
-    },
-  },
+  // ── 18. Void Magenta — REMOVIDO (substituído por skins 10/10 melhores) ──
 
   // ── 19. Aurora Teal — aurora gradient mesh with teal/emerald ──────────────
   {
@@ -773,6 +740,125 @@ export const SKINS: Skin[] = [
       shadow: "0 2px 12px rgba(234, 88, 12, 0.06)",
       headingFont: "var(--font-inter), system-ui, sans-serif",
       bodyFont: "var(--font-inter), system-ui, sans-serif",
+    },
+  },
+
+  // ════════════════════════════════════════════════════════════════════════
+  // 3 SKINS 10/10 — top tier premium (Nov 2026)
+  // ════════════════════════════════════════════════════════════════════════
+
+  // ── 22. Neon Delight — neons a brilhar (cyberpunk premium glow) ───────────
+  {
+    id: "neon-delight",
+    name: "Neon Delight",
+    description: "Neons a brilhar — cyberpunk premium com glow intenso",
+    category: "Neon",
+    suggestedColorPreset: "cyber-magenta",
+    dark: {
+      bg: "#050208",
+      card: "#0E0614",
+      text: "#F0E6FF",
+      muted: "#7A5A9B",
+      accent: "#FF00E5",
+      accentForeground: "#050208",
+      border: "rgba(255, 0, 229, 0.25)",
+      radius: "12px",
+      shadow: "0 0 40px rgba(255, 0, 229, 0.35), 0 0 80px rgba(0, 255, 200, 0.15), 0 4px 20px rgba(0, 0, 0, 0.8)",
+      headingFont: "var(--font-inter), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+      bgPattern: "radial-gradient(circle at 20% 30%, rgba(255, 0, 229, 0.12) 0%, transparent 45%), radial-gradient(circle at 80% 20%, rgba(0, 255, 200, 0.10) 0%, transparent 40%), radial-gradient(circle at 50% 80%, rgba(124, 58, 237, 0.08) 0%, transparent 50%), radial-gradient(circle at 10% 90%, rgba(255, 235, 59, 0.05) 0%, transparent 35%)",
+    },
+    light: {
+      bg: "#FFF5FF",
+      card: "#FFFFFF",
+      text: "#1A0512",
+      muted: "#7A5A7B",
+      accent: "#C026D3",
+      accentForeground: "#FFFFFF",
+      border: "rgba(192, 38, 211, 0.15)",
+      radius: "12px",
+      shadow: "0 0 24px rgba(192, 38, 211, 0.20), 0 4px 16px rgba(0, 0, 0, 0.06)",
+      headingFont: "var(--font-inter), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+      bgPattern: "radial-gradient(circle at 20% 30%, rgba(192, 38, 211, 0.06) 0%, transparent 45%), radial-gradient(circle at 80% 70%, rgba(0, 200, 200, 0.04) 0%, transparent 40%)",
+    },
+  },
+
+  // ── 23. Concrete Premium — Raw Concrete melhorado (brutalist moderno) ─────
+  // Inspirado no Raw Concrete mas mais refinado: cinzas quentes + accent vibrante
+  // + tipografia display moderna + sombras hard-edge premium
+  {
+    id: "concrete-premium",
+    name: "Concrete Premium",
+    description: "Brutalist moderno — cinzas quentes + accent vibrante + display",
+    category: "Brutalist",
+    suggestedColorPreset: "matrix-amber",
+    dark: {
+      bg: "#1C1B1A",
+      card: "#262523",
+      text: "#F5F2EE",
+      muted: "#8A857E",
+      accent: "#FF6B35",
+      accentForeground: "#1C1B1A",
+      border: "#3D3A36",
+      radius: "2px",
+      shadow: "6px 6px 0 #FF6B35, 0 0 0 1px #1C1B1A",
+      headingFont: "var(--font-clash-display), var(--font-inter), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+      bgPattern: "linear-gradient(135deg, rgba(255, 107, 53, 0.02) 0%, transparent 50%), radial-gradient(circle at 90% 10%, rgba(255, 107, 53, 0.04) 0%, transparent 30%)",
+    },
+    light: {
+      bg: "#F5F2EE",
+      card: "#FFFFFF",
+      text: "#1C1B1A",
+      muted: "#6B6660",
+      accent: "#1C1B1A",
+      accentForeground: "#FF6B35",
+      border: "#1C1B1A",
+      radius: "2px",
+      shadow: "6px 6px 0 #1C1B1A, 0 0 0 1px #1C1B1A",
+      headingFont: "var(--font-clash-display), var(--font-inter), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+      bgPattern: "linear-gradient(135deg, rgba(28, 27, 26, 0.01) 0%, transparent 50%)",
+    },
+  },
+
+  // ── 24. Aurora Mesh Pro — gradient mesh premium Awwwards 2026 ─────────────
+  // Inspirado em Linear + Vercel + Stripe — mesh gradient violet/blue/cyan
+  // com glow subtil, tipografia Geist, e profundidade atmosférica
+  {
+    id: "aurora-mesh-pro",
+    name: "Aurora Mesh Pro",
+    description: "Gradient mesh premium — Linear/Vercel/Stripe style atmosférico",
+    category: "Premium",
+    suggestedColorPreset: "electric-lavender",
+    dark: {
+      bg: "#08060F",
+      card: "#100C1F",
+      text: "#F0EDFA",
+      muted: "#7A6F9B",
+      accent: "#8B5CF6",
+      accentForeground: "#08060F",
+      border: "rgba(139, 92, 246, 0.18)",
+      radius: "14px",
+      shadow: "0 0 60px rgba(139, 92, 246, 0.12), 0 8px 32px rgba(0, 0, 0, 0.6)",
+      headingFont: "var(--font-geist), var(--font-inter), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+      bgPattern: "radial-gradient(at 20% 20%, rgba(139, 92, 246, 0.15) 0px, transparent 50%), radial-gradient(at 80% 10%, rgba(59, 130, 246, 0.12) 0px, transparent 45%), radial-gradient(at 70% 80%, rgba(6, 182, 212, 0.10) 0px, transparent 50%), radial-gradient(at 10% 70%, rgba(236, 72, 153, 0.06) 0px, transparent 40%)",
+    },
+    light: {
+      bg: "#FAF8FF",
+      card: "#FFFFFF",
+      text: "#1A0F2E",
+      muted: "#6B5F8A",
+      accent: "#7C3AED",
+      accentForeground: "#FFFFFF",
+      border: "rgba(124, 58, 237, 0.12)",
+      radius: "14px",
+      shadow: "0 4px 24px rgba(124, 58, 237, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04)",
+      headingFont: "var(--font-geist), var(--font-inter), system-ui, sans-serif",
+      bodyFont: "var(--font-inter), system-ui, sans-serif",
+      bgPattern: "radial-gradient(at 20% 20%, rgba(139, 92, 246, 0.06) 0px, transparent 50%), radial-gradient(at 80% 10%, rgba(59, 130, 246, 0.04) 0px, transparent 45%), radial-gradient(at 70% 80%, rgba(6, 182, 212, 0.03) 0px, transparent 50%)",
     },
   },
 ];
