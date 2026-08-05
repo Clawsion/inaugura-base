@@ -386,7 +386,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     const currentColors: { hex: string; role: string }[] = value.customColors.length > 0
       ? value.customColors
       : (() => {
-          const trend = COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
+          const trend = getAllPalettes().find((t) => t.id === value.colorPreset) ?? getPalettesByMode(value.paletteMode)[0] ?? COLOR_TRENDS_2026[0];
           const roles = ["Background", "Secundária", "Suporte", "Destaque"];
           return trend.colors.slice(0, value.colorCount).map((hex, i) => ({ hex, role: roles[i] ?? `Cor ${i + 1}` }));
         })();
@@ -407,7 +407,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
     const currentColors: { hex: string; role: string }[] = value.customColors.length > 0
       ? value.customColors
       : (() => {
-          const trend = COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
+          const trend = getAllPalettes().find((t) => t.id === value.colorPreset) ?? getPalettesByMode(value.paletteMode)[0] ?? COLOR_TRENDS_2026[0];
           const roles = ["Background", "Secundária", "Suporte", "Destaque"];
           return trend.colors.slice(0, value.colorCount).map((hex, i) => ({ hex, role: roles[i] ?? `Cor ${i + 1}` }));
         })();
@@ -595,26 +595,30 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
   }, [paletteFilter, value.paletteMode]);
 
   // Cor ativa para preview — SEMPRE usa customColors se existirem, senão gera da tendência
+  // NOTA: Usa getAllPalettes() para procurar em ambas as secções (normais + gradientes)
   const activePalette = useMemo(() => {
     const roles = ["Background", "Secundária", "Suporte", "Destaque"];
     if (value.customColors.length >= value.colorCount) {
       return value.customColors.slice(0, value.colorCount);
     }
+    // Procurar em TODAS as paletes (normais + gradientes)
+    const allPalettes = getAllPalettes();
+    const trend = allPalettes.find((t) => t.id === value.colorPreset) ??
+                  getPalettesByMode(value.paletteMode)[0] ??
+                  COLOR_TRENDS_2026[0];
     if (value.customColors.length > 0 && value.customColors.length < value.colorCount) {
       // Tem customColors mas menos que colorCount — completar com cores da tendência
-      const trend = COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
       const result = [...value.customColors];
       for (let i = value.customColors.length; i < value.colorCount; i++) {
         result.push({ hex: trend.colors[i] ?? "#5E6AD2", role: roles[i] ?? `Cor ${i + 1}` });
       }
       return result;
     }
-    const trend = COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
     return trend.colors.slice(0, value.colorCount).map((hex, i) => ({
       hex,
       role: roles[i] ?? `Cor ${i + 1}`,
     }));
-  }, [value.customColors, value.colorPreset, value.colorCount]);
+  }, [value.customColors, value.colorPreset, value.colorCount, value.paletteMode]);
 
   // Preview colors (sempre do tamanho colorCount) — actualizado em tempo real
   const previewColors = activePalette;
@@ -818,7 +822,7 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                 // Ao mudar colorCount, ajustar customColors também
                 if (value.customColors.length > 0) {
                   const roles = ["Background", "Secundária", "Suporte", "Destaque"];
-                  const trend = COLOR_TRENDS_2026.find((t) => t.id === value.colorPreset) ?? COLOR_TRENDS_2026[0];
+                  const trend = getAllPalettes().find((t) => t.id === value.colorPreset) ?? getPalettesByMode(value.paletteMode)[0] ?? COLOR_TRENDS_2026[0];
                   const newColors = [...value.customColors];
                   while (newColors.length < n) {
                     const idx = newColors.length;
@@ -1105,11 +1109,26 @@ export function SimpleForge({ value, onChange, onSubmit, isLoading, onSwitchToAd
                 )}
                 onClick={() => {
                   // Card inteiro clicável — seleciona a palete ao clicar em qualquer zona
+                  // Se tiver override, usa-o; senão popula customColors com as cores default
+                  // da palete (assim o preview funciona imediatamente sem precisar de Generate)
                   const existingOverride = value.trendOverrides[trend.id];
-                  onChange({
-                    colorPreset: trend.id,
-                    customColors: existingOverride ? existingOverride.map(c => ({ ...c })) : [],
-                  });
+                  if (existingOverride) {
+                    onChange({
+                      colorPreset: trend.id,
+                      customColors: existingOverride.map(c => ({ ...c })),
+                    });
+                  } else {
+                    // Sem override — usa as cores default da palete
+                    const roles = ["Background", "Secundária", "Suporte", "Destaque"];
+                    const defaultColors = trend.colors.slice(0, value.colorCount).map((hex, i) => ({
+                      hex,
+                      role: roles[i] ?? `Cor ${i + 1}`,
+                    }));
+                    onChange({
+                      colorPreset: trend.id,
+                      customColors: defaultColors,
+                    });
+                  }
                 }}
               >
                 {/* Preview do gradient (mesh) em cima — como o botão roxo de Gradientes */}

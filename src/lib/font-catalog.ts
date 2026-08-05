@@ -93,6 +93,18 @@ export const FONT_CATALOG: FontDef[] = [
   { name: "IBM Plex Mono", source: "IBM, Awwwards", category: "mono", foundry: "IBM (Google)", siteType: ["Enterprise", "Tech"], license: "free", personality: "Mono corporativa IBM — mais técnica/angular que JetBrains" },
   { name: "Berkeley Mono", source: "Terminal.dev, premium", category: "mono", foundry: "Berkeley Graphics", siteType: ["Dev", "Terminal"], license: "paid", freeAlternative: "JetBrains Mono (Google)", personality: "Mono premium CARA — terminal aesthetic, wide, retro" },
   { name: "Commit Mono", source: "Awwwards dev, free", category: "mono", foundry: "Commit (free)", siteType: ["Dev", "Terminal"], license: "free", personality: "Mono slim/narrow — mais condensada que JetBrains, distinctive" },
+
+  // ═══════════════════════════════════════════════════════════════
+  // EXPANSÃO — Fontshare + Google Fonts premium (skill: Premium Free Font Curator)
+  // ═══════════════════════════════════════════════════════════════
+  { name: "Author", source: "Fontshare, Awwwards", category: "sans", foundry: "Fontshare", siteType: ["SaaS", "Premium"], license: "free", personality: "Sans-serif widish — mais larga que Inter, editorial premium" },
+  { name: "Ranade", source: "Fontshare, Awwwards", category: "sans", foundry: "Fontshare", siteType: ["SaaS", "Editorial"], license: "free", personality: "Sans-serif angular — tech mas elegante, distinta de Satoshi" },
+  { name: "Chillax", source: "Fontshare, Awwwards", category: "display", foundry: "Fontshare", siteType: ["Awwwards", "Friendly"], license: "free", personality: "Display relaxed — rounded, chill, para headings amigáveis" },
+  { name: "Pally", source: "Fontshare, Awwwards", category: "sans", foundry: "Fontshare", siteType: ["Friendly", "Playful"], license: "free", personality: "Sans rounded bubbly — maximal friendly, para kids/playful" },
+  { name: "Outfit", source: "Google Fonts, SaaS", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Modern"], license: "free", personality: "Geométrica universal — mais limpa que Plus Jakarta, SaaS ready" },
+  { name: "Figtree", source: "Google Fonts, Awwwards", category: "sans", foundry: "Google Fonts", siteType: ["SaaS", "Clean"], license: "free", personality: "Sans moderna clean — distinta de Inter, mais organic" },
+  { name: "Instrument Sans", source: "Instrument, Google", category: "sans", foundry: "Instrument (Google)", siteType: ["Editorial", "Premium"], license: "free", personality: "Sans editorial fina — par perfeito de Instrument Serif" },
+  { name: "Libre Baskerville", source: "Google Fonts, editorial", category: "serif", foundry: "Google Fonts", siteType: ["Editorial", "Blog"], license: "free", personality: "Serif clássica readability — Baskerville open source, body-friendly" },
 ];
 
 // Helper: filtrar fonts por categoria
