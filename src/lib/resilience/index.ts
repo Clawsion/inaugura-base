@@ -112,52 +112,69 @@ async function callWithRetry(
 }
 
 async function callGLM(opts: LLMCallOptions): Promise<{ ok: boolean; pack?: unknown; raw?: string; error?: string }> {
-  // ZAI.create() lê de ficheiro .z-ai-config (dev local)
-  // No Vercel: escrever .z-ai-config a partir de ZAI_CONFIG env var (JSON string)
-  const zai = await (async () => {
+  // ─── CONFIG ROBUSTO ────────────────────────────────────────────────────
+  // Tenta ler de: 1) ZAI_CONFIG (JSON), 2) .z-ai-config (ficheiro), 3) vars individuais
+  let zaiConfig: { baseUrl: string; apiKey: string; chatId?: string; token?: string; userId?: string };
+
+  // 1. Tentar ZAI_CONFIG (JSON string — para Vercel)
+  const configJson = process.env.ZAI_CONFIG;
+  if (configJson) {
     try {
-      return await ZAI.create();
+      zaiConfig = JSON.parse(configJson);
     } catch {
-      // Tentar criar config a partir de variáveis de ambiente
-      const zaiConfigJson = process.env.ZAI_CONFIG;
-      if (zaiConfigJson) {
-        try {
-          const config = JSON.parse(zaiConfigJson);
-          // Escrever ficheiro para o ZAI.create() poder ler
-          const fs = await import("fs/promises");
-          const path = await import("path");
-          const configPath = path.join(process.cwd(), ".z-ai-config");
-          await fs.writeFile(configPath, zaiConfigJson);
-          return await ZAI.create();
-        } catch (e) {
-          // Se falhar, criar ZAI diretamente com o config
-          const config = JSON.parse(zaiConfigJson);
-          return new (ZAI as any)(config);
-        }
-      }
-      // Fallback final: usar vars individuais
-      const config = {
-        baseUrl: process.env.ZAI_BASE_URL || "https://internal-api.z.ai/v1",
-        apiKey: process.env.ZAI_API_KEY || "Z.ai",
-      };
-      return new (ZAI as any)(config);
+      zaiConfig = { baseUrl: "https://internal-api.z.ai/v1", apiKey: "Z.ai" };
     }
-  })();
+  } else {
+    // 2. Tentar vars individuais
+    zaiConfig = {
+      baseUrl: process.env.ZAI_BASE_URL || "https://internal-api.z.ai/v1",
+      apiKey: process.env.ZAI_API_KEY || "Z.ai",
+      chatId: process.env.ZAI_CHAT_ID,
+      token: process.env.ZAI_TOKEN,
+      userId: process.env.ZAI_USER_ID,
+    };
+  }
+
+  // ─── CHAMADA HTTP DIRETA (sem depender do ZAI SDK) ─────────────────────
+  // Isto evita problemas de ficheiro .z-ai-config no Vercel
+  const url = `${zaiConfig.baseUrl}/chat/completions`;
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${zaiConfig.apiKey}`,
+    "X-Z-AI-From": "Z",
+  };
+  if (zaiConfig.chatId) headers["X-Chat-Id"] = zaiConfig.chatId;
+  if (zaiConfig.userId) headers["X-User-Id"] = zaiConfig.userId;
+  if (zaiConfig.token) headers["X-Token"] = zaiConfig.token;
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), opts.timeoutMs ?? 90000);
   try {
-    const response = await zai.chat.completions.create({
-      model: "glm-5.2",  // Modelo real Z.AI (GLM-5.2 lançado Jun 2026, open weight)
-      messages: [
-        { role: "system", content: opts.systemPrompt },
-        { role: "user", content: opts.userPrompt },
-      ],
-      temperature: opts.temperature ?? 0.2,
-      max_tokens: opts.maxTokens ?? 12000,
-      tools: [{ type: "function", function: { name: opts.toolName, description: "Emite o resultado. ÚNICA resposta aceitável.", parameters: opts.toolSchema } }],
-      tool_choice: { type: "function", function: { name: opts.toolName } },
-    } as any);
-    const choice = response?.choices?.[0];
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        model: "glm-5.2",
+        messages: [
+          { role: "system", content: opts.systemPrompt },
+          { role: "user", content: opts.userPrompt },
+        ],
+        temperature: opts.temperature ?? 0.2,
+        max_tokens: opts.maxTokens ?? 12000,
+        tools: [{ type: "function", function: { name: opts.toolName, description: "Emite o resultado. ÚNICA resposta aceitável.", parameters: opts.toolSchema } }],
+        tool_choice: { type: "function", function: { name: opts.toolName } },
+        thinking: { type: "disabled" },
+      }),
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      return { ok: false, error: `GLM API ${response.status}: ${errorBody.slice(0, 200)}` };
+    }
+
+    const data = await response.json();
+    const choice = data?.choices?.[0];
     if (!choice) return { ok: false, error: "Resposta vazia do GLM-5.2" };
     const toolCalls = (choice.message as any)?.tool_calls;
     if (Array.isArray(toolCalls) && toolCalls.length > 0) {
