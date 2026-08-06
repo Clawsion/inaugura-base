@@ -112,7 +112,22 @@ async function callWithRetry(
 }
 
 async function callGLM(opts: LLMCallOptions): Promise<{ ok: boolean; pack?: unknown; raw?: string; error?: string }> {
-  const zai = await ZAI.create();
+  // ZAI.create() lê de ficheiro .z-ai-config (dev local)
+  // No Vercel/deploy, usar config de env vars
+  const zai = await ZAI.create().catch(() => {
+    // Fallback: criar ZAI com config de variáveis de ambiente
+    const config = {
+      baseUrl: process.env.ZAI_BASE_URL || "https://internal-api.z.ai/v1",
+      apiKey: process.env.ZAI_API_KEY || "Z.ai",
+      chatId: process.env.ZAI_CHAT_ID || "",
+      token: process.env.ZAI_TOKEN || "",
+      userId: process.env.ZAI_USER_ID || "",
+    };
+    if (!config.apiKey) {
+      throw new Error("ZAI config not found. Set ZAI_API_KEY env var or create .z-ai-config file.");
+    }
+    return new (ZAI as any)(config);
+  });
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), opts.timeoutMs ?? 90000);
   try {
