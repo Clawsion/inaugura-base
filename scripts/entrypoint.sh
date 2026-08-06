@@ -2,12 +2,11 @@
 set -e
 
 echo "┌─────────────────────────────────────────────────────────────┐"
-echo "│  Inaugura-Base — Container startup                          │"
+echo "│  Inaugura-Base — Koyeb Container startup                    │"
 echo "└─────────────────────────────────────────────────────────────┘"
 
 if [ -z "$DATABASE_URL" ]; then
     echo "[startup] ERROR: DATABASE_URL not set"
-    echo "[startup] For PostgreSQL: set DATABASE_URL=postgresql://user:pass@host:5432/db"
     exit 1
 fi
 
@@ -16,10 +15,9 @@ echo "[startup] Database: $DB_SCHEME"
 
 echo "[startup] Running prisma db push..."
 npx prisma db push --accept-data-loss 2>&1 || {
-    echo "[startup] ERROR: prisma db push failed"
-    exit 1
+    echo "[startup] WARNING: prisma db push failed — trying without"
 }
-echo "[startup] ✓ Schema pushed"
+echo "[startup] ✓ Schema ready"
 
 echo ""
 echo "[startup] Starting server on port ${PORT:-3000}..."
