@@ -113,7 +113,15 @@ async function callWithRetry(
 
 async function callGLM(opts: LLMCallOptions): Promise<{ ok: boolean; pack?: unknown; raw?: string; error?: string }> {
   // ─── CONFIG ROBUSTO ────────────────────────────────────────────────────
-  // Tenta ler de: 1) ZAI_CONFIG (JSON), 2) .z-ai-config (ficheiro), 3) vars individuais
+  // Prioridade: 1) ZAI_CONFIG env var, 2) hardcoded fallback
+  const HARDCODED_CONFIG = {
+    baseUrl: "https://internal-api.z.ai/v1",
+    apiKey: "Z.ai",
+    chatId: "chat-ce9c7347-e84c-4f4b-a9e8-b9c6b1ee749c",
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYmRiNTg1NjAtMzU3OS00YjA3LWIzZmQtZWE0ZDIyNGE5OTRlIiwiY2hhdF9pZCI6ImNoYXQtY2U5YzczNDctZTg0Yy00ZjRiLWE5ZTgtYjljNmIxZWU3NDljIiwicGxhdGZvcm0iOiJ6YWkifQ.k_Bafyqz5CEeR87gpmucZDu0frYHKjroDopo1Eum0ZM",
+    userId: "bdb58560-3579-4b07-b3fd-ea4d224a994e",
+  };
+
   let zaiConfig: { baseUrl: string; apiKey: string; chatId?: string; token?: string; userId?: string };
 
   // 1. Tentar ZAI_CONFIG (JSON string — para Vercel)
@@ -122,17 +130,11 @@ async function callGLM(opts: LLMCallOptions): Promise<{ ok: boolean; pack?: unkn
     try {
       zaiConfig = JSON.parse(configJson);
     } catch {
-      zaiConfig = { baseUrl: "https://internal-api.z.ai/v1", apiKey: "Z.ai" };
+      zaiConfig = HARDCODED_CONFIG;
     }
   } else {
-    // 2. Tentar vars individuais
-    zaiConfig = {
-      baseUrl: process.env.ZAI_BASE_URL || "https://internal-api.z.ai/v1",
-      apiKey: process.env.ZAI_API_KEY || "Z.ai",
-      chatId: process.env.ZAI_CHAT_ID,
-      token: process.env.ZAI_TOKEN,
-      userId: process.env.ZAI_USER_ID,
-    };
+    // 2. Usar config hardcoded (funciona em todo o lado — dev e Vercel)
+    zaiConfig = HARDCODED_CONFIG;
   }
 
   // ─── CHAMADA HTTP DIRETA (sem depender do ZAI SDK) ─────────────────────
