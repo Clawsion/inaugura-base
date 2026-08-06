@@ -141,7 +141,7 @@ export async function POST(req: NextRequest) {
             toolSchema: inauguraPackToJsonSchema(),
             temperature: 0.2,
             maxTokens: 12000,
-            timeoutMs: 90000,
+            timeoutMs: 120000,
           });
 
           if (!compileResult.ok) {
