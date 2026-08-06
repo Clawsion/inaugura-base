@@ -113,21 +113,36 @@ async function callWithRetry(
 
 async function callGLM(opts: LLMCallOptions): Promise<{ ok: boolean; pack?: unknown; raw?: string; error?: string }> {
   // ZAI.create() lê de ficheiro .z-ai-config (dev local)
-  // No Vercel/deploy, usar config de env vars
-  const zai = await ZAI.create().catch(() => {
-    // Fallback: criar ZAI com config de variáveis de ambiente
-    const config = {
-      baseUrl: process.env.ZAI_BASE_URL || "https://internal-api.z.ai/v1",
-      apiKey: process.env.ZAI_API_KEY || "Z.ai",
-      chatId: process.env.ZAI_CHAT_ID || "",
-      token: process.env.ZAI_TOKEN || "",
-      userId: process.env.ZAI_USER_ID || "",
-    };
-    if (!config.apiKey) {
-      throw new Error("ZAI config not found. Set ZAI_API_KEY env var or create .z-ai-config file.");
+  // No Vercel: escrever .z-ai-config a partir de ZAI_CONFIG env var (JSON string)
+  const zai = await (async () => {
+    try {
+      return await ZAI.create();
+    } catch {
+      // Tentar criar config a partir de variáveis de ambiente
+      const zaiConfigJson = process.env.ZAI_CONFIG;
+      if (zaiConfigJson) {
+        try {
+          const config = JSON.parse(zaiConfigJson);
+          // Escrever ficheiro para o ZAI.create() poder ler
+          const fs = await import("fs/promises");
+          const path = await import("path");
+          const configPath = path.join(process.cwd(), ".z-ai-config");
+          await fs.writeFile(configPath, zaiConfigJson);
+          return await ZAI.create();
+        } catch (e) {
+          // Se falhar, criar ZAI diretamente com o config
+          const config = JSON.parse(zaiConfigJson);
+          return new (ZAI as any)(config);
+        }
+      }
+      // Fallback final: usar vars individuais
+      const config = {
+        baseUrl: process.env.ZAI_BASE_URL || "https://internal-api.z.ai/v1",
+        apiKey: process.env.ZAI_API_KEY || "Z.ai",
+      };
+      return new (ZAI as any)(config);
     }
-    return new (ZAI as any)(config);
-  });
+  })();
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), opts.timeoutMs ?? 90000);
   try {
